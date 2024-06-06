@@ -1,0 +1,658 @@
+<div class="vr-workspace-theme-wizard ws-area w-100" id="workspace-id-{workspace-id}" data-dm-id="{dm-metadata-id}">
+    <div class="ws-page-header d-none">
+        <div class="row">
+            <div class="col-md-12 header-background-theme31">
+                <div class="topsidebar">
+                    <div class="ws-header-name-2">{header-position-2}</div>
+                </div>
+                <div class="col-md-9 ws-page-content-wrapper fright d-none">
+                    <div class="ws-page-header-content">
+                        <div class="ws-header-part" data-position-name="header-position-6">
+                            <span class="title">{header-position-6-labelname}</span>
+                            <span class="value">{header-position-6}</span>
+                        </div>
+                        <div class="ws-header-part" data-position-name="header-position-5">
+                            <span class="title">{header-position-5-labelname}</span>
+                            <span class="value">{header-position-5}</span>
+                        </div>
+                        <div class="ws-header-part" data-position-name="header-position-7">
+                            <span class="title">{header-position-7-labelname}</span>
+                            <span class="value">{header-position-7}</span>
+                        </div>
+                        <div class="ws-header-part" data-position-name="header-position-3">
+                            <span class="title">{header-position-3-labelname}</span>
+                            <span class="value">{header-position-3}</span>
+                        </div>
+
+                        <div class="ws-hidden-params" data-position-name="hidden-params">
+                            {hidden-params}
+                        </div>
+                        <div class="clearfix w-100"></div>
+                    </div>
+                </div>
+            </div>    
+        </div>
+        <div class="ws-menu">
+            <div class="dv-right-tools-btn text-right">
+                <button type="button" class="close-btn btn btn-icon-only btn-circle btn-secondary" data-dm-id="{dm-metadata-id}" onclick="backWindow(this);">
+                    <i class="icon-arrow-left8"></i>
+                </button>
+            </div>         
+        </div>
+    </div>
+    <div class="ws-page-container">
+        <div class="ws-page-content-wrapper wizard blue clearfix" id="wizard-{workspace-id}">
+            {menu}
+            <div class="ws-page-content">
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <div class="portlet light shadow workspace-main-container"></div>
+                        <div class="clearfix w-100"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <input type="hidden" name="workSpaceMode">
+</div>
+
+<div class="clearfix w-100"></div>
+
+<script type="text/javascript">
+    $(function() {
+        if ($().steps) {
+            initKpiWizardForm();
+        } else {
+            $.cachedScript('assets/core/js/plugins/forms/wizards/steps.min.js').done(function() {
+                initKpiWizardForm();
+            });
+        }
+    });
+    
+    function initKpiWizardForm() {
+        $('#wizard-{workspace-id}').steps({
+            headerTag: 'h3',
+            bodyTag: 'section',
+            transitionEffect: 'fade',
+            autoFocus: true, 
+            /*enableAllSteps: true,*/
+            titleTemplate: '<span class="number">#index#</span> #title#', 
+            labels: {
+                previous: '<i class="icon-arrow-left13 mr-2"></i> ' + plang.get('prev'),
+                next: plang.get('next') + ' <i class="icon-arrow-right14 ml-2"></i>',
+                finish: plang.get('finish_btn') + ' <i class="icon-arrow-right14 ml-2"></i>'
+            }, 
+            onInit: function (event, currentIndex) { 
+                $(this).attr('data-step', currentIndex);
+            },
+            onStepChanging: function (event, currentIndex, newIndex) {
+    
+                var _click1 = $('h3[id="wizard-{workspace-id}-h-'+ currentIndex +'"]'),
+                     _click = $('h3[id="wizard-{workspace-id}-h-'+ newIndex +'"]'),
+                    _menuId = _click1.attr('data-menu-id'),
+                    _selectedRow = _click1.attr('data-selected-row'),
+                    _prevProcessId = _click1.attr('data-prevprocessid'),
+                    _nextProcessId = _click1.attr('data-nextprocessid'),
+                    _finishProcessId = _click1.attr('data-finishprocessid');
+                
+                if (currentIndex > newIndex) {
+                    if ( typeof _prevProcessId !== 'undefined' && _prevProcessId) {
+                        var _response = callBackWorkinProcess (_menuId, _prevProcessId, _selectedRow, currentIndex);
+                        if (_response.status !== 'success') {
+                            PNotify.removeAll();
+                            new PNotify({
+                                title: 'Warning',
+                                text: _response.text,
+                                type: 'warning',
+                                sticker: false, 
+                                addclass: pnotifyPosition
+                            });
+
+                            return false;
+                        }
+                    }
+                } else {
+                    if ( typeof _nextProcessId !== 'undefined' && _nextProcessId) {
+                        var _response = callBackWorkinProcess (_menuId, _nextProcessId, _selectedRow, currentIndex);
+                        if (_response.status !== 'success') {
+                            PNotify.removeAll();
+                            new PNotify({
+                                title: 'Warning',
+                                text: _response.text,
+                                type: 'warning',
+                                sticker: false, 
+                                addclass: pnotifyPosition
+                            });
+                            return false;
+                        }
+                    }
+                }
+                
+                if (currentIndex > newIndex) {
+                    return true;
+                }
+                
+                var $form = $('#wizard-{workspace-id}').find('section:eq('+currentIndex+')');
+                var $requiredInputs = $form.find('[required]:not(:radio)').filter(function() { 
+                    var $this = $(this);
+                    if ($this.is(':radio')) {
+                        $this.closest('.radio-list').removeClass('error');
+                    } else {
+                        $this.removeClass('error');
+                        $this.parent().removeClass('error');
+                    }
+                
+                    if ($this.hasClass('fileInit')) {
+                        if ($this.parent().find('input[type=hidden]').length && $this.parent().find('input[type=hidden]').val()) {
+                            return false;
+                        } else {
+                            return this.value == '';
+                        }
+                    } else {
+                        return this.value == '';
+                    } 
+                });
+                
+                if ($requiredInputs.length) {
+                    
+                    PNotify.removeAll();
+                    new PNotify({
+                        title: 'Info',
+                        text: plang.get('FIN_01332'),
+                        type: 'info',
+                        sticker: false, 
+                        addclass: pnotifyPosition
+                    });
+    
+                    $requiredInputs.not(':hidden').eq(0).focus();
+                    
+                    console.log('Required paths =================== start');
+                    
+                    $requiredInputs.each(function() {
+                        var $this = $(this);
+                        
+                        if ($this.hasAttr('data-path')) {
+                            console.log('Path: ' + $this.attr('data-path'));
+                        }
+                        
+                        if ($this.is(':radio')) {
+                            $this.closest('.radio-list').addClass('error');
+                        } else {
+                            $this.addClass('error');
+                            $this.parent().addClass('error');
+                        }
+                    });
+                    
+                    console.log('Required paths =================== end');
+                
+                    return false;
+                } else {
+                    
+                    if (_click.attr('data-click') !== 'clicked') {
+                        _click.trigger('click');
+                        _click.attr('data-click', 'clicked');
+                    }
+                    return true;
+                }
+            },
+            onStepChanged: function (event, currentIndex, priorIndex) { 
+                $(this).attr('data-step', currentIndex);
+            },
+            onFinished: function (event, currentIndex) {
+                
+                var _click = $('h3[id="wizard-{workspace-id}-h-'+ currentIndex +'"]'),
+                    _menuId = _click.attr('data-menu-id'),
+                    _selectedRow = _click.attr('data-selected-row'),
+                    _prevProcessId = _click.attr('data-prevprocessid'),
+                    _nextProcessId = _click.attr('data-nextprocessid'),
+                    _finishProcessId = _click.attr('data-finishprocessid');
+                    _closeProcessId = _click.attr('data-closeprocessid');
+                    _callMetaDataId = _click.attr('data-callmetadataid');
+                    _callMetaTypeName = _click.attr('data-metatypename');
+                    _listName = _click.attr('data-listname');
+                    
+                if ( typeof _finishProcessId !== 'undefined' && _finishProcessId) {
+                    var _response = callBackWorkinProcess (_menuId, _finishProcessId, _selectedRow, currentIndex);
+                    if (_response.status !== 'success') {
+                        PNotify.removeAll();
+                        new PNotify({
+                            title: 'Warning',
+                            text: _response.text,
+                            type: 'warning',
+                            sticker: false, 
+                            addclass: pnotifyPosition
+                        });
+                        return false;
+                    }
+                }
+
+                if (typeof _closeProcessId !== 'undefined' && _closeProcessId) {
+                    var fillDataParams = 'defaultGetPf=1';
+
+                    var $dialogName = 'dialog-businessprocess-'+_closeProcessId;
+                    if (!$('#' + $dialogName).length) {
+                        $('<div id="' + $dialogName + '" ></div>').appendTo('body');
+                    }
+
+                    var $dialog = $('#' + $dialogName);
+
+                    $.ajax({
+                        type: 'post',
+                        url: 'mdwebservice/callMethodByMeta',
+                        data: {
+                            metaDataId: _closeProcessId,
+                            fillDataParams: fillDataParams,
+                            isDialog: true,
+                            isSystemMeta: false, 
+                            isBpOpen:  0
+                        },
+                        dataType: 'json',
+                        beforeSend: function () {
+                            Core.blockUI({
+                                message: 'Loading...',
+                                boxed: true
+                            });
+                        },
+                        success: function (data) {
+
+                            $dialog.empty().append(data.Html);
+
+                            var $processForm = $('#wsForm', '#' + $dialogName),
+                                processUniqId = $processForm.parent().attr('data-bp-uniq-id');
+
+                            var buttons = [
+                                {text: data.run_btn, class: 'btn green-meadow btn-sm bp-btn-save', click: function (e) {
+                                    if (window['processBeforeSave_' + processUniqId]($(e.target))) {
+                                        if (typeof window[processUniqId + '_dialog'] !== 'undefined' && typeof window[processUniqId + '_note'] !== 'undefined' || typeof window[processUniqId + '_title'] !== 'undefined') {
+                                            var $confirmDialog = $("#" + window[processUniqId + '_dialog']);
+                                            var yes_btn = plang.get('yes_btn');
+                                            var no_btn = plang.get('no_btn');
+                                            var yes_btn_class = '';
+                                            
+                                            if (typeof window[processUniqId + '_type'] !== 'undefined' && window[processUniqId + '_type'] == 'onlyclose') {
+                                                no_btn = plang.get('close_btn');
+                                                yes_btn_class = ' d-none';
+                                            }
+                                            
+                                            $confirmDialog.empty().append(window[processUniqId + '_note']);
+                                            $confirmDialog.dialog({
+                                                cache: false,
+                                                resizable: false,
+                                                bgiframe: true,
+                                                autoOpen: false,
+                                                title: window[processUniqId + '_title'],
+                                                width: 370,
+                                                height: 'auto',
+                                                modal: true,
+                                                open: function() {
+                                                    setTimeout(function() {
+                                                        $confirmDialog.dialog("option", "position", { my: "center", at: "center", of: window });
+                                                    }, 100);
+                                                },
+                                                close: function() {
+                                                    $("#" + $dialogName).dialog('close');
+                                                    $confirmDialog.empty().dialog('destroy').remove();
+                                                    uiDialogOverlayRemove();
+                                                },
+                                                buttons: [{
+                                                        text: yes_btn,
+                                                        class: 'btn green-meadow btn-sm'+yes_btn_class,
+                                                        click: function() {
+                                                            if (typeof window[processUniqId + '_message'] !== 'undefined' && typeof window[processUniqId + '_messageType'] !== 'undefined') {
+                                                                PNotify.removeAll();
+                                                                new PNotify({
+                                                                    title: window[processUniqId + '_messageType'],
+                                                                    text: window[processUniqId + '_message'],
+                                                                    type: window[processUniqId + '_messageType'],
+                                                                    sticker: false
+                                                                });
+                                                            }
+                                                            
+                                                            $processForm.validate({
+                                                                ignore: '',
+                                                                highlight: function (element) {
+                                                                    $(element).addClass('error');
+                                                                    $(element).parent().addClass('error');
+                                                                    if ($processForm.find("div.tab-pane:hidden:has(.error)").length) {
+                                                                        $processForm.find("div.tab-pane:hidden:has(.error)").each(function (index, tab) {
+                                                                            var tabId = $(tab).attr('id');
+                                                                            $processForm.find('a[href="#' + tabId + '"]').tab('show');
+                                                                        });
+                                                                    }
+                                                                },
+                                                                unhighlight: function (element) {
+                                                                    $(element).removeClass('error');
+                                                                    $(element).parent().removeClass('error');
+                                                                },
+                                                                errorPlacement: function () {}
+                                                            });
+
+                                                            var isValidPattern = initBusinessProcessMaskEvent($processForm);
+
+                                                            if ($processForm.valid() && isValidPattern.length === 0) {
+                                                                $processForm.ajaxSubmit({
+                                                                    type: 'post',
+                                                                    url: 'mdwebservice/runProcess',
+                                                                    dataType: 'json',
+                                                                    beforeSend: function () {
+                                                                        Core.blockUI({
+                                                                            boxed: true,
+                                                                            message: 'Түр хүлээнэ үү'
+                                                                        });
+                                                                    },
+                                                                    success: function (responseData) {
+                                                                        PNotify.removeAll();
+                                                                        new PNotify({
+                                                                            title: responseData.status,
+                                                                            text: responseData.message,
+                                                                            type: responseData.status,
+                                                                            sticker: false
+                                                                        });
+
+                                                                        if (responseData.status === 'success') {
+                                                                            var _mainId = $('#workspace-id-{workspace-id}').closest('.tab-pane.active').attr('id');
+                                                                            multiTabCloseConfirm($('body').find("ul.card-multi-tab-navtabs").find("a[href='#"+ _mainId +"']"), '1');
+                                                                            if (typeof _callMetaDataId !== 'undefined' && _callMetaDataId) {
+                                                                                appMultiTab({metaDataId: _callMetaDataId, title: _listName, dataTitle: _listName, type: _callMetaTypeName, proxyId: ''}, this);
+                                                                            }
+                                                                        }
+                                                                        Core.unblockUI();
+                                                                    },
+                                                                    error: function () {
+                                                                        alert("Error");
+                                                                    }
+                                                                });
+                                                            }
+
+                                                            $confirmDialog.dialog('close');
+                                                        }
+                                                    },
+                                                    {
+                                                        text: no_btn,
+                                                        class: 'btn blue-madison btn-sm',
+                                                        click: function() {
+                                                            $confirmDialog.dialog('close');
+                                                        }
+                                                    }
+                                                ]
+                                            });
+                                            $confirmDialog.dialog('open');
+                                        } else {
+                                            $processForm.validate({
+                                                ignore: '',
+                                                highlight: function (element) {
+                                                    $(element).addClass('error');
+                                                    $(element).parent().addClass('error');
+                                                    if ($processForm.find("div.tab-pane:hidden:has(.error)").length) {
+                                                        $processForm.find("div.tab-pane:hidden:has(.error)").each(function (index, tab) {
+                                                            var tabId = $(tab).attr('id');
+                                                            $processForm.find('a[href="#' + tabId + '"]').tab('show');
+                                                        });
+                                                    }
+                                                },
+                                                unhighlight: function (element) {
+                                                    $(element).removeClass('error');
+                                                    $(element).parent().removeClass('error');
+                                                },
+                                                errorPlacement: function () {}
+                                            });
+
+                                            var isValidPattern = initBusinessProcessMaskEvent($processForm);
+
+                                            if ($processForm.valid() && isValidPattern.length === 0) {
+                                                $processForm.ajaxSubmit({
+                                                    type: 'post',
+                                                    url: 'mdwebservice/runProcess',
+                                                    dataType: 'json',
+                                                    beforeSend: function () {
+                                                        Core.blockUI({
+                                                            boxed: true,
+                                                            message: 'Түр хүлээнэ үү'
+                                                        });
+                                                    },
+                                                    success: function (responseData) {
+                                                        PNotify.removeAll();
+                                                        new PNotify({
+                                                            title: responseData.status,
+                                                            text: responseData.message,
+                                                            type: responseData.status,
+                                                            sticker: false
+                                                        });
+
+                                                        if (responseData.status === 'success') {
+                                                            $("#" + $dialogName).dialog('close');
+                                                            var _mainId = $('#workspace-id-{workspace-id}').closest('.tab-pane.active').attr('id');
+                                                            multiTabCloseConfirm($('body').find("ul.card-multi-tab-navtabs").find("a[href='#"+ _mainId +"']"), '1');
+                                                            if (typeof _callMetaDataId !== 'undefined' && _callMetaDataId) {
+                                                                appMultiTab({metaDataId: _callMetaDataId, title: _listName, dataTitle: _listName, type: _callMetaTypeName, proxyId: ''}, this);
+                                                            }
+                                                        }
+                                                        Core.unblockUI();
+                                                    },
+                                                    error: function () {
+                                                        alert("Error");
+                                                    }
+                                                });
+                                            }
+                                        }
+                                    }
+                                }},
+                                {text: data.close_btn, class: 'btn blue-madison btn-sm', click: function () {
+                                    $dialog.dialog('close');
+                                }}
+                            ];
+                            var dialogWidth = data.dialogWidth,
+                                    dialogHeight = data.dialogHeight;
+
+                            if (data.isDialogSize === 'auto') {
+                                dialogWidth = 1200;
+                                dialogHeight = 'auto';
+                            }
+
+                            $dialog.dialog({
+                                cache: false,
+                                resizable: true,
+                                bgiframe: true,
+                                autoOpen: false,
+                                title: data.Title,
+                                width: data.dialogWidth,
+                                height: dialogHeight,
+                                modal: true,
+                                closeOnEscape: (typeof isCloseOnEscape == 'undefined' ? true : isCloseOnEscape),
+                                close: function () {
+                                    $dialog.empty().dialog('destroy').remove();
+                                },
+                                buttons: buttons
+                            }).dialogExtend({
+                                "closable": true,
+                                "maximizable": true,
+                                "minimizable": true,
+                                "collapsable": true,
+                                "dblclick": "maximize",
+                                "minimizeLocation": "left",
+                                "icons": {
+                                    "close": "ui-icon-circle-close",
+                                    "maximize": "ui-icon-extlink",
+                                    "minimize": "ui-icon-minus",
+                                    "collapse": "ui-icon-triangle-1-s",
+                                    "restore": "ui-icon-newwin"
+                                }
+                            });
+                            if (data.dialogSize === 'fullscreen') {
+                                $dialog.dialogExtend("maximize");
+                            }
+
+                            setTimeout(function () {
+                                $dialog.dialog('open');
+                                Core.unblockUI();
+                            }, 1);
+
+                        },
+                        error: function () {
+                            alert("Error");
+                        }
+                    }).done(function () {
+                        Core.initBPAjax($dialog);
+                    });
+                }
+                else {
+                    var _mainId = $('#workspace-id-{workspace-id}').closest('.tab-pane.active').attr('id');
+                    multiTabCloseConfirm($('body').find("ul.card-multi-tab-navtabs").find("a[href='#"+ _mainId +"']"), '1');
+                    if (typeof _callMetaDataId !== 'undefined' && _callMetaDataId) {
+                        appMultiTab({metaDataId: _callMetaDataId, title: _listName, dataTitle: _listName, type: _callMetaTypeName, proxyId: ''}, this);
+                    }
+                }
+            }
+        });
+    }
+    
+    setTimeout(function() {
+        var _click = $('h3[id="wizard-{workspace-id}-h-0"]');
+        if (_click.attr('data-click') !== 'clicked') {
+            _click.trigger('click');
+            _click.attr('data-click', 'clicked');
+        }
+        
+        $('#wizard-{workspace-id}').removeClass('d-none');
+        
+    }, 400);
+
+$(function(){
+    var headCss = '';
+    
+    $('style#head-style-{workspace-id}').remove();
+    
+    $('#workspace-id-{workspace-id} ul.workspace-menu > li > a').each(function() {
+        var $this = $(this);
+        
+        if ($this.hasAttr('style')) {
+            var _index = $this.parent().index() + 1;
+            var bgColor = $this.css('background-color');
+            var bgColorHover = invertCssColor(colorToHex(bgColor));
+            headCss += 'div#workspace-id-{workspace-id} .ws-menu ul.workspace-menu > li:nth-child('+_index+'):not(:last-child) > a:after { border-left: 20px solid '+bgColor+' !important;}';
+            headCss += 'div#workspace-id-{workspace-id} .ws-menu ul.workspace-menu > li:nth-child('+_index+'):hover > a { background-color: '+bgColorHover+' !important; }';
+            headCss += 'div#workspace-id-{workspace-id} .ws-menu ul.workspace-menu > li:nth-child('+_index+'):hover > a:before { border-right-color: '+bgColorHover+' !important; }';
+            headCss += 'div#workspace-id-{workspace-id} .ws-menu ul.workspace-menu > li:nth-child('+_index+'):hover > a:after { border-left-color: '+bgColorHover+' !important; }';
+        }
+        
+        if ($this.hasAttr('data-menu-id')) {
+            var menuId = $this.attr('data-menu-id');
+            $this.attr('data-criteria', 'menuId='+menuId);
+        }
+        
+        if ($this.next('ul.sub-menu').length) {
+            $this.next('ul.sub-menu').find('a[data-menu-id]').each(function(){
+                var $thisSub = $(this);
+                var menuIdSub = $thisSub.attr('data-menu-id');
+                $thisSub.attr('data-criteria', 'menuId='+menuIdSub);
+            });
+        }
+    });
+    
+    var $foundin = $("*:contains('{header-position-')").filter(function () {
+        return $(this).children().length === 0;
+    });
+    $foundin.parents('.ws-header-part').addClass('hide');    
+    
+    if (headCss !== '') {
+        $('<style type="text/css" id="head-style-{workspace-id}">'+headCss+'</style>').appendTo('head');
+    }
+});   
+
+function activeMenu(elem) {
+    $(".sub-menu li").removeClass("actived");
+    $(elem).attr("class", "actived");
+}
+
+function colorToHex(color) {
+    if (color.substr(0, 1) === '#') {
+        return color;
+    }
+    var digits = /(.*?)rgb\((\d+), (\d+), (\d+)\)/.exec(color);
+    
+    var red = parseInt(digits[2]);
+    var green = parseInt(digits[3]);
+    var blue = parseInt(digits[4]);
+    
+    var rgb = blue | (green << 8) | (red << 16);
+    return digits[1] + '#' + rgb.toString(16);
+}
+
+function invertCssColor(color) {
+    var rgb = invertColor(hexColor2rgb(color));
+    return rgb2hexColor(rgb);
+}
+
+function invertColor(rgb) {
+    var yuv = rgb2yuv(rgb);
+    var factor = 90;
+    var threshold = 100;
+    yuv.y = clamp(yuv.y + (yuv.y > threshold ? -factor : factor));
+    return yuv2rgb(yuv);
+}
+
+function rgb2hexColor(rgb) {
+    return '#' + dec2hex(rgb.r) + dec2hex(rgb.g) + dec2hex(rgb.b);
+}
+
+function hexColor2rgb(color) {
+    color = color.substring(1); // remove #
+    return {
+        r: parseInt(color.substring(0, 2), 16),
+        g: parseInt(color.substring(2, 4), 16),
+        b: parseInt(color.substring(4, 6), 16)
+    };
+}
+
+function rgb2hexColor(rgb) {
+    return '#' + dec2hex(rgb.r) + dec2hex(rgb.g) + dec2hex(rgb.b);
+}
+
+function dec2hex(n) {
+    var hex = n.toString(16);
+    if (hex.length < 2) {
+        return '0' + hex;
+    }
+    return hex;
+}
+
+function rgb2yuv(rgb){
+    var y = clamp(rgb.r *  0.29900 + rgb.g *  0.587   + rgb.b * 0.114);
+    var u = clamp(rgb.r * -0.16874 + rgb.g * -0.33126 + rgb.b * 0.50000 + 128);
+    var v = clamp(rgb.r *  0.50000 + rgb.g * -0.41869 + rgb.b * -0.08131 + 128);
+    return {y:y, u:u, v:v};
+}
+
+function yuv2rgb(yuv){
+    var y = yuv.y;
+    var u = yuv.u;
+    var v = yuv.v;
+    var r = clamp(y + (v - 128) *  1.40200);
+    var g = clamp(y + (u - 128) * -0.34414 + (v - 128) * -0.71414);
+    var b = clamp(y + (u - 128) *  1.77200);
+    return {r:r,g:g,b:b};
+}
+    
+function clamp(n){
+    if (n<0) { return 0;}
+    if (n>255) { return 255;}
+    return Math.floor(n);
+}
+
+function callBackWorkinProcess (_menuId, _nextProcessId, _selectedRow, newIndex) {
+    var response = $.ajax({
+        type: 'post',
+        url: 'mdworkspace/backWorkinProcess',
+        data: {
+            menuId: _menuId,
+            processId: _nextProcessId,
+            selectedRow: _selectedRow,
+            order: newIndex,
+        },
+        dataType: 'json',
+        async: false
+    });
+
+    return response.responseJSON;
+}
+</script>

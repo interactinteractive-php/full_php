@@ -1,0 +1,180 @@
+<div class="vr-workspace-theme14 ws-area" id="workspace-id-{workspace-id}" data-dm-id="{dm-metadata-id}">
+    <div class="ws-bg"></div>
+    <div class="sidebar sidebar-light sidebar-secondary sidebar-component-left sidebar-expand-md left-side {left-side}">
+      <div class="sidebar-content">
+          <div class="sidebar-user {img-margin} {use-picture}">
+              <div class="profile-userpic">
+                  <img src="{header-position-1}" data-position-name="header-position-1" class="img-responsive mx-auto d-block" alt="profile">
+                </div>
+              <div class="card-body">
+                  <div class="media">
+                      <div class="media-body text-center">
+                          <div class="media-title font-weight-semibold control-position-nobold" data-position-name="header-position-2">{header-position-3}</div>
+                          <div class="font-size-m opacity-50 control-position-nobold" data-position-name="header-position-3">{header-position-2}</div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          <div class="col-md-12 no-padding">
+            <div id="project-info">
+              <div class="project-info-row">
+                <div class="header-positions">
+                  <div class="label-position">{header-position-3-labelname}:</div>
+                  <div class="control-position" data-position-name="header-position-3">{header-position-3}</div>
+                </div>
+              </div>
+              <div class="project-info-row">
+                <div class="header-positions">
+                  <div class="label-position">{header-position-6-labelname}:</div>
+                  <div class="control-position" data-position-name="header-position-6">{header-position-6}</div>
+                </div>
+              </div>
+              <div class="project-info-row">
+                <div class="header-positions">
+                  <div class="label-position">{header-position-7-labelname}:</div>
+                  <div class="control-position" data-position-name="header-position-7">{header-position-7}</div>
+                </div>
+              </div>
+              <div class="project-info-row">
+                <div class="header-positions">
+                  <div class="label-position">{header-position-5-labelname}:</div>
+                  <div class="control-position" data-position-name="header-position-5">{header-position-5}</div>
+                </div>
+              </div>
+              <div class="project-info-row">
+                <div class="header-positions">
+                  <div class="label-position">{header-position-8-labelname}:</div>
+                  <div class="control-position" data-position-name="header-position-8">{header-position-8}</div>
+                </div>
+              </div>
+              <div class="project-info-row">
+                <div class="header-positions">
+                  <div class="label-position">{header-position-9-labelname}:</div>
+                  <div class="control-position" data-position-name="header-position-9">{header-position-9}</div>
+                </div>
+              </div>
+              <div class="project-info-row">
+                <div class="header-positions">
+                  <div class="label-position">{header-position-10-labelname}:</div>
+                  <div class="control-position" data-position-name="header-position-10">{header-position-10}</div>
+                </div>
+              </div>
+              <div class="project-info-row">
+                  <div class="header-positions">
+                    <div class="label-position">{header-position-11-labelname}:</div>
+                    <div class="control-position" data-position-name="header-position-11">{header-position-11}</div>
+                  </div>
+                </div>
+                <div class="project-info-row">
+                  <div class="header-positions">
+                    <div class="label-position">{header-position-12-labelname}:</div>
+                    <div class="control-position" data-position-name="header-position-12">{header-position-12}</div>
+                  </div>
+                </div> 
+                <div class="project-info-row">
+                  <div class="header-positions">
+                    <div class="label-position">{header-position-13-labelname}:</div>
+                    <div class="control-position" data-position-name="header-position-13">{header-position-13}</div>
+                  </div>
+                </div>    
+            </div>
+          </div>
+      </div>
+      {layout-render}
+      <div class="row">
+        <div class="col-md-12">
+          <div class="ws-page-sidebar-wrapper">
+            <div class="ws-page-sidebar nsidebar">
+              {tab}
+            </div>    
+          </div>
+        </div>
+      </div>
+    </div>
+   
+      <div class="content-wrapper workspace-main {right-side}" id="scrollit">
+        <div class="ws-menu tabbable-tabdrop justify-content-between">
+          {menu}
+          <div class="dv-right-tools-btn">
+            <a  href="javascript:;" data-dm-id="{dm-metadata-id}" class="close-btn btn btn-icon-only btn-circle btn-secondary" onclick="backWindow(this);"><i class="icon-arrow-left7"></i></a>
+          </div>
+        </div>
+        
+        <div class="ws-page-container">
+          <div class="ws-page-content-wrapper">
+            <div class="ws-page-content">
+              <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                  <div class="workspace-main-container"></div>
+                  <div class="clearfix w-100"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    <input type="hidden" name="workSpaceMode">
+    <div class="ws-hidden-params hidden" data-position-name="hidden-params">
+      {hidden-params}
+    </div>
+</div>
+
+<div class="clearfix w-100"></div>
+
+<script type="text/javascript">
+  var $tmpWsTheme14 = $('.vr-workspace-theme14');
+  $(document).ready(function(){
+
+    $.each($tmpWsTheme14.find('.date-pos'), function(){
+      $(this).html($(this).html().substring(0, 10));
+    });
+    
+    $('.emptyit').empty();
+
+    setTimeout(function(){
+      $tmpWsTheme14.find('.workspace-menu').tabdrop({offsetTop: 50, text: '<i class="fa fa-bars"></i>'});
+      $(window).resize();
+
+      $.each($tmpWsTheme14.find('.package-div'), function(k, div){
+        if(k % 2 !== 0){
+          $(div).addClass('odd');
+        }
+      });
+    }, 100);
+
+    var foundin=$("*:contains('{header-position-')").filter(function(){
+        return $(this).children().length === 0;
+    });
+    foundin.parents('.project-info-row').addClass('hide');
+
+    $tmpWsTheme14.find('.wsCoverImg').change(function(){
+      var input=this;
+      Core.blockUI();
+      $.ajax({
+        url: "mdworkspace/renderCoverChangeModal",
+        data: {workSpaceId: '{workspace-id}'},
+        type: "POST",
+        dataType: "JSON",
+        success: function(response){
+          if(typeof workspaceCover === 'undefined'){
+            $.getScript(URL_APP + 'middleware/assets/js/workspace/workspaceCover.js', function(){
+              workspaceCover.init(response, input, '{workspace-id}');
+            });
+          } else {
+            workspaceCover.init(response, input, '{workspace-id}');
+          }
+        },
+        error: function(jqXHR, exception){
+          Core.unblockUI();
+        }
+      }).complete(function(){
+        Core.unblockUI();
+      });
+    });
+  });
+
+  function activeMenu(elem){
+    $tmpWsTheme14.find('ul.workspace-menu li').removeClass("active");
+    $(elem).parents('li.dropdown').addClass('active');
+  }
+</script>

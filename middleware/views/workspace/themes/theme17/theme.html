@@ -1,0 +1,172 @@
+<div class="vr-workspace-theme17 ws-area" id="workspace-id-{workspace-id}" data-dm-id="{dm-metadata-id}">
+
+  <h4 class="first-pos {ws-bg}" data-position-name="header-position-2">{header-position-2}</h4>
+  <div class="dv-right-tools-btn">
+    <a class="close-btn btn-secondary btn-circle blue btn-xs" href="javascript:;" data-dm-id="{dm-metadata-id}" onclick="backWindow(this);"><i class="fa fa-arrow-left"></i> Буцах</a>
+  </div>
+  <div class="ws-bg {ws-bg}" style="background-image: url('{cover}');"></div>
+  <div class="uploadFile timelineUploadBG" title="Cover зураг">
+    <input type="file" name="coverImg" class="custom-file-input wsCoverImg">
+  </div>
+
+  <div class="left-side {left-side}">
+    <div class="process-theme2-sticky">
+      <div class="profile-userpic {img-margin} {use-picture}">
+        <img src="{header-position-1}" data-position-name="header-position-1" class="img-fluid">
+      </div>
+
+      <div class="col-md-12 no-padding">
+        <div id="project-info">
+
+
+          <div class="project-info-row">
+            <div class="header-positions">
+              <div class="label-position">{header-position-3-labelname}:</div>
+              <div class="control-position" data-position-name="header-position-3">{header-position-3}</div>
+            </div>
+          </div>
+          <div class="project-info-row">
+            <div class="header-positions">
+              <div class="label-position">{header-position-6-labelname}:</div>
+              <div class="control-position" data-position-name="header-position-6">{header-position-6}</div>
+            </div>
+          </div>
+          <div class="project-info-row">
+            <div class="header-positions">
+              <div class="label-position">{header-position-7-labelname}:</div>
+              <div class="control-position" data-position-name="header-position-7">{header-position-7}</div>
+            </div>
+          </div>
+          <div class="project-info-row">
+            <div class="header-positions">
+              <div class="label-position">{header-position-5-labelname}:</div>
+              <div class="control-position" data-position-name="header-position-5">{header-position-5}</div>
+            </div>
+          </div>
+          <div class="project-info-row">
+            <div class="header-positions">
+              <div class="label-position">{header-position-8-labelname}:</div>
+              <div class="control-position" data-position-name="header-position-8">{header-position-8}</div>
+            </div>
+          </div>
+          <div class="project-info-row">
+            <div class="header-positions">
+              <div class="label-position">{header-position-9-labelname}:</div>
+              <div class="control-position" data-position-name="header-position-9">{header-position-9}</div>
+            </div>
+          </div>
+          <div class="project-info-row">
+            <div class="header-positions">
+              <div class="label-position">{header-position-10-labelname}:</div>
+              <div class="control-position" data-position-name="header-position-10">{header-position-10}</div>
+            </div>
+          </div>
+        </div>
+      </div>     
+    </div>
+    {layout-render}
+    <div class="row">
+      <div class="col-md-12">
+        <div class="ws-page-sidebar-wrapper">
+          <div class="ws-page-sidebar nsidebar">
+            {tab}
+          </div>    
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="right-side {right-side}" id="scrollit">    
+
+    <div class="ws-page-container">
+      <div class="ws-page-content-wrapper scroller">
+        <div class="ws-page-content">
+          <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+              <div class="portlet light workspace-main-container"></div>
+              <div class="clearfix w-100"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+      <div class="ws-menu">
+      {menu}
+    </div>
+
+  </div>
+  
+
+  <input type="hidden" name="workSpaceMode">
+  <div class="ws-hidden-params hidden" data-position-name="hidden-params">
+    {hidden-params}
+  </div>
+</div>
+
+<div class="clearfix w-100"></div>
+
+<script type="text/javascript">
+  var $tmpWsTheme=$('.vr-workspace-theme17');
+  $(document).ready(function(){
+
+    $.each($tmpWsTheme.find('.numberInit'), function(){
+      var $source=$(this);
+      if(!$.isNumeric($source.html())){
+        $source.removeClass('numberInit');
+      }
+    });
+
+    Core.initNumberInput($tmpWsTheme);
+
+    $.each($tmpWsTheme.find('.date-pos'), function(){
+      $(this).html($(this).html().substring(0, 10));
+    });
+
+    setTimeout(function(){
+      $(window).resize();
+
+      $.each($tmpWsTheme.find('.package-div'), function(k, div){
+        if(k % 2 !== 0){
+          $(div).addClass('odd');
+        }
+      });
+    }, 100);
+
+    var foundin=$("*:contains('{header-position-')")
+            .filter(function(){
+              return $(this).
+                      children().length === 0;
+            });
+    foundin.parents('.project-info-row').addClass('hide');
+
+    $tmpWsTheme.find('.wsCoverImg').change(function(){
+      var input=this;
+      Core.blockUI();
+      $.ajax({
+        url: "mdworkspace/renderCoverChangeModal",
+        data: {workSpaceId: '{workspace-id}'},
+        type: "POST",
+        dataType: "JSON",
+        success: function(response){
+          if(typeof workspaceCover === 'undefined'){
+            $.getScript(URL_APP + 'middleware/assets/js/workspace/workspaceCover.js', function(){
+              workspaceCover.init(response, input, '{workspace-id}');
+            });
+          } else {
+            workspaceCover.init(response, input, '{workspace-id}');
+          }
+        },
+        error: function(jqXHR, exception){
+          Core.unblockUI();
+        }
+      }).complete(function(){
+        Core.unblockUI();
+      });
+    });
+  });
+
+  function activeMenu(elem){
+    $tmpWsTheme.find('ul.workspace-menu li').removeClass("active");
+    $(elem).parents('li.dropdown').addClass('active');
+  }
+</script>

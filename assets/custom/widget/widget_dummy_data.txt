@@ -1,0 +1,191 @@
+[
+  "cloud_list_linechart" => [
+    "data" => array ( 0 => array ( 'id' => '1', 'name' => 'Нийт захиалга', 'amount' => '115000', 'color' => '#FFCF26', 'recordid' => '10', 'graphdata_size' => '4', 'graphdata' => array ( 0 => array ( 'id' => '10', 'year' => '2015', 'value' => '45', 'color' => '#FFCF26', ), 1 => array ( 'id' => '10', 'year' => '2016', 'value' => '78', 'color' => '#FFCF26', ), 2 => array ( 'id' => '10', 'year' => '2017', 'value' => '56', 'color' => '#FFCF26', ), 3 => array ( 'id' => '10', 'year' => '2018', 'value' => '61', 'color' => '#FFCF26', ), ), ), 1 => array ( 'id' => '1', 'name' => 'Нийт төлсөн захиалга', 'amount' => '1850000', 'color' => '#0079FF', 'recordid' => '11', 'graphdata_size' => '4', 'graphdata' => array ( 0 => array ( 'id' => '11', 'year' => '2015', 'value' => '45', 'color' => '#FFCF26', ), 1 => array ( 'id' => '11', 'year' => '2016', 'value' => '78', 'color' => '#FFCF26', ), 2 => array ( 'id' => '11', 'year' => '2017', 'value' => '56', 'color' => '#FFCF26', ), 3 => array ( 'id' => '11', 'year' => '2018', 'value' => '61', 'color' => '#FFCF26', ), ), ), 2 => array ( 'id' => '1', 'name' => 'Нийт хүлээн авсан захиалга', 'amount' => '815000', 'color' => '#F14A73', 'recordid' => '12', 'graphdata_size' => '4', 'graphdata' => array ( 0 => array ( 'id' => '12', 'year' => '2015', 'value' => '45', 'color' => '#FFCF26', ), 1 => array ( 'id' => '12', 'year' => '2016', 'value' => '78', 'color' => '#FFCF26', ), 2 => array ( 'id' => '12', 'year' => '2017', 'value' => '56', 'color' => '#FFCF26', ), 3 => array ( 'id' => '12', 'year' => '2018', 'value' => '61', 'color' => '#FFCF26', ), ), ), 3 => array ( 'id' => '1', 'name' => 'Нийт орлого авсан захиалга', 'amount' => '916000', 'color' => '#58CF8F', 'recordid' => '13', 'graphdata_size' => '4', 'graphdata' => array ( 0 => array ( 'id' => '13', 'year' => '2015', 'value' => '45', 'color' => '#FFCF26', ), 1 => array ( 'id' => '13', 'year' => '2016', 'value' => '78', 'color' => '#FFCF26', ), 2 => array ( 'id' => '13', 'year' => '2017', 'value' => '56', 'color' => '#FFCF26', ), 3 => array ( 'id' => '13', 'year' => '2018', 'value' => '61', 'color' => '#FFCF26', ), ), ), ),
+    "positionConfig" => array ( 'xaxis' => array ( 'rows' => array ( 0 => array ( 'id' => '169350648731310', 'sectionid' => '169176021528110', 'positionname' => 'xaxis', 'fieldpath' => 'graphdata.year', 'otherattr' => NULL, ), ), 'row' => array ( 'id' => '169350648731310', 'sectionid' => '169176021528110', 'positionname' => 'xaxis', 'fieldpath' => 'graphdata.year', 'otherattr' => NULL, ), ), 'yaxis' => array ( 'rows' => array ( 0 => array ( 'id' => '169350686818510', 'sectionid' => '169176021528110', 'positionname' => 'yaxis', 'fieldpath' => 'graphdata.value', 'otherattr' => NULL, ), ), 'row' => array ( 'id' => '169350686818510', 'sectionid' => '169176021528110', 'positionname' => 'yaxis', 'fieldpath' => 'graphdata.value', 'otherattr' => NULL, ), ), 'position1' => array ( 'rows' => array ( 0 => array ( 'id' => '169410419225310', 'sectionid' => '169176021528110', 'positionname' => 'position1', 'fieldpath' => 'name', 'otherattr' => NULL, ), ), 'row' => array ( 'id' => '169410419225310', 'sectionid' => '169176021528110', 'positionname' => 'position1', 'fieldpath' => 'name', 'otherattr' => NULL, ), ), 'position2' => array ( 'rows' => array ( 0 => array ( 'id' => '169410419227410', 'sectionid' => '169176021528110', 'positionname' => 'position2', 'fieldpath' => 'amount', 'otherattr' => NULL, ), ), 'row' => array ( 'id' => '169410419227410', 'sectionid' => '169176021528110', 'positionname' => 'position2', 'fieldpath' => 'amount', 'otherattr' => NULL, ), ), 'position4' => array ( 'rows' => array ( 0 => array ( 'id' => '169410419227510', 'sectionid' => '169176021528110', 'positionname' => 'position4', 'fieldpath' => 'amount', 'otherattr' => NULL, ), ), 'row' => array ( 'id' => '169410419227510', 'sectionid' => '169176021528110', 'positionname' => 'position4', 'fieldpath' => 'amount', 'otherattr' => NULL, ), ), )
+  ],
+  "cloudcard_003" => [
+    "data" => array ( 0 => array ( 'name' => 'Ажил үүсгэх', 'icon' => 'fal fa-user', 'color' => '#5BA6FF', 'drillmeta' => '1692606639691276', ), 1 => array ( 'name' => 'Мэдлэг нэмэх', 'icon' => 'icon-grid', 'color' => '#8757ED', 'drillmeta' => '1692606639691276', ), 2 => array ( 'name' => 'Орлого бүртгэх', 'icon' => 'fal fa-thumbs-up', 'color' => '#13C9B3', 'drillmeta' => '1692606639691276', ), 3 => array ( 'name' => 'Дансны үлдэгдэл', 'icon' => 'fal fa-thumbs-up', 'color' => '#FFCF26', 'drillmeta' => '1692606639691276', ), 4 => array ( 'name' => 'Төлбөр харах', 'icon' => 'fal fa-thumbs-up', 'color' => '#5BA6FF', 'drillmeta' => '1692606639691276', ), 5 => array ( 'name' => 'Захидал бичих', 'icon' => 'fas fa-rocket', 'color' => '#F35D82', 'drillmeta' => '1692606639691276', ), ),
+    "positionConfig" => array ( 'position5' => array ( 'rows' => array ( 0 => array ( 'id' => '169318105812410', 'sectionid' => '169214839287710', 'positionname' => 'position5', 'fieldpath' => 'color', 'otherattr' => NULL, ), ), 'row' => array ( 'id' => '169318105812410', 'sectionid' => '169214839287710', 'positionname' => 'position5', 'fieldpath' => 'color', 'otherattr' => NULL, ), ), 'positiondrillmeta' => array ( 'rows' => array ( 0 => array ( 'id' => '169330001298810', 'sectionid' => '169214839287710', 'positionname' => 'positiondrillmeta', 'fieldpath' => 'drillMeta', 'otherattr' => NULL, ), ), 'row' => array ( 'id' => '169330001298810', 'sectionid' => '169214839287710', 'positionname' => 'positiondrillmeta', 'fieldpath' => 'drillMeta', 'otherattr' => NULL, ), ), 'position1' => array ( 'rows' => array ( 0 => array ( 'id' => '169214839295810', 'sectionid' => '169214839287710', 'positionname' => 'position1', 'fieldpath' => 'icon', 'otherattr' => NULL, ), ), 'row' => array ( 'id' => '169214839295810', 'sectionid' => '169214839287710', 'positionname' => 'position1', 'fieldpath' => 'icon', 'otherattr' => NULL, ), ), 'position2' => array ( 'rows' => array ( 0 => array ( 'id' => '169214839298910', 'sectionid' => '169214839287710', 'positionname' => 'position2', 'fieldpath' => 'name', 'otherattr' => NULL, ), ), 'row' => array ( 'id' => '169214839298910', 'sectionid' => '169214839287710', 'positionname' => 'position2', 'fieldpath' => 'name', 'otherattr' => NULL, ), ), )
+  ],
+  "cloudcard_005" => [
+    "data" => array ( 'id' => '1', 'subject' => 'Өнөөдөр төлөх төлбөрийн задаргаа', 'maindate' => '2023.07.28', 'firstname' => 'Нийт төлөх төлбөрүүд', 'firstamount' => '150000000', 'firstcolor' => '#FA8AA6', 'firstmonth' => 'Энэ сар', 'firstbutton' => 'fal fa-link', 'secondname' => 'Өнөөдөр төлөх төлбөрүүд', 'secondamount' => '13070000', 'secondcolor' => '#FFA8BD', 'secondmonth' => NULL, 'secondbutton' => 'fal fa-link', 'detail_size' => '3', 'detail' => array ( 0 => array ( 'id' => '1', 'title' => 'Өнөөдөр төлөх төлбөрийн задаргаа', 'maindate' => '2023.07.28', 'name' => 'Төлөвлөгөөт төлбөр', 'icon' => 'fal fa-comments', 'iconcolor' => '#50CD89', 'amount' => '6750000', 'currency' => '₮', ), 1 => array ( 'id' => '1', 'title' => 'Өнөөдөр төлөх төлбөрийн задаргаа', 'maindate' => '2023.07.28', 'name' => 'Нэхэмжлэлүүд', 'icon' => 'fal fa-comments', 'iconcolor' => '#F35D82', 'amount' => '1320000', 'currency' => '₮', ), 2 => array ( 'id' => '1', 'title' => 'Өнөөдөр төлөх төлбөрийн задаргаа', 'maindate' => '2023.07.28', 'name' => 'Өглөг', 'icon' => 'fal fa-comments', 'iconcolor' => '#6373ED', 'amount' => '5000000', 'currency' => '₮', ), ), ),
+    "positionConfig" => array ( 'position13' => array ( 'rows' => array ( 0 => array ( 'id' => '169243899551010', 'sectionid' => '169240122629310', 'positionname' => 'position13', 'fieldpath' => 'Задаргаа харах', 'otherattr' => NULL, ), ), 'row' => array ( 'id' => '169243899551010', 'sectionid' => '169240122629310', 'positionname' => 'position13', 'fieldpath' => 'Задаргаа харах', 'otherattr' => NULL, ), ), 'position1' => array ( 'rows' => array ( 0 => array ( 'id' => '169348260612610', 'sectionid' => '169240122629310', 'positionname' => 'position1', 'fieldpath' => 'detail.icon', 'otherattr' => NULL, ), ), 'row' => array ( 'id' => '169348260612610', 'sectionid' => '169240122629310', 'positionname' => 'position1', 'fieldpath' => 'detail.icon', 'otherattr' => NULL, ), ), 'position22' => array ( 'rows' => array ( 0 => array ( 'id' => '169385934365010', 'sectionid' => '169240122629310', 'positionname' => 'position22', 'fieldpath' => 'secondname', 'otherattr' => NULL, ), ), 'row' => array ( 'id' => '169385934365010', 'sectionid' => '169240122629310', 'positionname' => 'position22', 'fieldpath' => 'secondname', 'otherattr' => NULL, ), ), 'position12' => array ( 'rows' => array ( 0 => array ( 'id' => '169357820938210', 'sectionid' => '169240122629310', 'positionname' => 'position12', 'fieldpath' => 'maindate', 'otherattr' => NULL, ), ), 'row' => array ( 'id' => '169357820938210', 'sectionid' => '169240122629310', 'positionname' => 'position12', 'fieldpath' => 'maindate', 'otherattr' => NULL, ), ), 'position9' => array ( 'rows' => array ( 0 => array ( 'id' => '169357820945310', 'sectionid' => '169240122629310', 'positionname' => 'position9', 'fieldpath' => 'detail.name', 'otherattr' => NULL, ), ), 'row' => array ( 'id' => '169357820945310', 'sectionid' => '169240122629310', 'positionname' => 'position9', 'fieldpath' => 'detail.name', 'otherattr' => NULL, ), ), 'position10' => array ( 'rows' => array ( 0 => array ( 'id' => '169357820947410', 'sectionid' => '169240122629310', 'positionname' => 'position10', 'fieldpath' => 'detail.amount', 'otherattr' => NULL, ), ), 'row' => array ( 'id' => '169357820947410', 'sectionid' => '169240122629310', 'positionname' => 'position10', 'fieldpath' => 'detail.amount', 'otherattr' => NULL, ), ), 'position5' => array ( 'rows' => array ( 0 => array ( 'id' => '169357820948510', 'sectionid' => '169240122629310', 'positionname' => 'position5', 'fieldpath' => 'detail.iconcolor', 'otherattr' => NULL, ), ), 'row' => array ( 'id' => '169357820948510', 'sectionid' => '169240122629310', 'positionname' => 'position5', 'fieldpath' => 'detail.iconcolor', 'otherattr' => NULL, ), ), 'position3' => array ( 'rows' => array ( 0 => array ( 'id' => '169357820950610', 'sectionid' => '169240122629310', 'positionname' => 'position3', 'fieldpath' => 'firstmonth', 'otherattr' => NULL, ), ), 'row' => array ( 'id' => '169357820950610', 'sectionid' => '169240122629310', 'positionname' => 'position3', 'fieldpath' => 'firstmonth', 'otherattr' => NULL, ), ), 'position11' => array ( 'rows' => array ( 0 => array ( 'id' => '169357820951710', 'sectionid' => '169240122629310', 'positionname' => 'position11', 'fieldpath' => 'subject', 'otherattr' => NULL, ), ), 'row' => array ( 'id' => '169357820951710', 'sectionid' => '169240122629310', 'positionname' => 'position11', 'fieldpath' => 'subject', 'otherattr' => NULL, ), ), 'position20' => array ( 'rows' => array ( 0 => array ( 'id' => '169357962599610', 'sectionid' => '169240122629310', 'positionname' => 'position20', 'fieldpath' => 'secondamount', 'otherattr' => NULL, ), ), 'row' => array ( 'id' => '169357962599610', 'sectionid' => '169240122629310', 'positionname' => 'position20', 'fieldpath' => 'secondamount', 'otherattr' => NULL, ), ), 'position14' => array ( 'rows' => array ( 0 => array ( 'id' => '169386022304210', 'sectionid' => '169240122629310', 'positionname' => 'position14', 'fieldpath' => 'linear-gradient(90deg, rgb(19 201 179) 0%, rgb(0 86 76 / 87%) 100%, rgb(228 55 98) 100%)', 'otherattr' => NULL, ), ), 'row' => array ( 'id' => '169386022304210', 'sectionid' => '169240122629310', 'positionname' => 'position14', 'fieldpath' => 'linear-gradient(90deg, rgb(19 201 179) 0%, rgb(0 86 76 / 87%) 100%, rgb(228 55 98) 100%)', 'otherattr' => NULL, ), ), 'position15' => array ( 'rows' => array ( 0 => array ( 'id' => '169386022305410', 'sectionid' => '169240122629310', 'positionname' => 'position15', 'fieldpath' => 'linear-gradient(90deg, rgba(77,215,198,1) 0%, rgba(7,171,151,0.99) 100%)', 'otherattr' => NULL, ), ), 'row' => array ( 'id' => '169386022305410', 'sectionid' => '169240122629310', 'positionname' => 'position15', 'fieldpath' => 'linear-gradient(90deg, rgba(77,215,198,1) 0%, rgba(7,171,151,0.99) 100%)', 'otherattr' => NULL, ), ), 'position2' => array ( 'rows' => array ( 0 => array ( 'id' => '169240122651410', 'sectionid' => '169240122629310', 'positionname' => 'position2', 'fieldpath' => 'firstname', 'otherattr' => NULL, ), ), 'row' => array ( 'id' => '169240122651410', 'sectionid' => '169240122629310', 'positionname' => 'position2', 'fieldpath' => 'firstname', 'otherattr' => NULL, ), ), 'position6' => array ( 'rows' => array ( 0 => array ( 'id' => '169240962370510', 'sectionid' => '169240122629310', 'positionname' => 'position6', 'fieldpath' => 'firstamount', 'otherattr' => NULL, ), ), 'row' => array ( 'id' => '169240962370510', 'sectionid' => '169240122629310', 'positionname' => 'position6', 'fieldpath' => 'firstamount', 'otherattr' => NULL, ), ), )
+  ],
+  "cloud_list" => [
+    "data" =>   array (
+  0 => 
+  array (
+    'companyname' => 'Боса ХХК',
+    'receiptdate' => '2020.04.15',
+    'statusname' => '<span style="color: #13C9B3;font-size: 12px;background-color: #13c9b330;border-radius: 7px;padding: 5px;margin-top: 5px;height: 20px;">Илгээсэн</span>',
+    'totalamount' => '115000',
+  ),
+  1 => 
+  array (
+    'companyname' => 'Миний сүлжээ',
+    'receiptdate' => '2023.03.05',
+    'statusname' => '<span style="color: #F35D82;font-size: 12px;background-color: #FFF2F1;border-radius: 7px;padding: 5px;margin-top: 5px;height: 20px;">Цуцалсан</span>',
+    'totalamount' => '185000000',
+  ),
+  2 => 
+  array (
+    'companyname' => 'Номин',
+    'receiptdate' => '2020.01.05',
+    'statusname' => '<span style="color: #13C9B3;font-size: 12px;background-color: #13c9b330;border-radius: 7px;padding: 5px;margin-top: 5px;height: 20px;">Илгээсэн</span>',
+    'totalamount' => '815000',
+  ),
+  3 => 
+  array (
+    'companyname' => 'Бадрах',
+    'receiptdate' => '2020.02.09',
+    'statusname' => '<span style="color: #13C9B3;font-size: 12px;background-color: #13c9b330;border-radius: 7px;padding: 5px;margin-top: 5px;height: 20px;">Илгээсэн</span>',
+    'totalamount' => '916000',
+  ),
+  4 => 
+  array (
+    'companyname' => 'Танай',
+    'receiptdate' => '2021.06.05',
+    'statusname' => '<span style="color: #13C9B3;font-size: 12px;background-color: #13c9b330;border-radius: 7px;padding: 5px;margin-top: 5px;height: 20px;">Илгээсэн</span>',
+    'totalamount' => '1215000',
+  ),
+  5 => 
+  array (
+    'companyname' => 'Некст электроникс',
+    'receiptdate' => '2020.08.05',
+    'statusname' => '<span style="color: #13C9B3;font-size: 12px;background-color: #13c9b330;border-radius: 7px;padding: 5px;margin-top: 5px;height: 20px;">Илгээсэн</span>',
+    'totalamount' => '8151000',
+  ),
+),
+    "positionConfig" => array ( 'position1' => array ( 'rows' => array ( 0 => array ( 'id' => '169405820403710', 'sectionid' => '169247971808110', 'positionname' => 'position1', 'fieldpath' => 'companyName', 'otherattr' => NULL, ), ), 'row' => array ( 'id' => '169405820403710', 'sectionid' => '169247971808110', 'positionname' => 'position1', 'fieldpath' => 'companyName', 'otherattr' => NULL, ), ), 'position2' => array ( 'rows' => array ( 0 => array ( 'id' => '169405820404810', 'sectionid' => '169247971808110', 'positionname' => 'position2', 'fieldpath' => 'receiptDate', 'otherattr' => NULL, ), ), 'row' => array ( 'id' => '169405820404810', 'sectionid' => '169247971808110', 'positionname' => 'position2', 'fieldpath' => 'receiptDate', 'otherattr' => NULL, ), ), 'position3' => array ( 'rows' => array ( 0 => array ( 'id' => '169405820405910', 'sectionid' => '169247971808110', 'positionname' => 'position3', 'fieldpath' => 'statusName', 'otherattr' => NULL, ), 1 => array ( 'id' => '169405820407010', 'sectionid' => '169247971808110', 'positionname' => 'position3', 'fieldpath' => 'totalAmount', 'otherattr' => NULL, ), ), 'row' => array ( 'id' => '169405820405910', 'sectionid' => '169247971808110', 'positionname' => 'position3', 'fieldpath' => 'statusName', 'otherattr' => NULL, ), ), )
+  ],
+  "cloudcard_004" => [
+    "data" => array (
+      0 => 
+      array (
+        'id' => '1',
+        'name' => 'Кассын үлдэгдэл',
+        'amount' => '1500000',
+        'currency' => '₮',
+        'percent' => '<span style="color: #13C9B3;font-size: 9px;background-color: #13c9b330;border-radius: 5px;padding: 3px;margin-top: 5px;height: 17px;"><i class="fal fa-arrow-down"></i>8.02%</span>',
+        'icon' => 'fal fa-briefcase',
+        'color' => '#13C9B3',
+      ),
+      1 => 
+      array (
+        'id' => '2',
+        'name' => 'Харилцахын үлдэгдэл',
+        'amount' => '268000',
+        'currency' => '₮',
+        'percent' => '<span style="color: #13C9B3;font-size: 9px;background-color: #13c9b330;border-radius: 5px;padding: 3px;margin-top: 5px;height: 17px;"><i class="fal fa-arrow-down"></i>1.19%</span>',
+        'icon' => 'fal fa-briefcase',
+        'color' => '#FF524B',
+      ),
+      2 => 
+      array (
+        'id' => '3',
+        'name' => 'Өглөгийн үлдэгдэл',
+        'amount' => '855000',
+        'currency' => '₮',
+        'percent' => '<span style="color: #13C9B3;font-size: 9px;background-color: #13c9b330;border-radius: 5px;padding: 3px;margin-top: 5px;height: 17px;"><i class="fal fa-arrow-down"></i>4.05%</span>',
+        'icon' => 'fal fa-briefcase',
+        'color' => '#5BA6FF',
+      ),
+      3 => 
+      array (
+        'id' => '4',
+        'name' => 'Бараа материалын үлдэгдэл',
+        'amount' => '546000',
+        'currency' => '₮',
+        'percent' => '<span style="color: #13C9B3;font-size: 9px;background-color: #13c9b330;border-radius: 5px;padding: 3px;margin-top: 5px;height: 17px;"><i class="fal fa-arrow-down"></i>6.00%</span>',
+        'icon' => 'fal fa-briefcase',
+        'color' => '#8757ED',
+      ),
+      4 => 
+      array (
+        'id' => '5',
+        'name' => 'Үндсэн хөрөнгийн үлдэгдэл',
+        'amount' => '855000',
+        'currency' => '₮',
+        'percent' => '<span style="color: #13C9B3;font-size: 9px;background-color: #13c9b330;border-radius: 5px;padding: 3px;margin-top: 5px;height: 17px;"><i class="fal fa-arrow-down"></i>8.17%</span>',
+        'icon' => 'fal fa-briefcase',
+        'color' => '#FF524B',
+      ),
+      5 => 
+      array (
+        'id' => '6',
+        'name' => 'Авлагын үлдэгдэл',
+        'amount' => '1236000',
+        'currency' => '₮',
+        'percent' => '<span style="color: #13C9B3;font-size: 9px;background-color: #13c9b330;border-radius: 5px;padding: 3px;margin-top: 5px;height: 17px;"><i class="fal fa-arrow-down"></i>3.53%</span>',
+        'icon' => 'fal fa-briefcase',
+        'color' => '#FFCF26',
+      ),
+    ),
+    "positionConfig" => array ( 'position5' => array ( 'rows' => array ( 0 => array ( 'id' => '169217514286710', 'sectionid' => '169217358725610', 'positionname' => 'position5', 'fieldpath' => 'color', 'otherattr' => NULL, ), ), 'row' => array ( 'id' => '169217514286710', 'sectionid' => '169217358725610', 'positionname' => 'position5', 'fieldpath' => 'color', 'otherattr' => NULL, ), ), 'position4' => array ( 'rows' => array ( 0 => array ( 'id' => '169217514286810', 'sectionid' => '169217358725610', 'positionname' => 'position4', 'fieldpath' => 'white', 'otherattr' => NULL, ), ), 'row' => array ( 'id' => '169217514286810', 'sectionid' => '169217358725610', 'positionname' => 'position4', 'fieldpath' => 'white', 'otherattr' => NULL, ), ), 'position8' => array ( 'rows' => array ( 0 => array ( 'id' => '169308695195710', 'sectionid' => '169217358725610', 'positionname' => 'position8', 'fieldpath' => 'currency', 'otherattr' => NULL, ), ), 'row' => array ( 'id' => '169308695195710', 'sectionid' => '169217358725610', 'positionname' => 'position8', 'fieldpath' => 'currency', 'otherattr' => NULL, ), ), 'position1' => array ( 'rows' => array ( 0 => array ( 'id' => '169217358737710', 'sectionid' => '169217358725610', 'positionname' => 'position1', 'fieldpath' => 'icon', 'otherattr' => NULL, ), ), 'row' => array ( 'id' => '169217358737710', 'sectionid' => '169217358725610', 'positionname' => 'position1', 'fieldpath' => 'icon', 'otherattr' => NULL, ), ), 'position2' => array ( 'rows' => array ( 0 => array ( 'id' => '169217358741810', 'sectionid' => '169217358725610', 'positionname' => 'position2', 'fieldpath' => 'name', 'otherattr' => NULL, ), ), 'row' => array ( 'id' => '169217358741810', 'sectionid' => '169217358725610', 'positionname' => 'position2', 'fieldpath' => 'name', 'otherattr' => NULL, ), ), 'position7' => array ( 'rows' => array ( 0 => array ( 'id' => '169342555358710', 'sectionid' => '169217358725610', 'positionname' => 'position7', 'fieldpath' => 'percent', 'otherattr' => NULL, ), ), 'row' => array ( 'id' => '169342555358710', 'sectionid' => '169217358725610', 'positionname' => 'position7', 'fieldpath' => 'percent', 'otherattr' => NULL, ), ), 'position6' => array ( 'rows' => array ( 0 => array ( 'id' => '169342455094810', 'sectionid' => '169217358725610', 'positionname' => 'position6', 'fieldpath' => 'amount', 'otherattr' => NULL, ), ), 'row' => array ( 'id' => '169342455094810', 'sectionid' => '169217358725610', 'positionname' => 'position6', 'fieldpath' => 'amount', 'otherattr' => NULL, ), ), )
+  ],
+  "cloudtimeline_list" => [
+    "data" => array ( 0 => array ( 'color' => '#DE1F4E', 'bordercolor' => '#F35D82', 'name' => 'Хүсэлт', 'day' => '7', 'daytext' => 'өдөр', ), 1 => array ( 'color' => '#049583', 'bordercolor' => '#13C9B3', 'name' => 'Захиалга', 'day' => '1', 'daytext' => 'өдөр', ), 2 => array ( 'color' => '#4253D2', 'bordercolor' => '#6373ED', 'name' => 'Хүргэлт', 'day' => '2', 'daytext' => 'өдөр', ), 3 => array ( 'color' => '#E8AA01', 'bordercolor' => '#FFBB00', 'name' => 'Нэхэмжлэх ', 'day' => '1', 'daytext' => 'өдөр', ), 4 => array ( 'color' => '#DE1F4E', 'bordercolor' => '#F35D82', 'name' => 'Төлбөр', 'day' => '7', 'daytext' => 'өдөр', ), ),
+    "positionConfig" => array ( 'position3' => array ( 'rows' => array ( 0 => array ( 'id' => '169406765791410', 'sectionid' => '169173906276010', 'positionname' => 'position3', 'fieldpath' => 'dayText', 'otherattr' => NULL, ), ), 'row' => array ( 'id' => '169406765791410', 'sectionid' => '169173906276010', 'positionname' => 'position3', 'fieldpath' => 'dayText', 'otherattr' => NULL, ), ), 'position4' => array ( 'rows' => array ( 0 => array ( 'id' => '169406765792510', 'sectionid' => '169173906276010', 'positionname' => 'position4', 'fieldpath' => 'Нийт хугацаа', 'otherattr' => NULL, ), ), 'row' => array ( 'id' => '169406765792510', 'sectionid' => '169173906276010', 'positionname' => 'position4', 'fieldpath' => 'Нийт хугацаа', 'otherattr' => NULL, ), ), 'position5' => array ( 'rows' => array ( 0 => array ( 'id' => '169406765793110', 'sectionid' => '169173906276010', 'positionname' => 'position5', 'fieldpath' => '89 өдөр', 'otherattr' => NULL, ), ), 'row' => array ( 'id' => '169406765793110', 'sectionid' => '169173906276010', 'positionname' => 'position5', 'fieldpath' => '89 өдөр', 'otherattr' => NULL, ), ), 'position1' => array ( 'rows' => array ( 0 => array ( 'id' => '169173906331110', 'sectionid' => '169173906276010', 'positionname' => 'position1', 'fieldpath' => 'name', 'otherattr' => NULL, ), ), 'row' => array ( 'id' => '169173906331110', 'sectionid' => '169173906276010', 'positionname' => 'position1', 'fieldpath' => 'name', 'otherattr' => NULL, ), ), 'position6' => array ( 'rows' => array ( 0 => array ( 'id' => '169173906340210', 'sectionid' => '169173906276010', 'positionname' => 'position6', 'fieldpath' => 'color', 'otherattr' => NULL, ), ), 'row' => array ( 'id' => '169173906340210', 'sectionid' => '169173906276010', 'positionname' => 'position6', 'fieldpath' => 'color', 'otherattr' => NULL, ), ), )
+  ],
+  "cloudcard_008" => [
+    "data" => array ( 0 => array ( 'id' => '1', 'name' => 'Гоо сайхан', 'icon' => 'fal fa-shopping-bag', 'iconcolor' => '#FFBB00', ), 1 => array ( 'id' => '1', 'name' => 'Гэр ахуй', 'icon' => 'icon-chair', 'iconcolor' => NULL, ), 2 => array ( 'id' => '1', 'name' => 'Цахилгаан бараа', 'icon' => 'fal fa-tv', 'iconcolor' => '#79D1FE', ), 3 => array ( 'id' => '1', 'name' => 'Бичиг хэрэг', 'icon' => 'fal fa-brush', 'iconcolor' => '#FF524B', ), 4 => array ( 'id' => '1', 'name' => 'Авто', 'icon' => 'fal fa-truck', 'iconcolor' => NULL, ), 5 => array ( 'id' => '1', 'name' => 'Хүнс', 'icon' => 'fal fa-seedling', 'iconcolor' => NULL, ), ),
+    "positionConfig" => array ( 'position1' => array ( 'rows' => array ( 0 => array ( 'id' => '169213326002910', 'sectionid' => '169213326001810', 'positionname' => 'position1', 'fieldpath' => 'icon', 'otherattr' => NULL, ), ), 'row' => array ( 'id' => '169213326002910', 'sectionid' => '169213326001810', 'positionname' => 'position1', 'fieldpath' => 'icon', 'otherattr' => NULL, ), ), 'position2' => array ( 'rows' => array ( 0 => array ( 'id' => '169213326004010', 'sectionid' => '169213326001810', 'positionname' => 'position2', 'fieldpath' => 'name', 'otherattr' => NULL, ), ), 'row' => array ( 'id' => '169213326004010', 'sectionid' => '169213326001810', 'positionname' => 'position2', 'fieldpath' => 'name', 'otherattr' => NULL, ), ), 'position7' => array ( 'rows' => array ( 0 => array ( 'id' => '169281756156410', 'sectionid' => '169213326001810', 'positionname' => 'position7', 'fieldpath' => 'iconColor', 'otherattr' => NULL, ), ), 'row' => array ( 'id' => '169281756156410', 'sectionid' => '169213326001810', 'positionname' => 'position7', 'fieldpath' => 'iconColor', 'otherattr' => NULL, ), ), )
+  ],
+  "cloudcard_006" => [
+    "data" => array ( 0 => array ( 'icon' => 'icon-cubic', 'name' => 'Батлах захиалгууд', 'category' => 'Худалдан авалтын удирдлага', 'description' => 'ICT EXPO арга хэмжээнд booth барих материал авах', 'maindate' => '2023.07.28', 'amount' => '15000000', 'username' => 'Б.Солонго', 'userposition' => 'Маркетинг борлуулалтын газар', 'userphoto' => 'storage/uploads/process/202308/file_1692158230576321_15881351149111.png', ), ),
+    "positionConfig" => array ( 'position1' => array ( 'rows' => array ( 0 => array ( 'id' => '169407249700410', 'sectionid' => '169175139732210', 'positionname' => 'position1', 'fieldpath' => 'icon', 'otherattr' => NULL, ), ), 'row' => array ( 'id' => '169407249700410', 'sectionid' => '169175139732210', 'positionname' => 'position1', 'fieldpath' => 'icon', 'otherattr' => NULL, ), ), 'position2' => array ( 'rows' => array ( 0 => array ( 'id' => '169407249702510', 'sectionid' => '169175139732210', 'positionname' => 'position2', 'fieldpath' => 'name', 'otherattr' => NULL, ), ), 'row' => array ( 'id' => '169407249702510', 'sectionid' => '169175139732210', 'positionname' => 'position2', 'fieldpath' => 'name', 'otherattr' => NULL, ), ), 'position3' => array ( 'rows' => array ( 0 => array ( 'id' => '169407249705610', 'sectionid' => '169175139732210', 'positionname' => 'position3', 'fieldpath' => 'mainDate', 'otherattr' => NULL, ), ), 'row' => array ( 'id' => '169407249705610', 'sectionid' => '169175139732210', 'positionname' => 'position3', 'fieldpath' => 'mainDate', 'otherattr' => NULL, ), ), 'position4' => array ( 'rows' => array ( 0 => array ( 'id' => '169407249706710', 'sectionid' => '169175139732210', 'positionname' => 'position4', 'fieldpath' => 'description', 'otherattr' => NULL, ), ), 'row' => array ( 'id' => '169407249706710', 'sectionid' => '169175139732210', 'positionname' => 'position4', 'fieldpath' => 'description', 'otherattr' => NULL, ), ), 'position5' => array ( 'rows' => array ( 0 => array ( 'id' => '169407249708910', 'sectionid' => '169175139732210', 'positionname' => 'position5', 'fieldpath' => NULL, 'otherattr' => NULL, ), ), 'row' => array ( 'id' => '169407249708910', 'sectionid' => '169175139732210', 'positionname' => 'position5', 'fieldpath' => NULL, 'otherattr' => NULL, ), ), 'position6' => array ( 'rows' => array ( 0 => array ( 'id' => '169407249710010', 'sectionid' => '169175139732210', 'positionname' => 'position6', 'fieldpath' => 'userPhoto', 'otherattr' => NULL, ), ), 'row' => array ( 'id' => '169407249710010', 'sectionid' => '169175139732210', 'positionname' => 'position6', 'fieldpath' => 'userPhoto', 'otherattr' => NULL, ), ), 'position7' => array ( 'rows' => array ( 0 => array ( 'id' => '169407249710210', 'sectionid' => '169175139732210', 'positionname' => 'position7', 'fieldpath' => 'userName', 'otherattr' => NULL, ), ), 'row' => array ( 'id' => '169407249710210', 'sectionid' => '169175139732210', 'positionname' => 'position7', 'fieldpath' => 'userName', 'otherattr' => NULL, ), ), 'position8' => array ( 'rows' => array ( 0 => array ( 'id' => '169407249712310', 'sectionid' => '169175139732210', 'positionname' => 'position8', 'fieldpath' => 'userPosition', 'otherattr' => NULL, ), ), 'row' => array ( 'id' => '169407249712310', 'sectionid' => '169175139732210', 'positionname' => 'position8', 'fieldpath' => 'userPosition', 'otherattr' => NULL, ), ), 'position9' => array ( 'rows' => array ( 0 => array ( 'id' => '169408236503610', 'sectionid' => '169175139732210', 'positionname' => 'position9', 'fieldpath' => 'amount', 'otherattr' => NULL, ), ), 'row' => array ( 'id' => '169408236503610', 'sectionid' => '169175139732210', 'positionname' => 'position9', 'fieldpath' => 'amount', 'otherattr' => NULL, ), ), )
+  ],
+  "cloudcard_007" => [
+    "data" => array (
+  0 => 
+  array (
+    'icon' => 'far fa-folder-open',
+    'id' => '1671163924242794',
+    'metaprocessid' => '1671163924242794',
+    'metatypeid' => '200101010000035',
+    'category' => 'Платформ',
+    'metadataname' => '<a class="label label-sm" style="color:black; font-weight:bold;" href = "javascript:checkMetaDataTypeFunction(1671163924242794, 1456748604916054,  \'Энгийн тайлан\', \'Хадгалах\', \'Хаах\');" >Энгийн тайлан</a>',
+    'clickrowfunction' => 'checkMetaDataTypeFunction(1671163924242794, 1456748604916054,  \'Нийт ажилтны тайлан\', \'Хадгалах\', \'Хаах\');',
+    'name' => 'Энгийн тайлан',
+    'buttonname' => '<li class="fa fa-arrow-circle-right" style="color:#30a2dd" onclick = "javascript:checkMetaDataTypeFunction(1671163924242794, 1456748604916054,  \'Нийт ажилтны тайлан\', \'Хадгалах\', \'Хаах\');" ></li>',
+    'description' => NULL,
+    'rowcolor' => '#E0F7FA',
+    'backgroundcolor' => '#F0F5FE',
+    'textcolor' => '#2D51AC',
+  ),
+  1 => 
+  array (
+    'icon' => 'far fa-folder-open',
+    'id' => '1674608027883672',
+    'metaprocessid' => '1674608027883672',
+    'metatypeid' => '200101010000016',
+    'category' => 'Платформ',
+    'metadataname' => '<a class="label label-sm" style="color:black; font-weight:bold;" href = "javascript:checkMetaDataTypeFunction(1674608027883672, 1456748604916054,  \'Картаар харуулдаг тайлангийн жагсаалт\', \'Хадгалах\', \'Хаах\');" >Картаар харуулдаг тайлангийн жагсаалт</a>',
+    'clickrowfunction' => 'checkMetaDataTypeFunction(1674608027883672, 1456748604916054,  \'Картаар харуулдаг тайлангийн жагсаалт\', \'Хадгалах\', \'Хаах\');',
+    'name' => 'Картаар харуулдаг тайлангийн жагсаалт',
+    'buttonname' => '<li class="fa fa-arrow-circle-right" style="color:#30a2dd" onclick = "javascript:checkMetaDataTypeFunction(1674608027883672, 1456748604916054,  \'Картаар харуулдаг тайлангийн жагсаалт\', \'Хадгалах\', \'Хаах\');" ></li>',
+    'description' => NULL,
+    'rowcolor' => '#E0F7FA',
+    'backgroundcolor' => '#F0F5FE',
+    'textcolor' => '#2D51AC',
+  ),
+  2 => 
+  array (
+    'icon' => 'far fa-folder-open',
+    'id' => '1685346378179174',
+    'metaprocessid' => '1685346378179174',
+    'metatypeid' => '200101010000029',
+    'category' => 'Платформ',
+    'metadataname' => '<a class="label label-sm" style="color:black; font-weight:bold;" href = "javascript:checkMetaDataTypeFunction(1685346378179174, 1456748604916054,  \'Report template\', \'Хадгалах\', \'Хаах\');" >Report template</a>',
+    'clickrowfunction' => 'checkMetaDataTypeFunction(1685346378179174, 1456748604916054,  \'Report template\', \'Хадгалах\', \'Хаах\');',
+    'name' => 'Report template',
+    'buttonname' => '<li class="fa fa-arrow-circle-right" style="color:#30a2dd" onclick = "javascript:checkMetaDataTypeFunction(1685346378179174, 1456748604916054,  \'Report template\', \'Хадгалах\', \'Хаах\');" ></li>',
+    'description' => NULL,
+    'rowcolor' => '#E0F7FA',
+    'backgroundcolor' => '#F0F5FE',
+    'textcolor' => '#2D51AC',
+  ),
+),
+    "positionConfig" => array ( 'position1' => array ( 'rows' => array ( 0 => array ( 'id' => '169209363902710', 'sectionid' => '169209363877610', 'positionname' => 'position1', 'fieldpath' => 'icon', 'otherattr' => NULL, ), ), 'row' => array ( 'id' => '169209363902710', 'sectionid' => '169209363877610', 'positionname' => 'position1', 'fieldpath' => 'icon', 'otherattr' => NULL, ), ), 'position2' => array ( 'rows' => array ( 0 => array ( 'id' => '169209363915810', 'sectionid' => '169209363877610', 'positionname' => 'position2', 'fieldpath' => 'name', 'otherattr' => NULL, ), ), 'row' => array ( 'id' => '169209363915810', 'sectionid' => '169209363877610', 'positionname' => 'position2', 'fieldpath' => 'name', 'otherattr' => NULL, ), ), 'position7' => array ( 'rows' => array ( 0 => array ( 'id' => '169209363916910', 'sectionid' => '169209363877610', 'positionname' => 'position7', 'fieldpath' => '<span style="color: #13C9B3;font-size: 9px;background-color: #13c9b330;border-radius: 5px;padding: 3px;margin-top: 5px;height: 17px;">8,02</span>', 'otherattr' => NULL, ), ), 'row' => array ( 'id' => '169209363916910', 'sectionid' => '169209363877610', 'positionname' => 'position7', 'fieldpath' => '<span style="color: #13C9B3;font-size: 9px;background-color: #13c9b330;border-radius: 5px;padding: 3px;margin-top: 5px;height: 17px;">8,02</span>', 'otherattr' => NULL, ), ), )
+  ],
+];

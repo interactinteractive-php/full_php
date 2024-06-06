@@ -1,0 +1,30 @@
+.carousel-mini-1 .mini-lists {
+    height: 32px;
+}
+.carousel-mini-1 .mini-lists .mini-list {
+    margin-left: 0;
+    margin-right: 4px;
+    padding-right: 8px;
+    display: inline-block;
+    height: 38px;
+    vertical-align: middle;
+    width: 32px;
+    float: left;
+}
+.carousel-mini-1 .mini-list-target {
+    -webkit-border-radius: 16px;
+    border-radius: 16px;
+    height: 32px;
+    overflow: hidden;
+    position: relative;
+    width: 32px;
+    background-color: #689f38;
+    text-align: center;
+    text-transform: uppercase;
+}
+.carousel-mini-1 .mini-list-target-r {
+    color: #fff;
+    font-size: 15px;
+    line-height: 32px;
+    vertical-align: middle;      
+}

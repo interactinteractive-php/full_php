@@ -1,0 +1,44 @@
+{
+    "name": "A1 Trade Management",
+    "colour": "red",
+    "children": [{
+            "name": "A1 Analyse Application Requirements",
+            "colour": "gray",
+            "children": []
+        }, {
+            "name": "A1 Analyse & Resolve IT Services Availability Performance Reports",
+            "colour": "gray",
+            "children": [{
+                    "name": "A1 Tradeflow",
+                    "colour": "orange",
+                    "children": [{
+                            "name": "PADDLES - GP2",
+                            "colour": "#e27878"
+                        }, {
+                            "name": "PADDLES - DR",
+                            "colour": "#e27878"
+                        }, {
+                            "name": "PADDLES - TEST2",
+                            "colour": "#e27878"
+                        }, {
+                            "name": "PADDLES - TEST3",
+                            "colour": "#e27878"
+                        }, {
+                            "name": "PADDLES - UAT1",
+                            "colour": "#e27878"
+                        }, {
+                            "name": "PADDLES - Live",
+                            "colour": "#e27878"
+                        }, {
+                            "name": "PADDLES - DVA",
+                            "colour": "#e27878"
+                        }, {
+                            "name": "PADDLES - GP1",
+                            "colour": "#e27878"
+                        }, {
+                            "name": "PADDLES - TEST1",
+                            "colour": "#e27878"
+                        }]
+                } ]
+        } ]
+}

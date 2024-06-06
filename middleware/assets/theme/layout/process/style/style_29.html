@@ -1,0 +1,230 @@
+<style>
+  #cardbox{
+      width:170px;
+      background:#fff;
+      border-radius:6px;
+      overflow:hidden;
+      height:153px;
+      margin: 0 10px 10px 0;
+  }
+  #cardbox .lookup-code-autocomplete, #cardbox label[data-label-path] {
+      display: none;
+  }
+  #cardview{
+      width:170px;
+      height:153px;
+      position:absolute;
+      top:0;
+      left:0;	
+      display:none;
+      background:#fff;
+  }
+  #profile{
+      height:153px;
+      overflow:hidden;
+      text-align:center;
+      color:#fff;
+  }
+  .p1 #profile{
+      background:#fff url("assets/core/frontend/layout/theme/img/timeline.png") 0 0 no-repeat;
+  }
+  #profile .avatar{
+      width:68px;
+      border:3px solid #fff;
+      margin:23px 0 0;
+      border-radius:50%;
+  }
+  #profile  p{
+      font-weight:600;
+      font-size:15px;
+      margin:118px 0 -1px;
+      opacity:0;
+      -webkit-transition: all 200ms cubic-bezier(0.000, 0.995, 0.990, 1.000);
+      -moz-transition: all 200ms cubic-bezier(0.000, 0.995, 0.990, 1.000);
+      -ms-transition: all 200ms cubic-bezier(0.000, 0.995, 0.990, 1.000);
+      -o-transition: all 200ms cubic-bezier(0.000, 0.995, 0.990, 1.000);
+      transition: all 200ms cubic-bezier(0.000, 0.995, 0.990, 1.000);	
+  }
+  #profile  p.animate{
+      margin-top:97px;
+      opacity:1;
+      -webkit-transition: all 200ms cubic-bezier(0.000, 0.995, 0.990, 1.000);
+      -moz-transition: all 200ms cubic-bezier(0.000, 0.995, 0.990, 1.000);
+      -ms-transition: all 200ms cubic-bezier(0.000, 0.995, 0.990, 1.000);
+      -o-transition: all 200ms cubic-bezier(0.000, 0.995, 0.990, 1.000);
+      transition: all 200ms cubic-bezier(0.000, 0.995, 0.990, 1.000);	
+  }
+  #profile  span{
+      font-weight:400;
+      font-size:11px;
+  }
+  .floatingImg{
+      width:40px;
+      border-radius:50%;
+      position:absolute;
+      border:3px solid #fff;
+      top: 13px; 
+      width: 68px; 
+      left: 10px;
+  }
+  .btn-area {
+      margin-bottom: 20px;
+  }
+
+  #close{
+      position:absolute;
+      top: 8px;	
+      opacity:0.8;
+      right: 10px;
+      width:20px;
+      height:20px;
+      cursor:pointer;
+  }
+  #close:hover{
+      opacity:1;
+  }
+  .cx, .cy{
+      background:#fff;
+      position:absolute;
+      width:0px;
+      top:15px;
+      right:15px;
+      height:3px;
+      -webkit-transition: all 250ms ease-in-out;
+      -moz-transition: all 250ms ease-in-out;
+      -ms-transition: all 250ms ease-in-out;
+      -o-transition: all 250ms ease-in-out;
+      transition: all 250ms ease-in-out;
+  }
+  .cx.s1, .cy.s1{	
+      right:0;	
+      width:20px;	
+      -webkit-transition: all 100ms ease-out;
+      -moz-transition: all 100ms ease-out;
+      -ms-transition: all 100ms ease-out;
+      -o-transition: all 100ms ease-out;
+      transition: all 100ms ease-out;
+  }
+  .cy.s2{	
+      -ms-transform: rotate(50deg); 
+      -webkit-transform: rotate(50deg); 
+      transform: rotate(50deg);		 
+      -webkit-transition: all 100ms ease-out;
+      -moz-transition: all 100ms ease-out;
+      -ms-transition: all 100ms ease-out;
+      -o-transition: all 100ms ease-out;
+      transition: all 100ms ease-out;
+  }
+  .cy.s3{	
+      -ms-transform: rotate(45deg); 
+      -webkit-transform: rotate(45deg); 
+      transform: rotate(45deg);		 
+      -webkit-transition: all 100ms ease-out;
+      -moz-transition: all 100ms ease-out;
+      -ms-transition: all 100ms ease-out;
+      -o-transition: all 100ms ease-out;
+      transition: all 100ms ease-out;
+  }
+  .cx.s1{	
+      right:0;	
+      width:20px;	
+      -webkit-transition: all 100ms ease-out;
+      -moz-transition: all 100ms ease-out;
+      -ms-transition: all 100ms ease-out;
+      -o-transition: all 100ms ease-out;
+      transition: all 100ms ease-out;
+  }
+  .cx.s2{	
+      -ms-transform: rotate(140deg); 
+      -webkit-transform: rotate(140deg); 
+      transform: rotate(140deg);		 
+      -webkit-transition: all 100ms ease-out;
+      -moz-transition: all 100ms ease-out;
+      -ms-transition: all 100ease-out;
+      -o-transition: all 100ms ease-out;
+      transition: all 100ms ease-out;
+  }
+  .cx.s3{	
+      -ms-transform: rotate(135deg); 
+      -webkit-transform: rotate(135deg); 
+      transform: rotate(135deg);		 
+      -webkit-transition: all 100ease-out;
+      -moz-transition: all 100ms ease-out;
+      -ms-transition: all 100ms ease-out;
+      -o-transition: all 100ms ease-out;
+      transition: all 100ms ease-out;
+  }
+</style>
+
+
+<div class="material-card-area" id="material-card-area">
+  <div class="btn-area col-md-12"><a title="Нэмэх" class="btn btn-circle btn-icon-only theme-edit-btn" href="javascript: themeEditCard('material-card-area');" style="padding: 2px;"><i class="icon-plus3 font-size-12"></i></a></div>
+  <div class="active-with-click">
+    <div class="theme-data-area">
+      {{rowsbegin}}
+      <div class="theme-row">
+        <div id="cardbox" class="col-md-3 material-card theme-content">
+          <div id="cardview" class="p1" style="display: block;">    	
+            <div id="profile" class="animate">
+              <div class="" style="margin-top: 83px;">{{pos1}}</div>
+              <div class="">{{pos2}}</div>
+            </div>
+          </div>        
+          <img src="assets/core/frontend/layout/theme/img/img_avatar.png" class="floatingImg">
+        </div>
+      </div>
+      {{rowsend}}
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+  function themeEditCard(panelId){
+    var cloneItem="";
+    var $target=$("#" + panelId).find(".theme-row:last");
+    $target.find('select').select2("destroy").end();
+    cloneItem=$target.clone();
+    cloneItem.addClass('tmpThemeRow');
+    cloneItem.find('.removeThemeRowBtn').remove();
+    cloneItem.find('.theme-content').find("#profile").append(
+            '<div id="close" class="removeThemeRowBtn"><div class="cy s1 s2 s3"></div><div class="cx s1 s2 s3"></div></div>');
+    $("#" + panelId).find('.theme-data-area').append(cloneItem);
+
+    // Бүх select - үүдийг select2 болгох
+    $target.find("select").select2();
+
+    // datepicker set format
+    $(".dateInit").each(function(){
+      $(this).inputmask("y-m-d");
+      $(this).datepicker({
+        format: 'yyyy-mm-dd',
+        autoclose: true
+      });
+    });
+
+    $("#" + panelId).find(".theme-row:last").find("select").each(function(){
+      $(this).val('');
+      var tmpName=$(this).attr('name');
+      var newTempName=increaseIndex(tmpName);
+      $(this).attr('name', newTempName);
+      $(this).attr('id', newTempName);
+
+    });
+
+    $("#" + panelId).find(".theme-row:last").find("input").each(function(){
+      $(this).val('');
+      var tmpName=$(this).attr('name');
+      var newTempName=increaseIndex(tmpName);
+      $(this).attr('name', newTempName);
+      $(this).attr('id', newTempName);
+    });
+
+    $("#" + panelId).find(".theme-row:last").find("select").select2();
+
+    $("#" + panelId).find('.removeThemeRowBtn').click(function(){
+      $(this).parents('.tmpThemeRow').remove();
+    });
+
+    Core.scrollTo($("#" + panelId).find(".theme-row:last"));
+  }
+</script>

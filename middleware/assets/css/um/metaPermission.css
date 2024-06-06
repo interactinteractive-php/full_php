@@ -1,0 +1,43 @@
+.um-meta-permission fieldset {
+    padding: 1em;
+    border: 1px solid #ddd;
+    margin-bottom: 20px;
+    position: relative;
+}
+.um-meta-permission legend {
+    border: 1px solid #ddd;
+    padding: 5px;
+    margin-bottom: 0px;
+    font-size: 15px;
+}
+.um-meta-permission .ta-l {
+    text-align: left;
+}
+.um-meta-permission .ta-r {
+    text-align: right;
+}
+.um-meta-permission .f-r {
+    float: right; 
+}
+.um-meta-permission .batch-number {
+    width: 50px;
+}
+.um-meta-permission .criteria-condition-btn {
+    height: 23px;
+    padding: 0px 10px;
+}
+.um-meta-permission .single-row-label {
+    border-bottom:1px solid #ddd;
+    padding:5px;
+}
+.um-meta-permission .remove-batch-btn {
+    position: absolute;
+    top: -13px;
+    right: 2px;
+    background: #ea5b5b;
+    border-radius: 50%;
+    padding: 3px 5px;
+    color: #fff;
+    font-size: 11px;
+    cursor: pointer;
+}

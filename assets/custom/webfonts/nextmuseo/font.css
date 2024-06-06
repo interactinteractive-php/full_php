@@ -1,0 +1,32 @@
+@charset "UTF-8";
+
+@font-face {
+    font-family: "Next_MuseoSansCyrl";
+    font-weight: 100;
+    src: url('Next_MuseoSansCyrl_100-Tsign.ttf') format('truetype');
+}
+@font-face {
+    font-family: "Next_MuseoSansCyrl";
+    font-weight: 300;
+    src: url('Next_MuseoSansCyrl_300-Tsign.ttf') format('truetype');
+}
+@font-face {
+    font-family: "Next_MuseoSansCyrl";
+    font-weight: 500;
+    src: url('Next_MuseoSansCyrl_500-Tsign.ttf') format('truetype');
+}
+@font-face {
+    font-family: "Next_MuseoSansCyrl";
+    font-weight: 700;
+    src: url('Next_MuseoSansCyrl_700-Tsign.ttf') format('truetype');
+}
+@font-face {
+    font-family: "Next_MuseoSansCyrl";
+    font-weight: 900;
+    src: url('Next_MuseoSansCyrl_900-Tsign.ttf') format('truetype');
+}
+@font-face {
+    font-family: "Next_MuseoSansCyrl";
+    font-weight: bold;
+    src: url('Next_MuseoSansCyrl_900-Tsign.ttf') format('truetype');
+}

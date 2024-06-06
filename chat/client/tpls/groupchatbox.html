@@ -1,0 +1,30 @@
+<div class="popup-box chat-popup group-chat-popup" id="groupchatbox-<%=id%>" data-gid="<%=id%>">
+    <div class="popup-head">
+        <div class="user_img d-flex align-items-center justify-content-center">
+            <i class="icon-users4"></i>
+        </div>
+        <div class="username" title="<%=name%>"><%=name%></div>
+        <button type="button" class="btn p-0 chatbox-minimize ml-auto">
+            <i class="far fa-window-minimize"></i>
+        </button>
+        <div class="d-flex ml-auto">
+            <button type="button" class="btn p-0 chat-group-options-btn">
+                <i class="icon-more2"></i>
+            </button>
+            <button type="button" class="btn p-0 chatbox-close">
+                <i class="icon-cross2"></i>
+            </button>
+        </div>
+    </div>
+    <div class="popup-messages"></div>
+    <div class="chat-input-text msg-footer">
+        <form class="chat-replay d-flex align-items-center" enctype="multipart/form-data">
+            <textarea rows="1" placeholder="Мессеж бичих..." class="form-control" data-gid="<%=id%>" spellcheck="false" maxlength="4000"></textarea>
+            <span class="chat-emoji group-chat-emoji" title="emoji"><i class="fa fa-smile-o"></i></span>
+            <label class="chat-custom-file-input cursor-pointer" title="Файл сонгох">
+                <input type="file" name="attachFile[]" accept=".png,.gif,.jpeg,.jpg,.bmp,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.zip,.rar,.xml" multiple>
+                <span><i class="fa fa-paperclip"></i></span>
+            </label>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,127 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Oct 14, 2016, 4:49:44 PM
+    Author     : Satjan
+*/
+
+/*BOTTOM TAB*/
+.process-theme5 .custom-tabbable {
+    background: #fff;
+    margin-top: 10px;
+}
+.process-theme5 .custom-tabbable .nav-tabs {
+    border-top: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+}
+.process-theme5 .custom-tabbable .nav-tabs li {
+    width: 16.66667%;
+    border-right: 1px dashed #cccccc;
+    text-align: center;
+    padding: 5px 0
+}
+.process-theme5 .custom-tabbable .nav-tabs li a {
+    color: #333333;
+    font-size: 12px;
+    text-transform: uppercase;
+    background: #fff;
+    border-radius: 0px;
+    text-align: center;
+    margin: 0;
+    outline: none;
+    border: none
+}
+.process-theme5 .custom-tabbable .nav-tabs li a:hover {
+    border: none;
+    color: #2574a9;
+}
+.process-theme5 .custom-tabbable .nav-tabs li i {
+    color: #696969;
+    font-size: 15px
+}
+.process-theme5 .custom-tabbable .nav-tabs li:last-child {
+    border-right: none
+}
+.process-theme5 .custom-tabbable .nav-tabs li.active a {
+    color: #2574a9;
+    border: none
+}
+.process-theme5 .custom-tabbable .nav-tabs li.active i {
+    color: #4574c6
+}
+
+/*MAIN*/
+.process-theme5 {
+    font-family: 'PT Sans Narrow', sans-serif;
+}
+.process-theme5 .first-row {
+    border-bottom: 1px solid rgba(124,139,166,.5);
+    margin: 0 0 10px;
+}
+.process-theme5 .theme-edit-btn {
+    width: 25px;
+    height: 25px;
+    margin-top: -3px;
+}
+.process-theme5 label[data-label-path] {
+    text-align: right;
+    width: 25%;
+    margin: 7px 10px;
+    float: left;    
+}
+.process-theme5 .first-row label[data-label-path] {
+    font-weight: bold;
+    width: 21.7%;
+    margin: 20px 10px;
+}
+.process-theme5 .first-row input.stringInit {
+    width: 70% !important;
+}
+.process-theme5 .first-row input.bigdecimalInit {
+    width: 60% !important;
+}
+.process-theme5 .dateElement {
+    margin: 5px;
+}
+.process-theme5 textarea {
+    width: 65% !important;
+}
+.process-theme5 .material-card .form-control .select2-choice, .form-control .select2-choices {
+    border: 0px;
+}
+.process-theme5 .material-card .select2-container .select2-choice .select2-arrow {
+    display: none;
+}
+.process-theme5 .material-card .input-sm {
+    border: 1px solid transparent;
+    background: transparent !important;
+}
+.process-theme5 .material-card .input-sm:hover {
+    border: 1px solid #fff !important;
+}
+.process-theme5 .material-card .dropdownInput {
+    border: 1px solid transparent;
+    background: transparent !important;
+}
+.process-theme5 .material-card .select2-choice {
+    border: 1px solid transparent !important;
+    background: transparent !important;
+}
+.process-theme5 .material-card .select2-chosen, .process-theme5 .material-card input {
+    color: #FFF;
+}
+.process-theme5 .material-card ::-webkit-input-placeholder {
+    color: #fff !important;
+}
+.process-theme5 .material-card :-moz-placeholder { /* Firefox 18- */
+    color: #fff !important;
+}
+.process-theme5 .material-card ::-moz-placeholder {  /* Firefox 19+ */
+    color: #fff !important;
+}
+.process-theme5 .material-card :-ms-input-placeholder {  
+    color: #fff !important;
+}

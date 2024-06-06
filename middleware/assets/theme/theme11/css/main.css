@@ -1,0 +1,270 @@
+.vr-workspace-theme11 {
+    display: table;
+    padding-top: 10px;
+    width: 100%;    
+    overflow-y: auto;
+    overflow-x: hidden;
+    background-color: #cccbcb;
+    background-image: url('bg.jpg');
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+.vr-workspace-theme11 .close-btn > i {
+    color: #fff;
+}
+.vr-workspace-theme11 .close-btn {
+    position: absolute;
+    top: 30px;
+    right: 20px;
+    background: #515151;
+    padding: 5px 10px;
+    border-radius: 50%;
+}
+.vr-workspace-theme11 .left-side {
+    width: 24%;
+    float: left;
+    padding: 0 10px 0 65px;
+    
+}
+.vr-workspace-theme11 .left-side .profile-userpic {
+    background: #60a3d8;
+}
+.vr-workspace-theme11 .left-side .profile-userpic img {
+    width: 100%;
+    height: 260px;
+}
+.vr-workspace-theme11 .right-side {
+    width: 76%;
+    float: left;
+    padding: 0 10px 0 10px;
+}
+.vr-workspace-theme11 #stick-content {
+    background: #60a3d8;
+    min-height: 100px;
+}
+.vr-workspace-theme11 .workspace-main-container {
+    border-radius: 0px;
+    padding: 12px 0 10px !important;
+    background: transparent !important;
+    height: 650px;
+    overflow: auto;
+}
+.vr-workspace-theme11 #project-info {
+    background: #60a3d8;
+    padding: 10px 25px 30px;
+    color: #fff;
+    height: 490px;
+}
+.vr-workspace-theme11 #project-info .project-info-row {
+    clear: both;
+    padding: 5px 0;
+    font-size: 14px;
+}
+.vr-workspace-theme11 #project-info .main-title {
+    margin: 10px 5%;
+    clear: both;
+}
+.vr-workspace-theme11 #project-info .main-title > .left-side-title {
+    color: #cacaca;
+    text-transform: uppercase;                
+    margin-left: 5px;
+    font-weight: bold;
+    font-size: 18px;
+}
+.vr-workspace-theme11 #project-info .main-title > i.left-side-title-icon {
+    color: #fff;  
+    background: #2574a9;
+    padding: 5px 7px;
+    border-radius: 50%;
+}
+.vr-workspace-theme11 #project-info .project-info-row .control-pos {
+    padding-left: 5px;
+    display: table;
+}
+.vr-workspace-theme11 #project-info .purpose {
+    padding: 0 0px 0 50px;
+}
+.vr-workspace-theme11 #project-info .project-info-row .label-pos {
+    color: #020202;
+    width: 30%;
+    float: left;
+    text-align: right;
+    font-weight: bold;    
+}
+.vr-workspace-theme11 #project-info .project-info-row .name {
+    font-weight: bold;
+    font-size: 18px;
+    text-transform: uppercase;
+}
+.vr-workspace-theme11 .ws-menu {
+    background: rgba(255, 255, 255, 0.7);
+    display: flex;
+    margin-bottom: 10px;
+    
+}
+.vr-workspace-theme11 .ws-menu .workspace-menu {
+
+}
+.vr-workspace-theme11 .ws-menu .workspace-menu li {
+    border-right: 1px dashed #cccccc;
+    text-align: center;
+    padding: 30px 10px;
+}
+.vr-workspace-theme11 .ws-menu .workspace-menu li a {
+    font-size: 14px;
+    text-transform: uppercase;
+    border-radius: 0px;
+    text-align: center;
+    margin: 0;
+    outline: none;
+    border: none;
+    padding: 10px;
+    
+    font-weight: bold;
+}
+.vr-workspace-theme11 .ws-menu .workspace-menu li a:hover,
+.vr-workspace-theme11 .ws-menu .workspace-menu li a:focus,
+.vr-workspace-theme11 .ws-menu .workspace-menu li a:active {
+    border: none;
+    color: #2574a9;
+    background: none;
+}
+.vr-workspace-theme11 .ws-menu .workspace-menu li a:hover i {
+    color: #4574c6;
+}
+.vr-workspace-theme11 .ws-menu .workspace-menu li i {
+    color: #696969;
+    font-size: 18px;
+}
+.vr-workspace-theme11 .ws-menu .workspace-menu li:last-child {
+    border-right: none
+}
+.vr-workspace-theme11 .ws-menu .workspace-menu li.active a {
+    color: #2574a9;
+    border: none
+}
+.vr-workspace-theme11 .ws-menu .workspace-menu li.active i {
+    color: #4574c6
+}
+.vr-workspace-theme11 .ws-menu ul.workspace-menu ul.sub-menu {
+    display: none;
+    position: absolute; 
+    z-index: 100;
+    padding: 0; 
+    left: 0;
+    background: #60a3d8;
+    margin-top: 30px;
+}
+.vr-workspace-theme11 .ws-menu ul.workspace-menu ul.sub-menu li {
+    margin: 5px 0;
+    background: red;
+    list-style: none;
+    background: #60a3d8;
+    text-align: left;
+    padding: 0 5px;
+    border: none;
+    width: 150px;
+}
+.vr-workspace-theme11 .ws-menu ul.workspace-menu ul.sub-menu li a {
+    padding: 0; 
+    background: #60a3d8;
+    font-size: 14px;
+    text-transform: none;
+    color: #FAFAFA;
+}
+.vr-workspace-theme11 .ws-menu ul.workspace-menu li:hover > ul.sub-menu {
+    display: inherit !important;    
+}
+
+.vr-workspace-theme11 .workspace-part > div.row:first-child {
+    background: #fff;
+    padding: 10px;
+    margin: 0;
+}
+.vr-workspace-theme11 .package-div {
+    background: #fff;
+    padding-top: 10px;
+    margin-bottom: 11px;
+}
+.vr-workspace-theme11 .package-div.odd,
+.vr-workspace-theme11 .package-div.odd .package-tab {
+    background: #ffe99b;
+}
+.vr-workspace-theme11 .package-tab {
+    background: #fff;
+    padding: 15px;
+}
+.vr-workspace-theme11 .package-tab-name {
+    border-spacing: initial;
+    padding-top: 0;
+    margin-bottom: -5px;
+    font-weight: bold;
+    font-size: 14px;
+    
+    padding: 0 0 5px 5px;
+    margin: 0;
+    color: #949b9f;
+    text-transform: uppercase;
+    border-bottom: 1px dashed #cccccc;
+}
+.vr-workspace-theme11 .pf-carousel-1,
+.vr-workspace-theme11 .pf-carousel-2,
+.vr-workspace-theme11 .pf-carousel-3
+{
+    margin-top: 30px;
+    
+}
+.vr-workspace-theme11 .pf-carousel-2 .owl-carousel .owl-item {
+    width: 150px !important;
+}
+.vr-workspace-theme11 .pf-carousel-2 .product-item,
+.vr-workspace-theme11 .pf-carousel-3 .product-item {
+    border: 1px transparent solid;
+}
+.vr-workspace-theme11 .pf-carousel-2 .product-item:hover,
+.vr-workspace-theme11 .pf-carousel-3 .product-item:hover {
+    border: 1px #000 solid;
+}
+.vr-workspace-theme11 .pf-carousel-2 .pi-img-wrapper img {
+    border-radius: 50%;
+    height: 130px !important;
+    width: 130px !important;
+}
+.vr-workspace-theme11 .pf-carousel-3 .pi-yellow-bg-title .pi-yellow-bg-title-name1 {
+    height: 27px;
+    overflow: hidden;
+}
+.vr-workspace-theme11 #amactivityMaindWindow {
+    background: #fff;
+}
+
+@media screen and (max-width: 1366px) {
+    .vr-workspace-theme11 .left-side {
+        padding: 0 10px 0 20px;
+    }
+}
+
+@media screen and (min-width: 1500px) {
+    .vr-workspace-theme11 .left-side {
+        padding: 0 10px 0 30px;
+    }
+    .vr-workspace-theme11 .ws-menu .workspace-menu li a {
+        font-size: 12px;
+        padding: 5px;
+    }
+}
+
+@media screen and (min-width: 1600px) {
+    .vr-workspace-theme11 .left-side {
+        padding: 0 10px 0 65px;
+    }
+    .vr-workspace-theme11 .ws-menu .workspace-menu li {
+        padding: 30px 10px;
+    }
+}
+
+@media screen and (max-width: 1599px) {
+    .vr-workspace-theme11 .left-side {
+        padding: 0 10px 0 35px;
+    }
+}

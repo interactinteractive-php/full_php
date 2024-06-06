@@ -1,0 +1,288 @@
+.covid19 {
+    padding-top: 0px !important;
+    height: 100vh;
+}
+/**************************************** DANGER ******************************************/
+.left-item li span{
+    position: absolute;
+    right: 15px;
+    top: 5px;
+}
+.covid19 .logo{
+    width: 45px;
+    float: left;
+    margin-right: 15px;
+    margin-bottom: 10px;
+    color: #fff;
+}
+.left-item li {
+    margin-bottom: 15px !important;
+    padding: 18px 15px !important;
+}
+.emlogo{
+    max-width: 160px;
+}
+.left-item li p{
+    color: #fff;
+    margin: 0;
+    width: 90%;
+}
+.covid19 .box-shadow .card-header h6{
+    color:#000
+}
+.covid19 .box-shadow .drill{
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    z-index: 1;
+    cursor: pointer;
+}
+.covid19 .box-shadow {
+    position: relative;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: #efefef;
+    background-clip: border-box;
+    box-shadow: 0 0 30px 0 rgba(115, 77, 191, 0.2);
+    border-radius: 7px;
+    border: 0;
+    margin-bottom: 1.5rem;
+    width: 100%;
+    padding: 10px 15px;
+}
+.covid19 .btn-icon-small {
+    padding: 12px !important;
+}
+.covid19 .btn-icon-medium {
+    padding: 14px !important;
+}
+.covid19 .amcharts-chart-div > a {
+    display: none !important;
+}
+.navlist .col .box-shadow{
+    padding: 15px;
+    margin-bottom: 10px;
+}
+.navlist .col{
+    position: relative;
+}
+.navlist .col .desc p{
+    font-size: 15px;
+    width: 90%;
+    margin: 0;
+}
+.navlist .col .desc span{
+    position: absolute;
+    right: 0px;
+    top: -12px;
+}
+.navlist{
+    padding: 0;
+    list-style-type: none;
+}
+#fullscreen{
+    position: absolute;
+    right: 15px;
+    top:2px;
+}
+.overflow-hidden .iconbar{
+    display: none;
+}
+#chartdiv_pie2, #chartdiv_pie3{
+    height: 50%;
+}
+.codate .text-m{
+    color: #fff;
+}
+.codate .color1{
+    color: #fec85e;
+}
+.codate .color2{
+    color: #009688;
+}
+.codate .color3{
+    color: #509600;
+}
+.codate .color4{
+    color: #075863;
+}
+.codate .color6{
+    color: #960069;
+}
+.codate .color0 .bg-icon{}
+
+.codate .color5{
+    color:#000!important;
+}
+.codate .color0{
+    color:#f10075;
+}
+.codate .color0 .bg-icon{
+    background: #f10075;
+}
+.codate .color1 .bg-icon{
+    background: #fec85e;
+}
+.codate .color2 .bg-icon{
+    background: #009688;
+}
+.codate .color3 .bg-icon{
+    background: #7ebcff;
+}
+.codate .color4 .bg-icon{
+    background: #075863;
+}
+.covid19.dashboard3 #filter{
+    padding: 0;
+}
+
+.covid19.dashboard3 .filter{
+    padding: 0 15px;
+    list-style-type:none ;
+}
+.covid19.dashboard3 .filter li a {
+    margin: 2px 0;
+}
+.gradient-deepblue{
+    background: #6a11cb !important;
+}
+.gradient-ibiza {
+    background: #ee0979 !important;
+}
+.gradient-scooter {
+    background: #1a94ff !important;
+}
+.gradient-ohhappiness {
+    background: #00b09b !important;
+}
+@media screen and (min-width: 2400px) {
+    .box-shadow .card-header h6{
+        font-size: 28px;
+    }
+    .navlist .col .desc p {
+        font-size: 28px;
+        width: 85%;
+        margin: 0;
+        padding: 20px 0;
+    }
+    .top-descrition{
+        font-size: 38px !important;
+        top: 12px !important;
+    } 
+    .left-item li p span{
+        font-size: 38px !important;
+        top: 45px;
+    }
+    .left-item li p{
+        padding: 32px 0;
+        font-size: 32px;
+    }
+   
+}
+@media screen and (min-width: 1600px) {
+    .amcharts-chart-div svg{
+      /* //  height: 350px !important; */
+    }
+}
+@media screen and (min-width: 1900px) {
+
+}
+
+.covid19.resource .box-shadow .selectdiv{
+    position: relative;
+}
+
+select::-ms-expand {
+    display: none;
+}
+.resource .logo2{
+    width: 60px;
+}
+.resource .emy h4{
+    margin-left: 15px;
+    position: relative;
+    padding-top: 22px;
+    margin-bottom: 0;
+}
+.resource .emy{
+    margin-left: 20px;
+    display: inline-block;
+}
+.resource .mohs{
+    
+}
+.selectdiv label { 
+    width:100%;
+}
+.selectdiv:after {
+    content: '<>';
+    font: 17px "Consolas", monospace;
+    color: #333;
+    -webkit-transform: rotate(90deg);
+    -moz-transform: rotate(90deg);
+    -ms-transform: rotate(90deg);
+    transform: rotate(90deg);
+    right: 11px;
+    /*Adjust for position however you want*/
+    
+    top: 18px;
+    padding: 0 0 2px;
+    border-bottom: 1px solid #999;
+    /*left line */
+    position: absolute;
+    pointer-events: none;
+  }
+  
+  .selectdiv select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    /* Add some styling */
+    
+    display: block;
+    width: 100%;
+    /* max-width: 320px; */
+    height: 50px;
+    float: right;
+    margin: 5px 0px;
+    padding: 0px 24px;
+    font-size: 16px;
+    line-height: 1.75;
+    color: #333;
+    background-color: #ffffff;
+    background-image: none;
+    border: 1px solid #cccccc;
+    -ms-word-break: normal;
+    word-break: normal;
+  }
+  #HospitalData li .badge{
+      padding: 2px 5px;
+  }
+  #HospitalData li{
+      padding: 4px 15px;
+  }
+  #HospitalData li.line{
+      border-bottom: 1px solid rgba(255,255,255,.1);
+  }
+  #transArchiv .list-group-child {
+      padding: 0;
+  }
+  #transArchiv ul {
+      margin: 8px;
+      padding: 18px;
+  }
+  #transArchiv ul li {
+      padding: 4px 15px;
+  }
+  #transArchiv ul .theader {
+    border-bottom: 1px solid rgba(255,255,255,.1);
+    text-transform: uppercase;
+    padding-bottom: 10px;
+    font-weight: 600;
+  }

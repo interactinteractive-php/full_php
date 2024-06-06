@@ -1,0 +1,174 @@
+.newdes-wrapper {
+    max-width: 1580px;
+    margin: auto;
+    background-color: #E5E5E5;
+    margin-top: -10px;
+}
+.newdes_menu_wrapper li a {
+    color: #585858;
+    text-transform: none !important;
+    font-size: 12px;
+}
+.newdes_menu_wrapper .nav-item-open>.nav-link, .newdes_menu_wrapper .nav-item-selected {
+    background-color: #E2F4FF;
+    border-radius: 10px;
+}
+.newdes_menu_wrapper {
+    flex: 0 0 300px;
+    margin-right: 20px;    
+    background: #fff;
+    padding: 15px;    
+    overflow: hidden;
+    border-radius: 10px;
+    color: #585858;    
+}
+.newdes {
+    padding: 20px; 
+}
+.newdes-body {    
+    width: 100%;
+    color: #67748E;
+    font-size: 12px;
+}
+.newdes-wrapper .full-header-info {
+    border-radius: 10px;
+    background: white;
+}
+.newdes-wrapper .full-header-info img {
+    width: 100%;
+    background-size: cover;
+    height: 300px;
+    border-radius: 10px 10px 0px 0px;
+}
+.newdes-wrapper .info-text-sub1 {
+    font-size: 20px;
+    font-weight: 700;
+    color: #585858;
+}
+.newdes-wrapper .info-text {
+    padding: 20px;
+}
+.newdes-wrapper .card-info {
+    padding: 10px;
+    background: #F2F2F2;
+    border-radius: 10px;    
+    min-width: 120px;
+    text-align: center;
+}
+.newdes-wrapper .card-info p {
+}
+.newdes-wrapper .card-info p:first-child {
+    font-size: 16px;
+    line-height: 22px;
+    margin-bottom: 0;
+    color: #585858;
+    font-weight: 700;
+}
+.newdes-wrapper .card-info p:last-child {
+    line-height: 16px;
+    margin-bottom: 0;
+    margin-top: 6px;
+}
+.newdes-wrapper .newdes-content-section {
+    border-radius: 10px;
+    background: white;    
+    padding: 20px;
+}
+.newdes-wrapper .newdes-content-sidebar-section {
+    border-radius: 10px;
+    background: white;    
+    padding: 20px;
+}
+.newdes-wrapper .newdes-title {
+    color: #585858;
+    font-size: 16px;
+}
+.newdes-wrapper .newdes-partner {
+    gap: 10px;
+}
+.newdes-wrapper .newdes-partner img {
+    max-width: 130px;
+    background-size: cover;
+}
+.newdes-wrapper .newdes-partner-2 {
+    gap: 10px;
+}
+.newdes-wrapper .newdes-partner-2 div {
+    width: 190px;
+    gap: 10px;
+    border: 1px solid #E1E1E1;
+    border-radius: 10px;    
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    padding-top: 20px;
+}
+.newdes-wrapper .newdes-partner-2 div p.name {
+    color: #585858;
+}
+.newdes-wrapper .newdes-partner-2 div p.phone {
+    color: #67748E;
+}
+.newdes-wrapper .newdes-partner-2 img {    
+    background-size: cover;
+}
+.newdes-wrapper .newdes-partner-3 div {
+    padding-top: 10px;
+}
+.newdes-wrapper .newdes-partner-3 img {    
+    border: 5px solid #E1E1E1;
+    width: 130px;
+    height: 130px;
+    border-radius: 100px;
+}
+#newdes-dialog-change-logo input[type="file"] {
+    display: none;
+}
+#newdes-dialog-change-logo .custom-file-upload {
+    border: 1px solid #ccc;
+    display: inline-block;
+    padding: 6px 12px;
+    cursor: pointer;
+    border-radius: 10px;
+}
+#newdes-dialog-change-logo .custom-file-upload i {
+    font-size: 18px;
+}
+#newdes-dialog-change-logo .newdes-preview-image {
+    width: 200px;
+    height: 200px;
+    background: #FFFFFF;
+    border: 2px solid #E1E1E1;
+    border-radius: 10px;    
+    background-image: url('//placehold.it/200?text=200x200');
+    background-size: cover;
+}
+.newdes-wrapper .newdes-activity {
+    gap: 10px;
+}
+.newdes-wrapper .newdes-activity > div {
+    width: 230px;
+}
+.newdes-ipo img {
+    border-radius: 20px;
+}
+.newdes-ipo {
+    gap: 10px;
+}
+.newdes-logo > div {
+    position: absolute;
+    bottom: -13px;
+    margin-left: 76px;
+    margin-top: 13px;    
+}
+.newdes-logo {
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    background: #FFFFFF;
+    border: 2px solid #E1E1E1;
+    border-radius: 10px;
+    background-image: url('https://mongolia-mining.com/media/djcatalog2/images/item/0/msm-llc_f.png');
+    background-size: cover;
+    margin-top: -48px;
+}

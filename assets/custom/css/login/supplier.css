@@ -1,0 +1,49 @@
+.rightside {
+    padding-top: 15px;
+}
+.login-form img.logo {
+    margin-bottom: 20px;
+}
+.kpi-ind-tmplt-section > .row {
+    margin-left: -15px;
+    margin-right: -15px;
+}
+span.required {
+    color: #e02222;
+    font-size: 14px;
+    padding: 0 2px 0 0;
+    line-height: 1px;
+    font-weight: bold;
+}
+.form-text {
+    margin-top: 0;
+}
+.mv-hdr-label-control {
+    margin-bottom: 10px;
+}
+.mv-hdr-label-control-label .mv-hdr-label-control-descr {
+    color: #999;
+    font-size: 11px;
+    font-weight: normal;
+    margin-top: 5px;
+}
+.mv-hdr-label-control-label label {
+    margin-bottom: 5px;
+}
+.mv-hdr-label-control[data-cell-path="IS_PRIMARY"] .mv-hdr-label-control-label {
+    display: none;
+}
+.mv-hdr-label-control[data-cell-path="IS_CHECK"] {
+    margin-top: 5px;
+}
+.mv-hdr-label-control[data-cell-path="IS_CHECK"] label {
+    display: none;
+}
+.mv-hdr-label-control[data-cell-path="IS_CHECK"] .mv-hdr-label-control-label {
+    float: right;
+    width: 90% !important;
+}
+.mv-hdr-label-control[data-cell-path="IS_CHECK"] .mv-hdr-label-control-input {
+    float: left;
+    padding-top: 10px;
+}

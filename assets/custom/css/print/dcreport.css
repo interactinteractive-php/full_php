@@ -1,0 +1,296 @@
+    .ta-r{
+        text-align:right !important;
+    }
+    .mt30{
+            margin-top:15px !important;   
+        }
+    .dcReport {
+        background-color: #f6f6f6 !important;
+        overflow-x:hidden;
+    }
+    .dcreport_ .reportbold h4 {
+    font-weight:600 !important;
+    }
+
+    .dcReport h3 {
+    font-weight: 600;
+    text-transform: capitalize;
+    }
+    .dcReport .dcreport_ select {
+        width: 100%;
+        padding: 5px 0;
+    }
+    .dcReport .dcreport_ .repHead h2 {
+    color: #fff;
+    margin: 0 -8px;
+    background: #3c3c3c;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    color: #fff;
+    padding: 10px 20px;
+    }
+
+    .dcReport .dcreport_ .main-card {
+    background: #fff;
+    margin: 0px -8px;
+    padding: 10px;
+    }
+
+    .dcReport .dcreport_ .main-card .title {
+    padding-left: 15px;
+    }
+    .dcReport .dcreport_ select {
+    padding-left: 15px;
+    }
+    
+
+    .reportbutton .btn{
+        margin-top:30px;
+    }
+
+    .dcReport .dcreport_ .main-card button {
+        float: right;
+        margin-right: 15px;
+        margin-bottom: 30px;
+    }
+
+    .dcReport .dcreport_ .main-card.map {
+    padding: 20px 10px 15px 10px;
+    }
+    .dcReport .dcreport_ .main-card.map .mapimage h4{
+        padding-left:10px;
+    }
+    .dcReport .dcreport_ .main-card.map .mapimage img {
+        margin-left: 10px;
+        width:98%;
+    }
+
+    .dcReport .dcreport_ .main-card.map img {
+        width: 100%;
+        height: 300px;
+    }
+
+
+
+    .dcReport .dcreport_ .main-card.position b {
+    font-size: 15px;
+    }
+
+    .dcReport .dcreport_ .main-card.position p {
+    color: #00a9e4;
+    font-size: 15px;
+    padding-top: 7px;
+    font-weight: 700;
+    }
+
+    .dcReport .dcreport_ .main-card .rposition {
+    padding: 0;
+    border: 1px solid;
+    display: inline-block;
+    width: 95%;
+    margin: 5px 16px;
+    }
+
+    .dcReport .dcreport_ .main-card .rposition li {
+    float: left;
+    width: 50%;
+    text-align: center;
+    padding: 8px 0;
+    list-style-type: none;
+    }
+
+    .dcReport .dcreport_ .main-card .rposition li:last-child {
+    border-left: 1px solid;
+    }
+
+    .dcReport .dcreport_ .main-card .rposition li h3 {
+    margin: 10px;
+    }
+
+    .dcReport .dcreport_ .main-card .r2position {
+    padding: 0;
+    display: inline-block;
+    width: 100%;
+    margin: 4px 0;
+    }
+
+    .dcReport .dcreport_ .main-card .r2position li {
+    float: left;
+    text-align: center;
+    padding: 6px 0;
+    list-style-type: none;
+    }
+
+    .dcReport .dcreport_ .main-card .r2position li:first-child {
+    width: 40%;
+    }
+
+    .dcReport .dcreport_ .main-card .r2position li:first-child img {
+    width: 60px;
+    }
+
+    .dcReport .dcreport_ .main-card .r2position li:last-child {
+    width: 58%;
+    }
+
+    .dcReport .dcreport_ .main-card .r2position li h3 {
+    margin: 10px;
+    }
+
+    .dcReport .dcreport_ .methodDc {
+    background-color: #3c3c3c !important;
+    color: #fff;
+    padding-left: 20px;
+    padding-bottom: 20px;
+    margin-left: -8px;
+    margin-right: -8px;
+    }
+
+    .dcReport .dcreport_ .methodDc h3 {
+    color: #fff;
+    }
+    /*# sourceMappingURL=main.css.map */
+    
+.dcReport2 {
+    background-color: #f6f6f6 !important;
+    overflow-x:hidden;
+}
+
+.dcReport2 h3 {
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.dcReport2 .dcreport_ .repHead h2 {
+  color: #fff;
+  margin: 0 -8px;
+  background: #3c3c3c;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  color: #fff;
+  padding: 10px 20px;
+}
+
+.dcReport2 .dcreport_ .main-card {
+  background: #fff;
+  margin: 0px -8px;
+  padding: 10px;
+}
+
+.dcReport2 .dcreport_ .main-card .title {
+    padding-left: 15px;
+}
+.dcReport2 .dcreport_ select {
+    width: 100%;
+    padding: 5px 0;
+}
+   
+
+.reportbutton .btn{
+    margin-top:30px;
+}
+
+.dcReport2 .dcreport_ .main-card button {
+    float: right;
+    margin-right: 15px;
+    margin-bottom: 30px;
+}
+
+.dcReport2 .dcreport_ .main-card.map {
+  padding: 20px 10px 15px 10px;
+}
+.dcReport2 .dcreport_ .main-card.map .mapimage h4{
+    padding-left:10px;
+}
+.dcReport2 .dcreport_ .main-card.map .mapimage img {
+    margin-left: 10px;
+    width:98%;
+}
+
+.dcReport2 .dcreport_ .main-card.map img {
+    width: 100%;
+    height: 300px;
+}
+
+
+
+.dcReport2 .dcreport_ .main-card.position b {
+  font-size: 15px;
+}
+
+.dcReport2 .dcreport_ .main-card.position p {
+  color: #00a9e4;
+  font-size: 15px;
+  padding-top: 7px;
+  font-weight: 700;
+}
+
+.dcReport2 .dcreport_ .main-card .rposition {
+  padding: 0;
+  border: 1px solid;
+  display: inline-block;
+  width: 95%;
+  margin: 5px 16px;
+}
+
+.dcReport2 .dcreport_ .main-card .rposition li {
+  float: left;
+  width: 50%;
+  text-align: center;
+  padding: 8px 0;
+  list-style-type: none;
+}
+
+.dcReport2 .dcreport_ .main-card .rposition li:last-child {
+  border-left: 1px solid;
+}
+
+.dcReport2 .dcreport_ .main-card .rposition li h3 {
+  margin: 10px;
+}
+
+.dcReport2 .dcreport_ .main-card .r2position {
+  padding: 0;
+  display: inline-block;
+  width: 100%;
+  margin: 4px 0;
+}
+
+.dcReport2 .dcreport_ .main-card .r2position li {
+  float: left;
+  text-align: center;
+  padding: 6px 0;
+  list-style-type: none;
+}
+
+.dcReport2 .dcreport_ .main-card .r2position li:first-child {
+  width: 40%;
+}
+
+.dcReport2 .dcreport_ .main-card .r2position li:first-child img {
+  width: 60px;
+}
+
+.dcReport2 .dcreport_ .main-card .r2position li:last-child {
+  width: 58%;
+}
+
+.dcReport2 .dcreport_ .main-card .r2position li h3 {
+  margin: 10px;
+}
+
+.dcReport2 .dcreport_ .methodDc {
+  background-color: #3c3c3c !important;
+  color: #fff;
+  padding-left: 20px;
+  padding-bottom: 20px;
+  margin-left: -8px;
+  margin-right: -8px;
+}
+.dcreport_ .reportbold h4 {
+   font-weight:600 !important;
+}
+
+.dcReport2 .dcreport_ .methodDc h3 {
+  color: #fff;
+}

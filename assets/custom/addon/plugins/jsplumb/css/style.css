@@ -1,0 +1,402 @@
+.top-header{ margin-bottom: 40px; margin-top: 40px; } 
+.border-editor{ border: 1px solid #CCC; overflow: hidden; }
+.heigh-editor{ max-height: 600px; width: 100%; overflow: auto; background: url('../images/background.png'); border: 1px solid #cdcdb0; border-radius: 5px;}
+.content-editor{ margin-bottom: 50px; }
+.border-right-editor{ border-right: 1px solid #CCC; }
+.border-left-editor{ border-left: 1px solid #CCC; }
+.top-label{ margin-top: 20px; display: block; padding: 10px; font-weight: bold; }
+.tool-panel{ margin-top: 20px; padding: 0px; margin: auto; }
+.tool-panel li{margin-bottom: 20px;}
+#workFlowEditor{ 
+    position: relative;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    width: 100%;
+}
+.wfposition {
+    position: absolute;
+    cursor: move;
+}
+.wfposition:hover a > .connect {
+    display: block;
+}
+.connect {
+    display: none;
+    position: absolute;
+    bottom: 37%;
+    right: 5px;
+    width: 1em;
+    height: 1em;
+    background-color: #77ca00;
+    cursor: pointer;
+    box-shadow: 0px 0px 2px black;
+    -webkit-transition: -webkit-box-shadow 0.25s ease-in;
+    -moz-transition: -moz-box-shadow 0.25s ease-in;
+    transition: box-shadow 0.25s ease-in;
+    z-index: 10 !important;
+    border-radius: 100%;
+}
+span.iconText {
+    line-height: 12px;
+    padding: 0;
+    top: 0px;
+    position: absolute;
+    text-align: center;
+    vertical-align: middle;
+    font-size: 11px;
+    color: #000;
+}
+.wfIcon {
+    z-index: 1;
+    padding: 0;
+    cursor: move;
+    border-radius: 6px;
+    -webkit-transition: all 0.2s linear;
+    -o-transition: all 0.1s linear;
+    -moz-transition: all 0.1s linear;
+    -ms-transition: all 0.1s linear;
+    -kthtml-transition: all 0.1s linear;
+    transition: all 0.1s linear;
+    -webkit-box-shadow: 0px 0px 4px 2px rgba(56,56,56,0.2);
+    -moz-box-shadow: 0px 0px 4px 2px rgba(56,56,56,0.2);
+    box-shadow: 0px 0px 4px 2px rgba(56,56,56,0.2);
+}
+.wfposition.rectangle > a > div.wfIcon {
+    width: 160px;
+    height: 70px;
+}
+.wfposition > a > span.iconText .bp-code, 
+.wfdmart span.iconText .bp-code {
+    background-color: rgba(71,71,71,0.5);
+    border-bottom: 1px solid rgba(71,71,71,0.5);
+    padding: 7px 5px 7px 5px;
+    -webkit-border-top-left-radius: 6px;
+    -webkit-border-top-right-radius: 6px;
+    -moz-border-radius-topleft: 6px;
+    -moz-border-radius-topright: 6px;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+}
+.wfposition > a > span.iconText .bp-name, 
+.wfdmart span.iconText .bp-name {
+    padding: 7px 5px 7px 5px;
+    -webkit-border-bottom-right-radius: 6px;
+    -webkit-border-bottom-left-radius: 6px;
+    -moz-border-radius-bottomright: 6px;
+    -moz-border-radius-bottomleft: 6px;
+    border-bottom-right-radius: 6px;
+    border-bottom-left-radius: 6px;
+}
+.wfposition.circle > a > div.wfIcon{
+    border-radius:100% !important;
+    height: 30px;
+    width: 30px;
+}
+.wfposition.rombo{
+    height: 100px;
+    width: 100px;
+}
+.wfposition.rombo > a > div.wfIcon{
+    height: 100px;
+    width: 100px;
+    padding: 1em;
+    position: absolute;
+    box-shadow: 2px 2px 19px #e0e0e0;
+    -o-box-shadow: 2px 2px 19px #e0e0e0;
+    -webkit-box-shadow: 2px 2px 19px #e0e0e0;
+    -moz-box-shadow: 2px 2px 19px #e0e0e0;
+    border-radius: 0em;
+    -webkit-transition: background-color 0.25s ease-in;
+    -moz-transition: background-color 0.25s ease-in;
+    transition: background-color 0.25s ease-in;
+    -webkit-transform: rotateZ(-45deg) skew(20deg, 20deg);
+    -moz-transform: rotateZ(-45deg) skew(20deg, 20deg);
+    -ms-transform: rotateZ(-45deg) skew(20deg, 20deg);
+    -o-transform: rotateZ(-45deg) skew(20deg, 20deg);
+    transform: rotateZ(-45deg) skew(20deg, 20deg);
+    white-space: pre-wrap;
+    white-space: -moz-pre-wrap;
+    white-space: -pre-wrap;
+    white-space: -o-pre-wrap;
+    word-wrap: break-word;
+}
+.wfposition.wfStart > a > div.wfIcon{
+    background:  rgba(255, 0, 0,1);
+}
+.wfposition.wfEnd > a > div.wfIcon{
+    background:  rgba(255, 0, 0,1);
+}
+.wfposition.rombo span.iconText{
+    z-index: 9 !important;
+    padding: 30px 10px 30px 10px !important;
+}
+.wfposition .iconText{
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    z-index: 1;
+}
+.wfposition a {
+    color: #000;
+}
+.wfposition a .iconText .box {
+  max-width: 100%;
+  display: block;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+  text-align: center;
+}
+.wfposition.rectangle a .iconText .box .ellipsis {
+  height: 60px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 12px;
+  line-height: 12px;
+  margin: 0px;
+}
+.wfposition.rombo a .iconText .box .ellipsis {
+  height: 37px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 12px;
+  line-height: 12px;
+  margin: 0px;
+}
+.wfposition a{
+    cursor: move;
+    color: #000 !important;
+}
+.wfposition a:hover{
+    text-decoration: none;
+}
+.wfposition.selected > a .wfIcon , 
+.wfdmart.selected .wfIcon {
+    /*background: #4bab11;*/
+    border: dashed 3px #ff1f1f;
+}
+/* _jsPlumb_endpoint_anchor_ */
+._jsPlumb_endpoint ._jsPlumb_endpoint_anchor_{
+    z-index: 99999 !important;
+}
+.wfposition > a > .wfIcon, 
+.wfdmart .wfIcon {
+    box-shadow: 0 0 10px rgba(0,0,0,0.1) inset;
+    border: 2px solid rgba(71,71,71,0.3);
+    background: rgba(15, 121, 195,1);
+}
+.wfposition > a > span.iconText, 
+.wfdmart span.iconText {
+    color: rgba(255,255,255,0.8) !important;
+    overflow: hidden;
+}
+.wfposition:hover a .wfIcon, 
+.wfdmart:hover .wfIcon {
+    border: 2px solid rgba(36, 152, 233,0.8) !important;
+    background: rgba(36, 152, 233,1) !important;
+}
+.wfposition:hover a .bp-name {
+    color: #fff !important;
+}
+.wfposition.disabled > a > div.wfIcon{
+    border: 2px solid rgba(192,192,192,0.8) !important;
+    background: #ddd !important;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1) inset !important;
+}
+.wfposition.disabled > a > span.iconText {
+    color: #8f8f8f !important;
+}
+.wfposition.disabled:hover > a > div.wfIcon{
+    border: 2px solid rgba(197,197,197,1) !important;
+    background: rgba(197,197,197,1) !important;
+    box-shadow: 0 0 10px rgba(0,0,0,0) inset !important;
+    color: rgba(0,0,0,1);
+}
+.wfposition.disabled:hover > a > span.iconText {
+    color: #969696 !important;
+}
+.wfposition.current > a > div.wfIcon{
+    border: 2px solid rgba(67,158,12,1) !important;
+    background: #439e0c !important;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1) inset !important;
+}
+.wfposition.current > a > span.iconText {
+    color: rgba(255,255,255,0.8) !important;
+}
+.wfposition.current:hover > a > div.wfIcon{
+    border: 2px solid rgba(75,171,17,1) !important;
+    background: #4bab11 !important;
+    box-shadow: 0 0 10px rgba(0,0,0,0) inset !important;
+    color: rgba(255,255,255,0.8) !important;
+}
+.wfposition.current:hover > a > span.iconText {
+    color: rgba(255,255,255,0.8) !important;
+}
+.wfposition.drill-down{
+    position: relative;
+}
+.wfposition.drill-down a .drill-down-icon{
+    position: absolute;
+    bottom: 3px;
+    right: 1%;
+    z-index: 9;
+    width: 20px;
+    height: 20px;
+    color: #fff;
+}
+.wfdmart.dragHover .wfIcon {
+    border: 2px solid yellow !important;
+}
+
+/*----------datamart----------*/
+.wfdmart {
+    position: absolute;
+    cursor: move;
+    display: inline-block;
+}
+.wfdmart:hover .connect{
+    display: block;
+}
+.wfdmart span.iconText {
+    position: relative;
+}
+.wfdmart div.wfIcon {
+    width: 165px;
+    min-height: 70px;
+}
+.dmart-object-attr > div {
+    position: relative;
+    color: #ffffffcc;
+    font-size: 12px;
+    line-height: 16px;
+    padding: 0 0 0 14px;
+}
+.dmart-object-attr > div:not(.erd-attr-group-name):nth-child(1) {
+    padding-top: 5px;
+    border-top: 1px #ffffffcc solid;
+}
+.dmart-object-attr > div:not(.erd-attr-group-name):nth-child(1):before {
+    top: 5px;
+}
+.dmart-object-attr > div:not(.erd-attr-group-name):before {
+    position: absolute;
+    font-family: "Font Awesome 5 Pro";
+    font-weight: bold;
+    content: "\f111";
+    top: 0;
+    left: 3px;
+    font-size: 7px;
+}
+.dmart-object-attr > div.erd-attr-group-name {
+    font-weight: bold;
+    color: #fff;
+    border-bottom: 1px solid #ffffffcc;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    margin-bottom: 5px;
+}
+.wfdmcolor-grey .wfIcon {
+    background: rgb(128, 128, 128);
+}
+.wfdmcolor-red .wfIcon {
+    background: rgb(188, 77, 77);
+}
+.wfdmcolor-green .wfIcon {
+    background: rgb(42, 163, 46);
+}
+.wfdmcolor-orange .wfIcon {
+    background: rgb(217, 132, 28);
+}
+
+.wfdmcolor-grey.selected .wfIcon {
+    background: rgb(128, 128, 128);
+    border: solid 2px red;
+}
+.wfdmcolor-red.selected .wfIcon {
+    background: rgb(188, 77, 77);
+    border: solid 2px red;
+}
+.wfdmcolor-green.selected .wfIcon {
+    background: rgb(42, 163, 46);
+    border: solid 2px red;
+}
+.wfdmcolor-orange.selected .wfIcon {
+    background: rgb(217, 132, 28);
+    border: solid 2px red;
+}
+
+.wfdmcolor-grey:hover .wfIcon {
+    border: 2px solid rgba(36, 152, 233,0.8) !important;
+    background: rgb(172, 172, 172) !important;
+}
+.wfdmcolor-red:hover .wfIcon {
+    border: 2px solid rgba(36, 152, 233,0.8) !important;
+    background: rgb(200, 107, 107) !important;
+}
+.wfdmcolor-green:hover .wfIcon {
+    border: 2px solid rgba(36, 152, 233,0.8) !important;
+    background: rgb(96, 188, 99) !important;
+}
+.wfdmcolor-orange:hover .wfIcon {
+    border: 2px solid rgba(36, 152, 233,0.8) !important;
+    background: rgb(221, 152, 69) !important;
+}
+.wfposition span.is-complex-bp {
+    position: absolute;
+    background-color: #fff;
+    border: 1px #444 solid;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    text-align: center;
+    top: -10px;
+    right: -10px;
+    color: #000;
+    padding: 1px 2px 0 2px;
+    z-index: 2;
+}
+.wf-tf-view-UI.wfposition span.is-complex-bp {
+    position: absolute;
+    background-color: #fff;
+    border: none;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    text-align: center;
+    top: 1px;
+    right: 1px;
+    color: #000;
+    padding: 2px 2px 0 2px;
+    z-index: 2;
+}
+.wf-tf-UI > a > .wfIcon {
+    border: 2px solid rgba(71,71,71,0.3);
+    background: #7E57C2;
+}
+.wf-tf-view-UI > a > .wfIcon {
+    border: 1px solid rgba(71,71,71,0.3);
+    background: #fff;
+    box-shadow: none;
+}
+.wf-tf-view-UI.wfposition > a > span.iconText .bp-name {
+    color:#333;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);    
+    width: 100%;
+}
+.wfIconTable {
+    background-color: #e3e3e3;
+    padding: 5px 30px 5px 30px;    
+}
+.wfIconTable .iconText .bp-name {
+    color: #333;
+}

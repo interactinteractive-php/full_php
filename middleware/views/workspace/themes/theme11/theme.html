@@ -1,0 +1,111 @@
+<div class="vr-workspace-theme11 ws-area" id="workspace-id-{workspace-id}" data-dm-id="{dm-metadata-id}">
+    <div class="dv-right-tools-btn">
+        <a class="close-btn" href="javascript:;" onclick="backWindow(this);"><i class="fa fa-times"></i></a>
+    </div>
+    <div class="left-side">
+        <div class="process-theme2-sticky">
+            <div class="profile-userpic">
+                <img src="{header-position-1}" data-position-name="header-position-1" class="img-fluid">
+            </div>
+
+            <div class="col-md-12 no-padding">
+                <div id="project-info">
+                    <div class="main-title">
+                        <i class="fa fa-info-circle left-side-title-icon"></i>
+                        <span class="left-side-title">Зорилго:</span>
+                    </div>
+
+                    <div class="project-info-row purpose" data-position-name="header-position-8">
+                        {header-position-8}
+                    </div>
+
+                    <div class="main-title">
+                        <i class="fa fa-user left-side-title-icon"></i>
+                        <span class="left-side-title">Товч мэдээлэл</span>
+                    </div>
+
+                    <div class="project-info-row">
+                        <div class="amount" data-position-name="header-position-3">
+                            <b class="label-pos">Нэр: </b> 
+                            <span class="control-pos">{header-position-3}</span>
+                        </div>
+                    </div>
+                    <div class="project-info-row">
+                        <div class="amount" data-position-name="header-position-2">
+                            <b class="label-pos">Код: </b> 
+                            <span class="control-pos">{header-position-2}</span>
+                        </div>
+                    </div>
+                    <div class="project-info-row">
+                        <div class="amount" data-position-name="header-position-5">
+                            <b class="label-pos">Нийт дүн: </b> 
+                            <span class="control-pos numberInit">{header-position-5}</span>
+                        </div>
+                    </div>
+                    <div class="project-info-row">
+                        <div class="startdate" data-position-name="header-position-6">
+                            <b class="label-pos">Эхлэх огноо: </b> 
+                            <span class="control-pos date-pos">{header-position-6}</span>
+                        </div>
+                    </div>
+                    <div class="project-info-row">
+                        <div class="enddate" data-position-name="header-position-7">
+                            <b class="label-pos">Дуусах огноо: </b> 
+                            <span class="control-pos date-pos">{header-position-7}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>     
+        </div>
+    </div>
+    <div class="right-side" id="scrollit">
+        <div class="ws-menu tabbable-tabdrop">
+            {menu}
+        </div>
+
+        <div class="ws-page-container">
+            <div class="ws-page-content-wrapper">
+                <div class="ws-page-content">
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="portlet light workspace-main-container"></div>
+                            <div class="clearfix w-100"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <input type="hidden" name="workSpaceMode">
+    <div class="ws-hidden-params hidden" data-position-name="hidden-params">
+        {hidden-params}
+    </div>
+</div>
+
+<div class="clearfix w-100"></div>
+
+<script type="text/javascript">
+    var $tmpWsTheme = $('.vr-workspace-theme11');
+    $(document).ready(function () {
+        /* global Core */
+        Core.initNumberInput($tmpWsTheme);
+
+        $.each($tmpWsTheme.find('.date-pos'), function () {
+            $(this).html($(this).html().substring(0, 10));
+        });
+
+        setTimeout(function () {
+            $.each($tmpWsTheme.find('.package-div'), function (k, div) {
+                if (k % 2 !== 0) {
+                    $(div).addClass('odd');
+                }
+            });
+        }, 1000);
+    });
+
+    function activeMenu(elem) {
+        $tmpWsTheme.find('ul.workspace-menu li').removeClass("active");
+        $(elem).parents('li.dropdown').addClass('active');
+    }
+</script>

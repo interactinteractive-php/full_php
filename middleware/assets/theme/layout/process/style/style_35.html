@@ -1,0 +1,83 @@
+<style type="text/css">
+  #pro-contract {
+      padding: 0;
+      margin-bottom: 10px;
+  }
+  #pro-contract .theme-data-area-row {
+      background: url('assets/core/frontend/layout/theme/img/building.jpg');
+      background-size: cover;
+      margin: 0;
+  }
+  #pro-contract .input-sm {
+      border: 1px solid transparent;
+  }
+  #pro-contract .contract-title h3.title {
+      color: #575757;
+      font-size: 18px;
+      font-weight: bold;
+      margin-left: 10px;
+      padding-bottom: 10px;
+  }
+  #pro-contract .con-name .input-sm {
+      color: #000000;
+      font-size: 15px;
+      font-weight: bold;
+  }
+  #pro-contract .con-position .input-sm {
+      color: #2a2424;
+      font-size: 15px;
+  }
+  #pro-contract ::-webkit-input-placeholder {
+      color: #fff !important;
+  }
+  #pro-contract :-moz-placeholder { /* Firefox 18- */
+      color: #fff !important;
+  }
+  #pro-contract ::-moz-placeholder {  /* Firefox 19+ */
+      color: #fff !important;
+  }
+  #pro-contract :-ms-input-placeholder {  
+      color: #fff !important;
+      font-size: 14px;
+  }
+  #pro-contract .contract-image {
+      height: 250px;
+      width: 100%;
+  }
+  #pro-contract .bottom-info {
+      background: rgba(207,171,69, 0.6);
+  }
+  #pro-contract .removeThemeRowBtn {
+      position: absolute;
+      top: -10px;
+      right: 0;
+  }
+</style>
+
+<div id="pro-contract">
+  <div class="row">
+    <div class="contract-title col-md-6"><h3 class="title"><lang>Гэрээнүүд</lang></h3></div>
+    <div class="btn-area col-md-6"><a title="Нэмэх" class="btn btn-circle btn-icon-only theme-edit-btn" href="javascript: themeEditBox('pro-contract');" style="padding: 2px; margin-right: 10px;"><i class="icon-plus3 font-size-12"></i></a></div>    
+  </div>
+
+  <div class="row theme-data-area-row">
+    <div class="theme-data-area">
+      {{rowsbegin}}
+      <div class="theme-row">
+        <div class="col-md-2 col-sm-6 col-xs-12 no-padding theme-content">
+          <div class="" defaultHeight="200">
+            <img src="assets/core/frontend/layout/theme/img/contract.jpg" class="contract-image">
+          </div>  
+
+          <div class="bottom-info">
+            <div class="con-name"><span>{{pos2}}</span></div>
+            <div class="con-position"><span>{{pos3}}</span></div>
+          </div>
+        </div>
+      </div>
+      {{rowsend}}
+    </div>
+  </div>
+
+  <div class="clearfix"></div>
+</div>

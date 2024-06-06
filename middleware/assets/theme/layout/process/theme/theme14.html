@@ -1,0 +1,306 @@
+<link href="assets/core/frontend/layout/theme/css/anket/style.css" rel="stylesheet" type="text/css"/>
+<style type="text/css">
+    .lang-text {
+        display: inherit;
+        font-size: 11px;
+    }
+    .process-theme2 {
+        background: none;
+        padding: 0px 10px;
+    }
+    .process-theme14 {
+        width: 100%;    
+        overflow-y: auto;
+        overflow-x: hidden;
+        background-color: #e7e7e7;
+        position: relative;
+    }
+    .process-theme14 .right-side {
+        margin: 0;
+    }
+    .process-theme14 .workspace-main-container {
+        border-radius: 0px;
+        padding: 12px 0 10px !important;
+        min-height: 300px;
+        overflow: auto;
+        margin: 0;
+    }
+    .process-theme14 .ws-page-container {
+        border-top: 1px solid #c3c3c3;
+    }
+    .process-theme14 .ws-menu {
+        background: #777c84;
+        display: flex;
+        font-family: Pt Sans Narrow;
+    }
+    .process-theme14 .ws-menu .workspace-menu {
+        margin-bottom: 0;
+        border-bottom: none;
+    }
+    .process-theme14 .ws-menu .workspace-menu li {
+        border-right: 1px solid #91959c;
+        text-align: center;
+        padding: 6px 5px;
+        background: inherit;
+    }
+    .process-theme14 .ws-menu .workspace-menu li a {
+        color: #FFF;
+        font-size: 14px;
+        text-transform: uppercase;
+        border-radius: 0px;
+        text-align: center;
+        margin: 0;
+        outline: none;
+        border: none;
+        padding: 10px;
+        font-family: Pt Sans Narrow;
+        font-weight: bold;
+    }
+    .process-theme14 .ws-menu .workspace-menu li.tabdrop a {
+        text-align: left;
+    }
+    .process-theme14 .ws-menu .workspace-menu li a:hover,
+    .process-theme14 .ws-menu .workspace-menu li a:focus,
+    .process-theme14 .ws-menu .workspace-menu li a:active {
+        /*border: none;*/
+        color: #4ca8e6;
+        background: none;
+    }
+    .process-theme14 .ws-menu .workspace-menu li a:hover i {
+        color: #4ca8e6;
+    }
+    .process-theme14 .ws-menu .workspace-menu li i {
+        color: #c5c5c5;
+        font-size: 18px;
+    }
+    .process-theme14 .ws-menu .workspace-menu li:last-child {
+        border-right: none
+    }
+    .process-theme14 .ws-menu .workspace-menu li.active a {
+        color: #4ca8e6;
+        border: none;
+        background: none;
+    }
+    .process-theme14 .ws-menu .workspace-menu li.active {
+        background: #ffffff;
+    }
+    .process-theme14 .ws-menu .workspace-menu li.active i {
+        color: #4ca8e6
+    }
+    .process-theme14 .ws-menu ul.workspace-menu ul.sub-menu {
+        display: none;
+        position: absolute; 
+        z-index: 100;
+        padding: 0; 
+        left: 0;
+        background: #373c43;
+        margin-top: 18px;
+    }
+    .process-theme14 .ws-menu ul.workspace-menu ul.sub-menu li {
+        margin: 5px 0;
+        list-style: none;
+        background: #373c43;
+        text-align: left;
+        padding: 0 5px;
+        border: none;
+        width: 150px;
+    }
+    .process-theme14 .ws-menu ul.workspace-menu ul.sub-menu li a {
+        padding: 0; 
+        background: #373c43;
+        font-size: 14px;
+        text-transform: none;
+        color: #FAFAFA;
+    }
+    .process-theme14 .ws-menu ul.workspace-menu li:hover > ul.sub-menu {
+        display: inherit !important;    
+    }
+
+    @media screen and (max-width: 1366px) {
+        .process-theme14 .ws-menu .workspace-menu li {
+            padding: 0px 5px;
+        }
+        .process-theme14 .ws-menu ul.workspace-menu ul.sub-menu {
+            margin-top: 5px;
+        }
+        .process-theme14  .navbar-nav>li>a {
+            line-height: 10px;
+        }
+        .process-theme14 .ws-menu .workspace-menu li a {
+            font-size: 12px;
+        }
+    }
+    @media screen and (min-width: 1500px) {
+        .process-theme14 .ws-menu .workspace-menu li a {
+            font-size: 12px;
+            padding: 5px;
+        }
+    }
+    @media screen and (min-width: 1600px) {
+        .process-theme14 .ws-menu .workspace-menu li {
+            padding: 2px 5px;
+        }
+    }
+    @media screen and (max-width: 1599px) {
+    }
+    .process-theme14 .activeMenu {
+        background-color: rgba(103, 168, 224, 0.25) !important;
+    }
+</style>
+<div class="col-md-12 process-theme2 process-theme14">
+    <div class="ws-menu">
+        <ul class="workspace-menu nav navbar-nav nav-tabs">
+            <li class="nav-item dropdown dropdown-fw dropdown-fw-disabled active" style="width: auto !important;">
+                <a aria-expanded="false" href="#right_section_tab_0" data-toggle="tab" class="nav-link">
+                    <i class="fa fa-user-secret"></i>
+                    <span class="title"><lang>General information</lang></span>
+                </a>
+            </li>
+            <li class="nav-item dropdown dropdown-fw dropdown-fw-disabled" style="width: auto !important;">
+                <a aria-expanded="false" href="#right_section_tab_1" data-toggle="tab" class="nav-link">
+                    <i class="fa fa-graduation-cap"></i>
+                    <span class="title"><lang>Education</lang></span>
+                </a>
+            </li>
+            <li class="nav-item dropdown dropdown-fw dropdown-fw-disabled" style="width: auto !important;">
+                <a aria-expanded="false" href="#right_section_tab_2" data-toggle="tab" class="nav-link">
+                    <i class="fa fa-suitcase"></i>
+                    <span class="title"><lang>Employment history</lang></span>
+                </a>
+            </li>
+            <li class="nav-item dropdown dropdown-fw dropdown-fw-disabled" style="width: auto !important;">
+                <a aria-expanded="false" href="#right_section_tab_3" data-toggle="tab" class="nav-link">
+                    <i class="fa fa-users"></i>
+                    <span class="title"><lang>ГЭР БҮЛИЙН БАЙДАЛ</lang></span>
+                </a>
+            </li>
+            <li class="nav-item dropdown dropdown-fw dropdown-fw-disabled" style="width: auto !important;">
+                <a aria-expanded="false" href="#right_section_tab_7" data-toggle="tab" class="nav-link">
+                    <i class="fa fa-star"></i>
+                    <span class="title"><lang>Ур чадвар</lang></span>
+                </a>
+            </li>
+            <li class="nav-item dropdown dropdown-fw dropdown-fw-disabled" style="width: auto !important;">
+                <a aria-expanded="false" href="#right_section_tab_4" data-toggle="tab" class="nav-link">
+                    <i class="fa fa-file"></i>
+                    <span class="title"><lang>Хавсралт</lang></span>
+                </a>
+            </li>
+            <li class="nav-item dropdown dropdown-fw dropdown-fw-disabled" style="width: auto !important;">
+                <a aria-expanded="false" href="#right_section_tab_5" data-toggle="tab" class="nav-link">
+                    <i class="fa fa-cog"></i>
+                    <span class="title"><lang>Other</lang></span>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="right-side">
+        <div class="tab-content">
+            <div class="tab-pane active" id="right_section_tab_0">
+                <div class="col-md-12 no-padding">
+                    {{section3}}
+                </div>
+                <div class="col-md-12 no-padding">
+                    {{section4}}
+                </div>
+                <div class="col-md-12 no-padding">
+                    {{section5}}
+                </div>          
+                <div class="col-md-12 no-padding">
+                    {{section9}}
+                </div>
+                <div class="col-md-12 no-padding">
+                    {{section10}}
+                </div>
+            </div>        
+            <div class="tab-pane" id="right_section_tab_1">
+                <div class="col-md-12 no-padding">
+                    {{section11}}
+                </div>
+                <div class="col-md-12 no-padding">
+                    {{section12}}
+                </div>
+                <div class="col-md-12 no-padding">
+                    {{section13}}
+                </div>
+                <div class="col-md-12 no-padding">
+                    {{section25}}
+                </div>
+                <div class="col-md-12 no-padding">
+                    {{section26}}
+                </div>
+                <div class="col-md-12 no-padding">
+                    {{section27}}
+                </div>
+            </div>
+            <div class="tab-pane" id="right_section_tab_2">
+                <div class="col-md-12 no-padding">
+                    {{section14}}
+                </div>
+                <div class="col-md-12 no-padding">
+                    {{section15}}
+                </div>
+                <div class="col-md-12 no-padding">
+                    {{section16}}
+                </div>
+                <div class="col-md-12 no-padding">
+                    {{section17}}
+                </div> 
+                <div class="col-md-12 no-padding">
+                    {{section33}}
+                </div>
+                <div class="col-md-12 no-padding">
+                    {{section34}}
+                </div>         
+            </div>
+            <div class="tab-pane" id="right_section_tab_7">
+                <div class="col-md-12 no-padding">
+                    {{section28}}
+                </div>
+                <div class="col-md-12 no-padding">
+                    {{section29}}
+                </div>
+                <div class="col-md-12 no-padding">
+                    {{section30}}
+                </div>
+                <div class="col-md-12 no-padding">
+                    {{section31}}
+                </div>
+                <div class="col-md-12 no-padding">
+                    {{section32}}
+                </div>
+            </div>
+            <div class="tab-pane" id="right_section_tab_3">
+                <div class="col-md-12 no-padding">
+                    {{section24}}
+                </div>
+                <div class="col-md-12 no-padding">
+                    {{section6}}
+                </div>
+                <div class="col-md-12 no-padding">
+                    {{section7}}
+                </div>
+                <div class="col-md-12 no-padding">
+                    {{section8}}
+                </div>
+            </div>
+            <div class="tab-pane" id="right_section_tab_4">
+                <div class="col-md-12 no-padding">
+                    {{section19}}
+                </div>
+                <div class="col-md-12 no-padding">
+                    {{section20}}
+                </div>
+                <div class="col-md-12 no-padding">
+                    {{section21}}
+                </div>
+            </div>
+            <div class="tab-pane" id="right_section_tab_5">
+                <div class="col-md-12 no-padding">
+                    {{section22}}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

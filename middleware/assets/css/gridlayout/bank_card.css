@@ -1,0 +1,134 @@
+.dv-bank-card ul.dv-explorer {
+    list-style: none;  
+    padding: 0;
+    margin: 0;
+    display: block;
+}
+.dv-bank-card ul.dv-explorer > li {
+    list-style: none;  
+    padding: 16px 16px 0 16px;
+    margin: 0 18px 15px 0;
+    float: left;
+    width: 320px;
+    height: 165px;
+    min-height: 160px;
+    border: 1px transparent solid;
+    background-color: #49a8f1;
+    border-radius: 10px;
+}
+.dv-bank-card ul.dv-explorer li.dv-explorer-row {
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-origin: border-box;
+}
+.dv-bank-card ul.dv-explorer li.dv-explorer-row.selected-row {
+    border: 1px #999 solid;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+.dv-bank-card ul.dv-explorer li.dv-explorer-row .selected-row-link .media {
+    color: #fff;
+}
+.dv-bank-card ul.dv-explorer li.dv-explorer-row .selected-row-link .media .media-body {
+    -ms-flex-item-align: center;
+    align-self: center;
+}
+.dv-bank-card ul.dv-explorer li.dv-explorer-row .selected-row-link .media img.rounded-circle {
+    width: 50px;
+    height: 50px;
+    border: 2px #fff solid;
+}
+.dv-bank-card ul.dv-explorer li.dv-explorer-row .selected-row-link .media .bank-card-name1 {
+    font-weight: 700;
+    line-height: 14px;
+}
+.dv-bank-card ul.dv-explorer li.dv-explorer-row .selected-row-link .media .bank-card-name2 {
+    font-weight: normal;
+    font-size: 11px;
+}
+.dv-bank-card ul.dv-explorer li.dv-explorer-row .selected-row-link .media .badge {
+    color: #000;
+    padding: 4px 5px;
+}
+.dv-bank-card ul.dv-explorer li.dv-explorer-row .selected-row-link .media-info {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-align: start;
+    align-items: flex-start;
+    margin-top: 15px;
+    color: #585858;
+}
+.dv-bank-card ul.dv-explorer li.dv-explorer-row .selected-row-link .media-info .bank-card-name4 {
+    font-weight: 700;
+}
+.dv-bank-card ul.dv-explorer li.dv-explorer-row .selected-row-link .bank-card-drill-part {
+    height: 93px;
+    margin-top: -25px;
+}
+.dv-bank-card ul.dv-explorer li.dv-explorer-row .selected-row-link .bank-card-drill-part button {
+    padding: 3px 12px;
+    background-color: rgba(255, 255, 255, .09);
+    border: 2px solid rgba(255, 255, 255, .5);
+    color: #fff;
+    margin-bottom: 5px;
+    width: 78px;
+    font-size: 12px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    /*display: inherit;*/
+}
+.dv-bank-card ul.dv-explorer li.dv-explorer-row .selected-row-link .bank-card-drill-part .dropdown-toggle::after {
+    content: none;
+}
+.dv-bank-card ul.dv-explorer li.dv-explorer-row .selected-row-link .bank-card-drill-part .dropdown-toggle {
+    font-size: 20px;
+    height: 28px;
+    padding: 0px 12px;
+    line-height: 27px;
+}
+.dv-bank-card .dv-bank-card-sidebar {
+    width: 330px;
+}
+.dv-bank-card .dv-bank-card-sidebar .card {
+    padding: 12px 16px !important;
+    border-radius: 10px;
+}
+.dv-bank-card .dv-bank-card-sidebar .card .card-body {
+    padding-top: 0px;
+}
+.dv-bank-card-sidebar-item {
+    margin-top: 15px;
+}
+.dv-bank-card-sidebar-item .btn-icon {
+    background-color: #f0f9e9;
+    width: 36px;
+    height: 36px;
+    text-align: center;
+    padding: 0;
+    padding-top: 8px;
+    box-shadow: rgba(17, 17, 26, 0.05) 0px 1px 0px, rgba(17, 17, 26, 0.1) 0px 0px 8px;
+}
+.dv-bank-card-sidebar-item .btn-icon i {
+    color: #b2e392;
+    font-size: 18px;
+}
+.dv-bank-card-sidebar-item .dv-bank-card-sidebar-item-1 {
+    font-weight: bold;
+    font-size: 15px;
+    color: #444;
+}
+.dv-bank-card-sidebar-item .dv-bank-card-sidebar-item-2 {
+    font-weight: normal;
+    font-size: 12px;
+    color: #888;
+}
+.dv-bank-card-sidebar-item-3 {
+    font-weight: 700;
+    font-size: 14px;
+    color: #444;
+}
+.dv-bank-card-sidebar-item-4 {
+    font-weight: 700;
+    font-size: 13px;
+    color: #7fc155;
+}

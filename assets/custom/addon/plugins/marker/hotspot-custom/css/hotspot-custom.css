@@ -1,0 +1,56 @@
+#_hotSpot{
+    width: 100%;
+    overflow: auto;    
+}
+#_hotSpotContainer {
+    position: relative;
+    margin: 10px 20px 20px 0px;
+    
+}
+._hs-marker-object {background: url(../img/default-marker.svg), url(../img/marker_shadow.svg);}
+._hs-marker-object-blue {background: url(../img/marker_blue.svg), url(../img/marker_shadow.svg);}
+._hs-marker-object-red {background: url(../img/marker_red.svg), url(../img/marker_shadow.svg);}
+._hs-marker-object-pink {background: url(../img/marker_pink.svg), url(../img/marker_shadow.svg);}
+._hs-marker-object-green {background: url(../img/marker_green.svg), url(../img/marker_shadow.svg);}
+._hs-marker-object-brown {background: url(../img/marker_brown.svg), url(../img/marker_shadow.svg);}
+._hs-marker-object-white {background: url(../img/marker_white.svg), url(../img/marker_shadow.svg);}
+
+._hs-marker-object-borderBlack-blue {background: url(../img/marker_borderBlack_blue.svg), url(../img/marker_shadow.svg);}
+._hs-marker-object-borderBlack-red {background: url(../img/marker_borderBlack_red.svg), url(../img/marker_shadow.svg);}
+._hs-marker-object-borderBlack-pink {background: url(../img/marker_borderBlack_pink.svg), url(../img/marker_shadow.svg);}
+._hs-marker-object-borderBlack-green {background: url(../img/marker_borderBlack_green.svg), url(../img/marker_shadow.svg);}
+._hs-marker-object-borderBlack-brown {background: url(../img/marker_borderBlack_brown.svg), url(../img/marker_shadow.svg);}
+._hs-marker-object-borderBlack-white {background: url(../img/marker_borderBlack_white.svg), url(../img/marker_shadow.svg);}
+
+
+._hs-marker-object {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 30px;
+    height: 30px;
+    cursor: move;
+    background-position: top center;
+    background-repeat: no-repeat;
+    webkit-animation: pulse 1s ease infinite;
+    -moz-animation: pulse 1s ease infinite;
+    -ms-animation: pulse 1s ease infinite;
+    -o-animation: pulse 1s ease infinite;
+    animation: pulse 1s ease infinite;
+}
+._hs-marker-object:active{
+    border: rgba(255,0,0,0.8) 1px dashed;
+    background-color: rgba(0,0,0,0.2);
+}
+._hs-marker-object-creater {
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    background-position: top center;
+    background-repeat: no-repeat;
+    display: inline-block;
+    opacity: 0.8;
+}
+._hs-marker-object-creater:hover{
+    opacity: 1;
+}

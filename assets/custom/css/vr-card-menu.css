@@ -1,0 +1,464 @@
+div.vr-card-menu {
+    margin: 30px 70px 20px 70px;
+    padding: 0;
+}
+.navbar .modname {
+    background: none;
+}
+div.vr-card-submenu {
+    padding: 0 50px;
+}
+.navbar-dark .navbar-nav-link,
+.lhnormal.company {
+    color: #FFF;
+}
+.primary-top {
+    background: var(--root-color1);
+}
+div.vr-card-menu a.vr-menu-tile {
+    display: block;
+    float: left;
+    background: #fff;
+    width: 186px !important;
+    height: 128px !important;
+    overflow: hidden !important;
+    padding: 0;
+    margin: 12px 15px;
+    color: #222;
+    text-decoration: none;
+    overflow: hidden;
+    border: 1px #fff solid;
+}
+div.vr-card-menu a.vr-menu-tile:hover {
+    background: #eee;
+    border: 1px #333 solid;
+}
+div.vr-card-menu a.vr-menu-tile:focus {
+    background: #eee;
+    border: 1px #333 solid;
+}
+div.vr-card-menu a.vr-menu-tile div.vr-menu-img {
+    margin: 0;
+    padding: 0;
+    height: 79px;
+    overflow: hidden;
+    text-align: center;
+}
+div.vr-card-menu a.vr-menu-tile div.vr-menu-title {
+    padding: 10px 10px 0 10px;
+    margin: 0;
+}
+div.vr-card-menu a.vr-menu-tile div.vr-menu-title p {
+    font-size: 12px;
+    text-transform: uppercase;
+    font-weight: bold;
+    line-height: 14px;
+    height: 28px;
+    overflow: hidden;
+    padding: 0;
+    margin: 0;
+    text-align: center;
+    color: #595959;
+}
+div.vr-card-menu a.vr-menu-tile div.vr-menu-title span {
+    color: #666;
+    font-size: 11px;
+}
+div.vr-card-menu a.vr-submenu-tile {
+    background-color: #fff;
+    border: 1px solid #efefef;
+    box-shadow: 0 0.5px 1px rgba(0, 0, 0, 0.15), -1px 0 0 rgba(0, 0, 0, 0.03), 1px 0 0 rgba(0, 0, 0, 0.03), 0 1px 0 rgba(0, 0, 0, 0.12);
+    display: inline-block;
+    float: none;
+    position: relative;
+    margin: 5px 15px 13px 0;
+    padding: 5px;
+    width: 180px;
+    text-decoration: none;
+}
+div.vr-card-menu a.vr-submenu-tile:hover {
+    -webkit-box-shadow:0 0px 10px #888;
+    -moz-box-shadow:0 0px 10px #888;
+    box-shadow:0 0px 10px #888;
+    -webkit-transition:box-shadow 0.3s linear;
+    -moz-transition:box-shadow 0.3s linear;
+    -o-transition:box-shadow 0.3s linear;
+    transition:box-shadow 0.3s linear;
+}
+div.vr-card-menu a.vr-submenu-tile .first-title {
+    border-bottom: 1px solid #ccc;
+    color: #666;
+    display: table-cell;
+    font-size: 14px;
+    height: 30px;
+    line-height: 12px;
+    margin: 0;
+    overflow: hidden;
+    padding: 0 5px 5px;
+    text-overflow: ellipsis;
+    vertical-align: middle;
+    width: 168px;
+}
+div.vr-card-menu a.vr-submenu-tile .dv-img-container {
+    height: 130px;
+    margin: 10px 0 0;
+    padding: 0;
+}
+div.vr-card-menu a.vr-submenu-tile .dv-img-container .dv-img-container-sub {
+    display: table-cell;
+    height: 130px;
+    overflow: hidden;
+    padding: 0;
+    text-align: center;
+    text-overflow: ellipsis;
+    vertical-align: middle;
+    width: 168px;
+}
+div.vr-card-menu a.vr-submenu-tile .dv-img-container .dv-img-container-sub img {
+    max-width: 94px;
+    max-height: 94px;
+}
+div.vr-card-menu a.vr-submenu-tile .second-title {
+    box-sizing: content-box;
+    display: block;
+    max-width: 100%;
+    overflow: hidden;
+    overflow-wrap: break-word;
+    position: relative;
+    z-index: 1;    
+}
+div.vr-card-menu a.vr-submenu-tile .second-title h4 {
+    color: #30a2dd;
+    font-size: 12px;
+    font-weight: 700;
+    height: 30px;
+    line-height: 16px;
+    margin: 0;
+    overflow: hidden;
+    padding: 0 5px 5px;
+    text-align: center;
+    text-overflow: ellipsis;
+    text-transform: uppercase;
+    vertical-align: middle;
+    width: 168px;
+}
+.content-wrapper {
+    overflow: hidden;
+    height: auto;
+}
+.content {
+    padding: 0 0.6rem;
+}
+.appmenuicon {
+    display: none;
+}
+/**************************************************************************/
+body  {
+    background-position: center center !important;
+    background-size: cover !important;
+    background-repeat: repeat !important;
+}
+.page-content {
+    background: none;
+}
+.appmenu-table .appmenu-table-row .appmenu-table-cell-left {
+    border-right: 1px solid rgba(255,255,255,.2);
+    padding-top: 1rem;
+}
+.appmenu-newdesign-1 .appmenu-table-cell-left {
+    padding-top: 3rem !important;
+}
+.appmenu-table {
+    margin: 0;
+}
+ .appmenu-table-cell-left ul.mix-filter {
+    height: 100vh;
+}
+.navbar-expand-md>.container-fluid {
+    border: 0;
+}
+.body-top-menu-style .content,
+ .content-wrapper {
+    background: none;
+    margin-top: 0;
+    padding-top: 0;
+}
+ .content {
+    padding: 0 1.25rem;
+}
+ .appmenuicon {
+    display: block;
+    float: left;
+    color: #FFF;
+    margin-right: 10px;
+    padding-top: 1px;
+    margin-left: 5px;
+}
+.appmenuicon i {
+    font-size: 16px;
+}
+/*.white-card-menu .vr-menu-tile:hover,
+.appmenu-table-cell-right .vr-menu-tile:hover {
+    background: #FFF;
+}*/
+.white-card-menu .vr-menu-tile:hover .vr-menu-img,
+.appmenu-table-cell-right .vr-menu-tile:hover .vr-menu-img {
+    filter: brightness(1) invert(0);
+}
+.white-card-menu .vr-menu-tile:hover .vr-menu-descr,
+.appmenu-table-cell-right .vr-menu-tile:hover .vr-menu-descr {
+    color: #000;
+}
+.appmenu-table-cell-left ul.sub-mix-filter > li.active:after {
+    display: none;
+}
+.appmenusearch {
+    display: none;
+}
+.navbar .modname {
+    margin-top: 0;
+}
+.content-wrapper .content {
+    padding: 0;
+}
+ .header-tab {
+    display: none;
+}
+ .appmenusearch {
+    display: block;
+    width: 400px;
+    position: relative;
+    margin-left: 85px;
+}
+.appmenu-newdesign-header-1 .appmenusearch {
+    margin-left: 285px;
+}
+.appmenu-newdesign-header-1 .appmenusearch input {
+    background: #F3F4F6;
+    height: 35px;
+    color: #67748E;
+}
+ .appmenusearch input {
+    width: 100%;
+    background: rgba(255,255,255,0.2);
+    border: 0;
+    height: 32px;
+    border-radius: 50px;
+    font-size: 12px;
+    padding: 0 20px 0 44px;
+    outline: 0;
+    color: #FFF;
+}
+ .appmenu-newdesign-header-1 .appmenusearch input::placeholder {
+    color: #67748E;
+}
+ .appmenusearch input::placeholder {
+    color: rgba(255, 255, 255, 0.3);
+}
+ .appmenu-newdesign-header-1 .appmenusearch i {
+    color: #67748E;
+    top: 11px;
+}
+ .appmenusearch i {
+    left: 15px;
+    color: rgba(255, 255, 255, 0.3);
+    top: 8px;
+    position: absolute;
+}
+ .topnavbarmenumode {
+    display: none;
+}
+ .container-fluid.topnav {
+    display: none;
+}
+ .workspace-main-container .bp-wfmstatus-btns {
+    position: absolute;
+}
+ .appmenu-table-cell-left .mix-filter > .filter > span.title {
+    padding: 8px 20px;
+    font-size: 12px;
+    line-height: normal;
+    color: #555;
+    font-weight: 600;
+    display: block;
+}
+ .appmenu-newdesign-1 .appmenu-table-cell-left .mix-filter > .filter > span.title {
+    padding: 8px 12px;
+    font-size: 15px !important;
+    line-height: normal;
+    color: #fff;
+    font-weight: normal;
+    text-transform: none;
+    font-family: 'Rubik';
+}
+ .appmenu-table .appmenu-table-row .appmenu-table-cell-left {
+    border-right: 1px solid #f0f0f0;
+}
+ .appmenuicon i,
+ .appmenu-table-cell-right h2 {
+    color: var(--root-color1);
+}
+ .appmenu-table-cell-right h2 {
+    min-width: 200px;
+}
+.white-card-menu .vr-menu-img,
+ .appmenu-table-cell-right .vr-menu-img {
+    background: var(--root-color01);
+    width: 50px !important;
+    height: 50px !important;
+    border: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.appmenu-newdesign-1 .white-card-menu .vr-menu-img,
+.appmenu-newdesign-1 .appmenu-table-cell-right .vr-menu-img {
+    background: var(--root-color01);
+    width: 45px !important;
+    height: 45px !important;
+    border: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+ .white-card-menu .vr-menu-cell,
+ .appmenu-table-cell-right .vr-menu-cell {
+    padding: 0;
+    float: left;
+    margin-right: 10px;
+    display: flex;
+}
+ .white-card-menu .vr-menu-img img,
+ .appmenu-table-cell-right .vr-menu-img img {
+    width: 30px;
+}
+ .white-card-menu .vr-menu-title .vr-menu-row .vr-menu-name,
+ .appmenu-table-cell-right .vr-menu-title .vr-menu-row .vr-menu-name,
+ .appmenu-table-cell-right .vr-menu-descr {
+    font-size: 12px;
+    line-height: normal;
+}
+.appmenu-table-cell-right .vr-menu-title .vr-menu-row .vr-menu-code {
+    color: #555555bf;
+    font-weight: 600;
+    overflow: hidden;
+    height: 18px;
+    line-height: 1;
+}
+.appmenu-newdesign-1 .appmenu-table-cell-right .vr-menu-title .vr-menu-row .vr-menu-code {
+    color: #fff;
+    font-weight: 600;
+    overflow: hidden;
+    height: 18px;
+    line-height: 1;
+    font-family: 'Rubik';
+    font-weight: 300;
+}
+.appmenu-newdesign-1 .appmenu-table-cell-right h2 {
+    color: #3C3C3C;
+    font-size: 18px;
+    font-family: 'Rubik';
+}
+ .white-card-menu .vr-menu-tile,
+ .appmenu-table-cell-right .vr-menu-tile {
+    padding: 15px;
+    /* background: #f2f2f2; */
+    background: var(--root-color02);
+    border-radius: 5px;
+    border: 0;
+}
+/* .white-card-menu .vr-menu-tile:hover,
+ .appmenu-table-cell-right .vr-menu-tile:hover {
+    background-color: var(--root-color03) !important;
+}*/
+ .appmenu-table-cell-right .vr-menu-descr {
+    -webkit-line-clamp: 2;
+    height: 34px;
+}
+.white-card-menu .vr-menu-tile, 
+.appmenu-table-cell-right .vr-menu-tile {
+    overflow: hidden !important;
+    text-decoration: none;
+    width: 225px;
+    margin: 0 5px 10px 5px;
+}
+.white-card-menu .vr-menu-img, 
+.appmenu-table-cell-right .vr-menu-img {
+    text-align: center;
+    vertical-align: middle;
+    margin: 0 auto;
+    border-radius: 50%;
+    color: var(--root-color1);
+}
+.appmenu-table-cell-right h2 {
+    font-size: 14px;
+    font-weight: 600;
+}
+.appmenu-newdesign-1 .white-card-menu .vr-menu-tile, 
+.appmenu-newdesign-1 .appmenu-table-cell-right .vr-menu-tile {
+    overflow: hidden !important;
+    text-decoration: none;
+    width: 180px;
+    height: 140px;
+    margin: 0 13px 18px 6px;
+    border-radius: 20px 20px 20px 20px;
+}
+.appmenu-newdesign-1 .white-card-menu .vr-menu-tile.random-border-radius1, 
+.appmenu-newdesign-1 .appmenu-table-cell-right .vr-menu-tile.random-border-radius1 {
+    border-radius: 20px 100px 20px 20px;
+}
+.appmenu-newdesign-1 .white-card-menu .vr-menu-tile.random-border-radius2, 
+.appmenu-newdesign-1 .appmenu-table-cell-right .vr-menu-tile.random-border-radius2 {
+    border-radius: 20px 20px 100px 20px;
+}
+.appmenu-newdesign-1 .white-card-menu .vr-menu-tile.random-border-radius3, 
+.appmenu-newdesign-1 .appmenu-table-cell-right .vr-menu-tile.random-border-radius3 {
+    border-radius: 20px 20px 20px 20px;
+}
+.appmenu-newdesign-1 .vr-menu-tile > div {
+    display: block !important;
+}
+.appmenu-newdesign-1 .vr-menu-tile .vr-menu-cell {
+    float: none;
+}
+.appmenu-newdesign-1 .white-card-menu .vr-menu-img, 
+.appmenu-newdesign-1 .appmenu-table-cell-right .vr-menu-img {
+    margin: 0;
+    background: transparent;
+}
+.appmenu-newdesign-1 .white-card-menu .vr-menu-img i, 
+.appmenu-newdesign-1 .appmenu-table-cell-right .vr-menu-img i {
+    font-size: 38px !important;
+    color: #fff;
+}
+.appmenu-newdesign-1 .white-card-menu .vr-menu-img img, 
+.appmenu-newdesign-1 .appmenu-table-cell-right .vr-menu-img img {
+    width: 40px;
+    height: 40px;
+    filter: brightness(0) invert(1);
+}
+.appmenu-newdesign-1 .white-card-menu .vr-menu-title, 
+.appmenu-newdesign-1 .appmenu-table-cell-right .vr-menu-title {
+    margin-top: 50px;
+}
+.appmenu-newdesign-1 .appmenu-table-cell-right {
+    background-color: #F3F4F6;
+}
+.appmenu-newdesign-1 .vr-menu-name {
+    font-size: 16px !important;
+    font-weight: 500 !important;
+    color: #fff !important;
+    font-family: 'Rubik';
+}
+.appmenu-table.appmenu-newdesign-1 .appmenu-table-row .appmenu-table-cell-left {
+    border-right: none;
+    background: #2F306A;
+    width: 280px;
+}
+.appmenu-table.appmenu-newdesign-1 {
+    margin-top: -15px;
+    background: #F3F4F6;
+}
+.modname.justify-content-end {
+    justify-content: flex-end !important;
+}

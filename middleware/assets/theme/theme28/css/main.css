@@ -1,0 +1,147 @@
+.vr-workspace-theme28 {
+    display: flex;
+}
+.page-content .vr-workspace-theme28 .sidebar-second {
+    background:var(--root-color1);
+    z-index: 2;
+    height: 100%;
+}
+.vr-workspace-theme28 .sidebar-second ul li {
+    transition-delay: .3s;
+    border-bottom:1px solid transparent !important;
+}
+.vr-workspace-theme28 .sidebar-second ul li:hover {
+    background: #00000040;
+}
+.vr-workspace-theme28 .sidebar-second ul li span, .vr-workspace-theme28 .sidebar-second ul li a{
+    color:#fff;
+}
+.vr-workspace-theme28 .sidebar-second .sidebar-user .media-body .team a:hover{
+    opacity: 1;
+}  
+.vr-workspace-theme28 .sidebar-second .sidebar-user .media-body .team a{  
+    color:#fff;
+    opacity: .8;
+    transition-delay: .3s;
+}
+.vr-workspace-theme28 .sidebar-second ul li a.nav-link {
+    padding-left: 2rem;
+}
+.vr-workspace-theme28 .sidebar-second .sidebar-user .media-body .btn.action{  
+    padding: 1px 15px;
+    border-radius: 15px;
+    border: 2px solid #fff;
+    color: #fff;
+    margin: 10px 0;
+}
+.vr-workspace-theme28 .sidebar-second .sidebar-user .media-body h2{ 
+    margin: 0;
+ }
+.vr-workspace-theme28 .sidebar-second .sidebar-user .media-body h3{  
+    opacity: .8;
+}
+.vr-workspace-theme28 .sidebar-second .sidebar-user .media-body .team{  
+
+}
+.vr-workspace-theme28 .sidebar-second .sidebar-user .profile img{   
+    border: 5px solid #fff;    
+}
+.vr-workspace-theme28 .sidebar-second{
+    color:#fff;
+}
+
+.vr-workspace-theme28 .ws-menu {
+    
+    display: flex;
+}
+.vr-workspace-theme28 .ws-menu .workspace-menu {
+    display: inline-block;
+    margin-bottom: 0;
+    border-bottom: none;
+    padding-left: 10px;
+}
+.vr-workspace-theme28 .ws-menu .workspace-menu li {
+    /*border-right: 1px solid #91959c;*/
+    text-align: left;
+    padding: 1px 5px;
+    background: inherit;
+}
+.vr-workspace-theme28 .ws-menu .workspace-menu li a {
+    color: #405758;
+    font-size: 14px;
+    /*text-transform: uppercase;*/
+    border-radius: 0px;
+    text-align: center;
+    margin: 0;
+    outline: none;
+    border: none;
+    padding: 10px;
+    font-weight: bold;
+}
+.vr-workspace-theme28 .ws-menu .workspace-menu li.tabdrop a {
+    text-align: left;
+}
+.vr-workspace-theme28 .ws-menu .workspace-menu li a:hover,
+.vr-workspace-theme28 .ws-menu .workspace-menu li a:focus,
+.vr-workspace-theme28 .ws-menu .workspace-menu li a:active {
+    background: none;
+}
+.vr-workspace-theme28 .ws-menu .workspace-menu li a:hover i {
+    color: #4ca8e6;
+}
+.vr-workspace-theme28 .ws-menu .workspace-menu li i {
+    color: #c5c5c5;
+    font-size: 18px;
+}
+.vr-workspace-theme28 .ws-menu .workspace-menu li:last-child {
+    border-right: none
+}
+.vr-workspace-theme28 .ws-menu .workspace-menu li.active a {
+    color: #fff;
+    border: none;
+    background: none;
+}
+.vr-workspace-theme28 .ws-menu .workspace-menu li.active {
+    /*background: #ffffff;*/
+    border-bottom: 2px solid #54aab7;
+}
+.vr-workspace-theme28 .ws-menu .workspace-menu li.active i {
+    color: #4ca8e6;
+}
+.vr-workspace-theme28 .ws-menu .workspace-menu li i {
+    display: none;
+}
+.vr-workspace-theme28 .ws-menu ul.workspace-menu ul.sub-menu {
+    display: none;
+    position: absolute; 
+    z-index: 100;
+    padding: 0; 
+    left: 0;
+    background: #373c43;
+    margin-top: 2px;
+}
+.vr-workspace-theme28 .ws-menu ul.workspace-menu ul.sub-menu li {
+    margin: 5px 0;
+    list-style: none;
+    background: #373c43;
+    text-align: left;
+    padding: 0 5px;
+    border: none;
+    width: 150px;
+}
+.vr-workspace-theme28 .ws-menu ul.workspace-menu ul.sub-menu li a {
+    padding: 0; 
+    background: #373c43;
+    font-size: 14px;
+    text-transform: none;
+    color: #FAFAFA;
+}
+.vr-workspace-theme28 .ws-menu ul.workspace-menu li:hover > ul.sub-menu {
+    display: inherit !important;    
+}
+.vr-workspace-theme28 .workspace-main {
+    padding-top: 0;
+}
+.vr-workspace-theme28 .workspace-main .package-meta .package-div .package-tab > .row {
+    margin: 0;
+}

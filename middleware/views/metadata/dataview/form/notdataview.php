@@ -1,0 +1,1 @@
+<div class="alert alert-warning">DATAVIEW төрөлтэй үзүүлэлт биш байна.</div>

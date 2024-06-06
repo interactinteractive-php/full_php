@@ -1,0 +1,73 @@
+.dv-explorer4 {
+    margin-top: 10px;
+    color: #676a6c;
+}
+.dv-explorer4 a {
+    color: #676a6c;
+}
+.dv-explorer4 .name-title {
+    font-size: 14px;
+    margin: 0;
+    padding: 0;
+    font-weight: bold;
+    overflow: hidden;
+    height: 40px;
+}
+.dv-explorer4 .dv-explorer-row-f .name-title {
+    margin-top: 20px;
+}
+.dv-explorer4 .dv-explorer-row-f .img-explorer {
+    margin-left: 5px;
+}
+ul.dv-explorer4 > li {
+    list-style: none;  
+    float: left;
+    width: 300px;
+    background-color: #f3f3f4;
+}
+ul.dv-explorer4 > li .img-explorer {
+    list-style: none;  
+    width: 90px !important;
+    height: 90px;
+}
+ul.dv-explorer4 > li .img-back {
+    width: 52px !important;
+    height: 38px;
+    margin-top: 30px;
+}
+.dv-explorer4 .contact-box {
+    background-color: #ffffff;
+    border: 1px solid #e7eaec;
+    padding: 10px 0;
+    margin-bottom: 10px;
+    height: 120px;
+}
+.dv-explorer4 .contact-box > a {
+    color: inherit;
+}
+.dv-explorer4 .contact-box.center-version {
+    border: 1px solid #e7eaec;
+    padding: 0;
+}
+.dv-explorer4 .contact-box.center-version > a {
+    display: block;
+    background-color: #ffffff;
+    padding: 20px;
+    text-align: center;
+}
+.dv-explorer4 .contact-box.center-version > a img {
+    width: 80px;
+    height: 80px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+.dv-explorer4 .contact-box address {
+    margin-bottom: 0;
+    font-size: 12px;
+}
+.dv-explorer4 .contact-box .contact-box-footer {
+    text-align: center;
+    background-color: #ffffff;
+    border-top: 1px solid #e7eaec;
+    padding: 15px 20px;
+}

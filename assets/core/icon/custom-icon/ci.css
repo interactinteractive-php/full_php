@@ -1,0 +1,280 @@
+/* Hello CSS! */
+@font-face {
+  font-family: "ci";
+  src: url('ci.eot?t=1692244482870'); /* IE9*/
+  src: url('ci.eot?t=1692244482870#iefix') format('embedded-opentype'), /* IE6-IE8 */
+  url("ci.woff2?t=1692244482870") format("woff2"),
+  url("ci.woff?t=1692244482870") format("woff"),
+  url('ci.ttf?t=1692244482870') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/
+  url('ci.svg?t=1692244482870#ci') format('svg'); /* iOS 4.1- */
+}
+
+[class^="ci-"], [class*=" ci-"] {
+  font-family: 'ci' !important;
+  font-size:12px;
+  font-style:normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+:root {
+--ci-adobe: "\ea01";
+--ci-ai-car: "\ea02";
+--ci-ai-flame: "\ea03";
+--ci-ai-road: "\ea04";
+--ci-ai-ship: "\ea05";
+--ci-ai-train: "\ea06";
+--ci-demo: "\ea07";
+--ci-git: "\ea08";
+--ci-group_user: "\ea09";
+--ci-hdk_logo: "\ea0a";
+--ci-icon-1: "\ea0b";
+--ci-icon-10: "\ea0c";
+--ci-icon-100: "\ea0d";
+--ci-icon-101: "\ea0e";
+--ci-icon-102: "\ea0f";
+--ci-icon-103: "\ea10";
+--ci-icon-104: "\ea11";
+--ci-icon-105: "\ea12";
+--ci-icon-106: "\ea13";
+--ci-icon-107: "\ea14";
+--ci-icon-108: "\ea15";
+--ci-icon-109: "\ea16";
+--ci-icon-11: "\ea17";
+--ci-icon-110: "\ea18";
+--ci-icon-111: "\ea19";
+--ci-icon-112: "\ea1a";
+--ci-icon-113: "\ea1b";
+--ci-icon-114: "\ea1c";
+--ci-icon-115: "\ea1d";
+--ci-icon-12: "\ea1e";
+--ci-icon-13: "\ea1f";
+--ci-icon-14: "\ea20";
+--ci-icon-15: "\ea21";
+--ci-icon-16: "\ea22";
+--ci-icon-17: "\ea23";
+--ci-icon-18: "\ea24";
+--ci-icon-19: "\ea25";
+--ci-icon-2: "\ea26";
+--ci-icon-20: "\ea27";
+--ci-icon-21: "\ea28";
+--ci-icon-22: "\ea29";
+--ci-icon-23: "\ea2a";
+--ci-icon-24: "\ea2b";
+--ci-icon-25: "\ea2c";
+--ci-icon-26: "\ea2d";
+--ci-icon-27: "\ea2e";
+--ci-icon-28: "\ea2f";
+--ci-icon-29: "\ea30";
+--ci-icon-3: "\ea31";
+--ci-icon-30: "\ea32";
+--ci-icon-31: "\ea33";
+--ci-icon-32: "\ea34";
+--ci-icon-34: "\ea35";
+--ci-icon-35: "\ea36";
+--ci-icon-36: "\ea37";
+--ci-icon-37: "\ea38";
+--ci-icon-38: "\ea39";
+--ci-icon-39: "\ea3a";
+--ci-icon-4: "\ea3b";
+--ci-icon-40: "\ea3c";
+--ci-icon-41: "\ea3d";
+--ci-icon-42: "\ea3e";
+--ci-icon-43: "\ea3f";
+--ci-icon-44: "\ea40";
+--ci-icon-45: "\ea41";
+--ci-icon-46: "\ea42";
+--ci-icon-48: "\ea43";
+--ci-icon-49: "\ea44";
+--ci-icon-5: "\ea45";
+--ci-icon-50: "\ea46";
+--ci-icon-51: "\ea47";
+--ci-icon-52: "\ea48";
+--ci-icon-53: "\ea49";
+--ci-icon-54: "\ea4a";
+--ci-icon-55: "\ea4b";
+--ci-icon-56: "\ea4c";
+--ci-icon-57: "\ea4d";
+--ci-icon-58: "\ea4e";
+--ci-icon-59: "\ea4f";
+--ci-icon-6: "\ea50";
+--ci-icon-60: "\ea51";
+--ci-icon-61: "\ea52";
+--ci-icon-62: "\ea53";
+--ci-icon-63: "\ea54";
+--ci-icon-64: "\ea55";
+--ci-icon-65: "\ea56";
+--ci-icon-66: "\ea57";
+--ci-icon-67: "\ea58";
+--ci-icon-68: "\ea59";
+--ci-icon-69: "\ea5a";
+--ci-icon-7: "\ea5b";
+--ci-icon-70: "\ea5c";
+--ci-icon-71: "\ea5d";
+--ci-icon-72: "\ea5e";
+--ci-icon-73: "\ea5f";
+--ci-icon-74: "\ea60";
+--ci-icon-75: "\ea61";
+--ci-icon-76: "\ea62";
+--ci-icon-77: "\ea63";
+--ci-icon-78: "\ea64";
+--ci-icon-79: "\ea65";
+--ci-icon-8: "\ea66";
+--ci-icon-80: "\ea67";
+--ci-icon-81: "\ea68";
+--ci-icon-82: "\ea69";
+--ci-icon-83: "\ea6a";
+--ci-icon-84: "\ea6b";
+--ci-icon-85: "\ea6c";
+--ci-icon-86: "\ea6d";
+--ci-icon-87: "\ea6e";
+--ci-icon-88: "\ea6f";
+--ci-icon-89: "\ea70";
+--ci-icon-9: "\ea71";
+--ci-icon-90: "\ea72";
+--ci-icon-91: "\ea73";
+--ci-icon-92: "\ea74";
+--ci-icon-93: "\ea75";
+--ci-icon-94: "\ea76";
+--ci-icon-95: "\ea77";
+--ci-icon-96: "\ea78";
+--ci-icon-97: "\ea79";
+--ci-icon-98: "\ea7a";
+--ci-icon-99: "\ea7b";
+--ci-icon-cpu-1: "\ea7c";
+--ci-icon-cpu-2: "\ea7d";
+--ci-icon-cpu: "\ea7e";
+--ci-icon47: "\ea7f";
+--ci-left: "\ea80";
+--ci-stylelint: "\ea81";
+}
+.ci-adobe:before { content: var(--ci-adobe); }
+.ci-ai-car:before { content: var(--ci-ai-car); }
+.ci-ai-flame:before { content: var(--ci-ai-flame); }
+.ci-ai-road:before { content: var(--ci-ai-road); }
+.ci-ai-ship:before { content: var(--ci-ai-ship); }
+.ci-ai-train:before { content: var(--ci-ai-train); }
+.ci-demo:before { content: var(--ci-demo); }
+.ci-git:before { content: var(--ci-git); }
+.ci-group_user:before { content: var(--ci-group_user); }
+.ci-hdk_logo:before { content: var(--ci-hdk_logo); }
+.ci-icon-1:before { content: var(--ci-icon-1); }
+.ci-icon-10:before { content: var(--ci-icon-10); }
+.ci-icon-100:before { content: var(--ci-icon-100); }
+.ci-icon-101:before { content: var(--ci-icon-101); }
+.ci-icon-102:before { content: var(--ci-icon-102); }
+.ci-icon-103:before { content: var(--ci-icon-103); }
+.ci-icon-104:before { content: var(--ci-icon-104); }
+.ci-icon-105:before { content: var(--ci-icon-105); }
+.ci-icon-106:before { content: var(--ci-icon-106); }
+.ci-icon-107:before { content: var(--ci-icon-107); }
+.ci-icon-108:before { content: var(--ci-icon-108); }
+.ci-icon-109:before { content: var(--ci-icon-109); }
+.ci-icon-11:before { content: var(--ci-icon-11); }
+.ci-icon-110:before { content: var(--ci-icon-110); }
+.ci-icon-111:before { content: var(--ci-icon-111); }
+.ci-icon-112:before { content: var(--ci-icon-112); }
+.ci-icon-113:before { content: var(--ci-icon-113); }
+.ci-icon-114:before { content: var(--ci-icon-114); }
+.ci-icon-115:before { content: var(--ci-icon-115); }
+.ci-icon-12:before { content: var(--ci-icon-12); }
+.ci-icon-13:before { content: var(--ci-icon-13); }
+.ci-icon-14:before { content: var(--ci-icon-14); }
+.ci-icon-15:before { content: var(--ci-icon-15); }
+.ci-icon-16:before { content: var(--ci-icon-16); }
+.ci-icon-17:before { content: var(--ci-icon-17); }
+.ci-icon-18:before { content: var(--ci-icon-18); }
+.ci-icon-19:before { content: var(--ci-icon-19); }
+.ci-icon-2:before { content: var(--ci-icon-2); }
+.ci-icon-20:before { content: var(--ci-icon-20); }
+.ci-icon-21:before { content: var(--ci-icon-21); }
+.ci-icon-22:before { content: var(--ci-icon-22); }
+.ci-icon-23:before { content: var(--ci-icon-23); }
+.ci-icon-24:before { content: var(--ci-icon-24); }
+.ci-icon-25:before { content: var(--ci-icon-25); }
+.ci-icon-26:before { content: var(--ci-icon-26); }
+.ci-icon-27:before { content: var(--ci-icon-27); }
+.ci-icon-28:before { content: var(--ci-icon-28); }
+.ci-icon-29:before { content: var(--ci-icon-29); }
+.ci-icon-3:before { content: var(--ci-icon-3); }
+.ci-icon-30:before { content: var(--ci-icon-30); }
+.ci-icon-31:before { content: var(--ci-icon-31); }
+.ci-icon-32:before { content: var(--ci-icon-32); }
+.ci-icon-34:before { content: var(--ci-icon-34); }
+.ci-icon-35:before { content: var(--ci-icon-35); }
+.ci-icon-36:before { content: var(--ci-icon-36); }
+.ci-icon-37:before { content: var(--ci-icon-37); }
+.ci-icon-38:before { content: var(--ci-icon-38); }
+.ci-icon-39:before { content: var(--ci-icon-39); }
+.ci-icon-4:before { content: var(--ci-icon-4); }
+.ci-icon-40:before { content: var(--ci-icon-40); }
+.ci-icon-41:before { content: var(--ci-icon-41); }
+.ci-icon-42:before { content: var(--ci-icon-42); }
+.ci-icon-43:before { content: var(--ci-icon-43); }
+.ci-icon-44:before { content: var(--ci-icon-44); }
+.ci-icon-45:before { content: var(--ci-icon-45); }
+.ci-icon-46:before { content: var(--ci-icon-46); }
+.ci-icon-48:before { content: var(--ci-icon-48); }
+.ci-icon-49:before { content: var(--ci-icon-49); }
+.ci-icon-5:before { content: var(--ci-icon-5); }
+.ci-icon-50:before { content: var(--ci-icon-50); }
+.ci-icon-51:before { content: var(--ci-icon-51); }
+.ci-icon-52:before { content: var(--ci-icon-52); }
+.ci-icon-53:before { content: var(--ci-icon-53); }
+.ci-icon-54:before { content: var(--ci-icon-54); }
+.ci-icon-55:before { content: var(--ci-icon-55); }
+.ci-icon-56:before { content: var(--ci-icon-56); }
+.ci-icon-57:before { content: var(--ci-icon-57); }
+.ci-icon-58:before { content: var(--ci-icon-58); }
+.ci-icon-59:before { content: var(--ci-icon-59); }
+.ci-icon-6:before { content: var(--ci-icon-6); }
+.ci-icon-60:before { content: var(--ci-icon-60); }
+.ci-icon-61:before { content: var(--ci-icon-61); }
+.ci-icon-62:before { content: var(--ci-icon-62); }
+.ci-icon-63:before { content: var(--ci-icon-63); }
+.ci-icon-64:before { content: var(--ci-icon-64); }
+.ci-icon-65:before { content: var(--ci-icon-65); }
+.ci-icon-66:before { content: var(--ci-icon-66); }
+.ci-icon-67:before { content: var(--ci-icon-67); }
+.ci-icon-68:before { content: var(--ci-icon-68); }
+.ci-icon-69:before { content: var(--ci-icon-69); }
+.ci-icon-7:before { content: var(--ci-icon-7); }
+.ci-icon-70:before { content: var(--ci-icon-70); }
+.ci-icon-71:before { content: var(--ci-icon-71); }
+.ci-icon-72:before { content: var(--ci-icon-72); }
+.ci-icon-73:before { content: var(--ci-icon-73); }
+.ci-icon-74:before { content: var(--ci-icon-74); }
+.ci-icon-75:before { content: var(--ci-icon-75); }
+.ci-icon-76:before { content: var(--ci-icon-76); }
+.ci-icon-77:before { content: var(--ci-icon-77); }
+.ci-icon-78:before { content: var(--ci-icon-78); }
+.ci-icon-79:before { content: var(--ci-icon-79); }
+.ci-icon-8:before { content: var(--ci-icon-8); }
+.ci-icon-80:before { content: var(--ci-icon-80); }
+.ci-icon-81:before { content: var(--ci-icon-81); }
+.ci-icon-82:before { content: var(--ci-icon-82); }
+.ci-icon-83:before { content: var(--ci-icon-83); }
+.ci-icon-84:before { content: var(--ci-icon-84); }
+.ci-icon-85:before { content: var(--ci-icon-85); }
+.ci-icon-86:before { content: var(--ci-icon-86); }
+.ci-icon-87:before { content: var(--ci-icon-87); }
+.ci-icon-88:before { content: var(--ci-icon-88); }
+.ci-icon-89:before { content: var(--ci-icon-89); }
+.ci-icon-9:before { content: var(--ci-icon-9); }
+.ci-icon-90:before { content: var(--ci-icon-90); }
+.ci-icon-91:before { content: var(--ci-icon-91); }
+.ci-icon-92:before { content: var(--ci-icon-92); }
+.ci-icon-93:before { content: var(--ci-icon-93); }
+.ci-icon-94:before { content: var(--ci-icon-94); }
+.ci-icon-95:before { content: var(--ci-icon-95); }
+.ci-icon-96:before { content: var(--ci-icon-96); }
+.ci-icon-97:before { content: var(--ci-icon-97); }
+.ci-icon-98:before { content: var(--ci-icon-98); }
+.ci-icon-99:before { content: var(--ci-icon-99); }
+.ci-icon-cpu-1:before { content: var(--ci-icon-cpu-1); }
+.ci-icon-cpu-2:before { content: var(--ci-icon-cpu-2); }
+.ci-icon-cpu:before { content: var(--ci-icon-cpu); }
+.ci-icon47:before { content: var(--ci-icon47); }
+.ci-left:before { content: var(--ci-left); }
+.ci-stylelint:before { content: var(--ci-stylelint); }
+

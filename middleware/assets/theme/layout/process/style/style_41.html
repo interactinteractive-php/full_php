@@ -1,0 +1,170 @@
+<div class="portlet light shadow part-area theme-panel" id="part-area">
+  <div class="part-title">
+    <div class="theme-grid-title">
+      <div class="col-md-11 section-title">Оролцогч</div>
+      <a class="btn btn-circle btn-icon-only theme-edit-btn" href="javascript: themeEdit('part-area');" style="padding: 2px;"><i class="icon-plus3 font-size-12"></i></a>
+    </div>
+  </div>
+  <div class="edu-style-content">
+    <div class="theme-data-area">
+      {{rowsbegin}}
+      <div class="theme-row">
+        <span class="dotted-timeline"></span>
+        <div class="row">
+          <div class="col-md-6">{{pos1}}</div>
+          <div class="col-md-6">{{pos2}}</div>
+        </div>      
+
+        <div class="row">
+          <div class="col-md-6">{{pos3}}</div>
+          <div class="col-md-6">{{pos4}}</div>
+        </div>
+        <div class="row">
+          <div class="col-md-6">{{pos5}}</div>
+          <div class="col-md-6">{{pos6}}</div>  
+        </div>
+        <div class="row">
+          <div class="col-md-6">{{pos7}}</div>
+          <div class="col-md-6">{{pos8}}</div>  
+        </div>
+        <div class="row">
+          <div class="col-md-6">{{pos9}}</div>
+          <div class="col-md-6">{{pos10}}</div>  
+        </div>
+        <div class="row">
+          <div class="col-md-6">{{pos11}}</div>
+          <div class="col-md-6">{{pos12}}</div>  
+        </div>
+      </div>
+      {{rowsend}}
+    </div>    
+  </div>    
+</div>
+
+<style>   
+  .part-area {
+      background-color: #fff;
+      clear: both;
+      display: table;
+      width: 100%;
+      border-radius: 0px;
+  }
+
+  .part-area .part-title {
+      font-size: 30px;
+  }
+  
+  .part-area .section-title {
+    padding: 0px;
+    font-size: 17px;
+    color: #949b9f;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+  .part-area .edu-style-content .theme-row {
+      position: relative;
+      border-bottom: 1px dashed #9bcbdd;
+      padding: 15px 0px;
+  }
+  .part-area .edu-style-content .removeThemeRowBtn {
+      margin-top: -15px;
+  }
+  .part-area .edu-style-content .theme-row .theme-line {
+      border-bottom: 1px solid #efefef;
+      margin: 5px 0px;
+  }
+
+  .part-area .part-area label {
+      width: 22% !important;
+  }
+
+  .part-area .theme-inline-date .dateElement .input-group-btn {
+      display: none;
+  }
+
+  .part-area .theme-inline-date .dateElement .dataInit{
+      float: left;
+  }
+
+  .part-area .theme-inline-date .theme-inline-date-seperator {
+      float: left;
+  }
+
+  .edu-timeline ul {
+      padding-left: 15px;
+  }
+  .edu-timeline ul li {
+      list-style-type: none;
+      position: relative;
+      width: 2px;
+      margin: 0 auto;
+      padding-top: 40px;
+      background: #e5e5e5;
+  }
+  .edu-timeline ul li:last-child {
+      height: 0px;
+  }
+  .edu-timeline ul li.in-view::after {
+      background: #60a3d8;
+  }
+  .edu-timeline ul li::after {
+      content: '';
+      position: absolute;
+      left: 55%;
+      top: 40px;
+      transform: translateX(-50%);
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: inherit;
+  }
+  .edu-timeline ul li::after {
+      transition: background .5s ease-in-out;
+  }
+  .edu-timeline ul li.in-view div {
+      transform: none;
+      visibility: visible;
+      opacity: 1;
+      left: 30px;
+      transition: all .5s ease-in-out;
+      position: relative;
+      bottom: 0;
+      min-width: 500px;
+  }
+
+  .part-area .edu-timeline label {
+      display: none;
+  }
+  
+  .theme-inline-date, .theme-inline-date .select2-chosen  {
+      color: #2574a9;
+      font-size: 14px;
+  }
+  .edu-style-content {
+      padding: 10px 20px;
+  }
+  .edu-style-content .theme-data-area {
+      
+  }
+  .dotted-timeline {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      position: absolute;
+      top: 13px;
+      left: -6px;
+  }
+
+  .edu-timeline-start {
+      padding: 13px;
+      background: #2574a9;
+      border-radius: 50%;
+      color: #fff;
+      margin-left: -23px;
+      margin-bottom: 30px;
+  }
+  .part-area textarea {
+    width: 55%;
+  }
+</style>

@@ -1,0 +1,96 @@
+<style type="text/css">
+  .profile-card-area header img {
+      border-radius: 50%;
+      margin: 20px auto 0;
+      display: block;
+      width: 80px;
+      border: 2px solid #fff;
+  }
+  .profile-card-area aside {
+      margin: 5px;
+      display: block;
+      background: url('assets/core/frontend/layout/theme/img/card_bg.jpg');
+      background-size: cover;
+      overflow: hidden;
+      transition: all ease 0.3s;
+      border-top: 3px solid #26A69A;
+      border-bottom: 3px solid #00695C;
+      border-radius: 5px;
+      height: 210px;
+      width: 180px;
+      box-shadow: 0 0 70px 10px #fff;
+      float: left;
+      position: relative;
+  }
+  .profile-card-area header {
+      text-align: center;
+  }
+  .profile-card-area header h1 {
+      position: relative;
+      text-align: center;
+      color: #fff;
+      text-shadow: 1px 1px rgba(0, 0, 0, 0.5);
+      font-size: 15px;
+      line-height: 25px;
+      display: inline-block;
+      padding: 10px;
+      transition: all ease 0.250s;
+      border-top: 1px solid #fff;
+      border-bottom: 1px solid #fff;
+  }
+  .profile-card-area aside header h1 {
+      margin-top: 0px;
+      outline: 0 solid #fff;
+      border-top: 0px solid #fff;
+      border-bottom: 1px solid #fff;
+  }
+  .profile-card-area header h2 {
+      text-align: center;
+      color: #fff;
+      text-shadow: 1px 1px rgba(0, 0, 0, 0.5);
+      font-size: 14px;
+      font-weight: normal;
+      line-height: 20px;
+      margin: 0;
+  }
+  .profile-card-area .theme-edit-btn {
+      border: 1px solid;
+      float: right;
+  }
+  .profile-card-area .lookup-code-autocomplete, 
+  .profile-card-area label[data-label-path] {
+      display: none;
+  }
+  .profile-card-area .removeThemeRowBtn {
+      padding: 6px 0px !important;
+      position: absolute;
+      top: 3px;
+      right: 0px;
+  }
+</style>
+
+<div class="profile-card-area" id="profile-card-area">  
+  <div class="btn-area col-md-12 mb10"><a title="Нэмэх" class="btn btn-circle btn-icon-only theme-edit-btn" href="javascript: themeEditBox('profile-card-area');"><i class="icon-plus3 font-size-12"></i></a></div>
+  <div class="active-with-click">
+    <div class="theme-data-area">
+      {{rowsbegin}}
+      <div class="theme-row">
+        <aside class="profile-card theme-content">
+          <header>
+
+            <a href="javascript:;">
+              <img src="assets/core/global/img/user.png">
+            </a>
+
+            <h1>{{pos1}}</h1>
+
+            <h2>{{pos2}}</h2>
+
+            <h2>{{pos3}}</h2>
+          </header>
+        </aside>      
+      </div>
+      {{rowsend}}
+    </div>
+  </div>  
+</div>

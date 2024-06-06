@@ -1,0 +1,586 @@
+.government {
+    margin-top: 10px;
+    overflow: hidden;
+}
+
+.page-content.government {
+    display: inherit;
+}
+
+.government .card .card-header {
+    padding: 0.9375rem 1.25rem;
+}
+
+.government .card .card-body {
+    padding: 1.25rem;
+}
+
+.government .media {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+}
+
+@media (min-width: 768px) {
+    .header-elements-md-inline .header-elements.d-none {
+        display: none !important;
+    }
+}
+
+.government .general_number {
+    background: #f2635f;
+    width: 74px;
+    height: 64px;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    font-size: 44px;
+    border-radius: 5px;
+    font-weight: bold;
+    margin-right: 20px;
+}
+
+.government .general_number .numb {
+    font-size: 24px;
+}
+
+.government .general_number .type {
+    margin-top: 2px;
+    font-size: 12px;
+    padding-top: 5px;
+}
+
+.dblock {
+    max-width: 50px !important;
+    display: none !important;
+}
+
+.government .general_number_conf {
+    background: #034591;
+    width: auto;
+    height: 60px;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    font-size: 44px;
+    border-radius: 5px;
+    font-weight: bold;
+    margin-right: 20px;
+    padding: 0 10px;
+}
+
+@media (min-width: 768px) {
+    .dblock {
+        max-width: 50px !important;
+        display: none !important;
+    }
+}
+
+.government .general_number_conf .numb {
+    font-size: 24px;
+}
+
+.government .general_number_conf .type {
+    margin-top: 0;
+    font-size: 12px;
+    border-top: 1px solid #c0c0c0;
+    padding-top: 5px;
+}
+
+.government .posname {
+    font-size: 15px;
+    color: #aaa;
+    text-transform: uppercase;
+    /* font-weight: bold; */
+    margin-top: 5px;
+    margin-bottom: 0;
+}
+
+.government .posname2 {
+    font-size: 12px;
+    color: #aaa;
+    text-transform: uppercase;
+    font-weight: bold;
+    margin-top: 5px;
+    margin-bottom: 0;
+}
+
+.government .problem {
+    margin-right: 20px;
+    margin-bottom: 0;
+}
+
+.government .text-muted {
+    color: #777 !important;
+}
+
+.government .btn.timer-start {
+    background: #2196f3 !important;
+}
+
+.government .btn.timer-start i {
+    font-size: 25px !important;
+}
+
+.government .btn.clock {
+    font-size: 22px;
+    padding: 7px 10px;
+    width: 110px;
+    height: 64px;
+    border-left: 1px solid #e0e0e0;
+    background: #eee;
+    border-radius: 5px;
+}
+
+.government .pstatus {
+    background: #298c29;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    text-align: center;
+    position: relative;
+}
+
+.government .pstatus i {
+    color: #fff;
+    font-size: 17px;
+    line-height: 14px;
+    padding-top: 16px;
+}
+
+.government .pstatus .isactive {
+    background: #f00;
+}
+
+.government .list-icons-extended p {
+    font-size: 15px;
+    text-transform: capitalize;
+}
+
+.government .addothermem {
+    position: absolute;
+    right: 20px;
+    top: 15px;
+    font-size: 14px;
+    background: #2196f3;
+    color: #fff;
+    padding: 0 10px;
+    border-radius: 3px;
+}
+
+.government .btn.stopbtn i {
+    font-size: 25px;
+}
+
+.government .btn.clock2 {
+    width: 60px;
+    font-size: 22px;
+    padding: 7px 10px;
+    height: 60px;
+    border-left: 1px solid #e0e0e0;
+    background: #eee;
+    border-radius: 5px;
+}
+
+.government .media-list-linked .media {
+    padding: 0rem 1.25rem;
+}
+
+.government .table-xs td {
+    padding: 0.5rem 1.25rem;
+}
+
+@media (min-width: 768px) {
+    .government .sidebar-expand-md.sidebar-component-right {
+        margin-left: 1.25rem;
+        margin-right: 0;
+    }
+}
+
+.table-xs th {
+    padding: 0.5rem 1.25rem;
+}
+
+.government img.main_img {
+    width: 110px;
+    border-radius: 8px;
+    margin-right: 15px;
+}
+
+.government .breadcrumb-line {
+    margin-bottom: 0;
+}
+
+.government .header_icon_box a i {
+    font-size: 22px;
+}
+
+.government .text-green {
+    color: green !important;
+}
+
+.government .text-red {
+    color: #f00 !important;
+}
+
+.government .header_icon_box h5 {
+    line-height: normal;
+}
+
+.government .sidebar {
+    margin-left: 0;
+    background: #fff;
+    border: 0;
+    height: auto;
+    margin-right: 12px;
+}
+
+.government .list-inline-dotted .list-inline-item:not(:last-child):after {
+    display: none;
+}
+
+.government #accordion .card {
+    border: 0;
+}
+
+.government #accordion .card .card-header {
+    background: #aaa;
+    border-radius: 5px;
+    padding: 10px 20px;
+}
+
+.isitem .btn.finishadd {
+    width: inherit;
+    background: #fff !important;
+    color: green;
+    position: absolute;
+    right: 10px;
+    padding: 3px 7px;
+    border: none;
+    top: 10px;
+    z-index: 2;
+}
+
+.government .header-elements .timer-window {
+    background: #eee;
+    padding: 0px 15px;
+    border-radius: 5px;
+    min-width: 95px;
+    border: none;
+}
+
+.government .header-elements .timer-window span {
+    font-size: 12px;
+    text-transform: uppercase;
+    color: #aaa;
+    font-weight: 600;
+    display: inline-block;
+    margin-top: 7px;
+}
+
+.government .header-elements .timer-window h5 {
+    font-size: 22px;
+    font-weight: 600;
+}
+
+.government #accordion .card .btn .card-header h6 {
+    color: #fff;
+    font-weight: bold;
+    text-align: left;
+}
+
+.government .modal-dialog {
+    /*    max-width: 1000px;
+    margin: 1.75rem auto;*/
+}
+
+.government .modal .modal-header {
+    background: none;
+    display: none !important;
+}
+
+.modal-footer {
+    background: none;
+    /*display: none !important;*/
+}
+
+.government .card-table table tbody tr:hover,
+.government .card-table table tbody tr:active,
+.government .card-table table tbody tr:focus {
+    background: #cce6ff;
+}
+
+.government .modal .modal-footer .closebtn {
+    background: #e0e0e0;
+    color: #000;
+}
+
+.government .confnum {
+    width: 30px;
+    height: 20px;
+    font-weight: bold;
+    padding: 1px 10px 1px 8px;
+}
+
+.government .confnum span {
+    line-height: 21px;
+    letter-spacing: -1.5px;
+}
+
+.government .startbtn {
+    width: 60px;
+    height: 50px;
+    background: #2196f3;
+    justify-content: center;
+    align-items: center;
+    padding: 0 !important;
+    padding-left: 5px !important;
+}
+
+.government .startbtn.small {
+    width: 44px;
+    height: 34px;
+    justify-content: center;
+    align-items: center;
+    padding: 0 !important;
+    background: #f2f2f2 !important;
+    padding-left: 3px !important;
+    border: 1px solid #e5e5e5;
+    margin-top: -5px;
+}
+
+.government .card .media-list .badge {
+    margin-top: -10px;
+}
+
+.government .card .media-list .badge.badge-info {
+    background: #2196f3;
+}
+
+.government .startbtn.small i {
+    font-size: 15px;
+    color: #2196f3;
+}
+
+.government .startbtn.green {
+    background: #f2635f !important;
+}
+
+.government .startbtn i {
+    font-size: 34px;
+}
+
+.government .timestart,
+.government .timeend {
+    font-size: 12px;
+    text-transform: uppercase;
+    color: #aaa;
+}
+
+.line-height-normal {
+    line-height: normal;
+}
+
+.government .startbtn {
+    background: #2196f3 !important;
+}
+
+.government .confasname {
+    font-size: 15px;
+}
+
+.government .confasname2 {
+    font-size: 15px;
+    line-height: normal;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+}
+
+.government .membername {
+    font-size: 12px;
+}
+
+.government .memberposition1,
+.government .memberposition2,
+.government .memberposition {
+    font-size: 10px;
+    width: 100%;
+    color: #999;
+    text-transform: uppercase;
+}
+
+.government .parliament_logo {
+    height: 50px;
+}
+
+.government .text-gray {
+    color: #999;
+}
+
+.government .font-size-vs {
+    font-size: 12px;
+}
+
+.government .font-size-m {
+    font-size: 14px;
+}
+
+.government .font-size-lg {
+    font-size: 15px;
+}
+
+.government .bg-gray-400 {
+    background: #c0c0c0;
+}
+
+.government .badgecus {
+    background: transparent;
+    width: auto;
+    height: auto;
+    border-radius: 50px;
+    padding: 1px 6px 1px 5px;
+    width: 16px;
+    position: relative;
+    height: 14px;
+    color: #fff;
+    font-weight: bold;
+    font-size: 11px;
+    margin-left: 5px;
+    margin-top: -1px;
+    letter-spacing: -1px;
+}
+
+.government .badgecus i {
+    font-size: 11px;
+    position: absolute;
+    z-index: 1;
+    color: #2196f3;
+    cursor: pointer;
+}
+
+.v1 .tab-content li {
+    cursor: pointer;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.v1 .tab-content li.cancel {
+    background: #f3e8e8 !important;
+}
+
+button i.icon-pause {
+    cursor: pointer;
+}
+
+.government .header-elements .timerInit {
+    border: none !important;
+}
+
+.government .header-elements .breakTimer h5,
+.government .header-elements .durationTimer h5 {
+    border: none;
+}
+
+.government .header-elements .breakTimer h5 span,
+.government .header-elements .durationTimer h5 span {
+    color: green;
+    font-size: 22px;
+    font-weight: 600;
+    margin: 0;
+    border: none;
+}
+
+.government .header-elements .breakTimer h5 span {
+    color: #ff9800 !important;
+}
+
+.btnstatus .icon-briefcase3,
+.btnstatus .icon-plus3 {
+    color: #ee9248 !important;
+}
+
+.btnstatus .icon-subtract {
+    color: #f85656 !important;
+}
+
+.btnstatus .icon-lock {
+    color: #89a652 !important;
+}
+
+.btnstatus .icon-alarm {
+    color: #9d8aa5 !important;
+}
+
+.btnstatus .icon-circle2 {
+    color: green !important;
+}
+
+
+/** issui*/
+
+
+/* .conferencing-reviewgov-list li.active span,
+.conferencing-issue-list li.active span{
+color:#fff !important;
+} */
+
+.conferencing-reviewgov-list li.issue-stop,
+.conferencing-issue-list li.issue-stop {
+    background: #9cf9aa;
+}
+
+.conferencing-reviewgov-list li.issue-start,
+.conferencing-issue-list li.issue-start {
+    background: #f9e3c3;
+}
+
+.conferencing-reviewgov-list li.active,
+.conferencing-issue-list li.active {
+    background: #c8e7ff;
+}
+
+.conferencing-reviewgov-list li .startbtn i,
+.conferencing-issue-list li .startbtn i {
+    font-size: 22px;
+}
+
+.conferencing-reviewgov-list li .startbtn,
+.conferencing-issue-list li .startbtn {
+    width: 60px !important;
+    height: 50px !important;
+    border: none !important;
+}
+
+.media-list li {
+    /* transition: 0.5s; */
+}
+
+.conferencing-reviewgov-list li ul li,
+.conferencing-issue-list li ul li {
+    padding: 0;
+}
+
+.conferencing-reviewgov-list li ul li,
+.conferencing-issue-list li ul li:hover {
+    padding: 0;
+    background: transparent;
+}
+
+.conferencing-reviewgov-list li,
+.conferencing-issue-list li {
+    border-bottom: 1px solid #e0e0e0;
+    padding: 15px 30px;
+}
+
+.media-list li:last-child {
+    border: none !important;
+}
+.government .not-tab > a {
+    background: #f2f2f2;
+}
+
+.government .form-control[disabled], .government .form-control[readonly], .government fieldset[disabled] .form-control {
+    background-color: #FFF;
+    color: #000;
+    border: none;
+}

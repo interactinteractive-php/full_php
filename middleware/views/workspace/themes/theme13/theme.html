@@ -1,0 +1,187 @@
+<div class="vr-workspace-theme13 ws-area w-100" id="workspace-id-{workspace-id}" data-dm-id="{dm-metadata-id}">
+    <div class="ws-page-header">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="col-md-3 ws-page-sidebar">
+                    <div class="ws-page-sidebar-wrapper">
+                        <div class="topsidebar">
+                            <div class="ws-header-name-2">{header-position-2}</div>
+                        </div>    
+                    </div>
+                </div>
+                <div class="col-md-9 ws-page-content-wrapper fright">
+                    <div class="ws-page-header-content">
+                        
+                        <div class="ws-header-part" data-position-name="header-position-6">
+                            <span class="title">{header-position-6-labelname}</span>
+                            <span class="value">{header-position-6}<span>
+                        </div>
+                        <div class="ws-header-part" data-position-name="header-position-5">
+                            <span class="title">{header-position-5-labelname}</span>
+                            <span class="value">{header-position-5}<span>
+                        </div>
+                        <div class="ws-header-part" data-position-name="header-position-7">
+                            <span class="title">{header-position-7-labelname}</span>
+                            <span class="value">{header-position-7}<span>
+                        </div>
+                        <div class="ws-header-part" data-position-name="header-position-3">
+                            <span class="title">{header-position-3-labelname}</span>
+                            <span class="value">{header-position-3}<span>
+                        </div>
+
+                        <div class="ws-hidden-params" data-position-name="hidden-params">
+                            {hidden-params}
+                        </div>
+                        <div class="clearfix w-100"></div>
+                    </div>
+                </div>
+            </div>    
+        </div>
+        <div class="row"> 
+            <div class="ws-menu">
+                <div class="">
+                    {menu}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="ws-page-container">
+        <div class="ws-page-content-wrapper">
+            <div class="ws-page-content">
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <div class="portlet light shadow workspace-main-container"></div>
+                        <div class="clearfix w-100"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <input type="hidden" name="workSpaceMode">
+</div>
+
+<div class="clearfix w-100"></div>
+
+<script type="text/javascript">
+$(function(){
+    var headCss = '';
+    
+    $('style#head-style-{workspace-id}').remove();
+    
+    $('#workspace-id-{workspace-id} ul.workspace-menu > li > a').each(function(){
+        var $this = $(this);
+        
+        if ($this.hasAttr('style')) {
+            var _index = $this.parent().index() + 1;
+            var bgColor = $this.css('background-color');
+            var bgColorHover = invertCssColor(colorToHex(bgColor));
+            headCss += 'div#workspace-id-{workspace-id} .ws-menu ul.workspace-menu > li:nth-child('+_index+'):not(:last-child) > a:after { border-left: 20px solid '+bgColor+' !important;}';
+            headCss += 'div#workspace-id-{workspace-id} .ws-menu ul.workspace-menu > li:nth-child('+_index+'):hover > a { background-color: '+bgColorHover+' !important; }';
+            headCss += 'div#workspace-id-{workspace-id} .ws-menu ul.workspace-menu > li:nth-child('+_index+'):hover > a:before { border-right-color: '+bgColorHover+' !important; }';
+            headCss += 'div#workspace-id-{workspace-id} .ws-menu ul.workspace-menu > li:nth-child('+_index+'):hover > a:after { border-left-color: '+bgColorHover+' !important; }';
+        }
+        
+        if ($this.hasAttr('data-menu-id')) {
+            var menuId = $this.attr('data-menu-id');
+            $this.attr('data-criteria', 'menuId='+menuId);
+        }
+        
+        if ($this.next('ul.sub-menu').length) {
+            $this.next('ul.sub-menu').find('a[data-menu-id]').each(function(){
+                var $thisSub = $(this);
+                var menuIdSub = $thisSub.attr('data-menu-id');
+                $thisSub.attr('data-criteria', 'menuId='+menuIdSub);
+            });
+        }
+    });
+    
+    var $foundin = $("*:contains('{header-position-')").filter(function () {
+        return $(this).children().length === 0;
+    });
+    $foundin.parents('.ws-header-part').addClass('hide');    
+    
+    if (headCss !== '') {
+        $('<style type="text/css" id="head-style-{workspace-id}">'+headCss+'</style>').appendTo('head');
+    }
+});   
+
+function activeMenu(elem) {
+    $(".sub-menu li").removeClass("actived");
+    $(elem).attr("class", "actived");
+}
+
+function colorToHex(color) {
+    if (color.substr(0, 1) === '#') {
+        return color;
+    }
+    var digits = /(.*?)rgb\((\d+), (\d+), (\d+)\)/.exec(color);
+    
+    var red = parseInt(digits[2]);
+    var green = parseInt(digits[3]);
+    var blue = parseInt(digits[4]);
+    
+    var rgb = blue | (green << 8) | (red << 16);
+    return digits[1] + '#' + rgb.toString(16);
+}
+
+function invertCssColor(color) {
+    var rgb = invertColor(hexColor2rgb(color));
+    return rgb2hexColor(rgb);
+}
+
+function invertColor(rgb) {
+    var yuv = rgb2yuv(rgb);
+    var factor = 90;
+    var threshold = 100;
+    yuv.y = clamp(yuv.y + (yuv.y > threshold ? -factor : factor));
+    return yuv2rgb(yuv);
+}
+
+function rgb2hexColor(rgb) {
+    return '#' + dec2hex(rgb.r) + dec2hex(rgb.g) + dec2hex(rgb.b);
+}
+
+function hexColor2rgb(color) {
+    color = color.substring(1); // remove #
+    return {
+        r: parseInt(color.substring(0, 2), 16),
+        g: parseInt(color.substring(2, 4), 16),
+        b: parseInt(color.substring(4, 6), 16)
+    };
+}
+
+function rgb2hexColor(rgb) {
+    return '#' + dec2hex(rgb.r) + dec2hex(rgb.g) + dec2hex(rgb.b);
+}
+
+function dec2hex(n) {
+    var hex = n.toString(16);
+    if (hex.length < 2) {
+        return '0' + hex;
+    }
+    return hex;
+}
+
+function rgb2yuv(rgb){
+    var y = clamp(rgb.r *  0.29900 + rgb.g *  0.587   + rgb.b * 0.114);
+    var u = clamp(rgb.r * -0.16874 + rgb.g * -0.33126 + rgb.b * 0.50000 + 128);
+    var v = clamp(rgb.r *  0.50000 + rgb.g * -0.41869 + rgb.b * -0.08131 + 128);
+    return {y:y, u:u, v:v};
+}
+
+function yuv2rgb(yuv){
+    var y = yuv.y;
+    var u = yuv.u;
+    var v = yuv.v;
+    var r = clamp(y + (v - 128) *  1.40200);
+    var g = clamp(y + (u - 128) * -0.34414 + (v - 128) * -0.71414);
+    var b = clamp(y + (u - 128) *  1.77200);
+    return {r:r,g:g,b:b};
+}
+    
+function clamp(n){
+    if (n<0) { return 0;}
+    if (n>255) { return 255;}
+    return Math.floor(n);
+}
+</script>

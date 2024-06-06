@@ -1,0 +1,205 @@
+<div class="col-md-12 col-sm-12 pt10 pb10" id="content-widget2-windowid-uniqid" style="background-color:#fff;">
+    <div class="col-md-6 col-sm-6">
+        <p style="font-size: 15px; font-weight: bold; text-align: center">Дундаж борлуулалт</p>
+        <div id="sales1_content_widget2_chart_uniqid" class="widget-position isChart" data-position="1"></div>	
+    </div>  
+    <span style="border-left: 1px solid #019bab; height: 97%;position: absolute"></span>
+    <div class="col-md-6 col-sm-6">
+        <p style="font-size: 15px; font-weight: bold; text-align: center">Дундаж гүйлгээ</p>
+        <div id="sales2_content_widget2_chart_uniqid" class="widget-position isChart" data-position="2"></div>	
+    </div>
+</div>
+
+<style>
+    #content-widget2-windowid-uniqid {
+        padding-right: 0px;
+        padding-left: 0px;
+    }
+    #content-widget2-windowid-uniqid .widget-cards {
+        padding-top: 8px;
+        height: 220px;
+        background-color: #fff;
+    }
+    #content-widget2-windowid-uniqid .cm-number {
+        font-size: 32px;
+        margin-top: 65px;
+        position: absolute;
+    }
+    #content-widget2-windowid-uniqid .cm-number2 {
+        font-size: 22px;
+        color: #949494;
+        margin-top: 64px;
+        position: absolute;        
+        margin-left: 90px;
+    }
+    #content-widget2-windowid-uniqid .cm-divider {
+        border-left: 1px solid #019bab;
+        height: 204px;
+        position: absolute;
+        z-index: 9;
+        margin-top: 8px;        
+    }
+    #content-widget2-windowid-uniqid #sales1_content_widget2_chart_uniqid, #content-widget2-windowid-uniqid #sales2_content_widget2_chart_uniqid {
+        height: 400px;
+    }     
+</style>
+
+<script type="text/javascript">
+    amChartMinify.init();
+    
+    AmCharts.makeChart("sales1_content_widget2_chart_uniqid", {
+        "type": "serial",
+       "theme": "light",
+        "categoryField": "year",
+        "rotate": true,
+        "startDuration": 1,
+        "categoryAxis": {
+                "gridPosition": "start",
+                "position": "left"
+        },
+        "trendLines": [],
+        "graphs": [{
+            "balloonText": "Income:[[value]]",
+            "fillAlphas": 0.8,
+            "id": "AmGraph-1",
+            "lineAlpha": 0.2,
+            "title": "Income",
+            "type": "column",
+            "valueField": "income"
+        }],
+        "guides": [],
+        "valueAxes": [{
+            "id": "ValueAxis-1",
+            "position": "top",
+            "axisAlpha": 0
+        }],
+        "allLabels": [],
+        "balloon": {},
+        "titles": [],
+        "dataProvider": [
+            {
+                    "year": 2005,
+                    "income": 23.5,
+                    "expenses": 18.1
+            },
+            {
+                    "year": 2006,
+                    "income": 26.2,
+                    "expenses": 22.8
+            },
+            {
+                    "year": 2007,
+                    "income": 30.1,
+                    "expenses": 23.9
+            },
+            {
+                    "year": 2008,
+                    "income": 29.5,
+                    "expenses": 25.1
+            },
+            {
+                    "year": 2009,
+                    "income": 24.6,
+                    "expenses": 25
+            }
+        ],
+        "export": {
+            "enabled": false
+         }
+
+    });
+    
+    AmCharts.makeChart("sales2_content_widget2_chart_uniqid", {
+        "type": "serial",
+        "theme": "light",
+        "marginRight": 80,
+        "marginTop": 17,
+        "autoMarginOffset": 20,
+        "dataProvider": [{
+            "date": "2012-03-01",
+            "price": 20
+        }, {
+            "date": "2012-03-02",
+            "price": 75
+        }, {
+            "date": "2012-03-03",
+            "price": 15
+        }, {
+            "date": "2012-03-04",
+            "price": 75
+        }, {
+            "date": "2012-03-05",
+            "price": 158
+        }, {
+            "date": "2012-03-06",
+            "price": 57
+        }, {
+            "date": "2012-03-07",
+            "price": 107
+        }, {
+            "date": "2012-03-08",
+            "price": 89
+        }, {
+            "date": "2012-03-09",
+            "price": 75
+        }, {
+            "date": "2012-03-10",
+            "price": 132
+        }, {
+            "date": "2012-03-11",
+            "price": 158
+        }, {
+            "date": "2012-03-12",
+            "price": 56
+        }, {
+            "date": "2012-03-13",
+            "price": 169
+        }, {
+            "date": "2012-03-14",
+            "price": 24
+        }, {
+            "date": "2012-03-15",
+            "price": 147
+        }],
+        "valueAxes": [{
+            "logarithmic": true,
+            "dashLength": 1,
+            "guides": [{
+                "dashLength": 6,
+                "inside": true,
+                "label": "average",
+                "lineAlpha": 1,
+                "value": 90.4
+            }],
+            "position": "left"
+        }],
+        "graphs": [{
+            "bullet": "round",
+            "id": "g1",
+            "bulletBorderAlpha": 1,
+            "bulletColor": "#FFFFFF",
+            "bulletSize": 7,
+            "lineThickness": 2,
+            "title": "Price",
+            "type": "smoothedLine",
+            "useLineColorForBulletBorder": true,
+            "valueField": "price"
+        }],
+        "chartCursor": {
+            "valueLineEnabled": true,
+            "valueLineBalloonEnabled": true,
+            "valueLineAlpha": 0.5,
+            "fullWidth": true,
+            "cursorAlpha": 0.05
+        },
+        "dataDateFormat": "YYYY-MM-DD",
+        "categoryField": "date",
+        "categoryAxis": {
+            "parseDates": true
+        },
+        "export": {
+            "enabled": false
+        }
+    });
+ 
+</script>

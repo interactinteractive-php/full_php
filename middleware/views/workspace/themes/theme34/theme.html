@@ -1,0 +1,115 @@
+<div class="vr-workspace-theme34 ws-area" id="workspace-id-{workspace-id}" data-dm-id="{dm-metadata-id}">
+    <div class="sidebar sidebar-light sidebar-secondary sidebar-component-left sidebar-expand-md left-side">
+        <div class="sidebar-content">
+            <div class="dv-right-tools-btn">
+                <a href="javascript:;" data-dm-id="{dm-metadata-id}" class="close-btn btn btn-icon-only btn-circle btn-secondary ml0" onclick="backWindow(this);"><i class="icon-arrow-left7"></i></a>
+            </div>
+            
+            <div id="project-info">
+                <div class="project-info-row">
+                    <div class="header-positions">
+                        <div class="label-position">{header-position-3-labelname}:</div>
+                        <div class="control-position" data-position-name="header-position-3">{header-position-3}</div>
+                    </div>
+                </div>
+                <div class="project-info-row">
+                    <div class="header-positions">
+                        <div class="label-position">{header-position-6-labelname}:</div>
+                        <div class="control-position" data-position-name="header-position-6">{header-position-6}</div>
+                    </div>
+                </div>
+                <div class="project-info-row">
+                    <div class="header-positions">
+                        <div class="label-position">{header-position-7-labelname}:</div>
+                        <div class="control-position" data-position-name="header-position-7">{header-position-7}</div>
+                    </div>
+                </div>
+                <div class="project-info-row">
+                    <div class="header-positions">
+                        <div class="label-position">{header-position-5-labelname}:</div>
+                        <div class="control-position" data-position-name="header-position-5">{header-position-5}</div>
+                    </div>
+                </div>
+                <div class="project-info-row">
+                    <div class="header-positions">
+                        <div class="label-position">{header-position-8-labelname}:</div>
+                        <div class="control-position" data-position-name="header-position-8">{header-position-8}</div>
+                    </div>
+                </div>
+                <div class="project-info-row">
+                    <div class="header-positions">
+                        <div class="label-position">{header-position-9-labelname}:</div>
+                        <div class="control-position" data-position-name="header-position-9">{header-position-9}</div>
+                    </div>
+                </div>
+                <div class="project-info-row">
+                    <div class="header-positions">
+                        <div class="label-position">{header-position-10-labelname}:</div>
+                        <div class="control-position" data-position-name="header-position-10">{header-position-10}</div>
+                    </div>
+                </div>
+                <div class="project-info-row">
+                    <div class="header-positions">
+                        <div class="label-position">{header-position-11-labelname}:</div>
+                        <div class="control-position" data-position-name="header-position-11">{header-position-11}</div>
+                    </div>
+                </div>
+                <div class="project-info-row">
+                    <div class="header-positions">
+                        <div class="label-position">{header-position-12-labelname}:</div>
+                        <div class="control-position" data-position-name="header-position-12">{header-position-12}</div>
+                    </div>
+                </div> 
+                <div class="project-info-row">
+                    <div class="header-positions">
+                        <div class="label-position">{header-position-13-labelname}:</div>
+                        <div class="control-position" data-position-name="header-position-13">{header-position-13}</div>
+                    </div>
+                </div>    
+            </div>
+            {menu}
+        </div>
+    </div>
+   
+    <div class="content-wrapper workspace-main {right-side}" id="scrollit">
+        
+        <div class="ws-page-container">
+            <div class="ws-page-content-wrapper">
+                <div class="ws-page-content">
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="workspace-main-container"></div>
+                            <div class="clearfix w-100"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <input type="hidden" name="workSpaceMode">
+    <div class="ws-hidden-params hidden" data-position-name="hidden-params">
+        {hidden-params}
+    </div>
+</div>
+
+<div class="clearfix w-100"></div>
+
+<script type="text/javascript">
+var $tmpWsTheme34 = $('.vr-workspace-theme34');
+
+$(function() {
+    $('.emptyit').empty();
+
+    var foundin=$("*:contains('{header-position-')").filter(function(){
+        return $(this).children().length === 0;
+    });
+    
+    foundin.parents('.project-info-row').addClass('hide');
+});
+
+function activeMenu(elem){
+    $tmpWsTheme34.find('ul.workspace-menu li').removeClass("active");
+    $(elem).parents('li.dropdown').addClass('active');
+}
+</script>

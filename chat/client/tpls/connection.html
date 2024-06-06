@@ -1,0 +1,16 @@
+<li id="connection_<%=id%>" data-connection_id="<%=id%>" class="list-group-item media connectionItem chat-user-item">
+    <div class="media-body d-flex align-items-center bd-highlight">
+        <div class="connectionIconWrapper img_cont">
+            <img class="media-object connectionIcon rounded-circle user_img" onerror="onChatUserImgError(this);" src="api/image_thumbnail?width=35&src=<%=userData.picture%>"/>
+            <span class="is-online"></span>
+        </div>
+        <div class="user_info">
+            <div class="d-flex">
+                <h5 class="media-heading chat-user-name"><%=$.fn.mgVideoChat.htmlspecialchars(userData.fullName)%></h5>
+            </div>
+            <p class="chat-org-department-name"><%=$.fn.mgVideoChat.htmlspecialchars(userData.departmentName)%></p>
+            <p class="chat-status-name"><%=userData.status%></p>
+        </div>
+        <%=unread%>
+    </div>
+</li>

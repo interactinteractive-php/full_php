@@ -1,0 +1,139 @@
+<table border="0" style="width: 100%; font-family: Tahoma;">
+    <tbody>
+        <tr>
+            <td style="border-bottom: 1px #000 dashed; padding: 0 0 5px 0; text-align: center; font-size: 12px; font-weight: 700">
+                {title}
+            </td>
+        </tr>
+        <tr>
+            <td style="border-bottom: 1px #000 dashed; padding: 0 0 5px 0;">
+                <table border="0" width="100%" style="width: 100%; table-layout: fixed;">
+                    <tbody>
+                        <tr>
+                            <td style="vertical-align: middle; width: 110px"><img src="{poslogo}" style="width: 100px;"></td>
+                            <td style="font-family: Tahoma; font-size: 12px;">
+                                <strong>{companyName}</strong><br />
+                                {storeName}<br />
+                                ТТД: {vatNumber}<br />
+                                ТТН: {vatName}<br />
+                                {contactInfo}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td style="padding: 0;">
+                <table border="0" width="100%" style="width: 100%; table-layout: fixed; font-family: Tahoma; font-size: 12px; margin: 5px 0 8px 0;">
+                    <tbody>
+                        <tr>
+                            <td style="text-align: left; vertical-align: top; width: 50%">
+                                Касс: {cashierName}
+                            </td>
+                            <td style="text-align: right; vertical-align: top; width: 50%">
+                                ПОС: {cashCode}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: left; vertical-align: top;">
+                                Огноо: {date}
+                            </td>
+                            <td style="text-align: right; vertical-align: top;">
+                                Цаг: {time}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: left; vertical-align: top;">
+                                Билл #: {invoiceNumber}
+                            </td>
+                            <td style="text-align: right; vertical-align: top;">
+                                Код: {refNumber}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: left; vertical-align: top;" colspan="2">
+                                {salesPersonCode} 
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td style="padding: 0;">
+                <table border="0" width="100%" style="width: 100%; table-layout: fixed;">
+                    <tbody>
+                        <tr>
+                            <td style="width: 100%; border-top:1px #000 dashed; border-bottom:1px #000 dashed; font-family: Tahoma; font-size: 12px; font-weight: 600; padding: 2px 0; text-align: left;">
+                                Барааны нэр
+                            </td>
+                            <td style="width: 65px; border-top:1px #000 dashed; border-bottom:1px #000 dashed; font-family: Tahoma; font-size: 12px; font-weight: 600; padding: 2px 0; text-align: right;">
+                                Үнэ
+                            </td>
+                            <td style="width: 35px; border-top:1px #000 dashed; border-bottom:1px #000 dashed; font-family: Tahoma; font-size: 12px; font-weight: 600; padding: 2px 0; text-align: right;">
+                                Тоо
+                            </td>
+                            <td style="width: 85px; border-top:1px #000 dashed; border-bottom:1px #000 dashed; font-family: Tahoma; font-size: 12px; font-weight: 600; padding: 2px 0; text-align: right;">
+                                Дүн
+                            </td>
+                        </tr>
+                        
+                        {itemList}
+                        
+                    </tbody>
+                </table>
+            </td>
+        </tr> 
+        
+        <tr>
+            <td style="border-top:1px #000 dashed; padding: 4px 0;">
+                <div style="height: 5px"></div>
+                <table border="0" width="100%" style="width: 100%; table-layout: fixed; font-family: Tahoma; font-size: 12px; font-weight: normal;">
+                    <tbody>
+                        <tr>
+                            <td style="text-align: right; padding: 0; width: 100%;">Нийт дүн:</td>
+                            <td style="text-align: right; padding: 0; width: 35px; font-weight: bold">{totalItemCount}</td>
+                            <td style="text-align: right; padding: 0; width: 85px;">{totalAmount}</td>
+                        </tr>
+                    </tbody>    
+                </table>        
+            </td>    
+        </tr>
+        
+        {discountPart}
+        
+        <tr>
+            <td style="border-top: 1px #000 dashed; border-bottom: 1px #000 dashed; padding: 10px 0 5px 0">
+                <table border="0" width="100%" style="width: 100%; table-layout: fixed; font-family: Tahoma; font-size: 12px; font-weight: normal;">
+                    <tbody>
+                        <tr>
+                            <td style="text-align: left; padding: 0; width: 50%;">Төлөх дүн:</td>
+                            <td style="text-align: right; padding: 0; width: 50%; font-weight: bold">{payAmount}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td style="border-top:1px #000 dashed; padding: 4px 0;">
+                <table border="0" width="100%" style="width: 100%; table-layout: fixed; font-family: Tahoma; font-size: 12px; font-weight: normal;">
+                    <tbody>
+                        <tr>
+                            <td style="text-align: right; padding: 0; width: 100%;">НӨАТ:</td>
+                            <td style="text-align: right; padding: 0; width: 85px;">{vatAmount}</td>
+                        </tr>
+                        
+                        {payment-detail}
+                        
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+        {lockerCode}
+        {serialText}
+    </tbody>
+</table>
+
+{promotion}
+<div style="page-break-after: always;"></div>

@@ -1,0 +1,62 @@
+<div class="vr-workspace-theme3 ws-area" id="workspace-id-{workspace-id}" data-dm-id="{dm-metadata-id}">
+    <div class="hide">{menu}</div>
+    <div class="ws-page-header">
+        <div class="ws-page-container">
+            <div class="ws-page-content-wrapper">
+                <div class="ws-page-header-content">
+                    <div class="row">
+                        <div class="col header-background">
+                            <div class="code" data-position-name="header-position-2">{header-position-2}</div>
+                            <div class="name" data-position-name="header-position-3">{header-position-3}</div>
+                            <div class="description" data-position-name="header-position-4">
+                                {header-position-4}
+                            </div>
+                            <div class="ws-hidden-params" data-position-name="hidden-params">
+                                {hidden-params}
+                            </div>
+                        </div>
+                        <div class="col header-background-spacial">
+                            <div class="dv-right-tools-btn">
+                                <button type="button" class="btn btn-circle dark btn-sm" onclick="backWindow(this);">Буцах</button>
+                            </div>
+                            <div class="multi-field" data-position-name="header-position-5">
+                                {header-position-5}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="clearfix w-100"></div>
+                </div>
+            </div>
+            <div class="clearfix w-100"></div>
+        </div>
+    </div>
+    <div class="ws-page-container">
+        <div class="ws-page-content-wrapper">
+            <div class="ws-page-content">
+                <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="portlet light shadow workspace-main-container"></div>
+                    <div class="clearfix w-100"></div>
+                </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <input type="hidden" name="workSpaceMode">
+</div>
+<script type="text/javascript">
+    
+    $(".vr-workspace-theme", "body").css("padding", "0px");
+    $(".vr-workspace-theme .portlet-body", "body").css("padding", "0px");
+//    $("ul.sub-menu").on('click', 'li', function() {
+//        console.log($(this).children(0));
+//        $(".sub-menu li").removeClass("actived");
+//        $(this).addClass("actived");
+//    });
+    function activeMenu(elem){
+        $(".sub-menu li").removeClass("actived");
+        $(elem).attr("class", "actived");
+    }
+</script>
+
+<div class="clearfix w-100"></div>

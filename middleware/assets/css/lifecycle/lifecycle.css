@@ -1,0 +1,193 @@
+.lifecycle-div .lifecycle-tree {
+    border: 1px solid #ddd;
+    padding: 10px 0;
+    margin-top: 10px;
+    margin-left: 10px;
+}
+.lifecycle-div h4.lifecycle-title {
+    color: #f37731;
+    text-align: center;
+    font-size: 15px;
+    margin: 15px 0 0;
+    font-weight: bold;
+}
+.lifecycle-div .jstree-default .jstree-anchor {
+    width: 100%;
+}
+.lifecycle-div .jstree-leaf>.jstree-ocl {
+    width: 0;
+}
+.lifecycle-div .jstree-default>.jstree-container-ul>.jstree-node {
+    margin-bottom: 2px;
+}
+.jstree-default .jstree-icon {
+    width: 24px !important;
+}
+#rightSideDv {
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 0 5px;
+}
+.count-selective-task {
+    border-radius: 50px;
+    background-color: #2fbabc;
+    color: #fff;
+    position: absolute;
+    right: 0;
+    top: 2px;
+    padding: 0 7px;
+    font-size: 12px;
+    margin-left: 2px;
+    height: 20px;
+    width: 35px;
+    line-height: 20px;
+    text-align: center;
+}
+.header-banner {
+    background-color: #f6f6f6;
+    
+}
+.banner-img-div {
+    border-right: 1px solid #e0e0e0;
+}
+.banner-img-div img {
+    height: 90px;
+}
+.div-right {
+    border-left: 1px solid #e0e0e0;
+}
+.height-100 {
+    height: 100%;
+}
+.img-logo {
+    height: 50px;
+    /* filter: brightness(0) invert(1); */
+}
+.banner-title {
+    font-size: 24px;
+    color: #2fbabc;
+    margin: 0;
+    padding: 0;
+}
+.date-tt {
+    display: block;
+    color: #ff5500;
+    font-size: 15px;
+}
+.date-tt-val {
+    display: block;
+    color: #3f9be1;
+    font-size: 15px;
+    margin-top: 3px;
+}
+.line-s {
+    border-bottom: 1px solid #9d9d9d;
+    margin: 10px 0;
+}
+.first-block-l {
+    padding: 13px 21px;
+}
+.cnt-anket {
+    color: #676767;
+    display: block;
+}
+.circle-cnt {
+    font-size: 38px;
+    border: 1px solid #ff5500;
+    color: #3e9de1;
+    width: 70px;
+    height: 70px;
+    -moz-border-radius: 50px;
+    -webkit-border-radius: 50px;
+    border-radius: 50px;
+    text-align: center;
+    vertical-align: middle;
+    display: table-cell;
+    padding: 0;
+}
+.pad-0 {
+    padding: 0;   
+}
+.cnt-c {
+    padding: 0;
+}
+@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+    .banner-title {
+        font-size: 25px;
+    }
+}
+
+.fileinput-button {
+    position: relative;
+    overflow: hidden;
+}
+.fileinput-button input {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 0;
+    opacity: 0;
+    -ms-filter: 'alpha(opacity=0)';
+    font-size: 200px;
+    direction: ltr;
+    cursor: pointer;
+}
+
+/* Fixes for IE < 8 */
+@media screen\9 {
+    .fileinput-button input {
+        filter: alpha(opacity=0);
+        font-size: 100%;
+        height: 100%;
+    }
+}
+.jstree-default>.jstree-no-dots .jstree-leaf>.jstree-ocl {
+    display: none;
+}
+.portlet-multi-tab-content .tab-pane .meta-toolbar {
+    background: none;
+    padding-top: 15px;
+    margin: -12px -12px -12px -18px;
+}
+.portlet-multi-tab-content .tab-pane .meta-toolbar span.portlet-subject-blue {
+    color: #555 !important;
+}
+.lifecycle-phase-btn-hide {
+    overflow: hidden;
+}
+.lifecycle-phase-btn-hide .count-selective-task {
+    display: none;
+}
+.card > .card-body > .row,
+.render-object-viewer > .row > .col-md-12 {
+    background: #FFF;
+    border-bottom: 1px solid #e0e0e0;
+}
+.lifecycle-toggler-right > .lifecycle-common-right .row,
+.lifecycle-toggler-right > .lifecycle-common-right .row > .text-right,
+.lifecycle-toggler-right > .lifecycle-common-right .row > .col-md-12,
+.lifecycle-toggler-right > .lifecycle-common-right .row > .col-md-12 > .center-sidebar,
+.lifecycle-toggler-right > .lifecycle-common-right .row > .col-md-12 > .center-sidebar > .right-sidebar-content-for-resize {
+    padding-right: 0;
+    margin-right: 0;
+}
+.lifecycle-toggler-right > .lifecycle-common-right .row > .col-md-12 {
+    border: 0;
+}
+.lifecycle-toggler-right > .lifecycle-common-right > .row > .col-md-12 > .meta-toolbar {
+    margin-right: 10px !important;
+    display: none;
+}
+.card-body-padding {
+    padding: 0.2rem 1.25rem !important;
+}
+.bg-teal-400 {
+    background-color: #66cc00;
+}
+.col-lg-4 .card {
+    height: 70px;
+    margin: 0px 0 5px 0;
+}
+.font-size-20 {
+    font-size: 20px;
+}

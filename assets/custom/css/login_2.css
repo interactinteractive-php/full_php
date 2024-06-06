@@ -1,0 +1,177 @@
+    body {
+        overflow: hidden;
+    }
+    .login-form img.logo, .password-reset-form img.logo {
+        position: relative;
+        max-width: 220px;
+        max-height: 220px;
+        margin-bottom: 1rem;
+        margin-top: 0rem !important;
+    }
+    
+    .page-content {
+        background: url("../gov/img/background.jpg") repeat ;
+    }
+
+
+    .content {
+        width: 1313px;
+        margin: 0 auto;
+    }
+
+    .login-form {
+        padding: 25px 0;
+    }
+
+    .titles {
+        left: 20px;
+    }
+
+    .loginbody {
+        
+        background: url("../gov/img/login.png") no-repeat;
+        background-size: contain;
+    }
+    
+    .rightside input {
+        border: none !important;
+        border-bottom: 1px solid !important;
+        border-radius: 0;
+        padding-left: 0.75rem !important
+    }
+
+    .rightside .pl-075 {
+        padding-left: 0.75rem !important
+    }
+
+    .rightside {
+        background: none;
+        width: 24rem;
+    }
+
+    .leftside p {
+        width: 585px;
+    }
+
+    .leftside {
+        top: -12px;
+        float: left;    
+        display: grid;
+        overflow: hidden;
+        height: 82%;
+        float: left;
+        max-height: 766px;
+        min-height: 766px;
+    }
+
+    .www {
+        position: absolute;
+        z-index: 999;
+        border-top: 5px solid #FFF;
+        top: 18px;
+        border-bottom: 5px solid #FFF;
+        border-right: 5px solid #FFF;
+        width: 96%;
+        border-top-right-radius: 30px;
+        border-bottom-right-radius: 30px;
+        height: 94.1%;
+    }
+
+    .carousel-item {
+        position: relative;
+        height: 100%;
+    }
+
+    .img-slide {
+        
+        position: relative;
+        height: 100%;
+    }
+    
+    .carousel-indicators {
+        left: unset;
+        -ms-flex-pack: right;
+        justify-content: right;
+        background-color: #ffffff4a;
+        padding-left: 10px;
+        padding-right: 10px;
+        border-radius: 20px;
+        border-top-right-radius: 0;
+        border-bottom-left-radius: 0;
+        right: -80px;
+        bottom: 19.8%;
+        height: 36px;
+    }
+
+    .carousel-indicators li {
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+
+    }
+    .carousel-indicators .active {
+        background-color: #1b4392;
+        opacity: unset;
+    }
+    
+    .carousel-control-next, .carousel-control-prev {
+        display: none;
+    }
+
+    @media (min-width: 1345px) {
+
+       
+    }
+
+    @media (max-width: 1344px) {
+        
+    }
+
+    @media (min-width: 768px) and (max-width: 1024px) {
+        .rightside {
+            width: 350px;
+            padding: 0 10px;
+        }
+
+        .loginbody {
+            background: url("../gov/img/login_2.png") no-repeat;
+            background-size: contain;
+        }
+        
+        .login-form {
+            padding: 82px;
+        }
+    }
+
+.footer-bottom {
+    vertical-align: middle;
+    margin:  auto;
+    width: 1213px;
+}
+ul.footer {
+    list-style: none;
+    color: #767676;
+    margin: 0;
+    padding: 0 0 0 15px;
+    display: inline-block;
+    width: 100%;
+    font-size: 12px;
+}
+ul.footer li {
+    padding-right: 15px;
+    display: inline-block;
+}
+
+ul.footer li:last-child {
+    border-left: 1px solid #ccc;
+    padding-left: 15px;
+
+}
+
+footer {
+    position: relative;
+    top: -100px;
+    height: 50px;
+    float: left;
+    color: #000;
+}

@@ -1,0 +1,23 @@
+<!--{{rowsbegin}}
+    <div class="form-group">
+        <label class="col-md-12 control-label">Basic</label>
+        <div class="col-md-12">
+            <div class="noUi-control noUi-success" id="slider_0"></div>
+        </div>
+    </div>
+{{rowsend}}
+<link href="/assets/core/global/plugins/nouislider/jquery.nouislider.css" rel="stylesheet" type="text/css"/>
+<script src="/assets/core/global/plugins/nouislider/jquery.nouislider.min.js"></script>
+<script>
+    jQuery(document).ready(function() {
+        $('#slider_0').noUiSlider({
+            direction: (Core.isRTL() ? "rtl" : "ltr"),
+            start: 40,
+            connect: "lower",
+            range: {
+                'min': 0,
+                'max': 100
+            }
+        });
+    });
+</script>-->

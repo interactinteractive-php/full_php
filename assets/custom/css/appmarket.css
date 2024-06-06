@@ -1,0 +1,377 @@
+.appmarket-wrapper {
+    /*max-width: 1580px;*/
+    margin: auto;
+    background-color: #F0F0F0;
+    margin-top: -10px;
+}
+.appmarket_menu_wrapper li a {
+    color: #3C3C3C;
+    text-transform: none !important;
+    font-size: 13px;
+    font-weight: 500;
+}
+.appmarket_menu_wrapper .nav-item-open>.nav-link, .appmarket_menu_wrapper .nav-item-selected {
+    background-color: #E2F4FF;
+    border-radius: 6px;
+}
+.appmarket_menu_wrapper {
+    flex: 0 0 300px;
+    background: #fff;
+    padding: 7px 15px 15px 0px;    
+    overflow: hidden;
+    color: #585858;        
+}
+.appmarket_menu_wrapper .nav-link {
+    padding-left: 3px;      
+}
+
+.appmarket {    
+}
+.appmarket-body {    
+    width: 100%;
+    color: #3C3C3C;
+    font-size: 12px;
+    min-height: 750px;
+    overflow: hidden;
+}
+.appmarket-wrapper .full-header-info {
+    border-radius: 10px;
+}
+.appmarket-wrapper .full-header-info img {
+    width: 100%;
+    background-size: cover;
+    height: 300px;
+    border-radius: 10px 10px 0px 0px;
+}
+.appmarket-wrapper .info-text-sub1 {
+    font-size: 20px;
+    font-weight: 700;
+    color: #585858;
+}
+.appmarket-wrapper .info-text {
+    padding: 20px;
+}
+.appmarket-wrapper .card-info {
+    padding: 10px;
+    background: #F2F2F2;
+    border-radius: 10px;    
+    min-width: 120px;
+    text-align: center;
+}
+.appmarket-wrapper .card-info p {
+}
+.appmarket-wrapper .appmarket-menu-title {
+    color: #3C3C3C;
+    font-size: 17px;
+}
+.appmarket-wrapper .card-info p:first-child {
+    font-size: 16px;
+    line-height: 22px;
+    margin-bottom: 0;
+    color: #585858;
+    font-weight: 700;
+}
+.appmarket-wrapper .card-info p:last-child {
+    line-height: 16px;
+    margin-bottom: 0;
+    margin-top: 6px;
+}
+.appmarket-wrapper .appmarket-content-section {
+    border-radius: 10px;
+    background: white;    
+    padding: 20px;
+}
+.appmarket-wrapper .appmarket-content-sidebar-section {
+    border-radius: 10px;
+    background: white;    
+    padding: 20px;
+}
+.appmarket-wrapper .appmarket-title {
+    color: #585858;
+    font-size: 16px;
+}
+.appmarket-wrapper .appmarket-partner {
+    gap: 10px;
+}
+.appmarket-wrapper .appmarket-partner img {
+    max-width: 130px;
+    background-size: cover;
+}
+.appmarket-wrapper .appmarket-partner-2 {
+    gap: 10px;
+}
+.appmarket-wrapper .appmarket-partner-2 div {
+    width: 190px;
+    gap: 10px;
+    border: 1px solid #E1E1E1;
+    border-radius: 10px;    
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    padding-top: 20px;
+}
+.appmarket-wrapper .appmarket-partner-2 div p.name {
+    color: #585858;
+}
+.appmarket-wrapper .appmarket-partner-2 div p.phone {
+    color: #585858;
+}
+.appmarket-wrapper .appmarket-partner-2 img {    
+    background-size: cover;
+}
+.appmarket-wrapper .appmarket-partner-3 div {
+    padding-top: 10px;
+}
+.appmarket-wrapper .appmarket-partner-3 img {    
+    border: 5px solid #E1E1E1;
+    width: 130px;
+    height: 130px;
+    border-radius: 100px;
+}
+#appmarket-dialog-change-logo input[type="file"] {
+    display: none;
+}
+#appmarket-dialog-change-logo .custom-file-upload {
+    border: 1px solid #ccc;
+    display: inline-block;
+    padding: 6px 12px;
+    cursor: pointer;
+    border-radius: 10px;
+}
+#appmarket-dialog-change-logo .custom-file-upload i {
+    font-size: 18px;
+}
+#appmarket-dialog-change-logo .appmarket-preview-image {
+    width: 200px;
+    height: 200px;
+    background: #FFFFFF;
+    border: 2px solid #E1E1E1;
+    border-radius: 10px;    
+    background-image: url('//placehold.it/200?text=200x200');
+    background-size: cover;
+}
+.appmarket-wrapper .appmarket-activity {
+    gap: 10px;
+}
+.appmarket-wrapper .appmarket-activity > div {
+    width: 230px;
+}
+.appmarket-wrapper .content-wrapper {
+    overflow: hidden;
+}
+.appmarket-ipo img {
+    border-radius: 20px;
+}
+.appmarket-ipo {
+    gap: 10px;
+}
+.appmarket-logo > div {
+    position: absolute;
+    bottom: -13px;
+    margin-left: 76px;
+    margin-top: 13px;    
+}
+.appmarket-logo {
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    background: #FFFFFF;
+    border: 2px solid #E1E1E1;
+    border-radius: 10px;
+    background-image: url('https://mongolia-mining.com/media/djcatalog2/images/item/0/msm-llc_f.png');
+    background-size: cover;
+    margin-top: -48px;
+}
+.fw-500{
+    font-weight:500 !important;
+}
+
+.fs-16 {
+    font-size:16px !important;
+}
+
+.am-fs-13 {
+    font-size:13px !important;
+}
+
+.br-30{
+    border-radius: 30px;
+}
+
+.title-color{
+    color:#585858;
+}
+
+.input-group-append {
+    z-index:10;
+    margin-left: -30px;
+    border: 1px solid #E1E1E1;
+    border-radius: 22px;
+}
+
+.nav-item >.nav-link.active{
+    color:#468CE2;
+    border-bottom: 2px solid#457B9D;
+}
+
+.appmarket-card{
+    gap:10px;
+    margin-top: 25px;
+    margin-left: -5px;
+}
+
+.appmarket-wrapper .card-style .card-text {
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    overflow: hidden;
+    max-height: 100px;
+    word-break: break-word;    
+    font-size: 15px;
+    line-height: 20px;    
+}
+
+.appmarket-wrapper .card-style a {
+    color: #3C3C3C;
+}
+
+.appmarket-wrapper .card-style .card-text-description {
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    overflow: hidden;
+    max-height: 80px;
+    word-break: break-word;    
+}
+
+.appmarket-wrapper .card-style{
+    height:260px; 
+    width:224px;
+    border-radius: 10px;
+    background: #FFF;
+    margin: 0.3em 0.3em;
+}
+
+.appmarket-wrapper .card-style:hover {
+    border: 1px solid rgb(0 0 0 / 71%);
+}
+
+.font-bold {
+    font-weight: bold;
+}
+
+.appmarket-wrapper .info-header-sub{
+    color: #585858;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+}
+
+.appmarket-wrapper .table .header{
+   
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 22px; /* 137.5% */
+}
+
+.appmarket-wrapper .table .info-text-sub1{
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+}
+
+.appmarket-wrapper .table p{
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px; /* 171.429% */
+}
+
+.appmarket-wrapper .table .info-text-sub2{
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+}
+
+.appmarket-wrapper .appmarket-search i {
+    font-size: 16px;
+    color: #606060;    
+    position: absolute;
+    margin-left: -25px;
+    margin-top: 8px;    
+}
+.appmarket-wrapper .appmarket-search input {
+    border: 1px solid #E1E1E1;
+    border-radius: 10px;
+    height: 32px;
+    padding: 10px;
+    width: 100%;
+    outline: none;
+}
+
+.appmarket-wrapper .module-img {
+    width: 80px;
+    height: 80px;
+}
+
+.appmarket-wrapper .appmarket_menu_wrapper .appmarket-filter-typemenu {
+    padding-left: 0px;
+}
+
+#dialog-pos-qpayqr .payment-success-icon {
+    border: 1px solid green;
+    border-radius: 100px;
+    padding: 10px;
+    margin: auto;
+    width: 61.6px;
+    margin-top: 20px;
+}
+
+#dialog-pos-qpayqr .payment-success-icon i {
+    color: green;
+    font-size: 40px;
+}
+
+.color1{
+    color: #67748E; 
+}
+
+.color2{
+    color: #468CE2;
+}
+
+.color3{
+color: #585858;
+}
+
+.br-5{
+    border-radius: 5px;
+}
+.market_basket_plus input {
+    width: 25px;
+    background-color: transparent;
+    border: none;
+    font-weight: bold;
+    outline: none;
+    text-align: center;    
+}
+.appmarket-basket-minus, 
+.appmarket-basket-plus, 
+.appmarket-basket-minus-month, 
+.appmarket-basket-plus-month {
+    cursor: pointer;
+}
+.appmarket_menu_wrapper > ul {
+    overflow: hidden;
+}
+.appmarket_menu_wrapper > ul:hover {
+    overflow: auto;
+}
+.appmarket-back-btn {
+    color: #3c3c3c;
+    font-size: 12px;
+    position: absolute;
+    margin-top: 10px;    
+}

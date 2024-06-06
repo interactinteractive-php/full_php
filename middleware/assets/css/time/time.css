@@ -1,0 +1,262 @@
+#tnaBalanceGrid {
+    position: relative;
+    overflow-y: auto;
+    max-height: 600px;
+}
+#tnaBalanceGrid #table1 {
+    table-layout: fixed;
+}
+
+#tnaBalanceGrid #table1 thead tr {
+    height: 50px;
+}
+
+#tnaBalanceGrid #table1 thead tr th {
+    vertical-align: middle;
+    text-align: center;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+
+#tnaBalanceGrid #table1 tbody .hover {
+    background-color: #b6cefa !important;
+}
+
+#tnaBalanceGrid #table1 tbody tr:hover{
+    background-color: #b6cefa !important;
+}
+
+#tnaBalanceGrid #table1 tbody td.tbl-cell:hover {
+    background-color: gray !important;
+}
+
+#tnaBalanceGrid #table1 tbody td {
+    padding-bottom: 3px;
+    padding-top: 3px;
+    font-size: 12px;
+}
+
+.ui-selected {
+    background-color: #D3D3D3 !important;
+}
+
+#tnaBalanceGrid {
+    border: 1px solid #CCC;
+    border-radius: 4px;
+    margin-left: 2px;
+    margin-right: 0px;
+    min-height: 500px !important;
+    min-width: 500px !important;
+    overflow: auto;
+}
+
+#tnaBalanceGrid td.ui-selecting {
+    background: #FECA40 !important;
+}
+
+#tnaBalanceGrid td.ui-selected {
+    background: #F39814 !important;
+    color: white !important;
+}
+
+#employeeTimeBalance .col-md-9,#tnaTimeEmployeePlanWindow .col-md-9 {
+    width: 76%;
+}
+
+#employeeTimeBalance .col-md-3,#tnaTimeEmployeePlanWindow .col-md-3 {
+    width: 24%;
+}
+
+#tnaTimeEmployeePlanWindow table.sheetTable tbody td.left-padding {
+    width: 125px !important;
+    padding-left: 10px !important;
+}
+
+.card.light.tna-card > .card-title {
+    padding-bottom: 10px !important;
+}
+
+.timePlanList tbody td{
+    padding-left: 5px !important;
+    padding-right: 5px !important;
+    text-align: left !important;
+}
+
+.cellRotate90 {
+    -webkit-transform:rotate(-90deg); 
+    -moz-transform:rotate(-90deg); 
+    -o-transform: rotate(-90deg); 
+    white-space:wrap; 
+    display:blocking;
+    line-height: 16px;
+    -webkit-writing-mode:vertical-rl; 
+    -ms-writing-mode:tb-rl; 
+    writing-mode:vertical-rl;
+}
+
+.form-control.fullTime {
+    width: 100%;
+    border-color: transparent;
+    border-radius: 0 !important;
+}
+
+.fixedRightSideBar {
+    position: fixed;
+    top: 65px;
+    max-width: 340px;
+    background-color: rgba(255,255,255,1);
+}
+
+.cursorPointer {
+    cursor: pointer;
+}
+
+.tablesorter-bootstrap .tablesorter-filter-row td {
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+.tablesorter-bootstrap .tablesorter-filter-row {
+    height: 23px !important;
+}
+
+.tablesorter-header-inner {
+    text-align: center;
+}
+
+.departmentTitle {
+    text-transform: uppercase;
+    font-weight: 700;
+}
+
+.number {
+    width: 30px !important;
+}
+
+.border-radius-0 {
+    border-radius: 0 !important;
+}
+
+.panel-body {
+    
+    font-weight: 400;
+    font-size: 15px;
+    padding: 10px 15px;
+}
+
+.panel-body i.fa {
+    margin-left: 2px !important;
+    margin-right: 5px !important;
+    padding: 2px 3px;
+    border: 1px solid #ddd;
+    font-size: 11px;
+    line-height: 11px;
+}
+
+.panel-body label .checker{
+    margin-left: 0 !important;
+}
+
+.panel-title {
+    
+    font-weight: 400;
+    font-size: 15px;
+}
+
+.panel-heading {
+    padding: 6px 15px;
+}
+
+#tnaTimeBalanceWindow .dateElement .input-group-btn .btn {
+    padding: 1px 7px;
+}
+
+#employeeTimeBalance .datagrid-row-error td{
+    background-color: #df8c8c !important;
+}
+
+#employeeTimeBalance .datagrid-row-selected {
+    background-color: #dfba49 !important;
+    color: #fff !important;
+}
+
+#employeeTimeBalance .datagrid-row-over {
+    background-color: #45B6AF !important;
+    color: #fff !important;
+}
+
+#employeeTimeBalance .datagrid-row-over a {
+    color: #fff !important;
+}
+
+#dialog-tna-subgrid .datagrid-row-over {
+    background-color: #45B6AF !important;
+    color: #fff !important;
+}
+
+#dialog-tna-subgrid .datagrid-row-selected {
+    background-color: #dfba49 !important;
+    color: #fff !important;
+}
+
+#dialog-tna-subgrid .datagrid-row-selected a {
+    color: #fff !important;
+}
+
+#dialog-tna-subgrid .datagrid-row-over a {
+    color: #fff !important;
+}
+
+#employeeTimeBalance .datagrid-header .datagrid-cell {
+    white-space: pre-wrap !important;
+}
+
+#employeeTimeBalance .datagrid-body .datagrid-cell {
+    position: relative;
+}
+
+#employeeTimeBalance .datagrid-body .datagrid-cell input[type="text"] {
+    border-radius: 0 !important;
+    border: none;
+    margin-left: -4px;
+    margin-right: -4px;
+    width: 60px !important;
+    text-align: center;
+}
+
+#employeeTimeBalance .form-horizontal .col-form-label {
+    padding-top: 0px;
+}
+
+.ui-multiselect-checkboxes label input {
+    top: 3px; 
+    margin-right: 5px;
+}
+
+.ui-state-active, .ui-state-focus, .ui-state-hover, .ui-widget-content .ui-state-active, .ui-widget-content .ui-state-focus, .ui-widget-content .ui-state-hover, .ui-widget-header .ui-state-active, .ui-widget-header .ui-state-focus, .ui-widget-header .ui-state-hover {
+    font-weight: 600;
+    color: #FFFFFF;
+}
+
+.ui-multiselect-menu label {
+    margin: 0;
+}
+
+.ui-multiselect-checkboxes label {
+    padding-top:1px;
+    padding-bottom:5px;
+}
+
+.background-color-grey {
+    background-color: #D3D3D3 !important;
+}
+
+#employeeTimeBalance .datagrid-body .datagrid-cell a.btn-secondary {
+    float: right;
+    border-bottom-style: none;
+    border-right-style: none;
+    border-top-style: none;
+    border-radius: 50%;
+    border-left-color: #333;
+    margin-top: 1px;
+}

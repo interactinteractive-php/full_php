@@ -1,0 +1,638 @@
+/**************************************** DANGER ******************************************/
+.left-item li span {
+  position: absolute;
+  right: 15px;
+  top: 5px;
+}
+
+.hrddashboard .logo {
+  width: 45px;
+  float: left;
+  margin-right: 15px;
+  margin-bottom: 10px;
+  color: #fff;
+}
+
+.left-item li {
+  margin-bottom: 15px !important;
+  padding: 18px 15px !important;
+}
+
+.emlogo {
+  max-width: 160px;
+}
+
+.left-item li p {
+  color: #fff;
+  margin: 0;
+  width: 90%;
+}
+
+.sidebar-control i {
+  top: -10px;
+}
+
+.finance .row.top .chart {
+  height: 380px;
+}
+
+.finance .row.middle .chart {
+  height: 380px;
+}
+
+.finance .row.bottom .chart {
+  height: 380px;
+}
+
+.hrddashboard .content {
+  padding: 0;
+}
+
+.hrddashboard .box-shadow {
+  position: relative;
+  display: -ms-flexbox;
+  display: -webkit-box;
+  display: flex;
+  -ms-flex-direction: column;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+          flex-direction: column;
+  min-width: 0;
+  word-wrap: break-word;
+  background-color: #efefef;
+  background-clip: border-box;
+  -webkit-box-shadow: 0 0 30px 0 rgba(28, 67, 173, 0.12);
+          box-shadow: 0 0 30px 0 rgba(28, 67, 173, 0.12);
+  border-radius: 7px;
+  border: 0;
+  margin-bottom: 1.8rem;
+  width: 100%;
+  padding: 10px 15px;
+}
+
+.hrddashboard .box-shadow .card-header h6 {
+  color: #000;
+}
+
+.hrddashboard .box-shadow.cardlist {
+  position: relative;
+  margin-bottom: 10px !important;
+}
+
+.hrddashboard .box-shadow.cardlist p {
+  margin: 0;
+  font-size: 14px;
+}
+
+.hrddashboard .box-shadow.cardlist .count-value {
+  font-size: 28px;
+  text-align: right;
+  position: absolute;
+  right: -10px;
+  top: -10px;
+}
+
+.hrddashboard .box-shadow .drill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  cursor: pointer;
+  bottom: 0;
+  right: 0;
+  z-index: 1;
+}
+
+.hrddashboard .box-shadow .drill:hover {
+  opacity: .7;
+}
+
+.hrddashboard .btn-icon-small {
+  padding: 12px !important;
+}
+
+.hrddashboard .btn-icon-medium {
+  padding: 14px !important;
+}
+
+.hrddashboard .amcharts-chart-div > a {
+  display: none !important;
+}
+
+.hrddashboard .hr-main1 .row.top .chart {
+  height: 300px;
+}
+
+.hrddashboard .hr-main1 .row.middle .chart {
+  height: 300px;
+}
+
+.hrddashboard .hr-main1 .row.bottom .chart {
+  height: 300px;
+}
+
+.navlist {
+  padding: 0;
+  list-style-type: none;
+}
+
+.navlist .col {
+  position: relative;
+}
+
+.navlist .col .box-shadow {
+  padding: 15px;
+  margin-bottom: 10px;
+}
+
+.navlist .col .desc p {
+  font-size: 15px;
+  width: 90%;
+  margin: 0;
+}
+
+.navlist .col .desc span {
+  position: absolute;
+  right: 0px;
+  top: -12px;
+}
+
+#fullscreen {
+  position: absolute;
+  right: 15px;
+  top: 2px;
+}
+
+.overflow-hidden .iconbar {
+  display: none;
+}
+
+#chartdiv_pie2,
+#chartdiv_pie3 {
+  height: 50%;
+}
+
+.codate .text-m {
+  color: #fff;
+}
+
+.codate .color1 {
+  color: #fec85e;
+}
+
+.codate .color2 {
+  color: #009688;
+}
+
+.codate .color3 {
+  color: #509600;
+}
+
+.codate .color4 {
+  color: #075863;
+}
+
+.codate .color6 {
+  color: #960069;
+}
+
+.codate .media {
+  float: left;
+}
+
+.codate .color5 {
+  color: #000 !important;
+}
+
+.codate .color0 {
+  color: #f10075;
+}
+
+.codate .color0 .bg-icon {
+  background: #f10075;
+}
+
+.codate .color1 .bg-icon {
+  background: #fec85e;
+}
+
+.codate .color2 .bg-icon {
+  background: #009688;
+}
+
+.codate .color3 .bg-icon {
+  background: #7ebcff;
+}
+
+.codate .color4 .bg-icon {
+  background: #075863;
+}
+
+.resource .chart {
+  height: 380px;
+}
+
+.hrddashboard.dashboard3 #filter {
+  padding: 0;
+}
+
+.hrddashboard.dashboard3 .filter {
+  padding: 0 15px;
+  list-style-type: none;
+}
+
+.hrddashboard.dashboard3 .filter li a {
+  margin: 2px 0;
+}
+
+.gradient-deepblue {
+  background: #6a11cb !important;
+}
+
+.gradient-ibiza {
+  background: #ee0979 !important;
+}
+
+.gradient-scooter {
+  background: #1a94ff !important;
+}
+
+.gradient-ohhappiness {
+  background: #00b09b !important;
+}
+
+@media screen and (min-width: 2400px) {
+  .box-shadow .card-header h6 {
+    font-size: 28px;
+  }
+  .navlist .col .desc p {
+    font-size: 28px;
+    width: 85%;
+    margin: 0;
+    padding: 20px 0;
+  }
+  .top-descrition {
+    font-size: 38px !important;
+    top: 12px !important;
+  }
+  .left-item li p {
+    padding: 32px 0;
+    font-size: 32px;
+  }
+  .left-item li p span {
+    font-size: 38px !important;
+    top: 45px;
+  }
+}
+
+.hrddashboard.resource .box-shadow .selectdiv {
+  position: relative;
+}
+
+select::-ms-expand {
+  display: none;
+}
+
+.resource .logo2 {
+  width: 60px;
+}
+
+.resource .emy {
+  margin-left: 20px;
+  display: inline-block;
+}
+
+.resource .emy h4 {
+  margin-left: 15px;
+  position: relative;
+  padding-top: 22px;
+  margin-bottom: 0;
+}
+
+.col.card-d-none {
+  display: none !important;
+  visibility: hidden;
+}
+
+.selectdiv label {
+  width: 100%;
+}
+
+.selectdiv:after {
+  content: '<>';
+  font: 17px "Consolas", monospace;
+  color: #333;
+  -webkit-transform: rotate(90deg);
+  transform: rotate(90deg);
+  right: 11px;
+  /*Adjust for position however you want*/
+  top: 18px;
+  padding: 0 0 2px;
+  border-bottom: 1px solid #999;
+  /*left line */
+  position: absolute;
+  pointer-events: none;
+}
+
+.selectdiv select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  /* Add some styling */
+  display: block;
+  width: 100%;
+  /* max-width: 320px; */
+  height: 50px;
+  float: right;
+  margin: 5px 0px;
+  padding: 0px 24px;
+  font-size: 16px;
+  line-height: 1.75;
+  color: #333;
+  background-color: #ffffff;
+  background-image: none;
+  border: 1px solid #cccccc;
+  -ms-word-break: normal;
+  word-break: normal;
+}
+
+.newslider {
+  max-height: 120px;
+}
+
+.newslider .post-feature {
+  width: 60px;
+  height: 60px;
+  display: block;
+  margin-right: 15px;
+  margin-bottom: 5px;
+  border-radius: 50%;
+  background-size: cover;
+  float: left;
+}
+
+.newslider .news-post .card-title {
+  margin: 15px 0;
+}
+
+.newslider .news-post a {
+  color: #000;
+}
+
+.newslider .news-post .owl-nav {
+  position: absolute;
+  top: -30px;
+  right: 0;
+}
+
+.newslider .news-post .owl-nav button {
+  outline: none;
+}
+
+.newslider .news-post .owl-nav button span {
+  font-size: 28px;
+}
+
+#HospitalData li {
+  padding: 4px 15px;
+}
+
+#HospitalData li .badge {
+  padding: 2px 5px;
+}
+
+#HospitalData li.line {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+#transArchiv .list-group-child {
+  padding: 0;
+}
+
+#transArchiv ul {
+  margin: 8px;
+  padding: 18px;
+}
+
+#transArchiv ul li {
+  padding: 4px 15px;
+}
+
+#transArchiv ul .theader {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  text-transform: uppercase;
+  padding-bottom: 10px;
+  font-weight: 600;
+}
+
+#longColumn {
+  height: 340px;
+}
+
+.topchart {
+  height: 350px;
+}
+
+.chart-box {
+  height: 280px;
+  overflow-y: hidden;
+}
+
+/* General styles for all menus */
+.cbp-spmenu {
+  background: #fff;
+  position: absolute;
+  padding: 0 15px;
+}
+
+.cbp-spmenu h3 {
+  color: #000;
+  font-size: 1.9em;
+  padding: 15px 0;
+  margin: 0;
+  font-weight: 300;
+}
+
+.cbp-spmenu a {
+  display: block;
+  color: #fff;
+  font-size: 1.1em;
+  font-weight: 300;
+}
+
+.cbp-spmenu a:hover {
+  background: #258ecd;
+}
+
+.cbp-spmenu a:active {
+  background: #afdefa;
+  color: #47a3da;
+}
+
+/* Orientation-dependent styles for the content of the menu */
+.cbp-spmenu-vertical {
+  width: 315px;
+  height: 100vh;
+  top: 0;
+  z-index: 11;
+  overflow-y: auto;
+  padding-top: 5px;
+  padding-bottom: 105px;
+}
+
+.cbp-spmenu-vertical a.filterclose {
+  color: #000;
+  float: right;
+  padding: 8px 8px;
+}
+
+.cbp-spmenu-vertical a.filterclose:hover {
+  background: none;
+}
+
+.cbp-spmenu-horizontal {
+  width: 100%;
+  height: 150px;
+  left: 0;
+  z-index: 1000;
+  overflow: hidden;
+}
+
+.cbp-spmenu-horizontal h3 {
+  height: 100%;
+  width: 20%;
+  float: left;
+}
+
+.cbp-spmenu-horizontal a {
+  float: left;
+  width: 20%;
+  padding: 0.8em;
+  border-left: 1px solid #258ecd;
+}
+
+/* Vertical menu that slides from the left or right */
+.cbp-spmenu-left {
+  left: -335px;
+}
+
+.cbp-spmenu-right {
+  right: -320px;
+}
+
+.cbp-spmenu-left.cbp-spmenu-open {
+  left: 0px;
+}
+
+.cbp-spmenu-right.cbp-spmenu-open {
+  right: 0px;
+}
+
+/* Horizontal menu that slides from the top or bottom */
+.cbp-spmenu-top {
+  top: -150px;
+}
+
+.cbp-spmenu-bottom {
+  bottom: -150px;
+}
+
+.cbp-spmenu-top.cbp-spmenu-open {
+  top: 0px;
+}
+
+.cbp-spmenu-bottom.cbp-spmenu-open {
+  bottom: 0px;
+}
+
+/* Push classes applied to the body */
+.cbp-spmenu-push {
+  overflow-x: hidden;
+  position: relative;
+  left: 0;
+}
+
+.cbp-spmenu-push-toright {
+  left: 240px;
+}
+
+.cbp-spmenu-push-toleft {
+  left: -240px;
+}
+
+/* Transitions */
+.cbp-spmenu,
+.cbp-spmenu-push {
+  -webkit-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+}
+
+/* Example media queries */
+@media screen and (max-width: 55.1875em) {
+  .cbp-spmenu-horizontal {
+    font-size: 75%;
+    height: 110px;
+  }
+  .cbp-spmenu-top {
+    top: -110px;
+  }
+  .cbp-spmenu-bottom {
+    bottom: -110px;
+  }
+}
+
+@media screen and (max-height: 26.375em) {
+  .cbp-spmenu-vertical {
+    font-size: 90%;
+    width: 285px;
+  }
+  .cbp-spmenu-left,
+  .cbp-spmenu-push-toleft {
+    left: -285px;
+  }
+  .cbp-spmenu-right {
+    right: -285px;
+  }
+  .cbp-spmenu-push-toright {
+    left: 285px;
+  }
+}
+
+.sales_theme_dashboard .col-3, .sales_theme_dashboard .col-md-6, .sales_theme_dashboard .col-md-4 {
+  padding: 0 5px;
+}
+
+.sales_theme_dashboard .card-box {
+  background: #fff;
+  -webkit-box-shadow: 0 3px 4px 0 rgba(0, 0, 0, 0.15);
+          box-shadow: 0 3px 4px 0 rgba(0, 0, 0, 0.15);
+}
+
+.sales_theme_dashboard .card-box.tcard {
+  min-height: 110px;
+}
+
+.sales_theme_dashboard .card-box h3 {
+  padding: 5px 15px;
+}
+
+.sales_theme_dashboard .tcard {
+  height: 120px;
+  text-align: center;
+}
+
+.sales_theme_dashboard .bchart {
+  height: 310px;
+}
+
+.sales_theme_dashboard #chartdiv {
+  height: 440px;
+}
+
+.sales_theme_dashboard .rchart {
+  height: 400px;
+}
+
+.sales_theme_dashboard .btchart {
+  height: 400px;
+}
+/*# sourceMappingURL=hr-main.css.map */

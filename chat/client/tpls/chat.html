@@ -1,0 +1,14 @@
+<% 
+var className = (me) ? 'own d-flex justify-content-end' : 'notown d-flex justify-content-start'; 
+var massMsgIcon = (isMassMsg) ? '<span class="chat-masschat-icon" title="Масс мессеж"><i class="fa fa-users"></i></span>' : ''; 
+%>
+<div class="chat-user-message <%=className%>" data-mid="<%=mid%>" data-in="<%=isRead%>">
+    <div class="d-flex flex-column">
+        <div class="msg_container">
+            <span class="chat-msg"><%=message%></span>
+            <%=massMsgIcon%>
+        </div>
+        <span class="msg_time"><%=dateTime%></span>
+    </div>
+    <div class="clearfix"></div>
+</div>

@@ -1,0 +1,93 @@
+.explorer-table-cell.bgnone {
+    background: 0 !important;
+    border: 0 !important;
+}
+ul.dv-explorer11 {
+    list-style: none;  
+    padding: 0;
+    margin: 0;
+}
+.dv-explorer11 > .dv-explorer-row {
+    float: left;
+    overflow: hidden !important;
+    text-decoration: none;
+    width: 225px;
+    margin: 0 10px 10px 0px;
+    padding: 0;
+    background: var(--hex-color1);
+    border-radius: 5px;
+    border: 0;
+}
+.dv-explorer11 > .dv-explorer-row.dv-explorer-row-back {
+    background: #f3f3f3;
+}
+.dv-explorer11 > .dv-explorer-row.selected-row {
+    background-color: var(--root-color02) !important;
+}
+.dv-explorer11 > .dv-explorer-row:hover {
+    cursor: pointer;
+    background-color: var(--root-color02) !important;
+}
+.dv-explorer11 > .dv-explorer-row > .selected-row-link {
+    display: -ms-flexbox!important;
+    display: flex!important;
+    -ms-flex-align: center!important;
+    align-items: center!important;
+    padding: 15px;
+}
+.dv-explorer11 > .dv-explorer-row .dv-img-container {
+    padding: 0;
+    float: left;
+    margin-right: 10px;
+    display: flex;
+}
+.dv-explorer11 > .dv-explorer-row .dv-img-container-img {
+    text-align: center;
+    vertical-align: middle;
+    margin: 0 auto;
+    border-radius: 50%;
+    background: var(--root-color01);
+    width: 50px !important;
+    height: 50px !important;
+    border: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.dv-explorer11 > .dv-explorer-row .dv-img-container-img img {
+    width: 30px;
+}
+.dv-explorer11 .second-title h4::first-letter {
+    text-transform: uppercase;
+}
+.dv-explorer11 .second-title h4 {
+    font-size: 12px;
+    line-height: normal;
+    text-transform: lowercase;
+    color: #555;
+    font-weight: 600;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    overflow: hidden;
+    max-height: 42px;
+    margin: 0;
+}
+.dv-explorer11 .second-title h4 a.label {
+    white-space: inherit;
+    font-size: inherit;
+    padding: inherit;
+}
+.dv-explorer11 > li.dv-explorer-row-split {
+    display: block;
+    float: none !important;
+    clear: both;
+    width: 100%;
+    margin: 5px 0 10px 0;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--root-color1);
+    text-transform: uppercase;
+}
+.dv-explorer11 > li.dv-explorer-row-split i {
+    margin-right: 6px;
+}

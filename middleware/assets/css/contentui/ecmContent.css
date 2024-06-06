@@ -1,0 +1,23 @@
+.ecmContentDropzone .dropzone {
+    background: #fdf9f9;
+}
+.ecmContentDropzone .dropzone a.dz-remove, .dropzone-previews a.dz-remove {
+    display: none;
+}
+.ecmContentDropzone .dropzone .dz-preview.dz-file-preview [data-dz-thumbnail] {
+    display: inherit;
+    background: #ebebeb;
+}
+.ecmContentDropzone .dropzone .dz-preview .dz-filename {
+    margin-top: 95px;
+    font-size: 12px;
+    height: 53px;
+    overflow: hidden;
+}
+.ecmContentDropzone .dropzone .dz-preview .dz-details, .dropzone-previews .dz-preview .dz-details {
+    height: 150px;
+    width: 110px;
+}
+.ecmContentDropzone .dropzone .dz-preview .dz-details img, .dropzone-previews .dz-preview .dz-details img {
+    width: 110px;
+}

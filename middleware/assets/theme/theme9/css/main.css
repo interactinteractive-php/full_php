@@ -1,0 +1,149 @@
+.vr-workspace-theme9 {
+    
+    color: #596679;
+    line-height: 20px;
+}
+
+/*MENU*/
+.vr-workspace-theme9 .ws-menu {
+    margin-top: 10px;    
+}
+
+.vr-workspace-theme9 .ws-menu ul.workspace-menu {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    position: relative;
+    background-color: #E64A19;
+    float: none;
+}
+
+.vr-workspace-theme9 .ws-menu ul.workspace-menu li {
+    display:inline-block;
+    background-color: #E64A19;
+    padding: 0 15px;
+}
+
+.vr-workspace-theme9 .ws-menu a {
+    display:block;
+    padding:10px 5px;	
+    color:#FFF;
+    font-size:13px;
+    text-transform: uppercase;
+    text-decoration:none;
+}
+
+.vr-workspace-theme9 .ws-menu li.active,
+.vr-workspace-theme9 .ws-menu li:hover, 
+.vr-workspace-theme9 .ws-menu li a:hover, 
+.vr-workspace-theme9 .ws-menu li a:focus,
+.vr-workspace-theme9 .ws-menu li a:active { 
+    background-color: #000000 !important; 
+}
+
+/* Hide Dropdowns by Default */
+.vr-workspace-theme9 .ws-menu ul.workspace-menu ul.sub-menu {
+    display: none;
+    position: absolute; 
+    z-index: 100;
+    padding: 0; 
+    left: 0;
+}
+
+/* Display Dropdowns on Hover */
+.vr-workspace-theme9 .ws-menu ul.workspace-menu li:hover > ul.sub-menu {
+    display:inherit !important;    
+}
+
+/* Fisrt Tier Dropdown */
+.vr-workspace-theme9 .ws-menu ul.workspace-menu ul.sub-menu li {
+    width:170px;
+    float:none;
+    display:list-item;
+    position: relative;
+    list-style: none;
+}
+
+.vr-workspace-theme9 .ws-menu ul.workspace-menu ul.sub-menu li a {
+    padding:5px 5px;	
+}
+
+/* Second, Third and more Tiers	*/
+.vr-workspace-theme9 .ws-menu ul.workspace-menu ul.sub-menu ul li {
+    position: relative;
+    top:-60px; 
+    left:170px;
+}
+
+.vr-workspace-theme9 .ws-menu li > a:after { content:  ' +'; font-weight: bold;}
+.vr-workspace-theme9 .ws-menu li > a:only-child:after { content: ''; }
+
+
+/*PICTURE*/
+.vr-workspace-theme9 .profile-userpic {
+    float: none;
+    margin: 10px auto;
+    width: 50%;
+    height: 50%;
+    -webkit-border-radius: 50% !important;
+    -moz-border-radius: 50% !important;
+    border-radius: 50% !important;
+    border: 1px solid #ddd;
+    background-color: #fff;
+    min-height: 60px;
+    min-width: 60px;
+    max-height: 60px;
+    max-width: 60px;
+    overflow: hidden;
+}
+.vr-workspace-theme9 .ws-page-header {
+    
+    transition: margin 0.3s;
+}
+.vr-workspace-theme9 .ws-page-header, 
+.vr-workspace-theme9 .ws-page-sidebar-wrapper, 
+.vr-workspace-theme9 .ws-page-content-wrapper, 
+.vr-workspace-theme9 .ws-page-footer {
+    transition: margin 0.3s;
+}
+.vr-workspace-theme9 .ws-page-sidebar {
+    width: 120px;
+    float: left;
+    position: relative;
+    margin-right: -100%;
+    border-radius: 0px;    
+}
+.vr-workspace-theme9 .ws-page-content-wrapper {
+    float: left;
+    width: 100%;
+    border-radius: 4px;
+    padding: 3px;
+}
+.vr-workspace-theme9 .ws-page-content-wrapper .ws-page-header-content {
+    margin-left: 120px;
+    margin-top: 0px;
+    padding: 0px 10px;
+    font-size: 14px;
+    background: #a1a8b4;
+    color: #fff;
+    -moz-border-radius: 6px;
+    -webkit-border-radius: 6px;
+    border-radius: 6px;
+    -moz-box-shadow:
+        0px 1px 1px rgba(000,000,000,0.5),
+        inset 1px 2px 0px rgba(255,255,255,0.4);
+    -webkit-box-shadow:
+        0px 1px 1px rgba(000,000,000,0.5),
+        inset 1px 2px 0px rgba(255,255,255,0.4);
+    box-shadow:
+        0px 1px 1px rgba(000,000,000,0.5),
+        inset 1px 2px 0px rgba(255,255,255,0.4);
+}
+.vr-workspace-theme9 .ws-page-content-wrapper .ws-page-header-content .name {
+    font-weight: bold;
+    font-size: 18px;
+    text-transform: uppercase;
+}
+.vr-workspace-theme9 .package-tab-name {
+	border-bottom: 1px #E64A19 solid;
+}

@@ -1,0 +1,66 @@
+<div class="page-content vr-workspace-theme32 ws-area ad" id="workspace-id-{workspace-id}" data-dm-id="{dm-metadata-id}">
+    <div class=" content-wrapper workspace-main {right-side}" id="scrollit">
+        <div class="ws-menu tabbable-tabdrop justify-content-between">
+            {menu}
+        </div>
+        <div class="ws-page-container">
+            <div class="ws-page-content-wrapper">
+                <div class="ws-page-content mt-2">
+                    <div class="workspace-main-container"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <input type="hidden" name="workSpaceMode">
+    <div class="ws-hidden-params hidden" data-position-name="hidden-params">
+        {hidden-params}
+    </div>
+</div>
+
+<div class="clearfix w-100"></div>
+
+<script type="text/javascript">
+
+    var $tmpWstheme32 = $('.vr-workspace-theme32');
+
+    $(document).ready(function () {
+    
+        setTimeout(function () {
+            $(window).resize();
+            $.each($tmpWstheme32.find('.package-div'), function (k, div) {
+                if (k % 2 !== 0) {
+                    $(div).addClass('odd');
+                }
+            });
+        }, 100);
+
+        var $foundin = $("*:contains('{header-position-')").filter(function () {
+            return $(this).children().length === 0;
+        });
+        $foundin.parents('.project-info-row').addClass('hide');
+        $foundin.parents('.project-info-row2').addClass('hide');
+        $foundin.addClass('hide');
+
+        if ($('.social-row', '.vr-workspace-theme32').find('.hide').length === 4) {
+            $('.social-row', '.vr-workspace-theme32').addClass('hide');
+        }
+        $('.social-row', '.vr-workspace-theme32').find('a').text('');
+    });
+
+    function activeMenu(elem) {
+        $tmpWstheme19.find('ul.workspace-menu li').removeClass("active");
+        $(elem).parents('li.dropdown').addClass('active');
+    }
+
+    function ws20Expand(elem) {
+        var $this = $(elem);
+
+        if ($this.attr('data-show') == '1') {
+            $this.attr('data-show', '0');
+            $this.closest('#project-info').find('.project-info-row-expandshow').removeClass('hidden');
+        } else {
+            $this.attr('data-show', '1');
+            $this.closest('#project-info').find('.project-info-row-expandshow').addClass('hidden');
+        }
+    }
+</script>

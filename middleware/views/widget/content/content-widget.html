@@ -1,0 +1,264 @@
+<div class="col-md-12 col-sm-12 pt10 pb10" id="content-widget-windowid-uniqid">
+    <div class="col-md-3 col-sm-6 widget-cards">
+        <p style="font-size: 15px; font-weight: bold; text-align: center">Page Followers</p>
+        <div>
+            <span class="cm-number">3456</span>
+            <span class="cm-number2"><span style="color:green">↑</span> +10</span>
+            <span>
+                <div id="sales1_widget1_chart_uniqid"></div>	
+            </span>
+        </div>
+    </div> 
+    <span class="cm-divider"></span>
+    <div class="col-md-3 col-sm-6 widget-cards">
+        <p style="font-size: 15px; font-weight: bold; text-align: center">Page Views</p>
+        <div>
+            <span class="cm-number">3456</span>
+            <span class="cm-number2"><span style="color:red">↓</span> -23</span>
+            <span>
+                <div id="sales2_widget1_chart_uniqid"></div>	
+            </span>
+        </div>        
+    </div>    
+    <span class="cm-divider"></span>
+    <div class="col-md-3 col-sm-6 widget-cards">        
+        <p style="font-size: 15px; font-weight: bold; text-align: center">Likes</p>
+        <div>
+            <span class="cm-number">3456</span>
+            <span class="cm-number2"><span style="color:green">↑</span> +10</span>
+            <span>
+                <div id="sales3_widget_chart_uniqid"></div>	
+            </span>
+        </div>        
+    </div>    
+    <span class="cm-divider"></span>
+    <div class="col-md-3 col-sm-6 widget-cards">   
+        <p style="font-size: 15px; font-weight: bold; text-align: center">Comments</p>
+        <div>
+            <span class="cm-number">3456</span>
+            <span class="cm-number2"><span style="color:green">↑</span> +10</span>
+            <span>
+                <div id="sales4_widget_chart_uniqid"></div>	
+            </span>
+        </div>        
+    </div>    
+</div>
+
+<style>
+    #content-widget-windowid-uniqid {
+        padding-right: 0px;
+        padding-left: 0px;
+    }
+    #content-widget-windowid-uniqid .widget-cards {
+        padding-top: 8px;
+        height: 220px;
+        background-color: #fff;
+    }
+    #content-widget-windowid-uniqid .cm-number {
+        font-size: 32px;
+        margin-top: 65px;
+        position: absolute;
+    }
+    #content-widget-windowid-uniqid .cm-number2 {
+        font-size: 22px;
+        color: #949494;
+        margin-top: 64px;
+        position: absolute;        
+        margin-left: 90px;
+    }
+    #content-widget-windowid-uniqid .cm-divider {
+        border-left: 1px solid #019bab;
+        height: 204px;
+        position: absolute;
+        z-index: 9;
+        margin-top: 8px;        
+    }
+    #content-widget-windowid-uniqid #sales1_widget1_chart_uniqid, #content-widget-windowid-uniqid #sales2_widget1_chart_uniqid, #content-widget-windowid-uniqid #sales3_widget_chart_uniqid, #content-widget-windowid-uniqid #sales4_widget_chart_uniqid {
+        height: 170px;
+        margin-left: 40px;
+    }     
+</style>
+
+<script type="text/javascript">
+    amChartMinify.init();
+    
+    var gaugeChart = AmCharts.makeChart("sales1_widget1_chart_uniqid", {
+      "type": "gauge",
+      "theme": "light",
+      "axes": [{
+        "axisAlpha": 0,
+        "tickAlpha": 0,
+        "labelsEnabled": false,
+        "startValue": 0,
+        "endValue": 100,
+        "startAngle": 0,
+        "endAngle": 360,
+        "bands": [{
+          "color": "#eee",
+          "startValue": 0,
+          "endValue": 100,
+          "radius": "100%",
+          "innerRadius": "85%"
+        }, {
+          "color": "#84b761",
+          "startValue": 0,
+          "endValue": 80,
+          "radius": "100%",
+          "innerRadius": "85%",
+          "balloonText": "90%"
+        }]
+      }],
+    "allLabels": [{
+        "y": "45%",
+        "align": "center",
+        "size": 18,
+        "bold": true,
+        "text": '75%',
+        "color": "#555"
+        }, {
+        "y": "54%",
+        "align": "center",
+        "size": 12,
+        "text": "",
+        "color": "#555"
+    }],  
+      "export": {
+        "enabled": true
+      }
+    });
+    
+    var gaugeChart = AmCharts.makeChart("sales2_widget1_chart_uniqid", {
+      "type": "gauge",
+      "theme": "light",
+      "axes": [{
+        "axisAlpha": 0,
+        "tickAlpha": 0,
+        "labelsEnabled": false,
+        "startValue": 0,
+        "endValue": 100,
+        "startAngle": 0,
+        "endAngle": 360,
+        "bands": [{
+          "color": "#eee",
+          "startValue": 0,
+          "endValue": 100,
+          "radius": "100%",
+          "innerRadius": "85%"
+        }, {
+          "color": "rgb(185, 62, 61)",
+          "startValue": 0,
+          "endValue": 80,
+          "radius": "100%",
+          "innerRadius": "85%",
+          "balloonText": "90%"
+        }]
+      }],
+    "allLabels": [{
+        "y": "45%",
+        "align": "center",
+        "size": 18,
+        "bold": true,
+        "text": '75%',
+        "color": "#555"
+        }, {
+        "y": "54%",
+        "align": "center",
+        "size": 12,
+        "text": "",
+        "color": "#555"
+    }],  
+      "export": {
+        "enabled": true
+      }
+    });
+    
+    var gaugeChart = AmCharts.makeChart("sales3_widget_chart_uniqid", {
+      "type": "gauge",
+      "theme": "light",
+      "axes": [{
+        "axisAlpha": 0,
+        "tickAlpha": 0,
+        "labelsEnabled": false,
+        "startValue": 0,
+        "endValue": 100,
+        "startAngle": 0,
+        "endAngle": 360,
+        "bands": [{
+          "color": "#eee",
+          "startValue": 0,
+          "endValue": 100,
+          "radius": "100%",
+          "innerRadius": "85%"
+        }, {
+          "color": "rgb(183, 184, 63)",
+          "startValue": 0,
+          "endValue": 100,
+          "radius": "100%",
+          "innerRadius": "85%",
+          "balloonText": "90%"
+        }]
+      }],
+    "allLabels": [{
+        "y": "45%",
+        "align": "center",
+        "size": 18,
+        "bold": true,
+        "text": '100%',
+        "color": "#555"
+        }, {
+        "y": "54%",
+        "align": "center",
+        "size": 12,
+        "text": "",
+        "color": "#555"
+    }],  
+      "export": {
+        "enabled": true
+      }
+    });
+    
+    var gaugeChart = AmCharts.makeChart("sales4_widget_chart_uniqid", {
+      "type": "gauge",
+      "theme": "light",
+      "axes": [{
+        "axisAlpha": 0,
+        "tickAlpha": 0,
+        "labelsEnabled": false,
+        "startValue": 0,
+        "endValue": 100,
+        "startAngle": 0,
+        "endAngle": 360,
+        "bands": [{
+          "color": "#eee",
+          "startValue": 0,
+          "endValue": 100,
+          "radius": "100%",
+          "innerRadius": "85%"
+        }, {
+          "color": "hotpink",
+          "startValue": 0,
+          "endValue": 60,
+          "radius": "100%",
+          "innerRadius": "85%",
+          "balloonText": "90%"
+        }]
+      }],
+    "allLabels": [{
+        "y": "45%",
+        "align": "center",
+        "size": 18,
+        "bold": true,
+        "text": '55%',
+        "color": "#555"
+        }, {
+        "y": "54%",
+        "align": "center",
+        "size": 12,
+        "text": "",
+        "color": "#555"
+    }],  
+      "export": {
+        "enabled": true
+      }
+    });
+</script>

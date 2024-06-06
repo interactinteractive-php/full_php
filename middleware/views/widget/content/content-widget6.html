@@ -1,0 +1,269 @@
+<div class="col-md-12 col-sm-12 mt10 pt10" style="background-color:#fff;">
+    <div class="col-md-3 col-sm-3" style="padding: 4px;">
+        <div style="background-color: #9bbb59; height: 105px; padding-left: 8px; padding-top: 1px;padding-right: 8px;">
+            <p class="mt10" style="font-size: 15px;">Өнөөдөр Борлуулалт</p>
+            <p style="font-size: 28px; color:#fff; font-weight: bold;margin-top: 24px;text-align: right;">19,500,000</p>
+            <p class="mt5" style="font-size: 12px; text-align: right;">Өмнөх сартай харьцуулсан өсөлт 3.3</p>
+        </div>
+    </div>   
+    <div class="col-md-3 col-sm-3" style="padding: 4px;">
+        <div style="background-color: #9bbb59; height: 105px; padding-left: 8px; padding-top: 1px;padding-right: 8px;">
+            <p class="mt10" style="font-size: 15px;">Өнөөдөр Захиалга</p>
+            <p style="font-size: 28px; color:#fff; font-weight: bold;margin-top: 24px;text-align: right;">1,300</p>
+            <p class="mt5" style="font-size: 12px; text-align: right;">Өмнөх сартай 3.1</p>
+        </div>
+    </div>
+    <div class="col-md-3 col-sm-3" style="padding: 4px;">
+        <div style="background-color: #9bbb59; height: 105px; padding-left: 8px; padding-top: 1px;padding-right: 8px;">
+            <p class="mt10" style="font-size: 15px;">Төлөвлөсөн Борлуулалт</p>
+            <p style="font-size: 28px; color:#fff; font-weight: bold;margin-top: 24px;text-align: right;">23,000,000</p>
+            <p class="mt5" style="font-size: 12px; text-align: right;">Өмнөх сартай 3.1</p>
+        </div>
+    </div>
+    <div class="col-md-3 col-sm-3" style="padding: 4px;">
+        <div style="background-color: #9bbb59; height: 105px; padding-left: 8px; padding-top: 1px;padding-right: 8px;">
+            <p class="mt10" style="font-size: 15px;">Төлөвлөсөн Захиалга</p>
+            <p style="font-size: 28px; color:#fff; font-weight: bold;margin-top: 24px;text-align: right;">1,500</p>            
+            <p class="mt5" style="font-size: 12px; text-align: right;">Өмнөх сартай 3.1</p>
+        </div>
+    </div>     
+</div>
+<div class="col-md-12 col-sm-12 pt10 pb10" id="chart-widget-windowid-uniqid" style="background-color:#fff;">
+    <div class="col-md-4 col-sm-6">
+        <p style="font-size: 15px; font-weight: bold;" class="chart1_title">Борлуулалтын дүн</p>
+        <p style="font-size: 12px;margin-top: -8px" class="chart1_title">Нэр төрлөөр</p>
+        <div id="sales6_widget_chart_uniqid" class="widget-position isChart" data-position="1"></div>	
+    </div>    
+    <span style="border-left: 1px solid #019bab; height: 97%;position: absolute"></span>
+    <div class="col-md-4 col-sm-6">
+        <p style="font-size: 15px; font-weight: bold;" class="chart2_title">Борлуулалтын дүн</p>
+        <p style="font-size: 12px;margin-top: -8px;" class="chart1_title">Сувгаар</p>
+        <div id="sales16_widget_chart_uniqid" class="widget-position isChart" data-position="2"></div>	
+    </div>    
+    <span style="border-left: 1px solid #019bab; height: 97%;position: absolute"></span>
+    <div class="col-md-4 col-sm-6">        
+        <p style="font-size: 15px; font-weight: bold;" class="chart3_title">Борлуулалтын дүн</p>
+        <p style="font-size: 12px;margin-top: -8px" class="chart1_title">Төлбөрийн хэлбэрээр</p>
+        <table class="table table-hover" id="top5sale">
+            <thead>
+                <tr>
+                    <th style="font-size: 15px !important;  color: #000">
+                        Төрөл
+                    </th>
+                    <th class="text-right" style="font-size: 15px !important;  color: #000">
+                        Дүн
+                    </th>
+                </tr>
+            </thead>
+            <tbody style="font-size: 15px !important;  color: #000">
+                <tr>
+                    <td style="vertical-align: middle; width: 35%">Grilled Chicken Leg</td>
+                    <td style="vertical-align: middle" class="text-right"><strong>5</strong></td>
+                </tr>
+                <tr>
+                    <td style="vertical-align: middle; width: 35%">Grilled Chicken Leg</td>
+                    <td style="vertical-align: middle" class="text-right"><strong>5</strong></td>
+                </tr>
+                <tr>
+                    <td style="vertical-align: middle; width: 35%">Grilled Chicken Leg</td>
+                    <td style="vertical-align: middle" class="text-right"><strong>5</strong></td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td></td>
+                    <td class="text-right"><strong>3,600</strong></td>
+                </tr>
+            </tfoot>
+        </table>        
+    </div>    
+</div>
+
+<style>
+    #sales6_widget_chart_uniqid, #sales16_widget_chart_uniqid, #sales2_widget_chart_uniqid {
+        height: 400px;
+    } 
+</style>
+
+<script type="text/javascript">
+    var chartData = '';
+    
+    $(function () {
+        
+        $.ajax({
+            type: 'GET',
+            url: 'https://api.myjson.com/bins/1c1jnq',
+            dataType: "json",
+            async: false,
+            success: function(response) {
+                chartData = response;
+            }
+        });    
+        
+//        $('.chart1_title', '#chart-widget-windowid-uniqid').text(chartData[0].title);
+//        $('.chart2_title', '#chart-widget-windowid-uniqid').text(chartData[1].title);
+//        $('.chart3_title', '#chart-widget-windowid-uniqid').text(chartData[2].title);
+        
+        amChartMinify.init();
+
+        AmCharts.makeChart("sales6_widget_chart_uniqid", {
+            "type": "pie",
+            "startDuration": 0,
+            "outlineColor": "",
+            "theme": "light",
+            "fontSize": 13,
+            "labelText": "[[title]]",
+            "allLabels": [{
+            "y": "45%",
+            "align": "center",
+            "size": 18,
+            "bold": true,
+            "text": chartData[0].center_value,
+            "color": "#555"
+            }, {
+            "y": "54%",
+            "align": "center",
+            "size": 12,
+            "text": "",
+            "color": "#555"
+            }],              
+            "legend": false,
+            "radius": "33%",
+            "innerRadius": "75%",
+            "dataProvider": chartData[0].rows,
+            "valueField": chartData[0].value,
+            "titleField": chartData[0].name,         
+            "export": {
+                "enabled": false
+            }
+        });  
+
+        AmCharts.makeChart("sales16_widget_chart_uniqid", {
+            "type": "pie",
+            "startDuration": 0,
+            "outlineColor": "",
+            "theme": "light",
+            "fontSize": 13,
+            "labelText": "[[percents]]%",
+            "allLabels": [{
+            "y": "45%",
+            "align": "center",
+            "size": 18,
+            "bold": true,
+            "text": chartData[1].center_value,
+            "color": "#555"
+            }, {
+            "y": "54%",
+            "align": "center",
+            "size": 12,
+            "text": "",
+            "color": "#555"
+            }],              
+            "legend": false,
+            "radius": "33%",
+            "innerRadius": "75%",
+            "dataProvider": chartData[1].rows,
+            "valueField": chartData[1].value,
+            "titleField": chartData[1].name,                 
+            "export": {
+                "enabled": false
+            }
+        });   
+
+        var c2html = '', check = false, ccolor = {};
+        for(var c2 = 0; c2 < chartData[1].rows.length; c2++) {
+
+            switch(c2) {
+                case 0:
+                    ccolor[c2] = 'rgb(103, 183, 220)';
+                    break;
+                case 1:
+                    ccolor[c2] = 'rgb(253, 212, 0)';
+                    break;
+                case 2:
+                    ccolor[c2] = 'rgb(132, 183, 97)';
+                    break;
+                case 3:
+                    ccolor[c2] = 'rgb(204, 71, 72)';
+                    break;
+                case 4:
+                    ccolor[c2] = 'rgb(205, 130, 173)';
+                    break;
+            }        
+
+            if(c2 > 4) {
+                if(!check)
+                    c2html += '<div class="col-md-6 col-sm-12 col-xs-12 item"><div style="padding-bottom: 0px;padding-top: 0px;border-bottom: 1px solid #d7d7d7;"><div class="col-xs-1 pl0"></div><div class="col-xs-9 pl0"><a class="" style="" href="javascript:;" onclick="chart_more_uniqid(\''+encodeURIComponent(JSON.stringify(chartData[1].rows))+'\', \''+chartData[1].name+'\', \''+chartData[1].value+'\')">Дэлгэрэнгүй...</a> </div><div class="col-xs-2 pl0"><span class="float-right bold"></span></div><div class="clearfix w-100"></div></div></div>';
+                check = true;            
+                continue;            
+            }
+
+            c2html += '<div class="col-md-6 col-sm-12 col-xs-12 item"><div style="padding-bottom: 0px;padding-top: 0px;border-bottom: 1px solid #d7d7d7;"><div class="col-xs-1 pl0"><i class="fa fa-circle" style="color:' + ccolor[c2] + '"></i></div><div class="col-xs-9 pl0"><span class="" title="">' + chartData[1].rows[c2][chartData[1].name] + '</span> </div><div class="col-xs-2 pl0"><span class="float-right font-weight-bold">' + pureNumberFormat(chartData[1].rows[c2][chartData[1].value]) + '</span></div><div class="clearfix w-100"></div></div></div>';        
+        }
+        $("#sales16_widget_chart_uniqid").parent().append('<div class="mt15">' + c2html + '</div>');
+
+    });
+    
+    function chart_more_uniqid(response, name, value) {
+        response = JSON.parse(decodeURIComponent(response));
+        var $dialogname = 'dialog-chart-sales-more';
+        var data = '';
+
+        data = '<div class="row">'+
+            '<div class="col-md-12">';
+                var allFieldsLen = response.length;
+
+                data += '<table class="table table-sm table-bordered table-hover bprocess-table-dtl mb0">'+
+                    '<thead>'+
+                        '<tr style="border-bottom: 2px solid #ccc">'+
+                            '<th class="rowNumber" style="width: 3px">№</th>'+
+                            '<th>Нэр</th>'+
+                            '<th>Утга</th>'+
+                        '</tr>'+
+                    '</thead>'+
+                    '<tbody>';
+                    for(var i = 0; i < allFieldsLen; i++) {
+                        data += '<tr>';
+                        data += '<td>' + (i + 1) + '</td>';
+                        data += '<td>' + response[i][name] + '</td>';
+                        data += '<td class="text-right">' + pureNumberFormat(response[i][value]) + '</td>';
+                        data += '</tr>';
+                    };
+                data += '</tbody></table>';
+            data += '</div>'+
+        '</div>';
+
+        if (!$('#'+$dialogname).length) {
+            $('<div id="' + $dialogname + '"></div>').appendTo('#chart-widget-windowid-uniqid');
+        }
+        var dialogname = $('#'+$dialogname);
+
+        dialogname.empty().html(data);            
+        dialogname.dialog({
+            appendTo: '#chart-widget-windowid-uniqid',
+            cache: false,
+            resizable: true,
+            bgiframe: true,
+            autoOpen: false,
+            title: 'Дэлгэрэнгүй',
+            width: 550,
+            height: 'auto',
+            "max-height": 450,
+            modal: true,
+            open: function () {   
+                $('div[aria-describedby=' + $dialogname + '] .ui-dialog-buttonset').addClass("btn-group float-right");
+                $('div[aria-describedby=' + $dialogname + '] .ui-dialog-buttonset').find('button:eq(0)').addClass('btn blue-hoki btn-sm ml5');
+            },
+            close: function (elem) {
+                dialogname.dialog('close');
+            },
+            buttons: [
+                {text: plang.get('close_btn'), click: function () {
+                    dialogname.dialog('close');
+                }}
+            ]
+        });
+        dialogname.dialog('open');
+    }    
+
+</script>

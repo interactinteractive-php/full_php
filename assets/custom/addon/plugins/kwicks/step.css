@@ -1,0 +1,173 @@
+.wizard-steps {
+    margin:5px 0 0 0;
+    padding:0px;
+    position: relative;
+    background: url("img/step-bg.png") repeat-x;
+    border: 1px solid #c0c0c0;
+    height:46px;
+    border-radius: 4px;
+}
+/* = STEP NUMBERS
+----------------------------*/
+/* = DEFAULT STEPS
+----------------------------*/
+.wizard-steps div a {
+    background: url("img/step-bg.png") repeat-x;
+    position:relative;
+    width:auto;
+    height:44px;
+    padding:0px 15px 0px 25px;
+    float: left;
+    text-decoration:none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.wizard-steps div a:before {
+    width:0px;
+    height:0px;
+    background: url("img/step-bg.png") repeat-x;
+    position: absolute;
+    content: "";
+    top: 0px;
+    left: -12px;
+}
+.wizard-steps a:after {
+    width: 22px;
+    height: 44px;
+    background: url(img/step-after.png) right;
+    position: absolute;
+    content: "";
+    top: 0px;
+    right: -22px;
+    z-index: 1;
+}
+
+.wizard-steps div a .badge {
+    float: left;
+    height: 22px;
+    width: 22px;
+    background: #858585;
+    border: 2px solid #eeeeee;
+    border-radius: 10px !important;
+    font-weight: bold;
+    font-size: 11px !important;
+    margin: 10px 0
+}
+
+.wizard-steps div a .label {
+    width: auto;
+    max-width: 170px !important;
+    float: left;
+    font-weight: bold;
+    font-size:11px;
+    text-transform: uppercase;
+    overflow: hidden;
+    white-space: normal;
+    color:#656464;
+}
+
+.wizard-steps a:active, .wizard-steps a:hover {
+    color: #656464;
+}
+
+.wizard-steps a:hover .badge {
+    background: #1c92d5;
+    border: 2px solid #61d6ff;
+    color:#fff;
+}
+
+.wizard-steps .first a {
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+    padding-left: 15px !important;
+}
+
+.wizard-steps .step-finished {
+    float: left;
+    line-height: 46px;
+    margin-left: 30px;
+}
+
+.wizard-steps .step-finished .badge {
+    height: 32px;
+    width: 32px;
+    background: #67aa00 url("img/finish.png") no-repeat center;
+    border: 2px solid #eeeeee;
+    border-radius: 20px !important;
+    font-weight: bold;
+    font-size: 22px !important;
+    margin-right: 10px
+}
+
+/* = COMPLETED STEPS
+----------------------------*/
+
+.wizard-steps .completed-step a {
+    background: url("img/step-complete.png") repeat-x;
+    border-bottom: 1px solid #456003;
+}
+.wizard-steps .completed-step a:after {
+    background: url(img/step-complete-after.png);
+    z-index: 1
+}
+.wizard-steps .completed-step a .label {
+    color:#fff;
+}
+.wizard-steps .completed-step .badge {
+    background: #c4e24c;
+    border: 2px solid #efffb4;
+    color: #517900;
+}
+/* = ACTIVE STEPS
+----------------------------*/
+.wizard-steps .active-step a {
+    background: url("img/step-active.png") repeat-x;
+    border-bottom: 1px solid #058be9;
+}
+.wizard-steps .active-step a:after {
+    background: url(img/step-active-after.png);
+    z-index: 1
+}
+.wizard-steps .active-step a .label {
+    color:#fff;
+}
+.wizard-steps .active-step .badge {
+    background: #1c92d5;
+    border: 2px solid #61d6ff;
+    color:#fff;
+}
+/* = HOVER STATES
+----------------------------*/
+/*
+.wizard-steps a:hover, .wizard-steps a:visited {
+    background:#dedeca;
+}
+.wizard-steps a:hover:before, .wizard-steps a:visited:before {
+    width:0px;
+    height:0px;
+    border-top: 22px solid #dedeca;
+    border-bottom: 22px solid #dedeca;
+    border-left:22px solid transparent;
+    position: absolute;
+    content: "";
+    top: 0px;
+    left: -22px;
+}
+.wizard-steps a:hover:after, .wizard-steps a:hover:visited {
+    width: 0;
+    height: 0;
+    border-top: 22px solid transparent;
+    border-bottom: 22px solid transparent;
+    border-left:22px solid #dedeca;
+    position: absolute;
+    content: "";
+    top: 0px;
+    right: -22px;
+}
+.wizard-steps a .badge:hover {
+    color:#000;
+    font-weight: bold
+}
+*/

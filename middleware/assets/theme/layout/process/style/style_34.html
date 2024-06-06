@@ -1,0 +1,78 @@
+<style type="text/css">
+  #team-members {
+      background: #fff;
+      padding: 5px 10px;
+      margin-bottom: 10px;
+  }
+  #team-members .input-sm {
+      border: 1px solid transparent;
+  }
+  #team-members .team-title h3.title {
+      color: #575757;
+      font-size: 18px;
+      font-weight: bold;
+      padding-bottom: 10px;
+  }
+  #team-members .member-name {
+      margin-top: 10px;
+  }
+  #team-members .member-name, #team-members .member-position {
+      text-align: center;
+  }
+  #team-members .member-name .input-sm {
+      color: #3f3e3e;
+      font-size: 14px;
+      font-weight: bold;      
+      text-align: center;
+  }
+  #team-members .member-position .input-sm {
+      color: #a9a9a9;
+      font-size: 12px;
+      font-style: italic;
+      text-align: center;
+  }
+  #team-members .member-description .input-sm {
+      color: #a7a7a7;
+      font-size: 12px;
+  }
+  #team-members .member-image {
+      height: 190px;
+      width: 100%;
+  }
+  #team-members .removeThemeRowBtn {
+      position: absolute;
+      top: -10px;
+      right: 4px;
+  }
+  #team-members .lookup-code-autocomplete {
+      display: none;
+  }
+  #team-members .select2-container .select2-choice>.select2-chosen {
+      text-align: center !important;
+  }
+</style>
+
+<div id="team-members">
+  <div class="row">
+    <div class="col-md-6 team-title"><h3 class="title"><lang>Багийн гишүүд</lang></h3></div>
+    <div class="btn-area col-md-6"><a title="Нэмэх" class="btn btn-circle btn-icon-only theme-edit-btn" href="javascript: themeEditBox('team-members');" style="padding: 2px;"><i class="icon-plus3 font-size-12"></i></a></div>    
+  </div>
+
+  <div class="theme-data-area">
+    {{rowsbegin}}
+    <div class="theme-row">
+      <div class="col-md-2 col-sm-4 col-xs-12 theme-content">
+        <div class="" defaultHeight="120">
+         <img src="assets/core/frontend/layout/theme/img/img_avatar.png" class="member-image">
+        </div>  
+
+        <div class="member-name">{{pos2}}</div>
+        <div class="member-position">{{pos4}}</div>
+        <div class="member-description"><span>{{pos5}}</span></div>
+      </div>
+    </div>
+    {{rowsend}}
+  </div>
+  
+  <div class="clearfix"></div>
+</div>

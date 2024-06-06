@@ -1,0 +1,100 @@
+.postview-listtheme {
+    gap: 30px;
+    background: #fff;
+}
+.postview-listtheme .card-img-actions {
+    height: 200px;
+}
+.postview-listtheme-row {    
+    cursor: pointer;
+    width: 445px;
+}
+.postview-listtheme-row .card {
+    margin-bottom: 0;
+    border-radius: 10px;
+}    
+.postview-listtheme-row .card-img-actions {
+    overflow: hidden;
+    border-radius: 10px 10px 0px 0px;
+}
+.postview-listtheme-row .card-img-actions img {
+    max-height: 200px;
+    width: 100%;
+    object-fit: contain;
+}
+.postview-listtheme-row .bp-action-btns a, .postview-listtheme-row .bp-action-btns .dv-buttons-batch > .dropdown-toggle {    
+    padding-right: 6px;
+    padding-left: 6px;
+    border-radius: 8px !important;
+}
+.postview-listtheme-row .card-text {    
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;  
+    overflow: hidden;
+}
+.postview-listtheme-row .user-name {    
+    font-weight: 500;
+    font-size: 14px;
+}
+.postview-listtheme-row .user-date {    
+    color: #A0A0A0;
+    margin-top: -3px;
+}
+.postview-listtheme-row .user-photo img {    
+    width: 34px;
+    height: 34px;
+    border-radius: 100px;
+}
+.postview-listtheme-row .show-comment-btn {    
+    background: #F5F5F5;
+}
+.postview-listtheme-row .show-comment-btn, .postview-listtheme-row .show-comment-btn i {    
+    color:#4A86FF;
+}
+.postview-listtheme-row .show-comment-container {    
+    background: #FAFAFA;
+    border-top: 1px solid rgba(0,0,0,.125);
+    border-radius: 0px 0px 10px 10px;
+}
+.postview-listtheme-row .show-comment-container .chat-form {    
+    padding-left: 18px !important;
+    padding-right: 18px !important;        
+}
+.postview-listtheme-row .show-comment-container .media-list {    
+    max-height: 250px;
+    overflow-y: auto;    
+    padding-left: 18px;
+    padding-right: 18px;    
+}
+.postview-listtheme-row.selected-row .card {
+    box-shadow: 0 0 12px rgba(0,0,0,.25);
+}
+.postview-listtheme-row:hover .card {
+    box-shadow: 0 0 12px rgba(0,0,0,.25);
+    transition: box-shadow 0.3s ease-in-out;
+}
+.postview-listtheme-row .side-images-containter {
+    position: relative;
+    text-align: center;
+    color: white;    
+}
+.postview-listtheme-row .centered-image-text {
+    position: absolute;
+    padding-top: 10px;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 52px;
+    background: #000;
+    width: 100%;
+    height: 100%;
+    opacity: 0.65;  
+}
+.postview-listtheme-row .postview-readmore {
+    position: absolute;
+    color: #4B8DF8;
+    right: 16px;
+    margin-top: -28px;
+    background: #fff;
+    padding: 0px 6px 6px 6px;
+}

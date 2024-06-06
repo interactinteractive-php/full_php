@@ -1,0 +1,72 @@
+<div class="vr-workspace-theme9 ws-area" id="workspace-id-{workspace-id}" data-dm-id="{dm-metadata-id}">
+  <div class="ws-page-header">
+    <div class="row">
+      <div class="ws-page-sidebar">
+        <div class="ws-page-sidebar-wrapper">
+          <div class="ws-page-sidebar topsidebar">
+            <div class="profile-userpic">
+              <img src="{header-position-1}" data-position-name="header-position-1" class="img-fluid">
+            </div>
+          </div>    
+        </div>
+      </div>
+      <div class="ws-page-content-wrapper">
+        <div class="ws-page-header-content">
+          <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10 header-background">
+            <div class="date" data-position-name="header-position-2">{header-position-2}</div>
+            <div class="name" data-position-name="header-position-3">{header-position-3}</div>
+            <div class="date" data-position-name="header-position-5">{header-position-5}</div>
+            <div>
+              <span class="startdate" data-position-name="header-position-6">{header-position-6}</span>
+              -
+              <span class="enddate" data-position-name="header-position-7">{header-position-7}</span>
+            </div>
+
+            <div class="ws-hidden-params" data-position-name="hidden-params">
+              {hidden-params}
+            </div>
+          </div>
+          <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 header-background-spacial padding-10">
+            <div class="dv-right-tools-btn">
+              <button type="button" class="btn btn-circle dark btn-sm" onclick="backWindow(this);">Буцах</button>
+            </div>
+          </div>
+          <div class="clearfix w-100"></div>
+        </div>
+      </div>
+    </div>
+    <div class="row"> 
+      <div class="ws-menu tabbable-tabdrop">
+        <div class="col-md-12">
+          {menu}
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="ws-page-container">
+    <div class="ws-page-content-wrapper">
+      <div class="ws-page-content">
+        <div class="row">
+          <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="portlet light shadow workspace-main-container"></div>
+            <div class="clearfix w-100"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <input type="hidden" name="workSpaceMode">
+</div>
+
+<div class="clearfix w-100"></div>
+
+<script type="text/javascript">
+  $(document).ready(function(){
+
+  });
+
+  function activeMenu(elem){
+    $(".sub-menu li").removeClass("actived");
+    $(elem).attr("class", "actived");
+  }
+</script>

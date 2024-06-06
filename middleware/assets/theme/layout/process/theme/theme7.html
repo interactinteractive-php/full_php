@@ -1,0 +1,144 @@
+<style type="text/css">
+  .process-theme7 {
+      font-family: 'PT Sans Narrow',sans-serif;
+  }
+  .process-theme7 .top-info .input-sm {
+      border: 0px;
+      background: transparent !important;
+      color: #fff;
+  }
+  .process-theme7 .top-info .dropdownInput {
+      border: 0px;
+      background: transparent !important;
+  }
+  .process-theme7 .top-info .select2-choice {
+      border: 0px;
+      background: transparent !important;
+  }
+  .process-theme7 .top-info .form-control .select2-choice, .form-control .select2-choices {
+      border: 0px;
+  }
+  .process-theme7 .select2-container .select2-choice .select2-arrow {
+      display: none;
+  }
+  .process-theme7 .dateInit {
+      width: 70px !important;
+  }
+  .process-theme7 .top-info {
+      background: #60a3d8;
+      border-bottom: 1px solid #aeaeae;
+  }
+  .process-theme7 .right-side-bar-doc {
+      border-right: 1px solid #aeaeae;
+  }
+  .process-theme7 .file-area {
+      border: 1px solid #aeaeae;
+      min-height: 132px;
+  }
+  .process-theme7 label[data-label-path] {
+      text-align: right;
+      width: 30%;
+      margin: 7px 10px;
+      float: left;      
+  }
+  .process-theme7 ::-webkit-input-placeholder {
+      color: #b3b3b3 !important;
+      font-weight: 400;
+  }
+  .process-theme7 :-moz-placeholder { /* Firefox 18- */
+      color: #b3b3b3 !important;
+      font-weight: 400;
+  }
+  .process-theme7 ::-moz-placeholder {  /* Firefox 19+ */
+      color: #b3b3b3 !important;
+      font-weight: 400;
+  }
+  .process-theme7 :-ms-input-placeholder {  
+      color: #b3b3b3 !important;
+      font-weight: 400;
+  }
+  .process-theme7 .tabbed-style .custom-tabbable {
+      background: #fff
+  }
+  .process-theme7 .tabbed-style .custom-tabbable .nav-tabs {
+      margin-bottom: 5px
+  }
+  .process-theme7 .tabbed-style .custom-tabbable .nav-tabs li {
+      width: 10%;
+      border-right: 1px dashed #cccccc;
+      text-align: center;
+      padding: 15px 0
+  }
+  .process-theme7 .tabbed-style .custom-tabbable .nav-tabs li a {
+      color: #333333;
+      font-size: 14px;
+      text-transform: uppercase;
+      background: #fff;
+      border-radius: 0px;
+      text-align: center;
+      margin: 0;
+      outline: none;
+      border: none
+  }
+  .process-theme7 .tabbed-style .custom-tabbable .nav-tabs li a:hover {
+      border: none
+  }
+  .process-theme7 .tabbed-style .custom-tabbable .nav-tabs li i {
+      color: #696969;
+      font-size: 18px
+  }
+  .process-theme7 .tabbed-style .custom-tabbable .nav-tabs li:last-child {
+      border-right: none
+  }
+  .process-theme7 .tabbed-style .custom-tabbable .nav-tabs li.active a {
+      color: #2574a9;
+      border: none
+  }
+  .process-theme7 .tabbed-style .custom-tabbable .nav-tabs li.active i {
+      color: #4574c6
+  }
+</style>
+<div class="process-theme7">
+  <div class="top-info">
+    <div>{{section1}}</div>
+    <div class="clearfix"></div>
+  </div>
+
+  <div class="">
+    <div class="col-md-7 right-side-bar-doc">{{section2}}</div>
+
+    <div class="col-md-5 no-padding">
+      <div class="tabbed-style">
+        <div class="custom-tabbable">
+          <ul class="nav nav-tabs">
+            <li class="nav-item">      
+              <a aria-expanded="false" href="#[uniqId]_custom_section_tab_1" data-toggle="tab" title="Title" class="nav-link active"><i class="fa fa-user"></i></a>
+            </li>        
+            <li class="nav-item">
+              <a aria-expanded="false" href="#[uniqId]_custom_section_tab_2" data-toggle="tab" title="Title" class="nav-link"><i class="fa fa-share-alt"></i></a>
+            </li>
+          </ul>
+          <div class="tab-content">
+<!--            <div class="tab-pane active" id="[uniqId]_custom_section_tab_0">
+              <div class="col-md-12 no-padding">
+                {{addons}}
+              </div>
+            </div>-->
+            <div class="tab-pane active" id="[uniqId]_custom_section_tab_1">
+              <div class="col-md-12 no-padding">
+                {{section4}}
+              </div>
+            </div>        
+            <div class="tab-pane" id="[uniqId]_custom_section_tab_2">
+              <div class="col-md-12 no-padding">
+                {{section5}}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="clearfix"></div>
+  </div>
+</div>

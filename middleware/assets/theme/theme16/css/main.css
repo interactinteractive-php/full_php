@@ -1,0 +1,39 @@
+.vr-workspace-theme16 {
+    display: table;
+    width: 100%;    
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+.vr-workspace-theme16 .workspace-part .card-body {
+    padding-top: 0;
+}
+.vr-workspace-theme16 .hide {
+    display: none !important;
+}
+.vr-workspace-theme16 .header-bg {
+    background-color: #f2f2f2;
+}
+.vr-workspace-theme16 .header-bg img.logo-ws-theme {
+    margin: 10px 50px;
+    max-width: 130px;
+    max-height: 61px;
+}
+.vr-workspace-theme16 .close-btn > i {
+    color: #ff6900;
+}
+.vr-workspace-theme16 .close-btn {
+    position: absolute;
+    top: 5px;
+    right: 3px;
+    background: #ebebeb;
+    padding: 5px 10px;
+    border-radius: 50%;
+    border: 1px solid #999999;
+}
+.vr-workspace-theme16 .pos-1 {
+    color: #00a9ac;
+    margin-top: 27px;
+    font-size: 18px;
+    text-transform: uppercase;
+    font-weight: bold;
+}

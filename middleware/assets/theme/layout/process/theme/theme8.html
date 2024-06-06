@@ -1,0 +1,43 @@
+<link href="assets/core/frontend/layout/theme/css/anket/style.css" rel="stylesheet" type="text/css"/>
+<style type="text/css">
+  .process-theme8 input:read-only{
+      color: #444 !important;
+  }
+  .process-theme8 textarea:read-only{
+      background: #eee !important;
+      color: #444 !important;
+  }
+  .process-theme8 .process-theme2-sticky ::-webkit-input-placeholder{color:#444 !important;font-size:12px}.process-theme8 .process-theme2-sticky :-moz-placeholder{color:#444 !important;font-size:12px}.process-theme8 .process-theme2-sticky ::-moz-placeholder{color:#444 !important;font-size:12px}.process-theme8 .process-theme2-sticky :-ms-input-placeholder{color:#444 !important;font-size:12px}
+  .process-theme8 .process-theme2-sticky .select2-chosen {
+      color: #444;
+  }
+</style>
+<div class="col-md-12 process-theme2 process-theme8">
+  <div class="col-md-3 no-padding left-side">
+    <div class="process-theme2-sticky">
+      <div class="col-md-12 no-padding" style="background: #60a3d8;">
+        <img src="storage/uploads/files/mcaa.png" alt="" style="height: 250px;width: 100%;padding: 0;margin: 0!important;"/>
+      </div>
+      <div class="col-md-12 no-padding" id="stick-content" style="background: #60a3d8;padding-bottom: 20px !important;">
+        {{section1}}
+      </div>        
+    </div>
+  </div>
+  <div class="col-md-9 right-side" id="scrollit">
+    <div class="custom-tabbable">
+      <ul class="nav nav-tabs">
+        <li class="nav-item">
+          <i class="fa fa-user"></i>
+          <a aria-expanded="false" href="#[uniqId]_right_section_tab_0" data-toggle="tab" class="nav-link active">Оролцогч</a>
+        </li>
+      </ul>
+      <div class="tab-content">
+        <div class="tab-pane active" id="[uniqId]_right_section_tab_0">
+          <div class="col-md-12 no-padding">
+            {{section2}}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

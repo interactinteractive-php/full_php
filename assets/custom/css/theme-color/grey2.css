@@ -1,0 +1,23 @@
+:root {
+  --hex-color1: #f0f5f5;
+  --hex-color2: #dbe4e5;
+  --rgb-color: 248, 249, 250;
+}
+.without-left-iconbar .navbar-dark .navbar-nav-link,
+.without-left-iconbar .lhnormal.company,
+.without-left-iconbar .navbar-dark .nav-item.db-choose span,
+.without-left-iconbar .navbar-dark .nav-item.db-choose i,
+.loginrun .bluebg .dropdown-user > .navbar-nav-link {
+  color: #67748e;
+}
+.without-left-iconbar .navbar .navbar-nav.topnav > li > a:hover,
+.without-left-iconbar .navbar .navbar-nav.topnav > li > a:focus,
+.without-left-iconbar .navbar .navbar-nav.topnav > li > a:active {
+  color: #333;
+}
+.without-left-iconbar .navbar-dark .navbar-nav-link:hover .lhnormal.company {
+  color: #333;
+}
+.primary-top {
+  border-bottom-color: transparent;
+}

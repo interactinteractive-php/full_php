@@ -1,0 +1,84 @@
+
+.sales_dashboard {
+    padding-top: 0px !important;
+}
+/**************************************** DANGER ******************************************/
+.sales_dashboard .box-shadow {
+    position: relative;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: #fff;
+    background-clip: border-box;
+    box-shadow: 0 0 30px 0 rgba(115, 77, 191, 0.2);
+    border-radius: 7px;
+    border: 0;
+    margin-bottom: 1.5rem;
+    width: 100%;
+    padding: 20px;
+}
+.sales_dashboard table th {
+    border-bottom: 1px solid #e0e0e0;
+}
+.sales_dashboard table th,
+.sales_dashboard table td {
+    border-top: .07rem dashed #e5e5e5;
+    line-height: normal;
+}
+.sales_dashboard .btn-icon-small {
+    padding: 12px !important;
+}
+.sales_dashboard .btn-icon-medium {
+    padding: 14px !important;
+}
+.sales_dashboard .amcharts-chart-div > a {
+    display: none !important;
+}
+.sales_dashboard .amcharts-legend-div text {
+    
+}
+/****************************************** VeriCloud START ******************************************/
+.vericloud {
+    width: 100%;
+}
+.vericloud .sidebar {
+    margin-left: 300px;
+}
+.vericloud .user_propic {
+    border-radius: 8px;
+}
+/******************************************* VeriCloud END *******************************************/
+
+.gradient-deepblue{
+    background: #6a11cb !important;
+}
+.gradient-ibiza {
+    background: #ee0979 !important;
+}
+.gradient-scooter {
+    background: #1a94ff !important;
+}
+.gradient-ohhappiness {
+    background: #00b09b !important;
+}
+
+
+#transArchiv .list-group-child {
+    padding: 0;
+}
+#transArchiv ul {
+    margin: 8px;
+    padding: 18px;
+}
+#transArchiv ul li {
+    padding: 4px 15px;
+}
+#transArchiv ul .theader {
+  border-bottom: 1px solid rgba(255,255,255,.1);
+  text-transform: uppercase;
+  padding-bottom: 10px;
+  font-weight: 600;
+}

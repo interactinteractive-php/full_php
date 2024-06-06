@@ -1,0 +1,147 @@
+.explorer-table-cell.bgnone {
+    background: 0 !important;
+    border: 0 !important;
+}
+.gallery3-dv .gallery3-dv img {
+    vertical-align: bottom;
+}
+.gallery3-dv .gallery {
+    overflow: hidden;
+    *zoom: 1;
+    margin: 10px 0;
+    padding: 0;
+    overflow: hidden;
+}
+.gallery3-dv .gallery:hover > li {
+    filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=50);
+}
+.gallery3-dv .gallery li.folder {    
+    background: #bcbcbc;    
+}
+.gallery3-dv .gallery li.selected-row .item-pos-1,
+.gallery3-dv .gallery li.selected-row .item-pos-2 {    
+    color: #fff;
+}
+.dv-explorer-3-parent .explorer-table > .explorer-table-row > .explorer-table-cell {
+    display: list-item !important;
+    overflow-x: hidden;
+    overflow-y: auto;
+    margin: 5px 0 0;
+    padding-top: 10px;
+}
+.gallery3-dv .gallery li .item-pos-1 {
+    width: 190px;
+    overflow: hidden;
+    height: 18px;
+    font-size: 15px;
+    margin: 5px 0 0;
+    color: #1d6abd;
+    text-align: center;
+}
+.gallery3-dv .gallery li .item-pos-2 {
+    margin: 0;
+    text-align: center;
+}
+.gallery3-dv .gallery li img {
+    backface-visibility: hidden;
+    transition: all .2s ease-in-out;
+    width: 100%;
+    height: 140px;
+    margin: 0 auto;
+}
+.gallery3-dv .gallery li.folder img {
+    margin-top: 30px;
+    width: 83px;
+    height: 81px;
+}
+.gallery3-dv .gallery li img.img-back {
+    width: 50px;
+    height: 50px;
+}
+.gallery3-dv .gallery li img:hover {
+    -moz-transform: scale(1.1, 1.1);
+    -ms-transform: scale(1.1, 1.1);
+    -webkit-transform: scale(1.1, 1.1);
+    transform: scale(1.1, 1.1);
+}
+.gallery3-dv .gallery li:hover {
+    filter: progid:DXImageTransform.Microsoft.Alpha(enabled=false);
+    opacity: 1;
+    cursor: -webkit-zoom-in;
+    cursor: -moz-zoom-in;
+}
+.gallery3-dv .gallery li:hover > li {
+    box-shadow: 1px 1px 1px 5px #0093d0;
+}
+.gallery3-dv .lightbox {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: rgba(0, 0, 0, 0.7);
+    padding: 75px;
+    text-align: center;
+    display: none;
+    cursor: -webkit-zoom-out;
+    cursor: -moz-zoom-out;
+    z-index: 1;
+}
+.gallery3-dv .lightbox figure {
+    display: block;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    white-space: no-wrap;
+    background-repeat: no-repeat;
+    background-position: center;
+    -moz-background-size: contain;
+    -o-background-size: contain;
+    -webkit-background-size: contain;
+    background-size: contain;
+}
+.dv-explorer-3-parent ::-webkit-scrollbar {
+    width: 7px;
+}
+.dv-explorer-3-parent ::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+}
+.dv-explorer-3-parent ::-webkit-scrollbar-thumb {
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+    background: #55befc; 
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); 
+}
+.dv-explorer-3-parent .button-parent-div {
+    margin-top: 5px;
+}
+.gallery3-dv .card-text.text-black {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    color: #777;
+    height: 40px;
+}
+.gallery3-dv .card-img-top {
+    height: 120px;
+    width: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.gallery3-dv .card-title {
+    color: #000 !important;
+    height: 30px;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    overflow: hidden;
+    height: 30px;
+}
+.gallery3-dv ul li {
+    width: 250px;
+    margin-right: 10px;
+}

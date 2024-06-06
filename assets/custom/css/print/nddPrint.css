@@ -1,0 +1,73 @@
+@page {
+    /*size: 147mm 204mm;*/
+    size: A4 portrait; 
+    margin-top: 0;
+    margin-right: 0;
+    margin-bottom: 0;
+    margin-left: 0;
+    padding: 0;
+}
+html, body {
+    margin: 0;
+    padding: 0;
+    -webkit-print-color-adjust: exact;
+    font-family: Arial, sans-serif;
+    font-size: 11px;
+    color: #000;
+    font-weight: bold;
+}
+* {
+-webkit-box-sizing: border-box;
+   -moz-box-sizing: border-box;
+        box-sizing: border-box;
+}
+*:before,
+*:after {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+        box-sizing: border-box;
+}
+.nddContents, #nddContentsPrintPrev {
+  margin: 0;
+  padding: 0; 
+  display: table;
+}
+.nddColPre, .nddCol {
+    display: inline-block;
+    position: absolute;
+    padding: 0;
+}
+.right-rotate {
+  -webkit-transform: rotate(90deg);
+  -moz-transform: rotate(90deg);
+  -ms-transform: rotate(90deg);
+  -o-transform: rotate(90deg);
+  transform: rotate(90deg);
+}
+.left-rotate {
+  -webkit-transform: rotate(270deg);
+  -moz-transform: rotate(270deg);
+  -ms-transform: rotate(270deg);
+  -o-transform: rotate(270deg);
+  transform: rotate(270deg);
+}
+table.pf-report-table-none, 
+table.pf-report-table-none td, 
+table.pf-report-table-none th {
+    border: 0px #fff solid;
+}
+table.pf-report-table-dotted, 
+table.pf-report-table-dotted td, 
+table.pf-report-table-dotted th {
+    border: 1px #000 dotted;
+}
+table.pf-report-table-dashed, 
+table.pf-report-table-dashed td, 
+table.pf-report-table-dashed th {
+    border: 1px #000 dashed;
+}
+table.pf-report-table-solid, 
+table.pf-report-table-solid td, 
+table.pf-report-table-solid th {
+    border: 1px #000 solid;
+}

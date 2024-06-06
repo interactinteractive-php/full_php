@@ -1,0 +1,175 @@
+<div class="col-md-12 col-sm-12 pt10 pb10 mt10" id="content-widget4-windowid-uniqid" style="background-color:#fff;">
+    <div class="col-md-6 col-sm-6">
+        <p style="font-size: 15px; font-weight: bold; text-align: center">Chart 1</p>
+        <div id="sales1_content_widget4_chart_uniqid" class="widget-position isChart" data-position="1"></div>	
+    </div>  
+    <span style="border-left: 1px solid #019bab; height: 97%;position: absolute"></span>
+    <div class="col-md-6 col-sm-6">
+        <p style="font-size: 15px; font-weight: bold; text-align: center">Chart 2</p>
+        <div id="sales2_content_widget4_chart_uniqid" class="widget-position isChart" data-position="2"></div>	
+    </div>
+</div>
+
+<style>
+    #content-widget4-windowid-uniqid {
+        padding-right: 0px;
+        padding-left: 0px;
+    }
+    #content-widget4-windowid-uniqid .widget-cards {
+        padding-top: 8px;
+        height: 220px;
+        background-color: #fff;
+    }
+    #content-widget4-windowid-uniqid .cm-number {
+        font-size: 32px;
+        margin-top: 65px;
+        position: absolute;
+    }
+    #content-widget4-windowid-uniqid .cm-number2 {
+        font-size: 22px;
+        color: #949494;
+        margin-top: 64px;
+        position: absolute;        
+        margin-left: 90px;
+    }
+    #content-widget4-windowid-uniqid .cm-divider {
+        border-left: 1px solid #019bab;
+        height: 204px;
+        position: absolute;
+        z-index: 9;
+        margin-top: 8px;        
+    }
+    #content-widget4-windowid-uniqid #sales1_content_widget4_chart_uniqid, #content-widget4-windowid-uniqid #sales2_content_widget4_chart_uniqid {
+        height: 400px;
+    }     
+</style>
+
+<script type="text/javascript">
+    amChartMinify.init();
+    
+    AmCharts.makeChart("sales1_content_widget4_chart_uniqid", {
+        "type": "pie",
+        "startDuration": 0,
+        "outlineColor": "",
+        "theme": "light",
+        "fontSize": 13,
+        "labelText": "[[title]]",
+        "allLabels": [{
+        "y": "45%",
+        "align": "center",
+        "size": 18,
+        "bold": true,
+        "text": '',
+        "color": "#555"
+        }, {
+        "y": "54%",
+        "align": "center",
+        "size": 12,
+        "text": "",
+        "color": "#555"
+        }],              
+        "legend": false,
+        "radius": "33%",
+        "innerRadius": "75%",
+        "dataProvider": [{
+            "country": "Lithuania",
+            "litres": 501.9
+        }, {
+            "country": "Czech Republic",
+            "litres": 301.9
+        }, {
+            "country": "Ireland",
+            "litres": 201.1
+        }, {
+            "country": "Germany",
+            "litres": 165.8
+        }, {
+            "country": "Australia",
+            "litres": 139.9
+        }, {
+            "country": "Austria",
+            "litres": 128.3
+        }],
+        "valueField": "litres",
+        "titleField": "country",         
+        "export": {
+            "enabled": false
+        }
+    });  
+
+    var chart = AmCharts.makeChart( "sales2_content_widget4_chart_uniqid", {
+      "type": "serial",
+      "theme": "light",
+      "dataProvider": [ {
+        "country": "USA",
+        "visits": 2025
+      }, {
+        "country": "China",
+        "visits": 1882
+      }, {
+        "country": "Japan",
+        "visits": 1809
+      }, {
+        "country": "Germany",
+        "visits": 1322
+      }, {
+        "country": "UK",
+        "visits": 1122
+      }, {
+        "country": "France",
+        "visits": 1114
+      }, {
+        "country": "India",
+        "visits": 984
+      }, {
+        "country": "Spain",
+        "visits": 711
+      }, {
+        "country": "Netherlands",
+        "visits": 665
+      }, {
+        "country": "Russia",
+        "visits": 580
+      }, {
+        "country": "South Korea",
+        "visits": 443
+      }, {
+        "country": "Canada",
+        "visits": 441
+      }, {
+        "country": "Brazil",
+        "visits": 395
+      } ],
+      "valueAxes": [ {
+        "gridColor": "#FFFFFF",
+        "gridAlpha": 0.2,
+        "dashLength": 0
+      } ],
+      "gridAboveGraphs": true,
+      "startDuration": 1,
+      "graphs": [ {
+        "balloonText": "[[category]]: <b>[[value]]</b>",
+        "fillAlphas": 0.8,
+        "lineAlpha": 0.2,
+        "type": "column",
+        "valueField": "visits"
+      } ],
+      "chartCursor": {
+        "categoryBalloonEnabled": false,
+        "cursorAlpha": 0,
+        "zoomable": false
+      },
+      "categoryField": "country",
+      "categoryAxis": {
+        "gridPosition": "start",
+        "gridAlpha": 0,
+        "tickPosition": "start",
+        "tickLength": 20
+      },
+      "export": {
+        "enabled": true
+      }
+
+    } );    
+    
+</script>

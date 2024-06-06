@@ -1,0 +1,522 @@
+.mv-checklist2-render-parent .mv-checklist-render .quick-item-process.bp-add-ac-row .input-group-btn:last-child button {
+    color: #fff;
+    background-color: rgb(6, 214, 160);
+    padding: 0px 8px 0px 8px;
+    border-radius: .1875rem !important;
+}
+
+.card-multi-tab-content .tab-pane .dataview-render ul.bp-addon-tab.nav-tabs>li:hover,
+.card-multi-tab-content .tab-pane ul.workspace-menu-v2.nav-tabs>li:hover>a {
+    border-bottom: 4px solid #2196f3 !important;
+}
+
+.tabbable-line>.nav-tabs>li.open,
+.tabbable-line>.nav-tabs>li a:hover {
+    border-bottom: 4px solid #2196f3 !important;
+}
+
+.tabbable-line>.nav-tabs>li a.active:not(.nav-tabs-btn-filter) {
+    border-bottom: 4px solid #2196f3 !important;
+}
+
+.card-multi-tab-content .tab-pane ul.workspace-menu-v2.nav-tabs>li>a {
+    border-bottom: 4px solid transparent;
+}
+
+.card-multi-tab-content .tab-pane #wsForm ul.bp-addon-tab.nav-tabs>li.active,
+.card-multi-tab-content .tab-pane .dataview-render ul.bp-addon-tab.nav-tabs>li.active,
+.card-multi-tab-content .tab-pane ul.workspace-menu-v2>li.active>a {
+    border-bottom: 4px solid #2196f3 !important;
+}
+
+.ui-dialog .ui-dialog-buttonset .btn.blue-madison,
+.ui-dialog .ui-dialog-buttonset .btn.blue,
+.ui-dialog .ui-dialog-buttonset .btn.blue-hoki,
+.ui-dialog .ui-dialog-buttonset .btn-primary,
+.ui-dialog .ui-dialog-buttonset .btn.green-meadow.bp-btn-saveadd {
+    background-color: #def3ff;
+    border: 1px solid #def3ff !important;
+    border-radius: 100px !important;
+    color: #009ef7 !important;
+}
+
+.ui-dialog .ui-dialog-buttonset .btn.blue-madison:hover,
+.ui-dialog .ui-dialog-buttonset .btn.blue:hover,
+.ui-dialog .ui-dialog-buttonset .btn.blue-hoki:hover,
+.ui-dialog .ui-dialog-buttonset .btn-primary:hover,
+.ui-dialog .ui-dialog-buttonset .btn-primary:active,
+.ui-dialog .ui-dialog-buttonset .btn-primary:focus {
+    background: #2196f3 !important;
+    border-color: #2196f3 !important;
+    color: #FFF !important;
+}
+
+.ui-dialog .ui-dialog-buttonset .btn.green,
+.ui-dialog .ui-dialog-buttonset .btn-success,
+.ui-dialog .ui-dialog-buttonset .bp-btn-saveprint,
+.ui-dialog .ui-dialog-buttonset .btn.green-meadow {
+    background-color: #def3ff;
+    border-color: #def3ff;
+    color: #009ef7;
+    border-radius: 100px !important;
+}
+
+.ui-dialog .ui-dialog-buttonset .btn-success:hover,
+.ui-dialog .ui-dialog-buttonset .btn-success:active,
+.ui-dialog .ui-dialog-buttonset .btn-success:focus,
+.ui-dialog .ui-dialog-buttonset .btn.green:hover,
+.ui-dialog .ui-dialog-buttonset .btn.green-meadow:hover {
+    background: #2196f3;
+    border-color: #2196f3;
+    color: #FFF !important;
+}
+
+.mv-hdr-label-control-input div.checker {}
+
+.mv-hdr-label-control-input .mv-popup-control:hover .mv-popup-remove-value-btn {
+    display: block;
+    border-right: none !important;
+}
+
+.mv-popup-remove-value-btn i {
+    color: #666;
+    margin-top: 10px;
+}
+
+.mv-popup-remove-value-btn {
+    width: 30px !important;
+    display: none;
+}
+
+.mv-checklist-render .mv-hdr-label-control {
+    margin-top: 0;
+}
+
+.mv-checklist-render:not(.bp-render-checklist) .meta-toolbar {
+    background-color: #fff !important;
+    /*    border-top-left-radius: .75rem;
+    border-top-right-radius: .75rem;        */
+    border-top-left-radius: .75rem;
+    border-top-right-radius: .75rem;
+}
+
+.mv-checklist-render:not(.bp-render-checklist) {
+    /*margin: 5px !important;*/
+    /*    border-radius: .75rem;
+    padding-bottom: 15px;
+    padding-top: 0px !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;*/
+}
+
+.mv-checklist-render .mv-header-params {
+    background-color: #fff;
+    padding-bottom: 15px;
+/*    border-bottom-right-radius: .75rem;
+    border-bottom-left-radius: .75rem;*/
+}
+
+.sectiongidseperatorcontent legend {
+    font-weight: bold;
+    text-transform: uppercase;
+    border: none;
+    font-size: 12px;
+    color: rgba(51, 51, 51, .8);
+    margin-bottom: 0;
+    border-top-left-radius: .75rem;
+    background-color: #fff;
+    border-top-right-radius: .75rem;
+}
+
+.mv-checklist2-render-parent .mv-checklist-render:not(.bp-render-checklist) .meta-toolbar {
+    /*margin-left: -.625rem;*/
+}
+
+.mv-checklist2-render-parent .mv-checklist-render .meta-toolbar {
+    padding-left: 34px;
+    margin-bottom: 0px !important;
+    padding-bottom: 15px;
+    padding-top: 15px;
+}
+
+.sectiongidseperatorcontent-container {
+    background-color: #f4f4f4;
+    margin-right: .625rem;
+    margin-left: .625rem;
+}
+
+.sectiongidseperatorcontent {
+    background-color: #fff;
+    border-radius: .75rem;
+    padding-bottom: 15px;
+}
+
+.mv-checklist2-render-parent .kpi-ind-tmplt-section {
+    background-color: transparent !important;
+    padding-top: 0px !important;
+}
+
+.mv-checklist2-render-parent .mv-hdr-label-control {
+    margin-bottom: 15px !important;
+}
+
+.mv-hdr-label-control-label .mv-hdr-label-control-descr {
+    margin-top: 0;
+}
+
+.mv-checklist2-render-parent .mv-hdr-label-control:not(.mv-hdr-right-label-control) .mv-hdr-label-control-label {
+    padding-bottom: 0;
+}
+
+.mv-checklist-render.bp-render-checklist .meta-toolbar,
+.mv_checklist_render_all.bp-render-checklist .meta-toolbar {
+    background-color: #fff !important;
+    border-top-right-radius: .75rem;
+    border-top-left-radius: .75rem;
+}
+
+.mv-checklist-render.bp-render-checklist .bp-header-param,
+.mv_checklist_render_all.bp-render-checklist .bp-header-param {
+    background-color: #fff;
+/*    border-bottom-right-radius: .75rem;
+    border-bottom-left-radius: .75rem;*/
+}
+
+.mv-checklist-render.bp-render-checklist .bp-header-param .input-group-btn>.btn {
+    /*    height: 32px;
+    min-height: 32px;   */
+}
+
+.mv-checklist2-render-parent .form-control {
+    /*    height: 32px !important;
+    min-height: 32px !important;*/
+    border: 1px #f3f3f3 solid;
+    background-color: #f3f3f3 !important;
+    font-weight: bold;
+}
+
+.mv-checklist2-render-parent div[data-section-path="pfProcessFileWidget"] .bp-detail-title,
+.mv-checklist2-render-parent div[data-section-path="pfprocessfilewidget"] .bp-detail-title,
+.mv-checklist2-render-parent div[data-section-path="pfprocesscommentwidget"] .bp-detail-title,
+.mv-checklist2-render-parent div[data-section-path="pfProcessCommentWidget"] .bp-detail-title {
+    border-bottom: none !important;
+    font-size: 12px;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: rgba(51, 51, 51, .8);
+}
+
+.mv-checklist2-render-parent div[data-section-path="pfProcessFileWidget"],
+.mv-checklist2-render-parent div[data-section-path="pfprocessfilewidget"],
+.mv-checklist2-render-parent div[data-section-path="pfprocesscommentwidget"],
+.mv-checklist2-render-parent div[data-section-path="pfProcessCommentWidget"] {
+    background-color: #fff;
+    margin-top: 10px;
+    border-radius: .75rem;
+    padding: 10px 36px 10px 36px;
+}
+
+.mv-checklist2-render-parent .bp-tabs>.nav-tabs {
+    background-color: #fff !important;
+    padding: 10px !important;
+    margin-top: 10px !important;
+    border-top-right-radius: .75rem !important;
+    border-top-left-radius: .75rem !important;
+}
+
+.mv-checklist2-render-parent .bp-tabs>.tab-content {
+    background-color: #fff !important;
+    padding: 0px !important;
+    border-bottom-right-radius: .75rem !important;
+    border-top: none;
+    border-bottom-left-radius: .75rem !important;
+    /*    padding-right: 0px !important;
+    padding-bottom: 0px !important;    */
+}
+
+.mv-checklist2-render-parent .mv-checklist-render:not(.bp-render-checklist) .meta-toolbar {
+    margin-right: -.625rem;
+    margin-left: -.625rem;
+    width: inherit;
+}
+
+.mv-checklist2-render-parent .mv_checklist_render_all.bp-render-checklist .meta-toolbar {
+    margin-right: 0;
+    margin-left: 0;
+    width: inherit;
+}
+
+.mv-checklist2-render-parent .mv-datalist-show-filter .col.content-wrapper {
+    background-color: #fff;
+}
+
+.mv-checklist2-render-parent .select2-container-disabled.form-control .select2-choice {
+    background-color: #e1e1e1 !important;
+}
+
+.mv-checklist2-render-parent .form-control .select2-choice,
+.mv-checklist2-render-parent .form-control .select2-choices {
+    background-color: #f3f3f3 !important;
+    border-color: #f3f3f3;
+}
+
+.mv-checklist2-render-parent .select2-container .select2-choice .select2-arrow {
+    border-left: 1px solid #f3f3f3;
+}
+
+.mv-checklist2-render-parent .select2-container-disabled.select2-container .select2-choice .select2-arrow b {
+    background-color: #e1e1e1 !important;
+}
+
+.mv-checklist2-render-parent .select2-container .select2-choice .select2-arrow b {
+    background-color: #f3f3f3 !important;
+}
+
+.mv-checklist2-render-parent .indicatorView {
+    background-color: #fff;
+    padding: 15px;
+    padding-top: 0;
+    border-bottom-left-radius: .75rem;
+    border-bottom-right-radius: .75rem;    
+}
+
+.mv-checklist2-render-parent .form-control[disabled],
+.mv-checklist2-render-parent .form-control[readonly],
+.mv-checklist2-render-parent fieldset[disabled] .form-control {
+    background-color: #e1e1e1 !important;
+    color: #8d8d8d !important;
+}
+
+.mv-checklist2-render-parent .select2-container.select2-container-disabled .select2-choice {
+    color: #8d8d8d !important;
+}
+
+.mv-checklist2-render-parent .kpi-ind-tmplt-section .sectiongidseperatorcontent-container div[data-section-path] {
+/*    margin-right: 0;
+    margin-left: 0;    */
+}
+.mv-checklist2-render-parent .mv-checklist-main-render .kpi-ind-tmplt-section div[data-section-path] {
+    margin-right: 0;
+    margin-left: 0;    
+}
+.mv-checklist2-render-parent .kpi-ind-tmplt-section div[data-section-path] {
+/*    background-color: #fff;
+    padding: 10px 15px 5px 15px;*/
+}
+
+.mv-checklist2-render-parent .kpi-ind-tmplt-section td.stretchInput>div[data-section-path] {
+    background-color: transparent;
+    margin-right: 0;
+    margin-left: 0;
+    padding: 0;
+}
+
+.mv-checklist-section-sidebar {
+    flex: 0 0 280px;
+    border-right: 1px solid #eee;
+    background-color: #fff;
+    margin-top: 0px;
+    border-radius: .75rem;
+    /*padding: 15px;*/
+    padding-top: 10px;
+}
+.mv-checklist-section-sidebar > div > div.active {
+    background-color: #1b84ff54;  
+}
+.mv-checklist-section-sidebar > div > div {
+    padding: 5px 15px 5px 15px;    
+}
+.mv-checklist-section-sidebar > div > div:not(.active):hover {
+    background-color: #f5f5f5;
+}
+
+.mv-checklist2-render-parent .viewer-container {
+    background-color: #fff;
+    padding: 15px;
+    border-radius: .75rem;
+    padding-top: 0;
+}
+
+.mv-checklist2-render-parent .bp-render-checklist .bp-addon-tab {
+    background-color: #fff !important;
+}
+
+.mv-checklist2-render-parent .bp-render-checklist .tab-content {
+    padding-top: 0px;
+}
+
+.mv-checklist2-render-parent .table-scrollable.bp-header-param {
+    margin: 0px;
+}
+
+.mv-checklist2-render-parent .table-scrollable.bp-header-param {
+    padding-bottom: 15px !important;
+}
+
+.mv-checklist2-render-parent .table-scrollable.bp-header-param td {
+    padding-right: 15px;
+    padding-left: 15px;
+}
+
+.mv-checklist2-render-parent button.bp-btn-save,
+.mv-checklist2-render-parent button.bp-btn-saveadd {
+    margin-right: 15px !important;
+}
+
+.mv-checklist2-render-parent ul.bp-icon-selection li>.item-icon-selection {
+    background-color: #f3f3f3 !important;
+    border: 1px solid #f3f3f3 !important;
+}
+
+.mv-checklist2-render-parent ul.bp-icon-selection li.active>.item-icon-selection {
+    background-color: #f3f3f3 !important;
+    color: #737373 !important;
+}
+
+.mv-checklist2-render-parent ul.bp-icon-selection li.active>.item-icon-selection:before {
+    content: "";
+}
+
+.mv-checklist2-render-parent ul.bp-icon-selection li>.item-icon-selection p {
+    color: #737373 !important;
+}
+
+.mv-checklist2-render-parent ul.bp-icon-selection li>.item-icon-selection:hover p {
+    color: #fff !important;
+}
+
+.mv-checklist2-render-parent ul.bp-icon-selection li>.item-icon-selection:hover {
+    background-color: #1B84FF !important;
+}
+
+.mv-checklist2-render-parent .wizard.blue .actions .btn {
+    border-radius: 100px !important;
+    margin-top: 10px;
+    background-color: #2196f3;
+    color: #fff;
+}
+
+.mv-checklist2-render-parent .mv-checklist-main-render .kpi-ind-tmplt-section {
+    /*background-color: #fff !important;*/
+    margin-top: 0px;
+    border-bottom-left-radius: .75rem;
+    border-bottom-right-radius: .75rem;
+    /*padding-top: 20px !important;*/
+    overflow-x: hidden;
+}
+
+.mv-checklist2-render-parent #tnaTimeEmployeePlanWindow {
+    background-color: #fff;
+    padding: 10px;
+    margin: 0px;
+    border-radius: .75rem;
+}
+
+.mv-checklist2-render-parent #employeeTimeBalance {
+    background-color: #fff;
+    padding: 10px;
+    border-radius: .75rem;
+}
+
+.mv-checklist2-render-parent .main-dataview-container {
+    background-color: #fff;
+    padding: 10px;
+    border-radius: .75rem;
+}
+
+.mv-checklist2-render-parent #saveDepreciation-form {
+    background-color: #fff;
+}
+
+.mv-checklist2-render-parent .center-sidebar.content {
+    padding-left: 6px !important;
+}
+
+.mv-checklist2-render-parent .grid li figure {
+    width: 78px;
+}
+
+.mv-checklist2-render-parent .grid li .img-container,
+.mv-checklist2-render-parent .grid li .img-container img {
+    width: 78px;
+}
+
+.mv-checklist2-render-parent .grid li {
+    display: inline-block;
+    width: 80px;
+    border: 1px solid transparent;
+    margin: 4px 4px 8px;
+    padding: 0;
+    vertical-align: top;
+    cursor: pointer;
+    background-color: #eaeaea;
+    border-radius: 4px;
+}
+
+.mv-checklist2-render-parent .bp-layout .card>.card-header:not(.invisible) {
+    border-bottom: none;
+}
+
+.mv-checklist2-render-parent .card .card-title:not(.text-white) {
+    font-weight: bold;
+    color: #6a6a6a !important;
+}
+
+.mv-checklist2-render-parent .jstree-default .jstree-icon:empty {
+    line-height: 13px !important;
+}
+
+.mv-checklist2-render-parent .fileinput-button .big {
+    font-size: 40px;
+    line-height: 90px;
+    text-align: center;
+    color: #ddd;
+}
+
+.mv-checklist2-render-parent div[data-bp-detail-container] {
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-bottom: 10px;
+}
+.mv-checklist2-render-parent .pos-wrap .pos-leftsidebar td {
+    color: #333;
+}
+.mv-checklist2-render-parent .pos-bottom-layout .pos-center {
+    margin-left: 268px;
+    border-top-left-radius: .75rem;
+    border-top-right-radius: .75rem;
+    margin-right: 6px;
+    margin-top: 9px;    
+}
+.mv-checklist2-render-parent .pos-bill-number {
+    background-color: #fff;
+    color: #333;    
+}
+.mv-checklist2-render-parent .pos-wrap .green-meadow.btn {
+    background-color: #1B84FF;
+    border-radius: 100px;
+}
+.mv-checklist2-render-parent .pos-bottom-layout .pos-right {
+    margin-left: 268px;
+    margin-right: 8px;
+    border-top: 1px solid #dfdfdf;
+}
+.mv-checklist2-render-parent .pos-right {
+    border: none;
+    border-bottom-right-radius: .75rem;
+    border-bottom-left-radius: .75rem;
+}
+.mv-checklist2-render-parent #pos-bottom-bar td:last-child {
+    border-bottom-right-radius: .75rem;
+}
+.mv-checklist2-render-parent #pos-bottom-bar td:first-child {
+    border-bottom-left-radius: .75rem;
+}
+.mv-checklist2-render-parent #pos-bottom-bar td {
+    background-color: #fff !important;
+}
+.mv-checklist2-render-parent .pos-left {
+    background-color: #fff;
+    border-radius: .75rem;
+    margin-top: 9px;
+}

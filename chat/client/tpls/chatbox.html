@@ -1,0 +1,31 @@
+<div class="popup-box chat-popup private-chat-popup" id="chatbox-<%=id%>" data-cid="<%=id%>">
+    <div class="popup-head">
+        <img src="api/image_thumbnail?width=35&src=<%=picture%>" class="media-object connectionIcon rounded-circle user_img" onerror="onChatUserImgError(this);"/>
+        <span class="is-online"></span>
+        <div class="username"><%=name%></div>
+        <button type="button" class="btn p-0 chatbox-minimize ml-auto">
+            <i class="far fa-window-minimize"></i>
+        </button>
+        <div class="btn-group justify-content-center">
+            <a href="#" class="btn p-0 pl5 pr5 dropdown-toggle" data-toggle="dropdown"></a>
+            <div class="dropdown-menu dropdown-menu-right">
+                <a href="javascript:;" class="dropdown-item chat-delete-conversations">Бүгдийг устгах</a>
+            </div>
+        </div>
+        <button type="button" class="btn p-0 chatbox-close ml-auto">
+            <i class="icon-cross2"></i>
+        </button>
+    </div>
+    <div class="popup-messages"></div>
+    <div class="chat-input-text msg-footer">
+        <form class="chat-replay d-flex align-items-center" enctype="multipart/form-data">
+            <textarea rows="1" placeholder="Мессеж бичих..." class="form-control" data-ctid="<%=id%>" spellcheck="false" maxlength="4000"></textarea>
+            <span class="chat-emoji" title="emoji"><i class="fa fa-smile-o"></i></span>
+            <span class="chat-buzz" title="buzz"><i class="fa fa-bell-o"></i></span>
+            <label class="chat-custom-file-input cursor-pointer" title="Файл сонгох">
+                <input type="file" name="attachFile[]" accept=".png,.gif,.jpeg,.jpg,.bmp,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.zip,.rar,.xml" multiple>
+                <span><i class="fa fa-paperclip"></i></span>
+            </label>
+        </form>
+    </div>
+</div>

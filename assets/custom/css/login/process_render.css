@@ -1,0 +1,45 @@
+.rightside {
+    padding-top: 15px;
+}
+.login-form img.logo {
+    margin-bottom: 20px;
+}
+.table-scrollable {
+    max-height: none;
+}
+.col-md-12.center-sidebar {
+    padding: 0;
+}
+span.required {
+    color: #e02222;
+    font-size: 14px;
+    padding: 0 2px 0 0;
+    line-height: 1px;
+    font-weight: bold;
+}
+table.bp-header-param, 
+table.bp-header-param > tbody, 
+table.bp-header-param > tbody > tr, 
+table.bp-header-param > tbody > tr > td {
+    display: block;
+    width: 100%!important;
+}
+table.bp-header-param > tbody > tr > td {
+    border-top: none;
+    text-align: left!important;
+    padding: 5px 0 0 0;
+}
+table.bp-header-param > tbody > tr > td > label {
+    margin-bottom: 0;
+}
+table.bp-header-param > tbody > tr > td:nth-of-type(2) {
+    padding-bottom: 7px;
+}
+.form-control.error {
+    border-color: red !important;
+    box-shadow: none;
+}
+.select2-container.error .select2-choice,
+.select2-container.error .select2-choices {
+    border-color: red !important;
+}

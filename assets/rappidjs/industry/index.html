@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Typescript JointJS+ Demo Application</title>
+    <link rel="icon" href="./favicon.ico" type="image/x-icon" />
+
+    <link rel="stylesheet" type="text/css" href="./css/style.css" />
+    <link rel="stylesheet" type="text/css" href="./css/theme-picker.css" />
+
+    <!-- theme-specific application CSS  -->
+    <link rel="stylesheet" type="text/css" href="./css/style.dark.css" />
+    <link rel="stylesheet" type="text/css" href="./css/style.material.css" />
+    <link rel="stylesheet" type="text/css" href="./css/style.modern.css" />
+  </head>
+  <body>
+    <div style="padding: 15px">
+      <img
+        class="imgicon"
+        draggable="true"
+        ondragstart="event.dataTransfer.setData('text/plain',null)"
+        src="https://dev.veritech.mn/storage/uploads/4137180_building_construction_industry_saw_icon.svg"
+        width="60"
+        height="60"
+      />
+      <img
+        class="imgicon"
+        draggable="true"
+        ondragstart="event.dataTransfer.setData('text/plain',null)"
+        src="https://dev.veritech.mn/storage/uploads/4137182_building_construction_crane_industry_icon.svg"
+        width="60"
+        height="60"
+        style="margin-left: 50px"
+      />
+    </div>
+
+    <div id="app" class="joint-app">
+      <div class="app-header">
+        <div class="app-title">
+          <h1>Veritech ERP</h1>
+        </div>
+        <div class="toolbar-container"></div>
+      </div>
+      <div class="app-body">
+        <!-- <div class="stencil-container"></div> -->
+        <div class="paper-container"></div>
+        <!-- <div class="inspector-container"></div> -->
+        <div class="navigator-container"></div>
+      </div>
+    </div>
+
+    <!-- Application files:  -->
+    <script src="./bundle.js"></script>
+    <script>
+      addCustomShape();
+      //   document.addEventListener(
+      //     "drop",
+      //     function (event) {
+      //       // prevent default action (open as link for some elements)
+      //       event.preventDefault();
+      //       // move dragged elem to the selected drop target
+      //       console.log("event.target", event.target);
+      //     },
+      //     false
+      //   );
+      //   document.querySelector(".imgicon").addEventListener("dragend", dragEnd);
+      //   const graph = new window.joint.dia.Graph();
+      //   const image = new window.joint.shapes.basic.Image({
+      //     // type: "standard.Image",
+      //     size: { width: 60, height: 60 },
+      //     position: {
+      //       x: 200,
+      //       y: 200,
+      //     },
+      //     attrs: {
+      //       root: {
+      //         dataTooltip: "Image",
+      //         dataTooltipPosition: "left",
+      //         dataTooltipPositionSelector: ".joint-stencil",
+      //       },
+      //       image: {
+      //         xlinkHref:
+      //           "https://dev.veritech.mn/storage/uploads/4137180_building_construction_industry_saw_icon.svg",
+      //       },
+      //       body: {
+      //         fill: "transparent",
+      //         stroke: "#31d0c6",
+      //         strokeWidth: 2,
+      //         strokeDasharray: "0",
+      //       },
+      //       label: {
+      //         text: "image",
+      //         fontFamily: "Roboto Condensed",
+      //         fontWeight: "Normal",
+      //         fontSize: 11,
+      //         fill: "#c6c7e2",
+      //       },
+      //     },
+      //   });
+      //   graph.addCells([image]);
+    </script>
+  </body>
+</html>

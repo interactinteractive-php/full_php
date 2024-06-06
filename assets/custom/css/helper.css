@@ -1,0 +1,3 @@
+.dropdown-none-arrow::after{
+    content: none !important;
+}

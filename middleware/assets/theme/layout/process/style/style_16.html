@@ -1,0 +1,61 @@
+<div class="portlet light shadow workexp-area theme-panel" id="workexp-area">
+    <div class="workexp-title">
+        <div class="col-md-11 section-title">Ажлын туршлага</div> 
+        <div class="btn-area col-md-1"><a class="btn btn-circle btn-icon-only theme-edit-btn" href="javascript: themeEdit('workexp-area');" style="padding: 2px;"><i class="icon-plus3 font-size-12"></i></a></div>
+    </div>
+    <div class="theme-data-area">
+        {{rowsbegin}}
+        <div class="theme-row">
+            <div class="col-md-12 no-padding">
+                <table><tr><td class="theme-inline-date">{{pos1}}</td><td>-</td><td class="theme-inline-date">{{pos2}}</td></tr></table>
+            </div>
+            <div class="col-md-9 col-md-offset-3 no-padding">
+                <div class="col-md-12">{{pos3}}</div>
+                <div class="col-md-12">{{pos4}}</div>
+                <div class="col-md-12">{{pos5}}</div>
+            </div>
+            <div class="col-md-12 theme-line"></div>
+            </div>
+        {{rowsend}}
+    </div>
+    <div class="btn-area"></div>
+</div>
+
+<style>   
+    .process-theme2 .col-md-8 .workexp-area {
+        background-color: #fff;
+        padding: 15px 30px;
+        clear: both;
+        display: table;
+        width: 100%;
+        border-radius: 0px;
+    }
+    
+    .process-theme2 .workexp-title {
+        font-size: 30px;
+        font-family: 'Open Sans Condensed', sans-serif;
+        border-bottom: 1px solid #ffc000;
+        padding-bottom: 26px;
+        margin-bottom: 10px;
+    }
+    
+    .process-theme2 .theme-line {
+        border-bottom: 1px solid #efefef;
+    }
+            
+    .process-theme2 .theme-inline-date label {
+        display: none;
+    }
+    
+    .process-theme2 .theme-inline-date .dateElement .input-group-btn {
+        display: none;
+    }
+    
+    .process-theme2 .theme-inline-date .dateElement .dataInit{
+        float: left;
+    }
+    
+    .process-theme2 .theme-inline-date .theme-inline-date-seperator {
+        float: left;
+    }
+</style>

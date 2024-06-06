@@ -1,0 +1,195 @@
+/**************************************** DANGER ******************************************/
+/*body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}*/
+/*.primary-top {
+    display: none !important;
+}*/
+/*.page-content {
+    margin-top: 0 !important;
+}*/
+/*.content-wrapper {
+    background: #f0f3f7 !important;
+}
+.content {
+    background: none !important;
+}*/
+.covid19 {
+    padding-top: 0px !important;
+}
+/**************************************** DANGER ******************************************/
+
+.covid19 .box-shadow {
+    position: relative;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: #fff;
+    background-clip: border-box;
+    /* box-shadow: 0 0 30px 0 rgba(115, 77, 191, 0.2); */
+    border-radius: 7px;
+    border: 0;
+    margin-bottom: 1.5rem;
+    width: 100%;
+    padding: 20px;
+}
+.covid19 table th {
+    border-bottom: 1px solid #e0e0e0;
+}
+.covid19 table th,
+.covid19 table td {
+    border-top: .07rem dashed #e5e5e5;
+    line-height: normal;
+}
+.covid19 .btn-icon-small {
+    padding: 12px !important;
+}
+.covid19 .btn-icon-medium {
+    padding: 14px !important;
+}
+.covid19 .amcharts-chart-div > a {
+    display: none !important;
+}
+.covid19 .amcharts-legend-div text {
+    
+}
+/****************************************** VeriCloud START ******************************************/
+.vericloud {
+    width: 100%;
+}
+.vericloud .sidebar {
+    margin-left: 300px;
+}
+.vericloud .user_propic {
+    border-radius: 8px;
+}
+/*****************************************************************************************************/
+.cloud_dashboard {
+    padding: 15px;
+    font-size: 14px;
+}
+.cloud_dashboard > .row {
+    margin-bottom: 15px;
+}
+.cloud_dashboard .banner {
+    background-image: linear-gradient(to right, rgba(59, 69, 208, 0.8) 0%, rgba(146, 9, 251, 0.6) 100%), url(banner-bg.png);
+    background-size: cover;
+    position: relative;
+    overflow: hidden;
+    border: 0;
+}
+.cloud_dashboard .card-body {
+    padding: 1.5rem 1.5rem;
+}
+.cloud_dashboard .dash-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin: 0 auto;
+    line-height: 50px;
+    position: relative;
+    background: #e3e6f9;
+    z-index: 1;
+    text-align: center;
+}
+.cloud_dashboard .dash-icon i {
+    font-size: 30px;
+    text-align: center;
+    vertical-align: middle;
+}
+.cloud_dashboard .dash-icon:after {
+    position: absolute;
+    content: '';
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    bottom: 0;
+    top: -10px;
+    right: 0;
+    left: -10px;
+    background: rgba(235, 237, 252, 0.4);
+    z-index: -1;
+}
+.cloud_dashboard .dash-icon.text-orange {
+    background: rgba(236, 84, 68, 0.2);
+}
+.cloud_dashboard .dash-icon.text-orange:after {
+    background: rgba(236, 84, 68, 0.1);
+}
+.cloud_dashboard .dash-icon.text-secondary1 {
+    background: rgba(36, 228, 172, 0.2);
+}
+.cloud_dashboard .dash-icon.text-secondary1:after {
+    background: rgba(36, 228, 172, 0.1);
+}
+.cloud_dashboard .dash-icon.text-secondary {
+    background: rgba(156, 82, 253, 0.2);
+}
+.cloud_dashboard .dash-icon.text-secondary:after {
+    background: rgba(156, 82, 253, 0.1);
+}
+.cloud_dashboard .dash-icon.text-warning {
+    background: rgba(255, 167, 11, 0.2);
+}
+.cloud_dashboard .dash-icon.text-warning:after {
+    background: rgba(255, 167, 11, 0.1);
+}
+.cloud_dashboard .bg-dark-blue {
+    background-color: #535ce5 !important;
+}
+.cloud_dashboard .bg-purple {
+    background-color: #9c52fd !important;
+}
+.cloud_dashboard .bg-green {
+    background-color: #24e4ab !important;
+}
+.cloud_dashboard .bg-red {
+    background-color: #eb5345 !important;
+}
+.cloud_dashboard .your-a .btn {
+    padding: 10px;
+}
+.cloud_dashboard .text-dark-blue {
+    color: #535ce5 !important;
+}
+.cloud_dashboard .text-dark-blue2 {
+    color: #252e73 !important;
+}
+.cloud_dashboard .text-purple {
+    color: #9c52fd !important;
+}
+.cloud_dashboard .text-green {
+    color: #24e4ab !important;
+}
+.cloud_dashboard .text-red {
+    color: #eb5345 !important;
+}
+.cloud_dashboard .text-yellow {
+    color: #ffa70b !important;
+}
+.cloud_dashboard .card-header .card-title {
+    font-weight: bold;
+}
+.cloud_dashboard .btn.btn-grey  {
+    background-color: #ebedfc !important;
+    border: 0;
+}
+.cloud_dashboard .btn.view {
+    height: 34px;
+}
+.cloud_dashboard .top-pro .table .btn {
+    background-color: #eceefd !important;
+}
+.cloud_dashboard .top-pro .table .btn > i {
+    color: #606781 !important;
+}
+.cloud_dashboard img {
+    max-width: 100%;
+}
+.cloud_dashboard .card {
+    margin-bottom: 0;
+}
+/***********************************************************************************/

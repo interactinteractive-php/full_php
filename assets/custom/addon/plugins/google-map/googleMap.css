@@ -1,0 +1,38 @@
+.md-map-container .md-map-filter-panel.open {
+	width: 100px;
+}
+ul.colorPalette {
+	margin: 3px;
+	padding: 0;
+}
+ul.colorPalette li {
+	list-style: none;
+	margin: 2px;
+	display: inline-block;
+	width: 24px;
+	height: 24px;
+	border: 1px solid rgba(0,0,0,0.2);
+}
+ul.colorPalette li:hover,
+ul.colorPalette li:focus,
+ul.colorPalette li.active {
+	width: 24px;
+	height: 24px;
+	border: 2px solid rgba(0,0,0,1);
+}
+.context_menu{
+background-color:white;
+border:1px solid gray;
+}
+.context_menu_item{
+	padding:3px 6px;
+}
+.context_menu_item:hover{
+	background-color:#CCCCCC;
+}
+.context_menu_separator{
+	background-color:gray;
+	height:1px;
+	margin:0;
+	padding:0;
+}

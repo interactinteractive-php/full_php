@@ -1,0 +1,261 @@
+#dialog-manage-theme .style-content {
+    background: #222c3a;
+    color: #62e7ef;
+    padding: 0 1px;
+}
+#dialog-manage-theme .single-style {
+    background: #222c3a;
+    color: #62e7ef;
+    border: 1px solid #62e7ef;
+    height: 140px;
+    width: 100px;
+    padding: 0 3px;
+}
+#dialog-manage-theme .single-style .style-thumb {
+    height: 100px;
+    width: 100%;
+}
+#dialog-manage-theme .single-style .style-title {
+    color: #fff;
+}
+#dialog-manage-theme .single-style .style-title,
+#dialog-manage-theme .single-style .style-description {
+    font-size: 10px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    display: block;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+#dialog-manage-theme .single-style .style-description {
+    font-size: 10px;    
+}
+#dialog-manage-theme .style-content .single-style {
+    width: 100%;
+}
+#dialog-manage-theme .style-draggable-parent {
+    padding: 5px;
+}
+#dialog-manage-theme #metaThemeContent {
+    margin-top: 40px;
+}
+#dialog-manage-theme {
+    padding: 0;
+}
+#dialog-manage-theme .draggingMeta {
+    color: #916c80;
+    list-style-type: none;
+    border: 1px solid #ddd;
+}
+#dialog-manage-theme .ui-state-active {
+    background: #9AD7DC;
+    color: #3D4243;
+}
+
+#dialog-manage-theme .ui-state-hover {
+    opacity: 1;
+    color: #ff5722;
+    border: 1px solid #FF843C;
+}
+#theme-manage-wrapper .sectionsDroppableBordered {
+    border: 1px solid #E65C5C !important;
+    position: relative !important;
+}
+#theme-manage-wrapper .sectionsDroppable:hover,
+#theme-manage-wrapper .posDroppable:hover {
+    cursor: text;
+    outline: 1px solid #2ebdff;
+    box-shadow: none !important;
+    -moz-box-shadow: none !important;
+    -webkit-box-shadow: none !important;
+}
+#theme-manage-wrapper .metaThemeSectionDetail {
+    position: relative !important;
+}
+#theme-manage-wrapper .section-groupname {
+    border: 1px solid #ddd;
+    float: right;
+    font-size: 14px;
+    margin-right: 20px;
+    padding: 0 5px;
+}
+#theme-manage-wrapper .removeThemeContentBtn {    
+    color: #1a1414;
+    /* margin: -3px -1px; */
+    background: #e2b3b3;
+    border-radius: 50%;
+    padding: 4px 5px;
+    text-align: center;
+    cursor: pointer;
+    font-size: 8px;
+    z-index: 101;
+    /* display: inline-block; */
+    float: right;    
+}
+#theme-manage-wrapper .title-nav {
+    text-align: center;
+    margin: 0 0 8px;
+}
+#theme-manage-wrapper .columns {
+    margin: 10px 0 0 350px;
+}
+#theme-manage-wrapper #metas {
+    padding: 3px 1px;
+}
+#theme-manage-wrapper #metas li {
+    font-size: 11px;
+}
+
+#sidebar {
+    width: 350px;
+    position: absolute;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 3;
+    overflow: hidden;
+}
+#sidebar:after {
+    content: '';
+    background: #353c4d;
+    width: 350px;
+    height: 100%;
+    position: absolute;
+    top: 50px;
+    left: 0;
+    z-index: -1;
+}
+#sidebar #sidebar-menu {
+    background: #1c2029;
+    width: 50px;
+    height: 100%;
+    z-index: 4;
+}
+#sidebar #sidebar-menu ul {
+    list-style: none;
+    margin: 0;
+    padding: 29px 0 0;
+}
+#sidebar #sidebar-menu ul li {
+    color: white;
+    height: 50px;
+    text-align: center;
+    line-height: 50px;
+    border-bottom: 1px solid #252935;
+    position: relative;
+}
+#sidebar #sidebar-menu ul li.active {    
+    background: #0ca5f2;
+    border-bottom: 2px solid #0984c2;
+}
+#sidebar #sidebar-menu ul li.active:before,
+#sidebar #sidebar-menu ul li:hover:before {
+    position: absolute;
+    content: '';
+    border-right: 8px solid #353c4d;
+    border-top: 8px solid transparent;
+    border-bottom: 8px solid transparent;
+    top: 17px;
+    right: 0px;
+}
+#sidebar #sidebar-menu ul li a {
+    color: white;
+    position: relative;
+    font-size: 18px;
+    width: 50px;
+    display: block;
+}
+#sidebar #sidebar-menu ul li a i.option {
+    position: absolute;
+    font-size: 8px;
+    background: #1c2029;
+    border: 1px solid #1c2029;
+    top: 13px;
+    right: 14px;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    border-radius: 2px;
+}
+#sidebar #sidebar-menu ul li .tooltip {
+    white-space: nowrap;
+    margin-left: -8px;
+}
+#sidebar #sidebar-menu ul li .badge {
+    position: absolute;
+    background: red;
+    font-size: 8px;
+    line-height: 11px;
+    padding: 2px 5px;
+    top: 10px;
+    right: 8px;
+}
+#sidebar #sidebar-menu #logo {
+    margin: 0 10px;
+    width: 30px;
+    position: absolute;
+    bottom: 15px;
+}
+#sidebar #submenu {
+    width: 86%;
+    position: absolute;
+    left: 50px;
+    top: 0;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    height: 100%;
+    color: rgba(255, 255, 255, 0.9);
+}
+#sidebar #submenu #params {
+    background: #fff;
+}
+#sidebar #submenu .btn.btn-success {
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    border-radius: 2px;
+    background: #68d770;
+    border: 1px solid #40cc4a;
+    text-shadow: 0px 1px 0px #40cc4a;
+    width: 100%;
+}
+#sidebar #submenu .sidebar-title {
+    line-height: 30px;
+    height: 30px;
+    margin: 0 -15px;
+    padding: 0 30px 0 15px;
+    border-bottom: 1px solid #40475c;
+    color: white;
+    background: #2b303e;
+    position: relative;
+    text-align: center;
+}
+#sidebar #submenu .sidebar-title i {
+    background: #272b38;
+    border-left: 1px solid #40475c;
+    position: absolute;
+    top: 0;
+    right: 0;
+    cursor: pointer;
+    height: 29px;
+    line-height: 29px;
+    width: 29px;
+}
+#dialog-manage-theme ::-webkit-scrollbar {
+    width: 7px;
+}
+#dialog-manage-theme ::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+}
+#dialog-manage-theme ::-webkit-scrollbar-thumb {
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+    background: #55befc; 
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); 
+}
+#dialog-manage-theme ::-webkit-scrollbar-thumb:window-inactive {
+    background: #55befc; 
+}

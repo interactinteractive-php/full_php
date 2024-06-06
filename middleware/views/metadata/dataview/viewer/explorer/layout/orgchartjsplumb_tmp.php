@@ -1,0 +1,209 @@
+<div class="heigh-editor" id="width-orgchart-container-<?php echo $this->dataViewId; ?>">
+    <div class="css-editor" id="workFlowEditor">
+        <div class="panzoom">
+            <?php
+            $id = $this->row['dataViewLayoutTypes']['explorer']['fields']['id'];
+            $parent = $this->row['dataViewLayoutTypes']['explorer']['fields']['parent'];
+            $dependencydepartmentid = 'dependencydepartmentid';
+
+            $name1 = $this->row['dataViewLayoutTypes']['explorer']['fields']['name1'];
+            $name2 = $this->row['dataViewLayoutTypes']['explorer']['fields']['name2'];
+
+            echo '<div class="wfposition" id="1601878875864191" data-sourceid="" data-targetid="">Шинэ</div>';            
+            echo '<div class="wfposition" id="1601878922035235" data-sourceid="1" data-targetid="2">Хүлээн авах</div>';            
+            echo '<div class="wfposition" id="1601879382199140" data-sourceid="1" data-targetid="3">Мэдээлэл лавлах</div>';            
+            echo '<div class="wfposition" id="1601879382084213" data-sourceid="1" data-targetid="4">Мэдээлэл лавлахгүй</div>';            
+            echo '<div class="wfposition" id="1601879382936143" data-sourceid="2" data-targetid="5">Мэдээлэл өгөх</div>';            
+            echo '<div class="wfposition" id="1601879382106819" data-sourceid="2" data-targetid="6">Процесс ажилуулах</div>';            
+            echo '<div class="wfposition" id="1601879382889491" data-sourceid="3" data-targetid="7">Хэвийн ажиллаагүй</div>';      
+            echo '<div class="wfposition" id="1601879382267715" data-sourceid="3" data-targetid="7">Хэвийн ажилласан</div>';      
+            echo '<div class="wfposition" id="1601879454071724" data-sourceid="3" data-targetid="7">Мэдээлэл өгөх</div>';      
+            echo '<div class="wfposition" id="1601879382532064" data-sourceid="3" data-targetid="7">Баталгаажсан</div>';      
+            echo '<div class="wfposition" id="1601879382139902" data-sourceid="3" data-targetid="7">Баталгаажаагүй</div>';      
+            echo '<div class="wfposition" id="1601879382102709" data-sourceid="3" data-targetid="7">Өгөгдлийн зөрчилгүй</div>';      
+            echo '<div class="wfposition" id="1601879382227791" data-sourceid="3" data-targetid="7">Өгөгдлийн зөрчилтэй</div>';      
+            echo '<div class="wfposition" id="1601879382511728" data-sourceid="3" data-targetid="7">Тохиргооноос болоогүй</div>';      
+            echo '<div class="wfposition" id="1601879382242621" data-sourceid="3" data-targetid="7">Тохиргооноос болсон</div>';      
+//            foreach ($this->recordList as $row) {
+//                echo '<div class="wfposition" id="'.$row[$id].'" data-sourceid="'.$row[$parent].'" data-targetid="'.$row[$id].'" data-twotargetid="'.$row[$dependencydepartmentid].'">'.$row[$name2].'</div>';
+//            }
+            ?>
+        </div>    
+    </div>
+</div>
+
+<style>
+.wfposition {     
+    width: 115px;
+    padding: 6px 14px;
+    border-radius: 25px !important; 
+    border: 1px #000 solid; 
+}
+.panzoom {
+  position: absolute;
+  background-color: rgba(blue,.1);
+  overflow: visible;
+  border: 5px dotted rgba(#CCC,.1);
+}
+</style> 
+
+<script type="text/javascript">
+var windows;    
+var arrowStyle = "StateMachine"; //Straight, Flowchart, Bezier, StateMachine
+var minScale = 0.4;
+var maxScale = 2;
+var incScale = 0.1;
+var $panzoom = null;
+var $container = $("#width-orgchart-container-<?php echo $this->dataViewId; ?> .css-editor");
+
+$(function(){
+        
+    $.when(
+        $.getStylesheet(URL_APP+'assets/custom/addon/plugins/jsplumb/css/style.css'), 
+        $.getScript(URL_APP+'assets/custom/addon/plugins/html2canvas.min.js'),
+        $.getScript(URL_APP+'assets/custom/addon/plugins/jsplumb/jsplumb.min.js'),
+        $.getScript(URL_APP+'assets/custom/addon/plugins/d3/dagre/dagre.min.js'), 
+        $.getScript(URL_APP+'assets/custom/addon/plugins/jquery.panzoom/jquery.panzoom.min.js')
+    ).then(function () {
+        
+        orgChartResizer_<?php echo $this->dataViewId; ?>();
+        
+        var dg = new dagre.graphlib.Graph();
+        dg.setGraph({nodesep:40,ranksep:80,marginx:50,marginy:50});
+        dg.setDefaultEdgeLabel(function() { return {}; });
+        dg.graph().rankDir = 'LR';
+
+        var nodes = $(".wfposition:visible");
+
+        nodes.each(function(){
+            var n = $(this);
+            dg.setNode(n.attr('id'), {width: n.width(), height: n.height()});
+        });    
+
+        $.each([{"ID":"1601879790878362","NEXT_WFM_STATUS_ID":"1601878922035235","PREV_WFM_STATUS_ID":"1601878875864191","PREV_WFM_STATUS_NAME":"Шинэ","NEXT_WFM_STATUS_NAME":"Хүлээн авах","PREV_WFM_STATUS_COLOR":"#5085AB","NEXT_WFM_STATUS_COLOR":"#00AAA0","PREV_WFM_STATUS_CODE":"001","NEXT_WFM_STATUS_CODE":"599","CRITERIA":null,"ASSIGNMENT_CRITERIA":null,"TOP":"38.99653625488281","LEFT":null,"DESCRIPTION":null,"TRANSITION_TIME":null,"TIME_TYPE_ID":null,"PREV_ID":"1601878886828579","NEXT_ID":"1601879790497472"},{"ID":"1601879790497472","NEXT_WFM_STATUS_ID":"1601879382199140","PREV_WFM_STATUS_ID":"1601878922035235","PREV_WFM_STATUS_NAME":"Хүлээн авах","NEXT_WFM_STATUS_NAME":"Мэдээлэл лавлах","PREV_WFM_STATUS_COLOR":"#00AAA0","NEXT_WFM_STATUS_COLOR":"#82D7F6","PREV_WFM_STATUS_CODE":"599","NEXT_WFM_STATUS_CODE":"931","CRITERIA":null,"ASSIGNMENT_CRITERIA":null,"TOP":"15.8507080078125","LEFT":null,"DESCRIPTION":null,"TRANSITION_TIME":null,"TIME_TYPE_ID":null,"PREV_ID":"1601879790878362","NEXT_ID":"1601879790852337"},{"ID":"1601879790852337","NEXT_WFM_STATUS_ID":"1601879382084213","PREV_WFM_STATUS_ID":"1601878922035235","PREV_WFM_STATUS_NAME":"Хүлээн авах","NEXT_WFM_STATUS_NAME":"Мэдээлэл лавлахгүй","PREV_WFM_STATUS_COLOR":"#00AAA0","NEXT_WFM_STATUS_COLOR":"#82D7F6","PREV_WFM_STATUS_CODE":"599","NEXT_WFM_STATUS_CODE":"932","CRITERIA":null,"ASSIGNMENT_CRITERIA":null,"TOP":"110.15972900390625","LEFT":null,"DESCRIPTION":null,"TRANSITION_TIME":null,"TIME_TYPE_ID":null,"PREV_ID":"1601879790497472","NEXT_ID":"1601879790121940"},{"ID":"1601879790121940","NEXT_WFM_STATUS_ID":"1601879382936143","PREV_WFM_STATUS_ID":"1601879382199140","PREV_WFM_STATUS_NAME":"Мэдээлэл лавлах","NEXT_WFM_STATUS_NAME":"Мэдээлэл өгөх","PREV_WFM_STATUS_COLOR":"#82D7F6","NEXT_WFM_STATUS_COLOR":"#47C8B4","PREV_WFM_STATUS_CODE":"931","NEXT_WFM_STATUS_CODE":"934","CRITERIA":null,"ASSIGNMENT_CRITERIA":null,"TOP":"41.8507080078125","LEFT":null,"DESCRIPTION":null,"TRANSITION_TIME":null,"TIME_TYPE_ID":null,"PREV_ID":"1601879790852337","NEXT_ID":"1601879790132434"},{"ID":"1601879790132434","NEXT_WFM_STATUS_ID":"1601878922035235","PREV_WFM_STATUS_ID":"1601879382936143","PREV_WFM_STATUS_NAME":"Мэдээлэл өгөх","NEXT_WFM_STATUS_NAME":"Хүлээн авах","PREV_WFM_STATUS_COLOR":"#47C8B4","NEXT_WFM_STATUS_COLOR":"#00AAA0","PREV_WFM_STATUS_CODE":"934","NEXT_WFM_STATUS_CODE":"599","CRITERIA":null,"ASSIGNMENT_CRITERIA":null,"TOP":"38.99653625488281","LEFT":null,"DESCRIPTION":null,"TRANSITION_TIME":null,"TIME_TYPE_ID":null,"PREV_ID":"1601879790121940","NEXT_ID":"1601879790323022"},{"ID":"1601879790323022","NEXT_WFM_STATUS_ID":"1601879382106819","PREV_WFM_STATUS_ID":"1601879382084213","PREV_WFM_STATUS_NAME":"Мэдээлэл лавлахгүй","NEXT_WFM_STATUS_NAME":"Процесс ажилуулах","PREV_WFM_STATUS_COLOR":"#82D7F6","NEXT_WFM_STATUS_COLOR":"#47C8B4","PREV_WFM_STATUS_CODE":"932","NEXT_WFM_STATUS_CODE":"935","CRITERIA":null,"ASSIGNMENT_CRITERIA":null,"TOP":"116.84028625488281","LEFT":null,"DESCRIPTION":null,"TRANSITION_TIME":null,"TIME_TYPE_ID":null,"PREV_ID":"1601879790132434","NEXT_ID":"1601879791741881"},{"ID":"1601879791741881","NEXT_WFM_STATUS_ID":"1601879382889491","PREV_WFM_STATUS_ID":"1601879382106819","PREV_WFM_STATUS_NAME":"Процесс ажилуулах","NEXT_WFM_STATUS_NAME":"Хэвийн ажиллаагүй","PREV_WFM_STATUS_COLOR":"#47C8B4","NEXT_WFM_STATUS_COLOR":"#47C8B4","PREV_WFM_STATUS_CODE":"935","NEXT_WFM_STATUS_CODE":"937","CRITERIA":null,"ASSIGNMENT_CRITERIA":null,"TOP":"250.52084350585938","LEFT":null,"DESCRIPTION":null,"TRANSITION_TIME":null,"TIME_TYPE_ID":null,"PREV_ID":"1601879790323022","NEXT_ID":"1601879791101601"},{"ID":"1601879791101601","NEXT_WFM_STATUS_ID":"1601879382267715","PREV_WFM_STATUS_ID":"1601879382106819","PREV_WFM_STATUS_NAME":"Процесс ажилуулах","NEXT_WFM_STATUS_NAME":"Хэвийн ажилласан","PREV_WFM_STATUS_COLOR":"#47C8B4","NEXT_WFM_STATUS_COLOR":"#47C8B4","PREV_WFM_STATUS_CODE":"935","NEXT_WFM_STATUS_CODE":"936","CRITERIA":null,"ASSIGNMENT_CRITERIA":null,"TOP":"138.54168701171875","LEFT":null,"DESCRIPTION":null,"TRANSITION_TIME":null,"TIME_TYPE_ID":null,"PREV_ID":"1601879791741881","NEXT_ID":"1601879791226371"},{"ID":"1601879791226371","NEXT_WFM_STATUS_ID":"1601879454071724","PREV_WFM_STATUS_ID":"1601879382267715","PREV_WFM_STATUS_NAME":"Хэвийн ажилласан","NEXT_WFM_STATUS_NAME":"Мэдээлэл өгөх","PREV_WFM_STATUS_COLOR":"#47C8B4","NEXT_WFM_STATUS_COLOR":"#47C8B4","PREV_WFM_STATUS_CODE":"936","NEXT_WFM_STATUS_CODE":"934","CRITERIA":null,"ASSIGNMENT_CRITERIA":null,"TOP":"100.54168701171875","LEFT":null,"DESCRIPTION":null,"TRANSITION_TIME":null,"TIME_TYPE_ID":null,"PREV_ID":"1601879791101601","NEXT_ID":"1601879791078247"},{"ID":"1601879791078247","NEXT_WFM_STATUS_ID":"1601879382102709","PREV_WFM_STATUS_ID":"1601879382889491","PREV_WFM_STATUS_NAME":"Хэвийн ажиллаагүй","NEXT_WFM_STATUS_NAME":"Өгөгдлийн зөрчилгүй","PREV_WFM_STATUS_COLOR":"#47C8B4","NEXT_WFM_STATUS_COLOR":"#47C8B4","PREV_WFM_STATUS_CODE":"937","NEXT_WFM_STATUS_CODE":"941","CRITERIA":null,"ASSIGNMENT_CRITERIA":null,"TOP":"336.9236145019531","LEFT":null,"DESCRIPTION":null,"TRANSITION_TIME":null,"TIME_TYPE_ID":null,"PREV_ID":"1601879791226371","NEXT_ID":"1601879791283548"},{"ID":"1601879791283548","NEXT_WFM_STATUS_ID":"1601879382227791","PREV_WFM_STATUS_ID":"1601879382889491","PREV_WFM_STATUS_NAME":"Хэвийн ажиллаагүй","NEXT_WFM_STATUS_NAME":"Өгөгдлийн зөрчилтэй","PREV_WFM_STATUS_COLOR":"#47C8B4","NEXT_WFM_STATUS_COLOR":"#47C8B4","PREV_WFM_STATUS_CODE":"937","NEXT_WFM_STATUS_CODE":"940","CRITERIA":null,"ASSIGNMENT_CRITERIA":null,"TOP":"347.22222900390625","LEFT":null,"DESCRIPTION":null,"TRANSITION_TIME":null,"TIME_TYPE_ID":null,"PREV_ID":"1601879791078247","NEXT_ID":"1601879791812497"},{"ID":"1601879791812497","NEXT_WFM_STATUS_ID":"1601879382511728","PREV_WFM_STATUS_ID":"1601879382102709","PREV_WFM_STATUS_NAME":"Өгөгдлийн зөрчилгүй","NEXT_WFM_STATUS_NAME":"Тохиргооноос болоогүй","PREV_WFM_STATUS_COLOR":"#47C8B4","NEXT_WFM_STATUS_COLOR":"#47C8B4","PREV_WFM_STATUS_CODE":"941","NEXT_WFM_STATUS_CODE":"943","CRITERIA":null,"ASSIGNMENT_CRITERIA":null,"TOP":"464.6007080078125","LEFT":null,"DESCRIPTION":null,"TRANSITION_TIME":null,"TIME_TYPE_ID":null,"PREV_ID":"1601879791283548","NEXT_ID":"1601879791139182"},{"ID":"1601879791139182","NEXT_WFM_STATUS_ID":"1601879382242621","PREV_WFM_STATUS_ID":"1601879382102709","PREV_WFM_STATUS_NAME":"Өгөгдлийн зөрчилгүй","NEXT_WFM_STATUS_NAME":"Тохиргооноос болсон","PREV_WFM_STATUS_COLOR":"#47C8B4","NEXT_WFM_STATUS_COLOR":"#47C8B4","PREV_WFM_STATUS_CODE":"941","NEXT_WFM_STATUS_CODE":"942","CRITERIA":null,"ASSIGNMENT_CRITERIA":null,"TOP":"464.6007080078125","LEFT":null,"DESCRIPTION":null,"TRANSITION_TIME":null,"TIME_TYPE_ID":null,"PREV_ID":"1601879791812497","NEXT_ID":"1601879791186597"},{"ID":"1601879791186597","NEXT_WFM_STATUS_ID":"1601879382002202","PREV_WFM_STATUS_ID":"1601879382242621","PREV_WFM_STATUS_NAME":"Тохиргооноос болсон","NEXT_WFM_STATUS_NAME":"Тохиргоо шалгах","PREV_WFM_STATUS_COLOR":"#47C8B4","NEXT_WFM_STATUS_COLOR":"#47C8B4","PREV_WFM_STATUS_CODE":"942","NEXT_WFM_STATUS_CODE":"944","CRITERIA":null,"ASSIGNMENT_CRITERIA":null,"TOP":"566.6145935058594","LEFT":null,"DESCRIPTION":null,"TRANSITION_TIME":null,"TIME_TYPE_ID":null,"PREV_ID":"1601879791139182","NEXT_ID":"1601879791384618"},{"ID":"1601879791384618","NEXT_WFM_STATUS_ID":"1601879454071724","PREV_WFM_STATUS_ID":"1601879382002202","PREV_WFM_STATUS_NAME":"Тохиргоо шалгах","NEXT_WFM_STATUS_NAME":"Мэдээлэл өгөх","PREV_WFM_STATUS_COLOR":"#47C8B4","NEXT_WFM_STATUS_COLOR":"#47C8B4","PREV_WFM_STATUS_CODE":"944","NEXT_WFM_STATUS_CODE":"934","CRITERIA":null,"ASSIGNMENT_CRITERIA":null,"TOP":"100.54168701171875","LEFT":null,"DESCRIPTION":null,"TRANSITION_TIME":null,"TIME_TYPE_ID":null,"PREV_ID":"1601879791186597","NEXT_ID":"1601879791006422"},{"ID":"1601879791006422","NEXT_WFM_STATUS_ID":"1601879620256532","PREV_WFM_STATUS_ID":"1601879382511728","PREV_WFM_STATUS_NAME":"Тохиргооноос болоогүй","NEXT_WFM_STATUS_NAME":"Мэдээлэл өгөх","PREV_WFM_STATUS_COLOR":"#47C8B4","NEXT_WFM_STATUS_COLOR":"#47C8B4","PREV_WFM_STATUS_CODE":"943","NEXT_WFM_STATUS_CODE":"934","CRITERIA":null,"ASSIGNMENT_CRITERIA":null,"TOP":"633.9236145019531","LEFT":null,"DESCRIPTION":null,"TRANSITION_TIME":null,"TIME_TYPE_ID":null,"PREV_ID":"1601879791384618","NEXT_ID":"1601879791574234"},{"ID":"1601879791574234","NEXT_WFM_STATUS_ID":"1601878922530594","PREV_WFM_STATUS_ID":"1601879620256532","PREV_WFM_STATUS_NAME":"Мэдээлэл өгөх","NEXT_WFM_STATUS_NAME":"Хүлээн авсан ","PREV_WFM_STATUS_COLOR":"#47C8B4","NEXT_WFM_STATUS_COLOR":"pink","PREV_WFM_STATUS_CODE":"934","NEXT_WFM_STATUS_CODE":"004","CRITERIA":null,"ASSIGNMENT_CRITERIA":null,"TOP":"703.9236145019531","LEFT":null,"DESCRIPTION":null,"TRANSITION_TIME":null,"TIME_TYPE_ID":null,"PREV_ID":"1601879791006422","NEXT_ID":"1601879791595226"},{"ID":"1601879791595226","NEXT_WFM_STATUS_ID":"1601879650362132","PREV_WFM_STATUS_ID":"1601878922530594","PREV_WFM_STATUS_NAME":"Хүлээн авсан ","NEXT_WFM_STATUS_NAME":"Процесс ажилуулах","PREV_WFM_STATUS_COLOR":"pink","NEXT_WFM_STATUS_COLOR":"#47C8B4","PREV_WFM_STATUS_CODE":"004","NEXT_WFM_STATUS_CODE":"935","CRITERIA":null,"ASSIGNMENT_CRITERIA":null,"TOP":"694.9236145019531","LEFT":null,"DESCRIPTION":null,"TRANSITION_TIME":null,"TIME_TYPE_ID":null,"PREV_ID":"1601879791574234","NEXT_ID":"1601879791052516"},{"ID":"1601879791052516","NEXT_WFM_STATUS_ID":"1601879382839207","PREV_WFM_STATUS_ID":"1601879650362132","PREV_WFM_STATUS_NAME":"Процесс ажилуулах","NEXT_WFM_STATUS_NAME":"Алдааг тодорхойлох","PREV_WFM_STATUS_COLOR":"#47C8B4","NEXT_WFM_STATUS_COLOR":"#47C8B4","PREV_WFM_STATUS_CODE":"935","NEXT_WFM_STATUS_CODE":"945","CRITERIA":null,"ASSIGNMENT_CRITERIA":null,"TOP":"598.3055572509766","LEFT":null,"DESCRIPTION":null,"TRANSITION_TIME":null,"TIME_TYPE_ID":null,"PREV_ID":"1601879791595226","NEXT_ID":"1601879791781854"},{"ID":"1601879791781854","NEXT_WFM_STATUS_ID":"1601879382863951","PREV_WFM_STATUS_ID":"1601879382839207","PREV_WFM_STATUS_NAME":"Алдааг тодорхойлох","NEXT_WFM_STATUS_NAME":"Процессийн алдаа биш","PREV_WFM_STATUS_COLOR":"#47C8B4","NEXT_WFM_STATUS_COLOR":"#47C8B4","PREV_WFM_STATUS_CODE":"945","NEXT_WFM_STATUS_CODE":"947","CRITERIA":null,"ASSIGNMENT_CRITERIA":null,"TOP":"498.9965362548828","LEFT":null,"DESCRIPTION":null,"TRANSITION_TIME":null,"TIME_TYPE_ID":null,"PREV_ID":"1601879791052516","NEXT_ID":"1601879791959048"},{"ID":"1601879791959048","NEXT_WFM_STATUS_ID":"1601879382622442","PREV_WFM_STATUS_ID":"1601879382839207","PREV_WFM_STATUS_NAME":"Алдааг тодорхойлох","NEXT_WFM_STATUS_NAME":"Процессийн алдаа","PREV_WFM_STATUS_COLOR":"#47C8B4","NEXT_WFM_STATUS_COLOR":"#47C8B4","PREV_WFM_STATUS_CODE":"945","NEXT_WFM_STATUS_CODE":"946","CRITERIA":null,"ASSIGNMENT_CRITERIA":null,"TOP":"653.3055572509766","LEFT":null,"DESCRIPTION":null,"TRANSITION_TIME":null,"TIME_TYPE_ID":null,"PREV_ID":"1601879791781854","NEXT_ID":"1601879791416450"},{"ID":"1601879791416450","NEXT_WFM_STATUS_ID":"1601879382532064","PREV_WFM_STATUS_ID":"1601879454071724","PREV_WFM_STATUS_NAME":"Мэдээлэл өгөх","NEXT_WFM_STATUS_NAME":"Баталгаажсан","PREV_WFM_STATUS_COLOR":"#47C8B4","NEXT_WFM_STATUS_COLOR":"#72de10","PREV_WFM_STATUS_CODE":"934","NEXT_WFM_STATUS_CODE":"030","CRITERIA":null,"ASSIGNMENT_CRITERIA":null,"TOP":"214.98263549804688","LEFT":null,"DESCRIPTION":null,"TRANSITION_TIME":null,"TIME_TYPE_ID":null,"PREV_ID":"1601879791959048","NEXT_ID":"1601879791708870"},{"ID":"1601879791708870","NEXT_WFM_STATUS_ID":"1601879382139902","PREV_WFM_STATUS_ID":"1601879454071724","PREV_WFM_STATUS_NAME":"Мэдээлэл өгөх","NEXT_WFM_STATUS_NAME":"Баталгаажаагүй","PREV_WFM_STATUS_COLOR":"#47C8B4","NEXT_WFM_STATUS_COLOR":"#47C8B4","PREV_WFM_STATUS_CODE":"934","NEXT_WFM_STATUS_CODE":"939","CRITERIA":null,"ASSIGNMENT_CRITERIA":null,"TOP":"211.97918701171875","LEFT":null,"DESCRIPTION":null,"TRANSITION_TIME":null,"TIME_TYPE_ID":null,"PREV_ID":"1601879791416450","NEXT_ID":"1601879791643846"},{"ID":"1601879791643846","NEXT_WFM_STATUS_ID":"1601879382912340","PREV_WFM_STATUS_ID":"1601879382622442","PREV_WFM_STATUS_NAME":"Процессийн алдаа","NEXT_WFM_STATUS_NAME":"Алдаа засах","PREV_WFM_STATUS_COLOR":"#47C8B4","NEXT_WFM_STATUS_COLOR":"#47C8B4","PREV_WFM_STATUS_CODE":"946","NEXT_WFM_STATUS_CODE":"948","CRITERIA":null,"ASSIGNMENT_CRITERIA":null,"TOP":"659.982666015625","LEFT":null,"DESCRIPTION":null,"TRANSITION_TIME":null,"TIME_TYPE_ID":null,"PREV_ID":"1601879791708870","NEXT_ID":"1601879791255523"},{"ID":"1601879791255523","NEXT_WFM_STATUS_ID":"1601879382911824","PREV_WFM_STATUS_ID":"1601879382912340","PREV_WFM_STATUS_NAME":"Алдаа засах","NEXT_WFM_STATUS_NAME":"Зассан","PREV_WFM_STATUS_COLOR":"#47C8B4","NEXT_WFM_STATUS_COLOR":"#811fb3","PREV_WFM_STATUS_CODE":"948","NEXT_WFM_STATUS_CODE":"109","CRITERIA":null,"ASSIGNMENT_CRITERIA":null,"TOP":"567.2916870117188","LEFT":null,"DESCRIPTION":null,"TRANSITION_TIME":null,"TIME_TYPE_ID":null,"PREV_ID":"1601879791643846","NEXT_ID":"1601879791002180"},{"ID":"1601879791002180","NEXT_WFM_STATUS_ID":"1601879382282021","PREV_WFM_STATUS_ID":"1601879382912340","PREV_WFM_STATUS_NAME":"Алдаа засах","NEXT_WFM_STATUS_NAME":"Зассаагүй","PREV_WFM_STATUS_COLOR":"#47C8B4","NEXT_WFM_STATUS_COLOR":"#47C8B4","PREV_WFM_STATUS_CODE":"948","NEXT_WFM_STATUS_CODE":"950","CRITERIA":null,"ASSIGNMENT_CRITERIA":null,"TOP":"640.9722290039062","LEFT":null,"DESCRIPTION":null,"TRANSITION_TIME":null,"TIME_TYPE_ID":null,"PREV_ID":"1601879791255523","NEXT_ID":"1601879791746275"},{"ID":"1601879791746275","NEXT_WFM_STATUS_ID":"1601879382106819","PREV_WFM_STATUS_ID":"1601879382911824","PREV_WFM_STATUS_NAME":"Зассан","NEXT_WFM_STATUS_NAME":"Процесс ажилуулах","PREV_WFM_STATUS_COLOR":"#811fb3","NEXT_WFM_STATUS_COLOR":"#47C8B4","PREV_WFM_STATUS_CODE":"109","NEXT_WFM_STATUS_CODE":"935","CRITERIA":null,"ASSIGNMENT_CRITERIA":null,"TOP":"116.84028625488281","LEFT":null,"DESCRIPTION":null,"TRANSITION_TIME":null,"TIME_TYPE_ID":null,"PREV_ID":"1601879791002180","NEXT_ID":null}], function(i, n){
+            if (n['PREV_WFM_STATUS_ID'] != null && n['NEXT_WFM_STATUS_ID'] != null) {
+                dg.setEdge(n['PREV_WFM_STATUS_ID'], n['NEXT_WFM_STATUS_ID']);
+            }
+        }); 
+
+        dagre.layout(dg);
+
+        dg.nodes().forEach(function(v) {
+            $("#" + v).css("left", dg.node(v).x + "px");
+            $("#" + v).css("top", dg.node(v).y + "px");
+        });
+    
+        /* ================= */
+
+        jsPlumb.detachEveryConnection();
+       
+        jsPlumb.importDefaults({
+            ConnectionsDetachable: true,
+            ReattachConnections: true,
+            connector: [arrowStyle, {stub: [40, 60], gap: 10, cornerRadius: 5, alwaysRespectStubs: true}],
+            ConnectionOverlays: [["Arrow", {location: 1, length: 10}]],
+            Endpoint: ["Dot", {radius: 1}]
+        });
+
+        windows = jsPlumb.getSelector('.wfposition');
+
+        jsPlumb.makeSource(windows, {
+            filter: ".connect",
+            anchor: "Continuous",
+            isSource: true,
+            isTarget: false,
+            reattach: true,
+            maxConnections: 999,
+            connector: [arrowStyle, {stub: [10, 60], gap: 10, cornerRadius: 1, alwaysRespectStubs: true}],
+            connectorPaintStyle: {
+                strokeStyle: "green",
+                lineWidth: 2
+            },
+            connectorHoverPaintStyle: {
+                strokeStyle: "#77ca00",
+                outlineColor: "#77ca00",
+                outlineWidth: 3
+            },
+            connectorStyle: {
+                strokeStyle: "#5c96bc",
+                lineWidth: 2,
+                outlineColor: "#fff",
+                outlineWidth: 2
+            },
+            paintStyle: {fillStyle: "transparent"},
+            hoverPaintStyle: {fillStyle: "transparent", lineWidth: 5},
+            Endpoint: ["Dot", {radius: 1}]
+        });
+        jsPlumb.makeTarget(windows, {
+            isSource: false,
+            isTarget: true,
+            reattach: true,
+            setDragAllowedWhenFull: true,
+            dropOptions: {hoverClass: "dragHover"},
+            anchor: "Continuous",
+            paintStyle: {fillStyle: "transparent"},
+            hoverPaintStyle: {fillStyle: "#77ca00", strokeStyle: "#77ca00", lineWidth: 7}
+        });
+
+        var common = {
+            connector: [arrowStyle, {stub: [10, 60], midpoint: 0.0001, gap: 10, cornerRadius: 5, alwaysRespectStubs: true}], /*[Straight, Flowchart, Bezier, StateMachine]*/
+            paintStyle: {radius: 5},
+            hoverPaintStyle: {fillStyle: "#77ca00", strokeStyle: "#77ca00", lineWidth: 5},
+            dragOptions: {cursor: 'pointer'} 
+        };
+
+        var connections = [{"ID":"1601879790878362","NEXT_WFM_STATUS_ID":"1601878922035235","PREV_WFM_STATUS_ID":"1601878875864191","PREV_WFM_STATUS_NAME":"Шинэ","NEXT_WFM_STATUS_NAME":"Хүлээн авах","PREV_WFM_STATUS_COLOR":"#5085AB","NEXT_WFM_STATUS_COLOR":"#00AAA0","PREV_WFM_STATUS_CODE":"001","NEXT_WFM_STATUS_CODE":"599","CRITERIA":null,"ASSIGNMENT_CRITERIA":null,"TOP":"38.99653625488281","LEFT":null,"DESCRIPTION":null,"TRANSITION_TIME":null,"TIME_TYPE_ID":null,"PREV_ID":"1601878886828579","NEXT_ID":"1601879790497472"},{"ID":"1601879790497472","NEXT_WFM_STATUS_ID":"1601879382199140","PREV_WFM_STATUS_ID":"1601878922035235","PREV_WFM_STATUS_NAME":"Хүлээн авах","NEXT_WFM_STATUS_NAME":"Мэдээлэл лавлах","PREV_WFM_STATUS_COLOR":"#00AAA0","NEXT_WFM_STATUS_COLOR":"#82D7F6","PREV_WFM_STATUS_CODE":"599","NEXT_WFM_STATUS_CODE":"931","CRITERIA":null,"ASSIGNMENT_CRITERIA":null,"TOP":"15.8507080078125","LEFT":null,"DESCRIPTION":null,"TRANSITION_TIME":null,"TIME_TYPE_ID":null,"PREV_ID":"1601879790878362","NEXT_ID":"1601879790852337"},{"ID":"1601879790852337","NEXT_WFM_STATUS_ID":"1601879382084213","PREV_WFM_STATUS_ID":"1601878922035235","PREV_WFM_STATUS_NAME":"Хүлээн авах","NEXT_WFM_STATUS_NAME":"Мэдээлэл лавлахгүй","PREV_WFM_STATUS_COLOR":"#00AAA0","NEXT_WFM_STATUS_COLOR":"#82D7F6","PREV_WFM_STATUS_CODE":"599","NEXT_WFM_STATUS_CODE":"932","CRITERIA":null,"ASSIGNMENT_CRITERIA":null,"TOP":"110.15972900390625","LEFT":null,"DESCRIPTION":null,"TRANSITION_TIME":null,"TIME_TYPE_ID":null,"PREV_ID":"1601879790497472","NEXT_ID":"1601879790121940"},{"ID":"1601879790121940","NEXT_WFM_STATUS_ID":"1601879382936143","PREV_WFM_STATUS_ID":"1601879382199140","PREV_WFM_STATUS_NAME":"Мэдээлэл лавлах","NEXT_WFM_STATUS_NAME":"Мэдээлэл өгөх","PREV_WFM_STATUS_COLOR":"#82D7F6","NEXT_WFM_STATUS_COLOR":"#47C8B4","PREV_WFM_STATUS_CODE":"931","NEXT_WFM_STATUS_CODE":"934","CRITERIA":null,"ASSIGNMENT_CRITERIA":null,"TOP":"41.8507080078125","LEFT":null,"DESCRIPTION":null,"TRANSITION_TIME":null,"TIME_TYPE_ID":null,"PREV_ID":"1601879790852337","NEXT_ID":"1601879790132434"},{"ID":"1601879790132434","NEXT_WFM_STATUS_ID":"1601878922035235","PREV_WFM_STATUS_ID":"1601879382936143","PREV_WFM_STATUS_NAME":"Мэдээлэл өгөх","NEXT_WFM_STATUS_NAME":"Хүлээн авах","PREV_WFM_STATUS_COLOR":"#47C8B4","NEXT_WFM_STATUS_COLOR":"#00AAA0","PREV_WFM_STATUS_CODE":"934","NEXT_WFM_STATUS_CODE":"599","CRITERIA":null,"ASSIGNMENT_CRITERIA":null,"TOP":"38.99653625488281","LEFT":null,"DESCRIPTION":null,"TRANSITION_TIME":null,"TIME_TYPE_ID":null,"PREV_ID":"1601879790121940","NEXT_ID":"1601879790323022"},{"ID":"1601879790323022","NEXT_WFM_STATUS_ID":"1601879382106819","PREV_WFM_STATUS_ID":"1601879382084213","PREV_WFM_STATUS_NAME":"Мэдээлэл лавлахгүй","NEXT_WFM_STATUS_NAME":"Процесс ажилуулах","PREV_WFM_STATUS_COLOR":"#82D7F6","NEXT_WFM_STATUS_COLOR":"#47C8B4","PREV_WFM_STATUS_CODE":"932","NEXT_WFM_STATUS_CODE":"935","CRITERIA":null,"ASSIGNMENT_CRITERIA":null,"TOP":"116.84028625488281","LEFT":null,"DESCRIPTION":null,"TRANSITION_TIME":null,"TIME_TYPE_ID":null,"PREV_ID":"1601879790132434","NEXT_ID":"1601879791741881"},{"ID":"1601879791741881","NEXT_WFM_STATUS_ID":"1601879382889491","PREV_WFM_STATUS_ID":"1601879382106819","PREV_WFM_STATUS_NAME":"Процесс ажилуулах","NEXT_WFM_STATUS_NAME":"Хэвийн ажиллаагүй","PREV_WFM_STATUS_COLOR":"#47C8B4","NEXT_WFM_STATUS_COLOR":"#47C8B4","PREV_WFM_STATUS_CODE":"935","NEXT_WFM_STATUS_CODE":"937","CRITERIA":null,"ASSIGNMENT_CRITERIA":null,"TOP":"250.52084350585938","LEFT":null,"DESCRIPTION":null,"TRANSITION_TIME":null,"TIME_TYPE_ID":null,"PREV_ID":"1601879790323022","NEXT_ID":"1601879791101601"},{"ID":"1601879791101601","NEXT_WFM_STATUS_ID":"1601879382267715","PREV_WFM_STATUS_ID":"1601879382106819","PREV_WFM_STATUS_NAME":"Процесс ажилуулах","NEXT_WFM_STATUS_NAME":"Хэвийн ажилласан","PREV_WFM_STATUS_COLOR":"#47C8B4","NEXT_WFM_STATUS_COLOR":"#47C8B4","PREV_WFM_STATUS_CODE":"935","NEXT_WFM_STATUS_CODE":"936","CRITERIA":null,"ASSIGNMENT_CRITERIA":null,"TOP":"138.54168701171875","LEFT":null,"DESCRIPTION":null,"TRANSITION_TIME":null,"TIME_TYPE_ID":null,"PREV_ID":"1601879791741881","NEXT_ID":"1601879791226371"},{"ID":"1601879791226371","NEXT_WFM_STATUS_ID":"1601879454071724","PREV_WFM_STATUS_ID":"1601879382267715","PREV_WFM_STATUS_NAME":"Хэвийн ажилласан","NEXT_WFM_STATUS_NAME":"Мэдээлэл өгөх","PREV_WFM_STATUS_COLOR":"#47C8B4","NEXT_WFM_STATUS_COLOR":"#47C8B4","PREV_WFM_STATUS_CODE":"936","NEXT_WFM_STATUS_CODE":"934","CRITERIA":null,"ASSIGNMENT_CRITERIA":null,"TOP":"100.54168701171875","LEFT":null,"DESCRIPTION":null,"TRANSITION_TIME":null,"TIME_TYPE_ID":null,"PREV_ID":"1601879791101601","NEXT_ID":"1601879791078247"},{"ID":"1601879791078247","NEXT_WFM_STATUS_ID":"1601879382102709","PREV_WFM_STATUS_ID":"1601879382889491","PREV_WFM_STATUS_NAME":"Хэвийн ажиллаагүй","NEXT_WFM_STATUS_NAME":"Өгөгдлийн зөрчилгүй","PREV_WFM_STATUS_COLOR":"#47C8B4","NEXT_WFM_STATUS_COLOR":"#47C8B4","PREV_WFM_STATUS_CODE":"937","NEXT_WFM_STATUS_CODE":"941","CRITERIA":null,"ASSIGNMENT_CRITERIA":null,"TOP":"336.9236145019531","LEFT":null,"DESCRIPTION":null,"TRANSITION_TIME":null,"TIME_TYPE_ID":null,"PREV_ID":"1601879791226371","NEXT_ID":"1601879791283548"},{"ID":"1601879791283548","NEXT_WFM_STATUS_ID":"1601879382227791","PREV_WFM_STATUS_ID":"1601879382889491","PREV_WFM_STATUS_NAME":"Хэвийн ажиллаагүй","NEXT_WFM_STATUS_NAME":"Өгөгдлийн зөрчилтэй","PREV_WFM_STATUS_COLOR":"#47C8B4","NEXT_WFM_STATUS_COLOR":"#47C8B4","PREV_WFM_STATUS_CODE":"937","NEXT_WFM_STATUS_CODE":"940","CRITERIA":null,"ASSIGNMENT_CRITERIA":null,"TOP":"347.22222900390625","LEFT":null,"DESCRIPTION":null,"TRANSITION_TIME":null,"TIME_TYPE_ID":null,"PREV_ID":"1601879791078247","NEXT_ID":"1601879791812497"},{"ID":"1601879791812497","NEXT_WFM_STATUS_ID":"1601879382511728","PREV_WFM_STATUS_ID":"1601879382102709","PREV_WFM_STATUS_NAME":"Өгөгдлийн зөрчилгүй","NEXT_WFM_STATUS_NAME":"Тохиргооноос болоогүй","PREV_WFM_STATUS_COLOR":"#47C8B4","NEXT_WFM_STATUS_COLOR":"#47C8B4","PREV_WFM_STATUS_CODE":"941","NEXT_WFM_STATUS_CODE":"943","CRITERIA":null,"ASSIGNMENT_CRITERIA":null,"TOP":"464.6007080078125","LEFT":null,"DESCRIPTION":null,"TRANSITION_TIME":null,"TIME_TYPE_ID":null,"PREV_ID":"1601879791283548","NEXT_ID":"1601879791139182"},{"ID":"1601879791139182","NEXT_WFM_STATUS_ID":"1601879382242621","PREV_WFM_STATUS_ID":"1601879382102709","PREV_WFM_STATUS_NAME":"Өгөгдлийн зөрчилгүй","NEXT_WFM_STATUS_NAME":"Тохиргооноос болсон","PREV_WFM_STATUS_COLOR":"#47C8B4","NEXT_WFM_STATUS_COLOR":"#47C8B4","PREV_WFM_STATUS_CODE":"941","NEXT_WFM_STATUS_CODE":"942","CRITERIA":null,"ASSIGNMENT_CRITERIA":null,"TOP":"464.6007080078125","LEFT":null,"DESCRIPTION":null,"TRANSITION_TIME":null,"TIME_TYPE_ID":null,"PREV_ID":"1601879791812497","NEXT_ID":"1601879791186597"},{"ID":"1601879791186597","NEXT_WFM_STATUS_ID":"1601879382002202","PREV_WFM_STATUS_ID":"1601879382242621","PREV_WFM_STATUS_NAME":"Тохиргооноос болсон","NEXT_WFM_STATUS_NAME":"Тохиргоо шалгах","PREV_WFM_STATUS_COLOR":"#47C8B4","NEXT_WFM_STATUS_COLOR":"#47C8B4","PREV_WFM_STATUS_CODE":"942","NEXT_WFM_STATUS_CODE":"944","CRITERIA":null,"ASSIGNMENT_CRITERIA":null,"TOP":"566.6145935058594","LEFT":null,"DESCRIPTION":null,"TRANSITION_TIME":null,"TIME_TYPE_ID":null,"PREV_ID":"1601879791139182","NEXT_ID":"1601879791384618"},{"ID":"1601879791384618","NEXT_WFM_STATUS_ID":"1601879454071724","PREV_WFM_STATUS_ID":"1601879382002202","PREV_WFM_STATUS_NAME":"Тохиргоо шалгах","NEXT_WFM_STATUS_NAME":"Мэдээлэл өгөх","PREV_WFM_STATUS_COLOR":"#47C8B4","NEXT_WFM_STATUS_COLOR":"#47C8B4","PREV_WFM_STATUS_CODE":"944","NEXT_WFM_STATUS_CODE":"934","CRITERIA":null,"ASSIGNMENT_CRITERIA":null,"TOP":"100.54168701171875","LEFT":null,"DESCRIPTION":null,"TRANSITION_TIME":null,"TIME_TYPE_ID":null,"PREV_ID":"1601879791186597","NEXT_ID":"1601879791006422"},{"ID":"1601879791006422","NEXT_WFM_STATUS_ID":"1601879620256532","PREV_WFM_STATUS_ID":"1601879382511728","PREV_WFM_STATUS_NAME":"Тохиргооноос болоогүй","NEXT_WFM_STATUS_NAME":"Мэдээлэл өгөх","PREV_WFM_STATUS_COLOR":"#47C8B4","NEXT_WFM_STATUS_COLOR":"#47C8B4","PREV_WFM_STATUS_CODE":"943","NEXT_WFM_STATUS_CODE":"934","CRITERIA":null,"ASSIGNMENT_CRITERIA":null,"TOP":"633.9236145019531","LEFT":null,"DESCRIPTION":null,"TRANSITION_TIME":null,"TIME_TYPE_ID":null,"PREV_ID":"1601879791384618","NEXT_ID":"1601879791574234"},{"ID":"1601879791574234","NEXT_WFM_STATUS_ID":"1601878922530594","PREV_WFM_STATUS_ID":"1601879620256532","PREV_WFM_STATUS_NAME":"Мэдээлэл өгөх","NEXT_WFM_STATUS_NAME":"Хүлээн авсан ","PREV_WFM_STATUS_COLOR":"#47C8B4","NEXT_WFM_STATUS_COLOR":"pink","PREV_WFM_STATUS_CODE":"934","NEXT_WFM_STATUS_CODE":"004","CRITERIA":null,"ASSIGNMENT_CRITERIA":null,"TOP":"703.9236145019531","LEFT":null,"DESCRIPTION":null,"TRANSITION_TIME":null,"TIME_TYPE_ID":null,"PREV_ID":"1601879791006422","NEXT_ID":"1601879791595226"},{"ID":"1601879791595226","NEXT_WFM_STATUS_ID":"1601879650362132","PREV_WFM_STATUS_ID":"1601878922530594","PREV_WFM_STATUS_NAME":"Хүлээн авсан ","NEXT_WFM_STATUS_NAME":"Процесс ажилуулах","PREV_WFM_STATUS_COLOR":"pink","NEXT_WFM_STATUS_COLOR":"#47C8B4","PREV_WFM_STATUS_CODE":"004","NEXT_WFM_STATUS_CODE":"935","CRITERIA":null,"ASSIGNMENT_CRITERIA":null,"TOP":"694.9236145019531","LEFT":null,"DESCRIPTION":null,"TRANSITION_TIME":null,"TIME_TYPE_ID":null,"PREV_ID":"1601879791574234","NEXT_ID":"1601879791052516"},{"ID":"1601879791052516","NEXT_WFM_STATUS_ID":"1601879382839207","PREV_WFM_STATUS_ID":"1601879650362132","PREV_WFM_STATUS_NAME":"Процесс ажилуулах","NEXT_WFM_STATUS_NAME":"Алдааг тодорхойлох","PREV_WFM_STATUS_COLOR":"#47C8B4","NEXT_WFM_STATUS_COLOR":"#47C8B4","PREV_WFM_STATUS_CODE":"935","NEXT_WFM_STATUS_CODE":"945","CRITERIA":null,"ASSIGNMENT_CRITERIA":null,"TOP":"598.3055572509766","LEFT":null,"DESCRIPTION":null,"TRANSITION_TIME":null,"TIME_TYPE_ID":null,"PREV_ID":"1601879791595226","NEXT_ID":"1601879791781854"},{"ID":"1601879791781854","NEXT_WFM_STATUS_ID":"1601879382863951","PREV_WFM_STATUS_ID":"1601879382839207","PREV_WFM_STATUS_NAME":"Алдааг тодорхойлох","NEXT_WFM_STATUS_NAME":"Процессийн алдаа биш","PREV_WFM_STATUS_COLOR":"#47C8B4","NEXT_WFM_STATUS_COLOR":"#47C8B4","PREV_WFM_STATUS_CODE":"945","NEXT_WFM_STATUS_CODE":"947","CRITERIA":null,"ASSIGNMENT_CRITERIA":null,"TOP":"498.9965362548828","LEFT":null,"DESCRIPTION":null,"TRANSITION_TIME":null,"TIME_TYPE_ID":null,"PREV_ID":"1601879791052516","NEXT_ID":"1601879791959048"},{"ID":"1601879791959048","NEXT_WFM_STATUS_ID":"1601879382622442","PREV_WFM_STATUS_ID":"1601879382839207","PREV_WFM_STATUS_NAME":"Алдааг тодорхойлох","NEXT_WFM_STATUS_NAME":"Процессийн алдаа","PREV_WFM_STATUS_COLOR":"#47C8B4","NEXT_WFM_STATUS_COLOR":"#47C8B4","PREV_WFM_STATUS_CODE":"945","NEXT_WFM_STATUS_CODE":"946","CRITERIA":null,"ASSIGNMENT_CRITERIA":null,"TOP":"653.3055572509766","LEFT":null,"DESCRIPTION":null,"TRANSITION_TIME":null,"TIME_TYPE_ID":null,"PREV_ID":"1601879791781854","NEXT_ID":"1601879791416450"},{"ID":"1601879791416450","NEXT_WFM_STATUS_ID":"1601879382532064","PREV_WFM_STATUS_ID":"1601879454071724","PREV_WFM_STATUS_NAME":"Мэдээлэл өгөх","NEXT_WFM_STATUS_NAME":"Баталгаажсан","PREV_WFM_STATUS_COLOR":"#47C8B4","NEXT_WFM_STATUS_COLOR":"#72de10","PREV_WFM_STATUS_CODE":"934","NEXT_WFM_STATUS_CODE":"030","CRITERIA":null,"ASSIGNMENT_CRITERIA":null,"TOP":"214.98263549804688","LEFT":null,"DESCRIPTION":null,"TRANSITION_TIME":null,"TIME_TYPE_ID":null,"PREV_ID":"1601879791959048","NEXT_ID":"1601879791708870"},{"ID":"1601879791708870","NEXT_WFM_STATUS_ID":"1601879382139902","PREV_WFM_STATUS_ID":"1601879454071724","PREV_WFM_STATUS_NAME":"Мэдээлэл өгөх","NEXT_WFM_STATUS_NAME":"Баталгаажаагүй","PREV_WFM_STATUS_COLOR":"#47C8B4","NEXT_WFM_STATUS_COLOR":"#47C8B4","PREV_WFM_STATUS_CODE":"934","NEXT_WFM_STATUS_CODE":"939","CRITERIA":null,"ASSIGNMENT_CRITERIA":null,"TOP":"211.97918701171875","LEFT":null,"DESCRIPTION":null,"TRANSITION_TIME":null,"TIME_TYPE_ID":null,"PREV_ID":"1601879791416450","NEXT_ID":"1601879791643846"},{"ID":"1601879791643846","NEXT_WFM_STATUS_ID":"1601879382912340","PREV_WFM_STATUS_ID":"1601879382622442","PREV_WFM_STATUS_NAME":"Процессийн алдаа","NEXT_WFM_STATUS_NAME":"Алдаа засах","PREV_WFM_STATUS_COLOR":"#47C8B4","NEXT_WFM_STATUS_COLOR":"#47C8B4","PREV_WFM_STATUS_CODE":"946","NEXT_WFM_STATUS_CODE":"948","CRITERIA":null,"ASSIGNMENT_CRITERIA":null,"TOP":"659.982666015625","LEFT":null,"DESCRIPTION":null,"TRANSITION_TIME":null,"TIME_TYPE_ID":null,"PREV_ID":"1601879791708870","NEXT_ID":"1601879791255523"},{"ID":"1601879791255523","NEXT_WFM_STATUS_ID":"1601879382911824","PREV_WFM_STATUS_ID":"1601879382912340","PREV_WFM_STATUS_NAME":"Алдаа засах","NEXT_WFM_STATUS_NAME":"Зассан","PREV_WFM_STATUS_COLOR":"#47C8B4","NEXT_WFM_STATUS_COLOR":"#811fb3","PREV_WFM_STATUS_CODE":"948","NEXT_WFM_STATUS_CODE":"109","CRITERIA":null,"ASSIGNMENT_CRITERIA":null,"TOP":"567.2916870117188","LEFT":null,"DESCRIPTION":null,"TRANSITION_TIME":null,"TIME_TYPE_ID":null,"PREV_ID":"1601879791643846","NEXT_ID":"1601879791002180"},{"ID":"1601879791002180","NEXT_WFM_STATUS_ID":"1601879382282021","PREV_WFM_STATUS_ID":"1601879382912340","PREV_WFM_STATUS_NAME":"Алдаа засах","NEXT_WFM_STATUS_NAME":"Зассаагүй","PREV_WFM_STATUS_COLOR":"#47C8B4","NEXT_WFM_STATUS_COLOR":"#47C8B4","PREV_WFM_STATUS_CODE":"948","NEXT_WFM_STATUS_CODE":"950","CRITERIA":null,"ASSIGNMENT_CRITERIA":null,"TOP":"640.9722290039062","LEFT":null,"DESCRIPTION":null,"TRANSITION_TIME":null,"TIME_TYPE_ID":null,"PREV_ID":"1601879791255523","NEXT_ID":"1601879791746275"},{"ID":"1601879791746275","NEXT_WFM_STATUS_ID":"1601879382106819","PREV_WFM_STATUS_ID":"1601879382911824","PREV_WFM_STATUS_NAME":"Зассан","NEXT_WFM_STATUS_NAME":"Процесс ажилуулах","PREV_WFM_STATUS_COLOR":"#811fb3","NEXT_WFM_STATUS_COLOR":"#47C8B4","PREV_WFM_STATUS_CODE":"109","NEXT_WFM_STATUS_CODE":"935","CRITERIA":null,"ASSIGNMENT_CRITERIA":null,"TOP":"116.84028625488281","LEFT":null,"DESCRIPTION":null,"TRANSITION_TIME":null,"TIME_TYPE_ID":null,"PREV_ID":"1601879791002180","NEXT_ID":null}];
+        
+        jsPlumb.setSuspendDrawing(true);
+        
+        $.each(connections, function(i, n){
+            
+            jsPlumb.setSuspendDrawing(true);
+            
+            if (n['PREV_WFM_STATUS_ID'] != null && n['NEXT_WFM_STATUS_ID'] != null) {
+                jsPlumb.connect({
+                    source: n['PREV_WFM_STATUS_ID'],
+                    target: n['NEXT_WFM_STATUS_ID']
+                }, common);
+            }        
+            
+            jsPlumb.setSuspendDrawing(false, true);
+        });   
+        
+        jsPlumb.setSuspendDrawing(false, true);
+        
+        jsPlumb.repaintEverything();
+
+    }, function () {
+        console.log('an error occurred somewhere');
+    });
+
+    $('#orgchart-container-<?php echo $this->dataViewId; ?>').on('click', '.node', function(){
+        var elem = this;
+        var _this = $(elem);
+        var _parent = _this.closest('.orgchart');
+        _parent.find('.selected-row').removeClass('selected-row');
+        _this.addClass('selected-row');
+    });
+
+    $('#orgchart-container-<?php echo $this->dataViewId; ?>').on('contextmenu', '.node', function(e) {
+        e.preventDefault();
+        var elem = this;
+        var _this = $(elem);
+        var _parent = _this.closest('.orgchart');
+        _parent.find('.selected-row').removeClass('selected-row');
+        _this.addClass('selected-row');
+    });
+     
+});   
+
+function orgChartResizer_<?php echo $this->dataViewId; ?>() {
+    var orgChartElement = $('#width-orgchart-container-<?php echo $this->dataViewId; ?>');
+    
+    var getHeight = $(window).height() - orgChartElement.offset().top - 40;
+    orgChartElement.height(getHeight);
+    
+    var getWidth = $('#object-value-list-<?php echo $this->dataViewId; ?>').width();
+    orgChartElement.width(getWidth);
+}
+</script>

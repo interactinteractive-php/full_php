@@ -1,0 +1,139 @@
+@font-face {
+    font-family: "HelveticaNeueLTW1G-Bd"; 
+    src: url("HelveticaNeueLTW1G-Bd.eot"); 
+    src: url("HelveticaNeueLTW1G-Bd.woff") format("woff2"),
+    url("HelveticaNeueLTW1G-Bd.woff") format("woff"), 
+    url("HelveticaNeueLTW1G-Bd.ttf") format("truetype"),
+    url("HelveticaNeueLTW1G-Bd.svg") format("svg"); }
+
+@font-face {
+    font-family: "HelveticaNeueLTW1G-md"; 
+    src: url("HelveticaNeueLTW1G-Md.eot"); 
+    src: url("HelveticaNeueLTW1G-Md.woff") format("woff2"),
+    url("HelveticaNeueLTW1G-Md.woff") format("woff"), 
+    url("HelveticaNeueLTW1G-Md.ttf") format("truetype"),
+    url("HelveticaNeueLTW1G-Md.svg") format("svg"); }
+
+@font-face {
+    font-family: "HelveticaNeueLTW1G-It"; 
+    src: url("HelveticaNeueLTW1G-It.eot"); 
+    src: url("HelveticaNeueLTW1G-It.woff") format("woff2"),
+    url("HelveticaNeueLTW1G-It.woff") format("woff"), 
+    url("HelveticaNeueLTW1G-It.ttf") format("truetype"),
+    url("HelveticaNeueLTW1G-It.svg") format("svg"); }
+
+@font-face {
+    font-family: "HelveticaNeueLTW1G-Lt"; 
+    src: url("HelveticaNeueLTW1G-Lt.eot"); 
+    src: url("HelveticaNeueLTW1G-Lt.woff") format("woff2"),
+    url("HelveticaNeueLTW1G-Lt.woff") format("woff"), 
+    url("HelveticaNeueLTW1G-Lt.ttf") format("truetype"),
+    url("HelveticaNeueLTW1G-Lt.svg") format("svg"); }
+@font-face {
+    font-family: "HelveticaNeueLTW1G-Hv"; 
+    src: url("HelveticaNeueLTW1G-Hv.eot"); 
+    src: url("HelveticaNeueLTW1G-Hv.woff") format("woff2"),
+    url("HelveticaNeueLTW1G-Hv.woff") format("woff"), 
+    url("HelveticaNeueLTW1G-Hv.ttf") format("truetype"),
+    url("HelveticaNeueLTW1G-Hv.svg") format("svg"); }
+
+@font-face {
+    font-family: "HelveticaNeueLTW1G-LtIt"; 
+    src: url("HelveticaNeueLTW1G-LtIt.eot"); 
+    src: url("HelveticaNeueLTW1G-LtIt.woff") format("woff2"),
+    url("HelveticaNeueLTW1G-LtIt.woff") format("woff"), 
+    url("HelveticaNeueLTW1G-LtIt.ttf") format("truetype"),
+    url("HelveticaNeueLTW1G-LtIt.svg") format("svg"); }
+@font-face {
+    font-family: "HelveticaNeueLTW1G-Roman"; 
+    src: url("HelveticaNeueLTW1G-Roman.eot"); 
+    src: url("HelveticaNeueLTW1G-Roman.woff") format("woff2"),
+    url("HelveticaNeueLTW1G-Roman.woff") format("woff"), 
+    url("HelveticaNeueLTW1G-Roman.ttf") format("truetype"),
+    url("HelveticaNeueLTW1G-Roman.svg") format("svg"); }
+@font-face {
+    font-family: "HelveticaNeueLTW1G-Th"; 
+    src: url("HelveticaNeueLTW1G-Th.eot"); 
+    src: url("HelveticaNeueLTW1G-Th.woff") format("woff2"),
+    url("HelveticaNeueLTW1G-Th.woff") format("woff"), 
+    url("HelveticaNeueLTW1G-Th.ttf") format("truetype"),
+    url("HelveticaNeueLTW1G-Th.svg") format("svg"); }
+
+@font-face {
+    font-family: "HelveticaNeueLTW1G-UItLt"; 
+    src: url("HelveticaNeueLTW1G-UItLt.eot"); 
+    src: url("HelveticaNeueLTW1G-UItLt.woff") format("woff2"),
+    url("HelveticaNeueLTW1G-UItLt.woff") format("woff"), 
+    url("HelveticaNeueLTW1G-UItLt.ttf") format("truetype"),
+    url("HelveticaNeueLTW1G-UItLt.svg") format("svg"); }
+
+@font-face {
+    font-family: "HelveticaNeueforXac-Bd"; 
+    src: url("HelveticaNeueforXac-Bd.eot"),
+    src: url("HelveticaNeueforXac-Bd.otf") format("opentype");
+    url("HelveticaNeueforXac-Bd.woff") format("woff"), 
+    url("HelveticaNeueforXac-Bd.ttf") format("truetype"),
+    url("HelveticaNeueforXac-Bd.svg") format("svg"); }
+
+@font-face {
+    font-family: "HelveticaNeueforXac-Hv"; 
+    src: url("HelveticaNeueforXac-Hv.eot");
+    src: url("HelveticaNeueforXac-Hv.otf") format("opentype"),
+    url("HelveticaNeueforXac-Hv.woff") format("woff"), 
+    url("HelveticaNeueforXac-Hv.ttf") format("truetype"),
+    url("HelveticaNeueforXac-Hv.svg") format("svg"); }
+
+@font-face {
+    font-family: "HelveticaNeueforXac-It"; 
+    src: url("HelveticaNeueforXac-It.eot");
+    src: url("HelveticaNeueforXac-It.otf") format("opentype"),
+    url("HelveticaNeueforXac-It.woff") format("woff"), 
+    url("HelveticaNeueforXac-It.ttf") format("truetype"),
+    url("HelveticaNeueforXac-It.svg") format("svg"); }
+
+@font-face {
+    font-family: "HelveticaNeueforXac-Lt"; 
+    src: url("HelveticaNeueforXac-Lt.eot");
+    src: url("HelveticaNeueforXac-Lt.otf") format("opentype"),
+    url("HelveticaNeueforXac-Lt.woff") format("woff"), 
+    url("HelveticaNeueforXac-Lt.ttf") format("truetype"),
+    url("HelveticaNeueforXac-Lt.svg") format("svg"); }
+
+
+@font-face {
+    font-family: "HelveticaNeueforXac-LtIt"; 
+    src: url("HelveticaNeueforXac-LtIt.eot");
+    src: url("HelveticaNeueforXac-LtIt.otf") format("opentype"),
+    url("HelveticaNeueforXac-LtIt.woff") format("woff"), 
+    url("HelveticaNeueforXac-LtIt.ttf") format("truetype"),
+    url("HelveticaNeueforXac-LtIt.svg") format("svg"); }
+@font-face {
+    font-family: "HelveticaNeueforXac-Md"; 
+    src: url("HelveticaNeueforXac-Md.eot");
+    src: url("HelveticaNeueforXac-Md.otf") format("opentype"),
+    url("HelveticaNeueforXac-Md.woff") format("woff"), 
+    url("HelveticaNeueforXac-Md.ttf") format("truetype"),
+    url("HelveticaNeueforXac-Md.svg") format("svg"); }
+
+@font-face {
+    font-family: "HelveticaNeueforXac-Rm"; 
+    src: url("HelveticaNeueforXac-Rm.eot");
+    src: url("HelveticaNeueforXac-Rm.otf") format("opentype"),
+    url("HelveticaNeueforXac-Rm.woff") format("woff"), 
+    url("HelveticaNeueforXac-Rm.ttf") format("truetype"),
+    url("HelveticaNeueforXac-Rm.svg") format("svg"); }
+@font-face {
+    font-family: "HelveticaNeueforXac-Th"; 
+    src: url("HelveticaNeueforXac-Th.eot");
+    src: url("HelveticaNeueforXac-Th.otf") format("opentype"),
+    url("HelveticaNeueforXac-Th.woff") format("woff"), 
+    url("HelveticaNeueforXac-Th.ttf") format("truetype"),
+    url("HelveticaNeueforXac-Th.svg") format("svg"); }
+
+@font-face {
+    font-family: "HelveticaNeueforXac-UItLt"; 
+    src: url("HelveticaNeueforXac-UItLt.eot");
+    src: url("HelveticaNeueforXac-UItLt.otf") format("opentype"),
+    url("HelveticaNeueforXac-UItLt.woff") format("woff"), 
+    url("HelveticaNeueforXac-UItLt.ttf") format("truetype"),
+    url("HelveticaNeueforXac-UItLt.svg") format("svg"); }

@@ -1,0 +1,166 @@
+<div class="vr-workspace-theme28" id="workspace-id-{workspace-id}" data-dm-id="{dm-metadata-id}">
+    <div class="sidebar sidebar-second sidebar-main sidebar-expand-md sidebar-component-left">
+        <div class="sidebar-mobile-toggler text-center">
+            <a href="#" class="sidebar-mobile-main-toggle">
+                <i class="icon-arrow-left8"></i>
+            </a>
+            Navigation
+            <a href="#" class="sidebar-mobile-expand">
+                <i class="icon-screen-full"></i>
+                <i class="icon-screen-normal"></i>
+            </a>
+        </div>
+        <div class="sidebar-content">
+            <div class="sidebar-user">
+                <div class="card-body">
+                    <div class="media mt-2 profile">
+                        <div class="w-100">
+                           <img data-position-name="header-position-1" src="{header-position-1}" width="140" height="140" class="rounded-circle mx-auto d-block" alt="profile"/>
+                        </div>
+                    </div>
+                    <div class="media-body text-center mt-3">
+                        <h5 class="media-title font-weight-bold" data-position-name="header-position-2">{header-position-2}</h5>
+                        <h6 data-position-name="header-position-3">{header-position-3}</h6>
+                    </div>
+                </div>
+            </div>
+           
+            <div class="card card-sidebar-mobile">
+                {menu}
+            </div>
+        </div>
+    </div>
+    
+    <div class="content-wrapper workspace-main {right-side}" id="scrollit">
+        <div class="content">
+            <div class="workspace-main-container">                                                                
+            </div>
+        </div>
+    </div>
+
+
+    <input type="hidden" name="workSpaceMode">
+    <div class="ws-hidden-params hidden" data-position-name="hidden-params">
+        {hidden-params}
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    var $tmpWsTheme28 = $('.vr-workspace-theme28');
+
+    $(document).ready(function () {
+        $tmpWsTheme28.closest('.content').css('padding', '0');
+        $tmpWsTheme28.find('.sidebar-content').css('overflow', 'hidden');
+        
+        $('.workspace-menu-v2 > li.nav-item-submenu', $tmpWsTheme28).on('click', function(e){
+            var $this = $(this);
+            if ($this.hasClass('nav-item-open')) {
+                $this.removeClass('nav-item-open').find('ul:first').hide();
+            } else {
+                $this.addClass('nav-item-open').find('ul:first').show();
+            }
+        });        
+
+        setTimeout(function () {
+            /*$tmpWsTheme28.find('.workspace-menu').tabdrop({offsetTop: 50, text: '<i class="fa fa-bars"></i>'});*/
+            $(window).resize();
+
+            $.each($tmpWsTheme28.find('.package-div'), function (k, div) {
+                if (k % 2 !== 0) {
+                    $(div).addClass('odd');
+                }
+            });
+        }, 100);
+
+
+        var $foundin = $("*:contains('{header-position-')").filter(function () {
+
+            return $(this).children().length === 0;
+        });
+        
+        $foundin.parents('.project-info-row').addClass('hide');
+        $foundin.parents('.project-info-row2').addClass('hide');
+        $foundin.addClass('hide');
+        
+        if($('.social-row', '.vr-workspace-theme28').find('.hide').length === 4) {
+            $('.social-row', '.vr-workspace-theme28').addClass('hide');
+        }
+        $('.social-row', '.vr-workspace-theme28').find('a').text('');
+
+        var $wsProcess = $tmpWsTheme28.find('.header-position-44');
+        if ($wsProcess.attr('data-processid').indexOf('{header-position-44}') !== -1 && $wsProcess.attr('data-processid') != '') {
+            var wsArea = $tmpWsTheme28;
+            workSpaceParams = $("div.ws-hidden-params", wsArea).find("input[type=hidden]").serializeArray();
+            var fillDataParams = '';
+
+            for (var fdata = 0; fdata < workSpaceParams.length; fdata++) {
+                var mPath = /workSpaceParam\[([\w.]+)\]/g.exec(workSpaceParams[fdata].name);
+                if(mPath === null) continue;
+
+                var criVal = null;
+                if (workSpaceParams[fdata].value) {
+                    criVal = workSpaceParams[fdata].value;
+                }
+                fillDataParams = fillDataParams + mPath[1] + '=' + criVal + '&';
+            }
+            fillDataParams = fillDataParams + 'defaultGetPf=1';
+
+            $.ajax({
+                type: 'post',
+                url: 'mdwebservice/callMethodByMeta',
+                data: {
+                    metaDataId: $wsProcess.attr('data-processid'),
+                    dmMetaDataId: $tmpWsTheme28.attr('data-dm-id'),
+                    isDialog: 'false',
+                    isHeaderName: false,
+                    fillDataParams: fillDataParams,
+                    // workSpaceId: workSpaceId,
+                    isBackBtnIgnore: '1',
+                    // workSpaceParams: workSpaceParams, 
+                    // openParams: '{"callerType":"'+packageCode+'"}' 
+                },
+                dataType: 'json',
+                beforeSend: function () {
+                },
+                success: function (data) {
+                    $wsProcess.find("div").empty().append(data.Html).find('.meta-toolbar').remove();
+                },
+                error: function () {
+                    alert('Error');
+                }
+            });            
+        }
+
+        $(window).scroll(function(){
+            var scrollPos = $(this).scrollTop();
+            if (scrollPos > 100) {
+                $('div[data-process-id="1560752449954"]').find('.meta-toolbar').find('.float-right').css({
+                    position: 'fixed',
+                    right: '45px',
+                    top: '99px'
+                });
+            } else {
+                $('div[data-process-id="1560752449954"]').find('.meta-toolbar').find('.float-right').removeAttr('style');
+            }
+        });       
+    });
+
+    function activeMenu(elem) {
+        return;
+        $tmpWsTheme28.find('ul.workspace-menu li').removeClass("active");
+        $(elem).parents('li.dropdown').addClass('active');
+    }
+
+    function ws28Expand(elem) {
+        var $this = $(elem);
+
+        if ($this.attr('data-show') == '1') {
+            $this.attr('data-show', '0');
+            $this.closest('#project-info').find('.project-info-row-expandshow').removeClass('hidden');
+        } else {
+            $this.attr('data-show', '1');
+            $this.closest('#project-info').find('.project-info-row-expandshow').addClass('hidden');
+        }
+    }
+</script>

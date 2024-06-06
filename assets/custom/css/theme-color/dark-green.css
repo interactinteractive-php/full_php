@@ -1,0 +1,32 @@
+:root {
+    --hex-color1: #f2f7f6;
+    --hex-color2: #004D19;
+    --rgb-color: 0, 77, 25;
+    --root-color02: #d7e3db;
+}
+
+.without-left-iconbar .navbar .topnav.navbar-nav>li>a {
+    color: #edda8d;
+}
+
+.white-card-menu .vr-menu-tile:hover,
+.appmenu-table-cell-right .vr-menu-tile:hover .vr-menu-row div {
+    color: #edda8d;
+}
+
+.appmenu-table-cell-left ul.mix-filter>li.active {
+    background-color: #004D19;
+}
+
+.appmenu-table-cell-left ul.mix-filter>li.active span {
+    background-color: #004D19;
+    color: #edda8d !important;
+}
+
+.appmenu-table-cell-left ul.mix-filter>li span {
+    color: #004D19 !important;
+}
+
+.appmenu-table-cell-right .vr-menu-title .vr-menu-row .vr-menu-name {
+    color: #004D19;
+}

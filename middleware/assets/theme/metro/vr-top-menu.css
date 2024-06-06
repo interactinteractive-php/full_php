@@ -1,0 +1,137 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Aug 25, 2017, 11:31:51 AM
+    Author     : Ulaankhuu
+*/
+
+.page-header.navbar.navbar-fixed-top.vr-white-header .vr-mega-top-menu.navbar {
+  float: left;
+  
+  font-weight: 400;
+  font-size: 15px;
+  background: 0 0;
+  padding: 0;
+  top: -2px;
+  border-color: transparent;
+  box-shadow: none!important;
+  bottom: 0;
+  margin: 0;
+  left: -1px;
+}
+.page-header.navbar.navbar-fixed-top.vr-white-header .vr-mega-top-menu.navbar:first-child li {
+  
+}
+.page-header.navbar.navbar-fixed-top.vr-white-header .vr-mega-top-menu.navbar .navbar-brand {
+  color: rgba(255,255,255,.8);
+}
+.page-header.navbar.navbar-fixed-top.vr-white-header .vr-mega-top-menu.navbar .navbar-brand:focus,.page-header.navbar.navbar-fixed-top.vr-white-header .vr-mega-top-menu.navbar .navbar-brand:hover {
+  color: rgba(255,255,255,1);
+}
+.page-header.navbar.navbar-fixed-top.vr-white-header .vr-mega-top-menu.navbar .navbar-nav>li {
+  background-image: url(line.png);
+  background-position: right;
+  background-repeat: no-repeat;
+}
+.page-header.navbar.navbar-fixed-top.vr-white-header .vr-mega-top-menu.navbar .navbar-nav>li:last-child {
+  background-image: none;
+}
+.page-header.navbar.navbar-fixed-top.vr-white-header .vr-mega-top-menu.navbar .navbar-nav>li:first-child {
+  background-image: none;
+}
+.page-header.navbar.navbar-fixed-top.vr-white-header .vr-mega-top-menu.navbar .navbar-nav>li>a {
+  color: #b9c2d2;
+  font-size: 15px;
+  line-height: 32px;
+  padding: 0px 6px 0px 6px;
+}
+.page-header.navbar.navbar-fixed-top.vr-white-header .vr-mega-top-menu.navbar .navbar-nav>li>a:focus,.page-header.navbar.navbar-fixed-top.vr-white-header .vr-mega-top-menu.navbar .navbar-nav>li>a:hover {
+  color: #dce3ef;
+  border-color: transparent;
+}
+.page-header.navbar.navbar-fixed-top.vr-white-header .vr-mega-top-menu.navbar .navbar-nav>.active>a,.page-header.navbar.navbar-fixed-top.vr-white-header .vr-mega-top-menu.navbar .navbar-nav>.active>a:focus,.page-header.navbar.navbar-fixed-top.vr-white-header .vr-mega-top-menu.navbar .navbar-nav>.active>a:hover {
+  color: rgba(60,71,92,1);
+  background-color: transparent;
+  border-color: transparent;
+  border-bottom: rgba(60,71,92,.5) 1px solid;
+}
+.page-header.navbar.navbar-fixed-top.vr-white-header .vr-mega-top-menu.navbar .navbar-nav>.open>a,.page-header.navbar.navbar-fixed-top.vr-white-header .vr-mega-top-menu.navbar .navbar-nav>.open>a:focus,.page-header.navbar.navbar-fixed-top.vr-white-header .vr-mega-top-menu.navbar .navbar-nav>.open>a:hover {
+  color: #f6f6f6;
+  background-color: #2e6e9a;
+  border-color: transparent;
+}
+.page-header.navbar.navbar-fixed-top.vr-white-header .vr-mega-top-menu.navbar .navbar-nav>.dropdown>a .caret {
+  border-top-color: #fff;
+  border-bottom-color: #fff;
+}
+.page-header.navbar.navbar-fixed-top.vr-white-header .vr-mega-top-menu.navbar .navbar-nav>.dropdown>a:focus .caret,.page-header.navbar.navbar-fixed-top.vr-white-header .vr-mega-top-menu.navbar .navbar-nav>.dropdown>a:hover .caret {
+  border-top-color: rgba(255,255,255,1);
+  border-bottom-color: rgba(255,255,255,1);
+}
+.page-header.navbar.navbar-fixed-top.vr-white-header .vr-mega-top-menu.navbar .navbar-nav>.open>a .caret,.page-header.navbar.navbar-fixed-top.vr-white-header .vr-mega-top-menu.navbar .navbar-nav>.open>a:focus .caret,.page-header.navbar.navbar-fixed-top.vr-white-header .vr-mega-top-menu.navbar .navbar-nav>.open>a:hover .caret {
+  border-top-color: #8a0e0b;
+  border-bottom-color: #8a0e0b;
+}
+.page-header.navbar.navbar-fixed-top.vr-white-header .vr-mega-top-menu.navbar .navbar-toggle {
+  border-color: #d65c14;
+}
+
+.page-header.navbar.navbar-fixed-top.vr-white-header .vr-mega-top-menu.navbar .navbar-toggle:focus,.page-header.navbar.navbar-fixed-top.vr-white-header .vr-mega-top-menu.navbar .navbar-toggle:hover {
+  background-color: #d65c14;
+}
+.page-header.navbar.navbar-fixed-top.vr-white-header .vr-mega-top-menu.navbar .navbar-toggle .icon-bar {
+  background-color: #fff;
+}
+.vr-mega-top-menu .btn-group>.dropdown-menu:after,.vr-mega-top-menu .btn-group>.dropdown-menu:before,.vr-mega-top-menu .dropdown-toggle>.dropdown-menu:after,.vr-mega-top-menu .dropdown-toggle>.dropdown-menu:before,.vr-mega-top-menu .dropdown>.dropdown-menu:after,.vr-mega-top-menu .dropdown>.dropdown-menu:before {
+  display: none!important;
+  border: none!important;
+}
+@media all and (-ms-high-contrast:none),(-ms-high-contrast:active) {
+  .page-header.navbar.navbar-fixed-top.vr-white-header .vr-mega-top-menu.navbar .navbar-nav>li>a,.page-sidebar .page-sidebar-menu>li.root-title,span.page-sidebar-menu-title {
+    font-size: 12px!important;
+  }
+}
+.metaheader-topbar-menu {
+    background-color: rgba(53, 64, 82, 0.89);
+    width: 100%;
+}
+.metaheader-topbar-menu .dropdown-menu {
+    background-color: #2e6e9a; 
+}
+.vr-mega-top-menu .navbar-nav>li>a:hover {
+    background-color: #393D49;
+}
+.metaheader-topbar-menu .dropdown-menu li > a {
+    color: #f6f6f6;
+}
+.vr-mega-top-menu .navbar-nav>.open>a, 
+.vr-mega-top-menu .navbar-nav>.open>a:focus, 
+.vr-mega-top-menu .navbar-nav>.open>a:hover{
+    background-image: none !important;
+}
+.vr-mega-top-menu .nav-tabs>li>a{
+    border-radius: 0;
+}
+.vr-side-bar .page-content-wrapper .page-content {
+    margin-left: 0px !important;
+    margin-top: 63px !important;
+}
+.page-container {
+    padding: 0 !important;
+}
+.page-header.navbar.navbar-fixed-top {
+    background-color: transparent;
+}
+body.page-header-fixed {
+    background: url(../../img/ntr_background.jpg) no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;    
+}
+.page-header.navbar.navbar-fixed-top.vr-white-header .vr-mega-menu.navbar .navbar-nav>li>a {
+    color: #b9c2d2;
+}

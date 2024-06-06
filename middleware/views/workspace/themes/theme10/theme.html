@@ -1,0 +1,48 @@
+<div class="vr-workspace-theme10 ws-area" id="workspace-id-{workspace-id}" data-dm-id="{dm-metadata-id}" data-portlet-status="nofullscreen">
+    <!--<div class="ws-page-header">
+        <div class="ws-page-container">
+            <div class="ws-page-content-wrapper ml0">
+                <div class="ws-page-header-content ">
+                    <div class="ws-page-header-content-header">
+                        {header-001}
+                    </div>
+                    <div class="clearfix w-100"></div>
+                </div>
+            </div>
+            <div class="clearfix w-100"></div>
+        </div>
+    </div>-->
+    <div class="ws-page-container navbar">
+        <div class="ws-page-sidebar-wrapper col-md-12 pl0 pr0">
+            <div class="ws-page-sidebar nsidebar col-md-12 pl0 pr0">
+                {menu}
+            </div>    
+        </div>
+        <div class="ws-page-content-wrapper col-md-12 pl0 pr0">
+            <div class="ws-page-content col-md-12 pl0 pr0 mt0">
+                <div class="row">
+                    <div class="col col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <div class="portlet light workspace-main-container"></div>
+                        <div class="clearfix w-100"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <input type="hidden" name="workSpaceMode">
+    <div class="ws-hidden-params hidden" data-position-name="hidden-params">
+        {hidden-params}
+    </div>
+</div>
+
+<script type="text/javascript">
+    var workspace_id = $("div.ws-area");
+    $(".vr-workspace-theme", "body").css("padding", "0px");
+    $(".vr-workspace-theme .portlet-body", "body").css("padding", "0px");
+
+    function activeMenu(elem){
+        $(".sub-menu li").removeClass("actived");
+        $(elem).attr("class", "actived");
+    }
+</script>
+<div class="clearfix w-100"></div>

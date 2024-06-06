@@ -1,0 +1,107 @@
+<table border="0" style="width: 100%; font-family: Tahoma;">
+    <tbody>
+        <tr>
+            <td style="border-bottom: 1px #000 dashed; padding: 0 0 5px 0; font-size: 12px;">
+                Салбар: {storeName}<br />
+                ПОС: {posName}<br />
+                Код: {cashierCode}<br />
+                <strong>Касс: {cashierName}</strong><br />
+                Огноо: {date}
+            </td>
+        </tr>
+        <tr>
+            <td style="padding: 0;">
+                <table border="0" width="100%" style="width: 100%; table-layout: fixed;">
+                    <tbody>
+                        <tr>
+                            <td style="width: 100%; border-top:1px #000 dashed; border-bottom:1px #000 dashed; font-family: Tahoma; font-size: 12px; font-weight: 600; padding: 4px 0; text-align: left;">
+                                Дэвсгэрт
+                            </td>
+                            <td style="width: 40px; border-top:1px #000 dashed; border-bottom:1px #000 dashed; font-family: Tahoma; font-size: 12px; font-weight: 600; padding: 4px 0; text-align: right;">
+                                Тоо
+                            </td>
+                            <td style="width: 130px; border-top:1px #000 dashed; border-bottom:1px #000 dashed; font-family: Tahoma; font-size: 12px; font-weight: 600; padding: 4px 0; text-align: right;">
+                                Нийт дүн
+                            </td>
+                        </tr>
+                        
+                        {bankNoteList}
+                        
+                    </tbody>
+                </table>
+            </td>
+        </tr> 
+        <tr>
+            <td style="border-top:1px #000 dashed; padding: 4px 0;">
+                <div style="height: 5px"></div>
+                <table border="0" width="100%" style="width: 100%; table-layout: fixed; font-family: Tahoma; font-size: 12px; font-weight: bold;">
+                    <tbody>
+                        <tr>
+                            <td style="text-align: left; padding: 0; width: 100%;">НИЙТ ДҮН</td>
+                            <td style="text-align: right; padding: 0; width: 150px;">{totalAmount}</td>
+                        </tr>
+                    </tbody>    
+                </table>        
+            </td>    
+        </tr>
+        <tr>
+            <td style="border-top:1px #000 dashed; padding: 4px 0;">
+                <div style="height: 5px"></div>
+                <table border="0" width="100%" style="width: 100%; table-layout: fixed; font-family: Tahoma; font-size: 12px; font-weight: bold;">
+                    <tbody>
+                        <tr>
+                            <td style="text-align: left; padding: 0; width: 100%;">ТУШААСАН</td>
+                            <td style="text-align: right; padding: 0; width: 150px;">{totalAmount}</td>
+                        </tr>
+                    </tbody>    
+                </table>        
+            </td>    
+        </tr>
+        <tr>
+            <td style="border-top:1px #000 dashed; padding: 4px 0;">
+                <div style="height: 5px"></div>
+                <table border="0" width="100%" style="width: 100%; table-layout: fixed; font-family: Tahoma; font-size: 12px; font-weight: bold;">
+                    <tbody>
+                        <tr>
+                            <td style="text-align: left; padding: 0; width: 100%;">Зардал</td>
+                            <td style="text-align: right; padding: 0; width: 150px;">{localCost}</td>
+                        </tr>
+                    </tbody>    
+                </table>        
+            </td>    
+        </tr>
+        <tr>
+            <td style="padding: 5px 0 0 0;">
+                <table border="0" width="100%" style="width: 100%; table-layout: fixed; font-family: Tahoma; font-size: 12px;">
+                    <tbody>
+                        <tr>
+                            <td style="text-align: left; padding: 0; width: 120px;">Хүлээлгэн өгсөн:</td>
+                            <td style="text-align: left; padding: 0; width: 100%; border-bottom: 2px #000 dotted"></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: left; padding: 10px 0 0 0;">Хүлээн авсан:</td>
+                            <td style="text-align: left; padding: 10px 0 0 0; border-bottom: 2px #000 dotted"></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: left; padding: 10px 0 0 0;">Ахлах кассир:</td>
+                            <td style="text-align: left; padding: 10px 0 0 0; border-bottom: 2px #000 dotted"></td>
+                        </tr>
+                    </tbody>    
+                </table>        
+            </td>    
+        </tr>
+        <tr>
+            <td style="padding: 4px 0 0 0;"> 
+                <div style="height: 15px"></div>
+                <table border="0" width="100%" style="width: 100%; table-layout: fixed; font-family: Tahoma; font-size: 12px; border-top:1px #000 dashed;">
+                    <tbody>
+                        <tr>
+                            <td style="text-align: left; padding: 5px 0 0 0; width: 100%;">Хэвлэсэн:</td>
+                            <td style="text-align: right; padding: 5px 0 0 0; width: 150px;">{printDate}</td>
+                        </tr>
+                    </tbody>    
+                </table>        
+            </td>    
+        </tr>
+    </tbody>
+</table>

@@ -1,0 +1,188 @@
+ul.p-exp-metas {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+ul.p-exp-metas li {
+    list-style: none;
+    padding: 6px 0;
+    margin: 0;
+    border-bottom: 1px #ddd solid;
+    font-size: 12px;
+    line-height: 14px;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -o-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    cursor: pointer;
+}
+ul.p-exp-metas li:hover {
+    background-color: #eee;
+}
+h3.p-exp-title {
+    margin-bottom: 10px;
+    margin-top: 0;
+    padding-bottom: 10px;
+    border-bottom: 1px #999 solid;
+    font-weight: 600;
+}
+.p-exp-operator {
+    padding: 5px 0 7px 0 !important;
+    margin-bottom: 4px !important;
+    width: 39px;
+    height: 34px;
+    font-size: 12px;
+    border: 1px #ddd solid !important;
+    background-color: #F0F0F0;
+}
+.p-exp-operator.p-exp-operator-big {
+    font-size: 21px !important;
+    padding: 0 !important;
+    height: 34px;
+}
+.p-exp-operator:hover {
+    background-color: #ddd;
+}
+.p-exp-area {
+    /*font-family: "Courier New", Courier, monospace;*/
+    font-size: 15px;
+    height: 396px;
+    min-height: 396px; 
+    max-height: 396px; 
+    overflow: auto;
+    border: 1px #ddd solid;
+    margin: 0;
+    padding: 10px;
+    background-color: #FAFAFA;
+    line-height: 28px;
+}
+span.p-exp-meta {
+    display: inline-block;
+    background-color: #A4DAFF;
+    border: 1px #94C4EE solid;
+    padding: 1px 4px;
+    border-radius: 3px;
+    font-size: 12px;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -o-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    height: 23px;
+    line-height: 17px;
+    white-space: pre;
+    cursor: pointer;
+}
+span.p-exp-meta-selected {
+    border: 1px #666 solid;
+}
+span.p-exp-meta-remove {
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+    padding-left: 5px;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -o-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+span.p-exp-meta-remove:hover {
+    color: #444;
+}
+.p-exp-search > i {
+    margin-top: 5px !important;
+}
+.p-exp-kpifield {
+    display: inline-block;
+    background-color: #A4DAFF;
+    border: 1px #94C4EE solid;
+    padding: 1px 4px;
+    border-radius: 3px;
+    font-size: 12px;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -o-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    line-height: 17px;
+    white-space: pre;
+    cursor: pointer;
+    margin-bottom: 5px;
+}
+.p-exp-kpifield input:first-child {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+.p-exp-kpifield input:last-of-type {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+.p-exp-kpifield-tmp {
+    display: inline-block;
+    background-color: #fab580;
+    border: 1px #d99969 solid;
+    padding: 0 5px;
+    border-radius: 3px;
+    font-size: 12px;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -o-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    line-height: 15px;
+}
+.p-exp-kpifield-ind {
+    display: inline-block;
+    background-color: #ffc496;
+    border: 1px #d99969 solid;
+    padding: 0 5px;
+    border-radius: 3px;
+    font-size: 12px;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -o-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    line-height: 15px;
+}
+.p-exp-kpifield-fact {
+    display: inline-block;
+    background-color: #ffd3b0;
+    border: 1px #d99969 solid;
+    padding: 0 5px;
+    border-radius: 3px;
+    font-size: 12px;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -o-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    line-height: 15px;
+}
+.p-exp-kpifield-title {
+    display: inline-block;
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding: 0px 0 0 0;
+    margin: 3px 0 0 0;
+}
+.p-exp-kpifield-tmp .p-exp-meta-remove,
+.p-exp-kpifield-ind .p-exp-meta-remove, 
+.p-exp-kpifield-fact .p-exp-meta-remove {
+    display: inline-block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}

@@ -1,0 +1,21 @@
+.editable-content {
+    margin-top: 20px;
+}
+.mce-last.mce-btn-group span.mce-txt {
+    color: white;
+    background: #35aa47;
+    padding: 3px 5px;
+    font-size: 12px;
+}
+.mce-last.mce-btn-group span.mce-txt:before {
+    font-family: "Font Awesome 5 Pro";
+    content: "\f0c7";
+    margin-right: 5px;
+}
+span.mce-txt.isDefault {
+    color: #fff;
+    background: #ffaa26;
+    color: white;
+    padding: 3px 5px;
+    font-size: 12px;
+}

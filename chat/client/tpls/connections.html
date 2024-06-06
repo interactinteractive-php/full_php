@@ -1,0 +1,82 @@
+<% if (rows) { %>
+    <div class="card mb-sm-3 mb-md-0 contacts_card">
+        <div class="card-header d-flex flex-row align-items-center justify-content-between">
+            <div>
+                <div id="chat-status-dropdown">
+                    <a href="javascript:;" class="dropdown-toggle chat-user-status" data-toggle="dropdown"><%=userStatus%></a>
+
+                    <div class="dropdown-menu dropdown-content dropdown-menu-right chat-user-status-dropdown">
+                        <div class="dropdown-content-header">
+                            <div class="input-group">
+                                <input type="text" class="form-control form-control-sm chat-user-status-input" placeholder="Шинэ төлөв оруулах">
+                                <span class="input-group-append">
+                                    <button type="button" class="btn btn-light btn-sm chat-user-status-button"><i class="icon-check"></i></button>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="dropdown-content-body dropdown-scrollable">
+                            <ul class="media-list"></ul>
+                        </div>
+                    </div>
+                </div>
+            </div>    
+            <div class="notify">
+                <div class="chat-dropdown-options btn-group">
+                    <button type="button" class="btn dropdown-toggle p-0" data-toggle="dropdown" aria-expanded="false">
+                        <i class="icon-more2 text-white"></i>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right">
+                        <a href="javascript:;" class="dropdown-item" id="chat-create-group"><i class="icon-bubbles4"></i> Чат групп</a>
+                        <a href="javascript:;" class="dropdown-item" id="chat-mass-message"><i class="icon-bubbles6"></i> Масс мессеж</a>
+                    </div>
+                </div>
+                <button type="button" class="btn p-0 chat-connections-close text-white" title="Хаах">
+                    <i class="icon-cross2"></i>
+                </button>
+            </div>
+        </div>
+        <div class="chat-tabs">
+            <ul class="nav nav-tabs nav-tabs-solid nav-justified border-0">
+                <li class="nav-item"><a href="#chat-contacts" class="nav-link p-1 active show" data-toggle="tab">Contacts</a></li>
+                <li class="nav-item"><a href="#chat-groups" class="nav-link p-1" data-toggle="tab">Groups</a></li>
+            </ul>
+        </div>
+        <div class="input-group chat-search d-flex align-items-center justify-content-between">
+            <div>
+                <i class="icon-search4"></i><input type="text" placeholder="Хайх..." class="form-control search" id="chat_namesearch" data-where="contacts"/>
+            </div>
+            <div class="btn-group chat-view-dropdown">
+                <button type="button" class="btn btn-light dropdown-toggle py-1 px-2 border-radius-0 border-bottom-0 border-top-0" data-toggle="dropdown" aria-expanded="false"></button>
+                <div class="dropdown-menu dropdown-menu-right border-radius-0">
+                    <a href="javascript:;" class="dropdown-item" data-view="recent">
+                        <span style="width:25px;"><i class="icon-history text-gray"></i></span> Түүх
+                    </a>
+                    <a href="javascript:;" class="dropdown-item" data-view="online">
+                        <span style="width:25px;"><i class="icon-circle2 font-size-9 ml4" style="color: #42b72a"></i></span> Онлайн (<span id="chat-online-count">0</span>)
+                    </a>
+                    <a href="javascript:;" class="dropdown-item" data-view="offline">
+                        <span style="width:25px;"><i class="icon-circle2 font-size-9 text-gray ml4"></i></span> Офлайн (<span id="chat-offline-count">0</span>)
+                    </a>
+                    <a href="javascript:;" class="dropdown-item" data-view="org">
+                        <span style="width:25px;"><i class="icon-folder-open text-gray"></i></span> Хэлтсээр
+                    </a>
+                    <a href="javascript:;" class="dropdown-item" data-view="all">
+                        <span style="width:25px;"><i class="icon-menu7 text-gray"></i></span> Бүгд
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="tab-content">
+            <div class="tab-pane fade active show" id="chat-contacts">
+                <div class="card-body chat_contacts_body">
+                    <ul id="userlistbox" class="media-list"></ul>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="chat-groups">
+                <div class="card-body chat_groups_body">
+                    <ul id="grouplistbox" class="media-list"></ul>
+                </div>
+            </div>
+        </div>
+    </div>
+<% } %>

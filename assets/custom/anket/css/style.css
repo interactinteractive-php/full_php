@@ -1,0 +1,793 @@
+body {
+  font-family: Arial, sans-serif;
+  background: #f5f8fb url('../../img/dot.png');
+  color: #405e7c;
+}
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+*::-webkit-scrollbar-track {
+  background: #eef4fa;
+}
+*::-webkit-scrollbar-thumb {
+  background: #b8cfe5;
+}
+*::-webkit-scrollbar-thumb:hover {
+  background: #9dbedd;
+}
+.anket-body .anket-header {
+  position: fixed;
+  width: 100%;
+  border-bottom: 1px solid #d8e7f7;
+}
+.anket-body .anket-header,
+.anket-form-body .nav-scroll {
+  z-index: 999;
+}
+
+.section51 button.action{
+  display:block !important;
+}
+.anket-form-body .nav-scroll {
+  position: fixed;
+  background: #FFF;
+  width: 1120px;
+  padding: 0;
+  margin: 0;
+  border-radius: 0;
+  box-shadow: 0 0 10px 0px #c5cfe0;
+  margin-top: -10px;
+}
+.anket-form-body #processHtml .accordion-section,
+.anket-body .joblist,
+.anket-body .anket-desc {
+  background: #FFF;
+  box-shadow: 0 5px 30px 0px rgba(0, 0, 0, 0.1) !important;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+.anket-form-body .theme-grid-title,
+.anket-body .joblist .title-common {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0;
+  padding: 20px;
+  border-bottom: 1px solid #d8e7f7;
+}
+.anket-form-body #processHtml .profile-item,
+.anket-form-body #processHtml .accordion-section .theme-data-area,
+.anket-body .accordion-section.five .card > .row,
+.anket-body .accordion-section.one > div > .portlet,
+.anket-body .anket-desc {
+  padding: 20px;
+}
+.anket-form-body #processHtml .bprocess-table-dtl-div .table {
+  text-align: center;
+  line-height: normal;
+}
+.anket-body .form-btn {
+  border-bottom: 1px solid #d8e7f7;
+  padding-bottom: 20px;
+  margin-bottom: 30px;
+}
+.anket-form-body #processHtml .form-control:not(.description_autoInit):not(.descriptionInit) {
+  height: 38px !important;
+}
+.anket-form-body #processHtml .form-control {
+  display: block;
+  border: none;
+  border: 2px solid #d3e3f2;
+  border-radius: 5px;
+  font-size: 14px;
+}
+.anket-form-body #processHtml .form-control .select2-choice,
+.anket-form-body #processHtml .form-control .select2-choices {
+  border-color: transparent;
+}
+.anket-form-body #processHtml .select2-container .select2-choice .select2-arrow {
+  background-color: transparent;
+  border-color: transparent;
+}
+.anket-form-body #processHtml .form-control:disabled,
+.anket-form-body #processHtml .form-control[readonly],
+.anket-form-body #processHtml .select2-container.select2-container-disabled .select2-choice,
+.anket-form-body #processHtml .select2-container.select2-container-disabled .select2-choice .select2-arrow {
+  background-color: #edf7ff;
+}
+.anket-form-body #processHtml .select2-container .select2-choice > .select2-chosen {
+  line-height: 34px;
+}
+.anket-form-body #processHtml .table thead th,
+.anket-form-body #processHtml .table-bordered td,
+.anket-form-body #processHtml .table-bordered th,
+.anket-form-body #processHtml .border-gray {
+  border-color: #d3e3f2 !important;
+}
+.anket-form-body #processHtml .table-bordered td.error {
+  border-color: #FF0000 !important;
+}
+.anket-form-body #processHtml .select2-container.form-control-sm .select2-choice .select2-arrow b {
+  background-position: 0 2px;
+}
+.anket-form-body #processHtml .input-group .form-control {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.anket-form-body #processHtml .input-group .input-group-btn {
+  background: #d3e3f2;
+  border: 2px solid #d3e3f2;
+  border-left: 0;
+  height: 38px;
+  border-radius: 5px;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.anket-form-body #processHtml .accordion-section table .form-control,
+.anket-form-body #processHtml .accordion-section table .input-group-btn {
+  border: 0 !important;
+  background: transparent !important;
+}
+.anket-body .changeTabBtn {
+  /* display: none !important; */
+}
+.anket-form-body #processHtml .form-control:hover,
+.anket-form-body #processHtml .form-control:active,
+.anket-form-body #processHtml .form-control:focus {
+  border-color: #1b4588;
+}
+.anket-body .top-menu img.logo {
+  max-width: 130px;
+  max-height: 50px;
+}
+.anket-body img.logo:hover {
+  opacity: 1;
+}
+.anket-body a {
+  text-decoration: none;
+}
+.anket-body .show {
+  display: block !important;
+}
+.anket-body header.anket-header .top-bar ul.social-icons {
+  margin-top: 10px;
+  text-align: right;
+}
+.anket-body header.anket-header .top-bar ul.social-icons li i {
+  color: #1b4588;
+  background-color: #fff;
+  border-radius: 50%;
+  padding: 10px 10px;
+  cursor: pointer;
+}
+.anket-body header.anket-header .top-bar ul.social-icons li i:hover {
+  background-color: #3d4456;
+  color: #fff;
+}
+.anket-body header.anket-header .top-bar ul.social-icons li i.facebook {
+  padding: 10px 13px;
+}
+.anket-body header.anket-header .top-menu {
+  background: #FFF;
+  padding: 10px 0 10px;
+  min-height: 80px;
+}
+.anket-body header.anket-header .top-menu .top-contact .top-contact-title {
+  line-height: normal;
+}
+.anket-body header.anket-header .top-menu .top-login {
+  border-left: 1px solid #474747;
+  height: 25px;
+  margin-top: 25px;
+  padding: 2px 0 0 10px;
+}
+.anket-body header.anket-header .top-menu .top-login i.lock {
+  color: #474747;
+  font-size: 18px;
+  left: 15px;
+  position: absolute;
+  top: 4px;
+}
+.anket-body header.anket-header .top-menu .top-login .login-txt {
+  color: #474747;
+  cursor: pointer;
+  outline: none;
+  font-size: 15px !important;
+  font-weight: normal !important;
+  margin-left: 24px;
+}
+.anket-body header.anket-header .top-menu .top-login .login-txt:hover,
+.anket-body header.anket-header .top-menu .top-login .login-txt:active,
+.anket-body header.anket-header .top-menu .top-login .login-txt:focus {
+  color: #1b4588;
+}
+.anket-body header.anket-header .top-menu .header-bg {
+  margin-top: 20px;
+  background: url("../img/header-bg.jpg") center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 599px;
+}
+.anket-body header.anket-header .top-menu .toggle-menu-btn {
+  position: absolute;
+  top: 15px;
+  right: 25px;
+  border: none;
+  background: #1b4588;
+  color: #fff;
+  display: none;
+  padding: 6px 12px;
+}
+.anket-body header.anket-header .top-menu .toggle-menu-btn:active,
+.anket-body header.anket-header .top-menu .toggle-menu-btn:focus,
+.anket-body header.anket-header .top-menu .toggle-menu-btn:hover {
+  background: #3d4456;
+  color: #1b4588;
+}
+.anket-body section#body div.title-common .sub-title-cl {
+  color: #807272;
+  font-size: 14px;
+}
+.anket-body section#body ul.tree-ul li {
+  font-size: 15px !important;
+  font-weight: normal !important;
+}
+.anket-body section#body .sub-title {
+  font-size: 20px !important;
+  font-weight: normal !important;
+  color: #878787;
+  display: block;
+  margin-top: 20px;
+}
+.anket-body section#body .open-r {
+  padding-right: 30px;
+}
+.anket-body section#body .open-l {
+  padding-left: 30px;
+}
+.anket-body section#body p.description-text {
+  font-size: 18px !important;
+  font-weight: normal !important;
+  color: #5d5d5d;
+  text-align: justify;
+}
+.anket-body section#body p.description-text.red {
+  color: #ff0000;
+}
+.anket-body section#body p.description-text.gray {
+  color: #404040;
+}
+.anket-body section#body .round-step {
+  background-color: #ff7c20;
+  color: #fff;
+  padding: 34px 61px;
+  border-radius: 50%;
+  font-size: 60px !important;
+  font-weight: normal !important;
+}
+.anket-body section#body .round-step.second {
+  padding: 34px 51px;
+}
+.anket-body section#body .round-step.third {
+  padding: 34px 42px;
+}
+.anket-body section#body .step-text {
+  color: #5d5d5d;
+  font-size: 18px !important;
+  font-weight: normal !important;
+  margin-top: 55px;
+}
+.anket-body section#body .search-section {
+  background-color: #3d4456;
+  border-radius: 3px;
+  padding: 35px 35px 25px;
+}
+.anket-body section#body .search-section select.search-input, .anket-body section#body .search-section .search-btn {
+  border: none;
+  border-radius: 2px;
+  padding: 10px 15px;
+}
+.anket-body section#body .search-section select.search-input {
+  margin-right: 15px;
+  margin-bottom: 10px;
+  width: 300px;
+  color: #a6a7ab;
+  font-size: 15px !important;
+  font-weight: normal !important;
+}
+.anket-body section#body .search-section .search-btn {
+  background-color: #1b4588;
+  color: #f7f8fe;
+  width: 160px;
+  padding: 8px 15px;
+  text-transform: uppercase;
+  font-size: 15px !important;
+  font-weight: normal !important;
+}
+.anket-body section#body .search-section .search-btn:hover, .anket-body section#body .search-section .search-btn:active, .anket-body section#body .search-section .search-btn:focus {
+  color: #1b4588;
+  background-color: #f7f8fe;
+}
+.anket-body .section-anket {
+  margin-top: 90px;
+}
+.anket-body .section-anket .section-title,
+.anket-body .anket-desc h3 {
+  font-size: 14px;
+  font-weight: bold;
+  margin-bottom: 0;
+  position: relative;
+}
+.anket-body .section-anket .section-title *,
+.anket-body .anket-desc h3 {
+  display: inline-block;
+  position: relative;
+  background-color: #fff;
+  padding-left: 20px;
+  padding-right: 20px;
+  text-transform: uppercase;
+  font-weight: bold;
+  font-size: 12px;
+}
+.anket-body .anket-desc h3 {
+  width: 100%;
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+.anket-body .anket-desc h3:first-child {
+  margin-top: 0;
+}
+.anket-body .section-anket .section-title::before,
+.anket-body .anket-desc h3::before {
+  content: "";
+  position: absolute;
+  top: 0%;
+  left: 0px;
+  width: 3px;
+  height: 100%;
+  z-index: 1;
+}
+.anket-body .section-anket .section-title::after,
+.anket-body .anket-desc h3::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 1px;
+  top: 50%;
+  left: 0px;
+  background-color: #e0e0e0;
+  z-index: -1;
+}
+.anket-body section#body .search-down {
+  width: 0;
+  height: 0;
+  border-left: 20px solid transparent;
+  border-right: 20px solid transparent;
+  border-top: 25px solid #3d4456;
+  margin: 0 auto;
+}
+.anket-body section#body table.anket-table {
+  border: none;
+  font-size: 14px;
+}
+.anket-body section#body table.anket-table thead th, .anket-body section#body table.anket-table tbody td {
+  font-weight: normal;
+}
+.anket-body section#body table.anket-table thead th {
+  border-bottom: 1px solid #e0e0e0;
+  min-width: 60px;
+  color: #AAA;
+}
+.anket-body section#body table.anket-table tbody tr {
+  cursor: pointer;
+}
+.anket-body section#body table.anket-table tbody tr:hover {
+  background-color: #f2f2f2;
+}
+.anket-body section#body table.anket-table tbody td {
+  border: none;
+}
+.anket-body section#body table.anket-table tbody td span.label {
+  background-color: #1b4588;
+  color: #fff;
+  border-radius: 20px;
+  text-align: center;
+  font-size: 15px !important;
+  font-weight: normal !important;
+}
+.anket-body section#body table.anket-table tbody td .show-btn {
+  padding: 10px 35px;
+  border-radius: 25px;
+  text-transform: uppercase;
+  color: #fff;
+  background-color: #1b4588;
+  font-size: 15px !important;
+  font-weight: normal !important;
+}
+.anket-body section#body table.anket-table tbody td .show-btn:hover, .anket-body section#body table.anket-table tbody td .show-btn:active, .anket-body section#body table.anket-table tbody td .show-btn:focus {
+  color: #1b4588;
+  background-color: #3d4456;
+}
+.anket-body section#body ul.anket-pagination {
+  float: right;
+  margin-top: 1rem;
+  margin-bottom: 0;
+}
+.anket-body section#body ul.anket-pagination li {
+  color: #5d5d5d;
+  cursor: pointer;
+  padding: 5px 10px;
+  display: inline-block;
+  margin-left: 3px;
+}
+.anket-body section#body ul.anket-pagination li.active, .anket-body section#body ul.anket-pagination li:hover, .anket-body section#body ul.anket-pagination li:active, .anket-body section#body ul.anket-pagination li:focus {
+  color: #fff;
+  background-color: #1b4588;
+  border-radius: 5px;
+}
+.anket-body section#body ul.anket-pagination li.disactive {
+  pointer-events: none;
+  opacity: 0.6;
+}
+.anket-body section#body .material-area {
+  background-color: #1b4588;
+  padding: 30px;
+}
+.anket-body section#body .material-area .text-one {
+  font-size: 18px !important;
+  font-weight: normal !important;
+  color: #fff;
+  display: block;
+}
+.anket-body section#body .material-area .text-two {
+  font-size: 20px !important;
+  font-weight: normal !important;
+  color: #2f2f2f;
+}
+.anket-body section#body .inter-icon {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 155px;
+  height: 155px;
+  opacity: 0.85;
+  background-repeat: no-repeat !important;
+}
+.anket-body section#body .inter-icon:hover {
+  opacity: 1;
+}
+.anket-body section#body .inter-icon.one {
+  background: url("../img/inter.png");
+}
+.anket-body section#body .inter-icon.two {
+  background: url("../img/inter-two.png");
+}
+.anket-body section#body .inter-text {
+  color: #404040;
+  margin-left: 160px;
+  margin-top: 5px;
+  font-size: 18px !important;
+  font-weight: normal !important;
+}
+.anket-body section#body .inter-text span.italic {
+  font-size: 15px !important;
+  font-weight: normal !important;
+  display: block;
+}
+.anket-body section#body .anket-btn {
+  margin: 90px 60px 0;
+  display: inline-block;
+  padding: 10px 35px;
+  border-radius: 25px;
+  text-transform: uppercase;
+  color: #fff;
+  background-color: #1b4588;
+  font-size: 18px !important;
+  font-weight: normal !important;
+}
+.anket-body section#body .anket-btn:hover, .anket-body section#body .anket-btn:active, .anket-body section#body .anket-btn:focus {
+  color: #1b4588;
+  background-color: #3d4456;
+}
+.anket-body footer#anket-footer .footer-bg .tip-title {
+  color: #fff;
+  font-size: 36px !important;
+  font-weight: normal !important;
+  margin: 200px 0 50px;
+}
+.anket-body footer#anket-footer .footer-bg .tip-desc {
+  color: #fff;
+  font-size: 18px !important;
+  font-weight: normal !important;
+}
+.anket-body footer#anket-footer .footer-info {
+  padding: 30px 0 30px;
+}
+.anket-body footer#anket-footer .footer-info h4.info-title {
+  color: #54535b;
+  margin: 0 0 15px;
+}
+.anket-body footer#anket-footer .footer-info .info-desc,
+.anket-body footer#anket-footer .footer-info .email-input {
+  color: #999ca1;
+  font-size: 18px !important;
+  font-weight: normal !important;
+  display: block;
+}
+.anket-body footer#anket-footer .footer-info .mail-info {
+  position: relative;
+  margin-top: 20px;
+  width: 270px;
+}
+.anket-body footer#anket-footer .footer-info .mail-info .email-input {
+  background-color: #eaf0fc;
+  border: none;
+  padding: 13px;
+  width: 100%;
+  border-radius: 2px;
+}
+.anket-body footer#anket-footer .footer-info .mail-info .send-btn {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  color: #1b4588;
+  cursor: pointer;
+}
+.anket-body ul.social-icons-footer {
+  margin-top: 20px;
+}
+.anket-body ul.social-icons-header {
+  border-left: 1px solid rgba(255,255,255,0.2);
+  margin-left: 20px;
+  padding-left: 20px;
+}
+.anket-body ul.social-icons-header li,
+.anket-body ul.social-icons-footer li {
+  margin-right: 5px;
+}
+.anket-body ul.social-icons-header li i,
+.anket-body ul.social-icons-footer li i {
+  color: #fff;
+  background-color: #3d4456;
+  border-radius: 50%;
+  padding: 10px 10px;
+  cursor: pointer;
+}
+.anket-body ul.social-icons-header li i:hover,
+.anket-body ul.social-icons-footer li i:hover {
+  background-color: #1b4588;
+}
+.anket-body ul.social-icons-header li i.facebook,
+.anket-body ul.social-icons-footer li i.facebook {
+  padding: 10px 13px;
+}
+.anket-body #anket-footer {
+  padding: 15px 0;
+  font-size: 12px;
+  border-top: 1px solid #d8e7f7;
+}
+.anket-form-body {
+  padding-bottom: 30px;
+}
+.anket-form-body .portlet-subject-blue,
+.anket-form-body .font-grey-gallery,
+.anket-form-body .bp-back-btn {
+  display: none;
+}
+.anket-form-body .bpMainSaveButton {
+  margin-top: 10px;
+  padding: 8px 30px;
+  border-radius: 100px;
+}
+.anket-form-body .meta-toolbar {
+  position: absolute;
+  bottom: -40px;
+  z-index: 9;
+  right: .625rem;
+}
+.anket-form-body .meta-toolbar > span {
+  display: none;
+}
+.anket-form-body .bp-banner-container > #wsForm {
+  position: relative;
+}
+.anket-body #topContact {
+  margin-top: 20px;
+}
+.anket-body .button2.new {
+  display: inline-block;
+  margin: 40px 0;
+  float: left;
+}
+.anket-body .form-btn .btn {
+  text-transform: uppercase;
+  font-size: 12px;
+  font-weight: bold;
+}
+.anket-body #promptext .modal-body {
+  text-align: justify;
+}
+.anket-form-body .header-bg {
+  background-color: #1b4588;
+  padding: 0 20px;
+  height: 100px;
+  margin-bottom: 15px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.anket-form-body .header-bg .main-title {
+  color: #fff;
+  font-size: 34px;
+}
+.anket-form-body .card {
+  border: 0;
+}
+.anket-form-body .profile-item .profile-row {
+  margin-bottom: 15px;
+}
+.anket-form-body .profile-item .file-p-row label[data-label-path] {
+  width: 100% !important;
+}
+.anket-form-body .btn-xs.bp-remove-row {
+  background: #CC0000;
+  color: #FFF;
+}
+.anket-form-body .green-meadow.btn {
+  color: #FFFFFF;
+  background-color: #1BBC9B;
+  border-radius: 100px;
+  margin-right: 0 !important;
+  padding: 5px 15px;
+}
+.anket-form-body .btn-xs {
+  padding: 3px 10px;
+  background: #eee;
+}
+.anket-form-body label {
+  margin-bottom: 5px;
+}
+.anket-form-body .kpiFormSection {
+  padding: 0;
+}
+.anket-form-body div[data-section-path="fileAttachment"] > span,
+.anket-form-body div[data-section-path="attachId"] > span {
+  /*margin-left: 40px !important;*/
+  font-size: 12px !important;
+  margin-top: 0 !important;
+  /*color: green !important;*/
+  border: 2px solid #d3e3f2;
+}
+.anket-body .bprocess-table-dtl-div .table-sm>tbody>tr>td,
+.anket-body .bprocess-table-dtl-div .table-sm>tbody>tr>th,
+.anket-body .bprocess-table-dtl-div .table-sm>tfoot>tr>td,
+.anket-body .bprocess-table-dtl-div .table-sm>tfoot>tr>th {
+  padding: 0;
+}
+.anket-body table.bprocess-table-dtl > thead > tr.bp-filter-row > th > input[type="text"],
+.anket-body table.bprocess-table-dtl > thead > tr.bp-filter-row > th > div > input[type="text"],
+.anket-body table.gl-table-dtl > thead > tr.bp-filter-row > th > input[type="text"] {
+  background: url(../../addon/plugins/jquery-easyui/themes/metro/images/search.png) no-repeat 4px center;
+  background-color: #FFF;
+  font-weight: normal;
+  border-top: 1px #d3e3f2 solid;
+  font-size: 12px !important;
+  margin: 0 !important;
+  padding: 2px 3px 2px 18px;
+  outline: none;
+  box-sizing: border-box;
+  display: inline-block;
+  width: 100%;
+}
+.anket-body .table-bordered {
+  border: 1px solid #d3e3f2;
+}
+.anket-body table.bprocess-table-dtl > thead > tr.bp-filter-row > th,
+.anket-body table.gl-table-dtl > thead > tr.bp-filter-row > th {
+  padding: 0 !important;
+  height: 20px !important;
+}
+.anket-body table.bprocess-table-dtl thead th:not(.rowNumber) {
+  min-width: 70px;
+  color: #444;
+}
+.anket-body table.bprocess-table-dtl input {
+  height: 30px;
+}
+.anket-body table.bprocess-theme1 thead tr th {
+  background: #e4edf6 !important;
+  font-size: 11px !important;
+  border-bottom: none !important;
+  border-top: 0 !important;
+}
+.anket-body .bprocess-table-dtl-div input,
+.anket-body .bprocess-table-dtl-div select {
+  border: 0;
+}
+.anket-body table.table td.stretchInput input[type="text"] {
+  border-right: 1px solid #ddd;
+  margin: 0 !important;
+  padding: 0 3px !important;
+  outline: none;
+  box-sizing: border-box;
+  display: inline-block;
+  border-radius: 0 !important;
+  -moz-border-radius: 0 !important;
+  -webkit-border-radius: 0 !important;
+}
+.anket-body .bp-template-mode .dateElement.input-group input[type="text"] {
+  width: 75% !important;
+}
+.anket-body .xs-form .input-group .form-control {
+  border-radius: .1875rem 0 0 .1875rem;
+  -moz-border-radius: .1875rem 0 0 .1875rem;
+  -webkit-border-radius: .1875rem 0 0 .1875rem;
+}
+.anket-body .dateElement .input-group-btn .btn {
+  border-left: 0;
+  margin-right: 0;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  padding: 9px 8px 8px 8px;
+  box-shadow: none !important;
+}
+.anket-body .dateElement .input-group-btn .btn i {
+  display: block;
+}
+
+.anket-body .table-sm>tfoot>tr>td,
+.anket-body .table-sm>tfoot>tr>th,
+.anket-body .table-sm>thead>tr>td,
+.anket-body .table-sm>thead>tr>th {
+  padding: 4px;
+}
+.anket-body .table-sm>tbody>tr>td,
+.anket-body .table-sm>tbody>tr>th {
+  padding: 0;
+}
+.anket-body .step-5 > .steps {
+  display: flex;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+}
+.anket-body .step-5 > .steps .img-bg {
+  background: linear-gradient(to right, #405e7c 0%,#7a92b9 100%);
+  border-radius: 10px;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 15px;
+}
+.anket-body .step-5 > .steps .img-bg > img {
+  width: 44px;
+  height: auto;
+  padding: 10px;
+  filter: invert(1);
+}
+/* .anket-body .section-anket .choose .section-title::before {
+  background: #14b191;
+}
+.anket-body .section-anket .choose .section-title *,
+.anket-body .choose .anket-desc h3,
+.anket-body .step-5 > .steps > .title {
+  color: #14b191;
+} */
+.anket-body .step-5 > .steps > .title {
+  font-size: 11px;
+  font-weight: bold;
+  line-height: 15px;
+  letter-spacing: -0.5px;
+  text-align: left; 
+  text-transform: uppercase;
+}
+#pagingJobList .nonenaket{
+  position: absolute;
+  left: 38%;
+  font-size: 24px;
+  margin-top: -35px;
+}

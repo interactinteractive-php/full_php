@@ -1,0 +1,122 @@
+@page {
+    margin-top: 0.5cm;
+    margin-right: 0;
+    margin-bottom: 0.5cm;
+    margin-left: 0;
+    size: A4 landscape;
+    width: 31.7cm;
+    orientation: landscape; 
+}
+* {
+    -webkit-box-sizing: border-box;
+       -moz-box-sizing: border-box;
+            box-sizing: border-box;
+}
+*:before,
+*:after {
+    -webkit-box-sizing: border-box;
+       -moz-box-sizing: border-box;
+            box-sizing: border-box;
+}
+body {
+    margin: 0;
+    padding: 0;
+    line-height: 1.4em;
+    font-size: 12px;
+    font-family: "Times Roman", sans-serif;
+    color: #000;
+    width: 100%;
+    -webkit-print-color-adjust: exact;
+}
+a, a:visited, a:hover, a:active {
+    color: inherit; 
+    text-decoration: none; 
+} 
+a:after { content: ''; } 
+a[href]:after { content: none !important; } 
+.navbar, .sidebar-nav {
+    display: none;
+}
+#main_table table {
+     border-collapse: collapse !important;
+     page-break-inside: avoid !important;
+}
+table {
+    /*table-layout: fixed; 
+    clear: both;*/
+    border-collapse:collapse; 
+    font-size: 12px;
+    border-color: grey;
+}
+.reportTableLayoutFixed table {
+    table-layout: fixed;
+    clear: both;
+    border-collapse: collapse;
+    word-wrap: break-word;
+}
+tr { page-break-inside:avoid; page-break-after:auto }
+td { page-break-inside:avoid; page-break-after:auto }
+thead {
+    display: table-header-group; 
+}
+tbody {
+   display: table-row-group;
+}
+tfoot {
+    display: table-footer-group;
+}
+table thead th, table thead td, table tbody td, table tfoot td {
+    padding: 2px 3px;
+}
+table tbody td.bold {
+    font-weight: bold;
+}
+table tbody td.cell-depth-1 {
+    padding: 3px 4px 3px 15px !important;
+}
+table tbody td.cell-depth-2 {
+    padding: 3px 4px 3px 35px !important;
+}
+table tbody td.cell-depth-3 {
+    padding: 3px 4px 3px 55px !important;
+}
+.right-rotate {
+    -webkit-transform: rotate(90deg);
+    -moz-transform: rotate(90deg);
+    -ms-transform: rotate(90deg);
+    -o-transform: rotate(90deg);
+    transform: rotate(90deg);
+    word-wrap: break-word;
+}
+.left-rotate {
+    -webkit-transform: rotate(270deg);
+    -moz-transform: rotate(270deg);
+    -ms-transform: rotate(270deg);
+    -o-transform: rotate(270deg);
+    transform: rotate(270deg);
+    word-wrap: break-word;
+}
+.right-rotate span, .left-rotate span {
+    display: block;
+}
+table.pf-report-table-none, 
+table.pf-report-table-none td, 
+table.pf-report-table-none th {
+    border: 0px #fff solid;
+}
+table.pf-report-table-dotted, 
+table.pf-report-table-dotted td, 
+table.pf-report-table-dotted th {
+    border: 1px #000 dotted;
+}
+table.pf-report-table-dashed, 
+table.pf-report-table-dashed td, 
+table.pf-report-table-dashed th {
+    border: 1px #000 dashed;
+}
+table.pf-report-table-solid, 
+table.pf-report-table-solid td, 
+table.pf-report-table-solid th {
+    border: 1px #000 solid;
+}
+

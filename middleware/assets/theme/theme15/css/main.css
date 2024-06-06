@@ -1,0 +1,481 @@
+body {
+    background-color: #ecf2f6 !important; 
+}
+.vr-workspace-theme15 {
+    display: table;
+    width: 100%;    
+    overflow-y: auto;
+    overflow-x: hidden;
+    background-color: #ecf2f6;
+}
+.vr-workspace-theme15 .ws-bg {
+    background-image: url('bg.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 200px;
+}
+.vr-workspace-theme15 .hide {
+    display: none !important;
+}
+.vr-workspace-theme15 .close-btn > i {
+    color: #999999;
+}
+.vr-workspace-theme15 .close-btn {
+    position: absolute;
+    top: 30px;
+    right: 20px;
+    background: #ebebeb;
+    padding: 5px 10px;
+    border-radius: 50%;
+    border: 1px solid #999999;
+}
+.vr-workspace-theme15 .left-side { 
+   width: 15%;
+    height: 100%;
+    float: left;
+    
+}
+.vr-workspace-theme15 .left-side .profile-userpic {
+    height: 100%;
+    width: 100% !important;
+    background: #FFF;
+    margin: 0 auto;
+    padding: 10px 10px 0px 10px !important;
+    text-align: center;
+    border-top:3px solid #4ca8e6;
+    margin-bottom: 10px;
+    float:left;
+}
+.vr-workspace-theme15 .left-side .profile-userpic img {
+    padding: 0;
+    margin: 0!important;
+    border-radius: 0;
+    border: 1px solid #fff;
+    height: 250px !important;
+    width: 100% !important;
+    background: #e7e7e7;
+}
+.vr-workspace-theme15 .right-side {
+    width: 85%;
+    float: left;
+    padding: 0 0px 0 10px;
+}
+.vr-workspace-theme15 #stick-content {
+    min-height: 100px;
+}
+.vr-workspace-theme15 .workspace-main-container {
+    padding: 35px 0 10px !important;
+    min-height: 650px;
+    margin-bottom:0px !important;
+    overflow: auto;
+    border-radius: 0 !important;
+}
+.vr-workspace-theme15 .project-info-left {
+    float: left;
+    background: #FFF;
+    margin-bottom: 10px;
+}
+.vr-workspace-theme15 #project-info {
+    padding: 0;
+    float:left;
+    background: #FFF;
+    margin: 0 auto;
+    width: 100%;
+    padding: 0 10px 0 10px;
+}
+.vr-workspace-theme15 #project-info .project-info-row {
+    clear: both;
+    padding: 5px 0;
+    font-size: 14px;
+}
+.vr-workspace-theme15 #project-info .main-title {
+    margin: 10px 5%;
+    clear: both;
+}
+.vr-workspace-theme15 #project-info .main-title > .left-side-title {
+    color: #cacaca;
+    text-transform: uppercase;                
+    margin-left: 5px;
+    font-weight: bold;
+    font-size: 18px;
+}
+.vr-workspace-theme15 #project-info .main-title > i.left-side-title-icon {
+    color: #fff;  
+    background: #2574a9;
+    padding: 5px 7px;
+    border-radius: 50%;
+}
+.vr-workspace-theme15 #project-info .project-info-row .control-pos {
+    padding-left: 5px;
+    display: table;
+}
+.vr-workspace-theme15 #project-info .purpose {
+    padding: 0 0px 0 50px;
+}
+.vr-workspace-theme15 #project-info .project-info-row {
+    padding: 5px 0 0;
+    float:left;
+}
+.vr-workspace-theme15 #project-info .project-info-row .header-positions {
+    /*padding: 0 10px;*/
+    float:left;
+}
+.vr-workspace-theme15 #project-info .project-info-row .header-positions .control-position {    
+    float: left;
+    
+    width: 100%;
+    text-align: left;
+    margin-top: 3px;
+    font-size: 15px;
+}
+.vr-workspace-theme15 #project-info .project-info-row .header-positions .label-position {
+    color: #222;
+    float: left;
+    text-align: right;
+    width: 35%;
+    font-weight: bold;
+}
+.vr-workspace-theme15 #project-info .project-info-row .label-pos {
+    color: #020202;
+    width: 30%;
+    float: left;
+    text-align: right;
+    font-weight: bold;    
+}
+.vr-workspace-theme15 #project-info .project-info-row .name {
+    font-weight: bold;
+    font-size: 18px;
+    text-transform: uppercase;
+}
+.vr-workspace-theme15 .ws-menu {
+    background: #FFF;
+    display: flex;
+    
+}
+.vr-workspace-theme15 .ws-menu .workspace-menu {
+
+}
+.vr-workspace-theme15 .ws-menu .workspace-menu li {
+    border-right: 1px dashed #ecf2f6;
+    text-align: center;
+    padding: 15px 5px 15px 5px;
+    width: 70px !important;
+    height: 100%;
+    background: #FFF;
+    border-bottom: 3px solid #ecf2f6;
+}
+.vr-workspace-theme15 .ws-menu .workspace-menu li a {
+    color: #ecf2f6;
+    font-size: 14px;
+    text-transform: uppercase;
+    border-radius: 0px;
+    text-align: center;
+    margin: 0;
+    outline: none;
+    border: none;
+    padding: 10px;
+    
+    font-weight: bold;
+}
+.vr-workspace-theme15 .ws-menu .workspace-menu li.tabdrop a {
+    text-align: left;
+}
+.vr-workspace-theme15 .ws-menu .workspace-menu li:hover {
+    border-bottom: 3px solid #4ca8e6;
+}
+.vr-workspace-theme15 .ws-menu .workspace-menu li a:hover,
+.vr-workspace-theme15 .ws-menu .workspace-menu li a:focus,
+.vr-workspace-theme15 .ws-menu .workspace-menu li a:active {
+    border: none;
+    color: #4ca8e6;
+    background: none;
+}
+.vr-workspace-theme15 .ws-menu .workspace-menu li a:hover i {
+    color: #4ca8e6;
+}
+.vr-workspace-theme15 .ws-menu .workspace-menu li i {
+    color: rgba(93,109,138,.8);
+    font-size: 20px;
+}
+.vr-workspace-theme15 .ws15-theme-menu {
+    color: rgba(84,97,133,1) !important;
+}
+.vr-workspace-theme15 .ws-menu .workspace-menu li i.ws15-theme-menu {
+    font-size: 12px;
+}
+.vr-workspace-theme15 .ws-menu .workspace-menu li:last-child {
+    border-right: none
+}
+.vr-workspace-theme15 .ws-menu .workspace-menu li.active a {
+    color: #4ca8e6;
+    border: none
+}
+.vr-workspace-theme15 .ws-menu .workspace-menu li.active {
+    background: #FFF;
+    border-bottom: 3px solid #4ca8e6;
+}
+.vr-workspace-theme15 .ws-menu .workspace-menu li.active i {
+    color: #4ca8e6
+}
+.vr-workspace-theme15 .ws-menu ul.workspace-menu ul.sub-menu {
+    display: none;
+    position: absolute;
+    z-index: 100;
+    padding: 0 0 0 5px;
+    left: 0;
+    background: #373c43;
+    margin-left: 5px;
+    width: 150px !important;
+}
+.vr-workspace-theme15 .ws-menu ul.workspace-menu ul.sub-menu li {
+    margin: 5px 0;
+    list-style: none;
+    background: #373c43;
+    text-align: left;
+    padding: 0 5px !important;
+    border: none;
+    width: 150px !important;
+}
+.vr-workspace-theme15 .ws-menu ul.workspace-menu ul.sub-menu li a {
+    padding: 0; 
+    background: #373c43;
+    font-size: 14px;
+    text-transform: none;
+    color: #FAFAFA;
+}
+.vr-workspace-theme15 .ws-menu ul.workspace-menu li:hover > ul.sub-menu {
+    display: inherit !important;    
+}
+
+.vr-workspace-theme15 .workspace-part > div.row:first-child {
+    background: #FFF;
+    margin: 0;
+}
+.vr-workspace-theme15 .package-div {
+    /*background: #ebebeb;*/
+    /*padding-top: 10px;*/
+    margin-bottom: 11px;
+    position: relative;
+}
+.vr-workspace-theme15 .package-div .package-tab-name {
+    display:none;
+}
+.vr-workspace-theme15 .package-div.odd,
+.vr-workspace-theme15 .package-div.odd .package-tab {
+    background: #ffe99b;
+}
+.vr-workspace-theme15 .margin-none-ws15 {
+    margin: 0 !important;
+}
+.vr-workspace-theme15 .package-tab {
+    background: #FFF;
+    padding: 0px !important;
+}
+.vr-workspace-theme15 .package-tab-name {
+    border-spacing: initial;
+    font-weight: bold;
+    font-size: 14px;
+    
+    color: #949b9f;
+    text-transform: uppercase;
+    border-bottom: 0;
+    position: absolute;
+    top: 17px;
+    left: 15px;
+}
+.vr-workspace-theme15 .pf-carousel-1,
+.vr-workspace-theme15 .pf-carousel-2,
+.vr-workspace-theme15 .pf-carousel-3
+{
+    margin-top: 30px;
+    
+}
+.vr-workspace-theme15 .pf-carousel-2 .owl-carousel .owl-item {
+    width: 150px !important;
+}
+.vr-workspace-theme15 .pf-carousel-2 .product-item,
+.vr-workspace-theme15 .pf-carousel-3 .product-item {
+    border: 1px transparent solid;
+}
+.vr-workspace-theme15 .pf-carousel-2 .product-item:hover,
+.vr-workspace-theme15 .pf-carousel-3 .product-item:hover {
+    border: 1px #000 solid;
+}
+.vr-workspace-theme15 .pf-carousel-2 .pi-img-wrapper img {
+    border-radius: 50%;
+    height: 130px !important;
+    width: 130px !important;
+}
+.vr-workspace-theme15 .pf-carousel-3 .pi-yellow-bg-title .pi-yellow-bg-title-name1 {
+    height: 27px;
+    overflow: hidden;
+}
+.vr-workspace-theme15 #amactivityMaindWindow {
+    background: #ebebeb;
+}
+.vr-workspace-theme15 .card-package-body {
+    background: #ebebeb;
+    padding: 5px 10px;
+}
+
+@media screen and (max-width: 1366px) {
+    .vr-workspace-theme15 .left-side .profile-userpic img {
+        height: 180px !important;
+        width: 100% !important;
+    }
+    .vr-workspace-theme15 .ws-menu .workspace-menu li i {
+        font-size: 14px !important;
+    }
+    .vr-workspace-theme15 .ws-menu .workspace-menu li span {
+        font-size: 14px;
+    }
+    .vr-workspace-theme15 .ws-menu .workspace-menu li {
+        padding: 1px 5px 1px 5px;
+        width: 50px !important;
+        border-bottom: 3px solid #ecf2f6;
+    }
+    .vr-workspace-theme15 #project-info .project-info-row .header-positions .control-position {
+        font-size: 15px !important;
+    }
+    .vr-workspace-theme15 .ws-menu .workspace-menu li {
+        height: inherit !important;
+    }
+    .vr-workspace-theme15 .ws-menu .workspace-menu li .ws15-theme-menu {
+        font-size: 12px;
+    }
+    .vr-workspace-theme15 .ws-menu .workspace-menu li i.ws15-theme-menu {
+        font-size: 12px;
+    }
+}
+
+@media screen and (min-width: 1500px) {
+    .vr-workspace-theme15 .ws-menu .workspace-menu li a {
+        font-size: 15px;
+        vertical-align: middle;
+        padding: 1px 5px 1px 5px;
+    }
+    .vr-workspace-theme15 .ws-menu .workspace-menu li .ws15-theme-menu {
+        font-size: 12px;
+    }
+}
+
+@media screen and (min-width: 1600px) {
+    .vr-workspace-theme15 .ws-menu .workspace-menu li {
+        width: 50px !important;
+        height: 100%;
+        border-bottom: 3px solid #ecf2f6;
+    }
+}
+
+@media screen and (max-width: 1599px) {
+    
+    .vr-workspace-theme15 .ws-menu .workspace-menu li {
+        height: inherit !important;
+    }
+}
+
+.vr-workspace-theme15 .workspace-part .xs-form > form > .meta-toolbar .btn-secondary {
+    display: none !important;
+}
+
+
+/*********************************/
+
+.vr-workspace-theme15 .left-side .workspace-menu {
+    list-style: none;
+    padding-left: 0;
+    background: #FFF;
+}
+
+.vr-workspace-theme15 .left-side .workspace-menu > li > a {
+    border-left: none!important;
+    color: rgba(84,97,133,1);
+    background: #FFF;
+    min-height: 38px;
+    padding: 10px 15px;
+    min-height: 38px;
+    display: block;
+    position: relative;
+    margin: 0;
+    border: 0px;
+    text-decoration: none;
+}
+
+.vr-workspace-theme15 .left-side .workspace-menu > li > a > span.title {
+    
+    font-weight: 400;
+    text-transform: uppercase;
+    font-size: 14px;
+    padding-left: 7px;
+    position: absolute;
+    line-height: 14px;
+    padding-top: 2px;
+}
+.vr-workspace-theme15 .left-side .workspace-menu > li {
+    display: block;
+    margin: 0;
+    padding: 0;
+}
+.vr-workspace-theme15 .left-side .workspace-menu > li > a:hover {
+    border-left: 3px solid #4ca8e6 !important;
+    padding-left: 12px;
+    color: #4ca8e6 !important;
+    background: #FFF !important;
+}
+
+.vr-workspace-theme15 .left-side .workspace-menu > li.active > a {
+    border-left: 3px solid #4ca8e6 !important;
+    padding-left: 12px;
+    color: #4ca8e6 !important;
+    background: #FFF !important;
+}
+
+.vr-workspace-theme15 .ws-page-sidebar .slimScrollDiv {
+    height: auto !important;
+}
+
+.vr-workspace-theme15 .ws-page-sidebar .slimScrollDiv .workspace-menu {
+    height: auto !important;
+}
+
+/****************/
+.vr-workspace-theme15 .right-side .ws-menu .workspace-menu .tooltip-inner {
+    background-color: #4ca8e6 !important;
+}
+.vr-workspace-theme15 .right-side .ws-menu .workspace-menu .tooltip.bottom .tooltip-arrow {
+    border-bottom-color: #4ca8e6 !important;
+}
+
+.vr-menu-icon-theme15 {
+    font-size: 20px !important;
+    text-align: center !important;
+    vertical-align: middle !important;
+}
+
+.vr-workspace-theme15 .theme-layout-render-div {
+    border: 1px solid #F00;
+    min-height: 50px;
+}
+.vr-menu-icon-theme15 .right-sidebar-content-for-resize .button-parent-div {
+    display: none !important;
+}
+.vr-menu-icon-theme15 .layout-cell {
+    width: 100% !important;
+}
+.vr-workspace-theme15 .workspace-theme {
+    margin: 0 !important;
+}
+.vr-workspace-theme15 .workspace-theme-pl0 {
+    padding-left: 0 !important;
+}
+.vr-workspace-theme15 .workspace-theme-pr0 {
+    padding-right: 0 !important;
+}
+.vr-workspace-theme15 .workspace-theme .pl15 {
+    padding-left:0px !important;
+}
+.vr-workspace-theme15 .workspace-theme .pr15 {
+    padding-right:10px !important;
+}
+.vr-workspace-theme15 .workspace-theme .pr15 { 
+}

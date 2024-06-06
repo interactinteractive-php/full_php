@@ -1,0 +1,1086 @@
+{
+  "page": {
+    "config": {
+      "hostObject": {},
+      "style": {}
+    },
+    "header": {
+      "children": []
+    },
+    "body": {
+      "type": "row",
+      "widgetCode": "body",
+      "itemStyle": {
+        "maxHeight" : "max-content",
+        "backgroundColor": "#e5e5e5"
+      },
+      "children": [
+        {
+          "type": "row_column",
+          "widgetCode": "column-1",
+          "rowItemCount": "col-9",
+          "itemStyle": {
+            "maxHeight" : "max-content",
+            "rowGap": "15px",
+            "padding": "10px"
+          },
+          "children": [{
+              "type": "row_column",
+              "rowItemCount": "col-12",
+              "widgetCode": "column-1-1",
+              "itemStyle": {
+                "maxHeight" : "max-content"
+              },
+              "children": [
+                {
+                  "meta": {
+                    "metadataid": "1679971477585122",
+                    "metadatacode": "HP_MAIN_MENU",
+                    "metatypeid": "200101010000016"
+                  },
+                  "type": "row_column",
+                  "itemCount": 4,
+                  "widgetCode": "column-1-1-1",
+                  "widgetName": "",
+                  "rowItemCount": "col-4",
+                  "body": {
+                    "gap": "4"
+                  },
+                  "itemStyle": {
+                    "rowGap": "15px",
+                    "maxHeight" : "max-content",
+                    "backgroundColors": ["#F35D82", "#39E0CF", "#FF8E50", "#009EF7"]
+                  },
+                  "children": [{
+                    "type": "card",
+                    "widgetCode": "column-1-1-1-1",
+                    "widgetName": "",
+                    "rowItemCount": "col-6",
+                    "defaultRawData": [{
+                        "position1Value": "174",
+                        "position2Value": "fa fa-link",
+                        "position3Value": "Нийт ажил"
+                    }],
+                    "body": {
+                      "gap": "4"
+                    },
+                    "itemStyle": {
+                      "minHeight" : "135px",
+                      "maxHeight" : "135px",
+                      "borderRadius": "6px",
+                      "padding": "15px",
+                      "boxShadow": "0px 0px 20px 0px #4C577D05"
+                    },
+                    "showFields": [
+                      {
+                        "position": "1",
+                        "rendertype": "text",
+                        "defaultVal": "position1Value",
+                        "rowItemCount": "col-6",
+                        "containerStyle": {},
+                        "style": {
+                          "color": "Colors.white",
+                          "fontSize": "FontSize[22]",
+                          "fontWeight": "FontWeight[700]",
+                          "fontFamily": "Fonts.nunitoMedium"
+                        }
+                      },
+                      {
+                        "position": "2",
+                        "rendertype": "icon",
+                        "side": "body",
+                        "rowItemCount": "col-6",
+                        "defaultVal": "position2Value",
+                        "containerStyle": {},
+                        "style": {
+                          "color": "Colors.white",
+                          "fontSize": "FontSize[12]",
+                          "textAlign": "right",
+                          "iconBackgroundColor": "Colors.FFFFFF4D",
+                          "fontFamily": "Fonts.nunitoMedium"
+                        }
+                      },
+                      {
+                        "position": "3",
+                        "rendertype": "text",
+                        "defaultVal": "position3Value",
+                        "side": "body",
+                        "rowItemCount": "col-12",
+                        "containerStyle": {},
+                        "style": {
+                          "color": "Colors.white",
+                          "fontSize": "FontSize[14]",
+                          "fontWeight": "FontWeight[700]",
+                          "fontFamily": "Fonts.nunitoMedium"
+                        }
+                      }
+                    ]
+                  }]
+                },
+                {
+                  "meta": {
+                    "metadataid": "1679971477585122",
+                    "metadatacode": "HP_MAIN_MENU",
+                    "metatypeid": "200101010000016"
+                  },
+                  "widgetCode": "column-1-1-2",
+                  "widgetName": "",
+                  "type": "card",
+                  "rowItemCount": "col-4",
+                  "body": {
+                    "gap": "4"
+                  },
+                  "itemStyle": {
+                    "borderRadius": "6px",
+                    "backgroundColor": "#FFF",
+                    "padding": "15px",
+                    "boxShadow": "0px 0px 20px 0px #4C577D05",
+                    "height": "100%"
+                  },
+                  "defaultRawData": [{
+                      "position1Value": "Шийдвэрлэсэн ажлын хувь"
+                  }],
+                  "showFields": [
+                    {
+                      "position": "1",
+                      "rendertype": "text",
+                      "rowItemCount": "col-10",
+                      "containerStyle": {},
+                      "defaultVal": "position1Value",
+                      "style": {
+                        "color": "Colors.dark",
+                        "fontSize": "FontSize[18]",
+                        "fontFamily": "Fonts.nunitoMedium",
+                        "fontWeight": "FontWeight[700]",
+                        "maxHeight": "20px",
+                        "height": "20px"
+                      }
+                    },
+                    {
+                      "position": "2",
+                      "rendertype": "icon",
+                      "rowItemCount": "col-2",
+                      "containerStyle": {},
+                      "style": {
+                        "color": "Colors.gray",
+                        "fontSize": "FontSize[12]",
+                        "textAlign": "right",
+                        "iconBackgroundColor": "Colors.E9E9ED",
+                        "fontFamily": "Fonts.nunitoMedium",
+                        "maxHeight": "20px",
+                        "height": "20px"
+                      }
+                    },
+                    {
+                      "position": "3",
+                      "rendertype": "chart",
+                      "side": "body",
+                      "rowItemCount": "col-12",
+                      "containerStyle": {},
+                      "style": {
+                        "maxHeight" : "220px",
+                        "height" : "220px"
+                      },
+                      "chartoption": {"tooltip":{"trigger":"item","show":false},"grid":{"show":false,"top":0,"left":0,"right":0,"bottom":0},"legend":{"show":true,"bottom":"bottom"},"color":["#009EF7","#39E0CF","#E6ECF6"],"series":[{"type":"pie","height":480,"top":-60,"radius":["40%","70%"],"startAngle":180,"label":{"show":true,"position":"center","fontSize":"32","formatter":"72.5%"},"itemStyle":{"borderRadius":5,"borderColor":"#fff","borderWidth":0},"data":[{"value":1048,"name":"Шийдвэрлэлтийн хувь"},{"value":735,"name":"Хугацаандаа шийдвэрлэсэн"},{"value":580,"name":""},{"value":2363,"itemStyle":{"color":"none","decal":{"symbol":"none"}},"label":{"show":false}}]}]}
+                    }
+                  ]
+                },
+                {
+                  "meta": {
+                    "metadataid": "1679971477585122",
+                    "metadatacode": "HP_MAIN_MENU",
+                    "metatypeid": "200101010000016"
+                  },
+                  "widgetCode": "column-1-1-3",
+                  "widgetName": "",
+                  "type": "card",
+                  "rowItemCount": "col-4",
+                  "body": {
+                    "gap": "4"
+                  },
+                  "itemStyle": {
+                    "borderRadius": "6px",
+                    "padding": "15px",
+                    "backgroundColor": "#FFF",
+                    "boxShadow": "0px 0px 20px 0px #4C577D05",
+                    "height": "100%"
+                  },
+                  "defaultRawData": [{
+                      "position1Value": "Шийдвэрлээгүй ажлын хувь"
+                  }],
+                  "showFields": [
+                    {
+                      "position": "1",
+                      "rendertype": "text",
+                      "rowItemCount": "col-10",
+                      "containerStyle": {},
+                      "defaultVal": "position1Value",
+                      "style": {
+                        "color": "Colors.dark",
+                        "fontSize": "FontSize[18]",
+                        "fontWeight": "FontWeight[700]",
+                        "maxHeight": "20px",
+                        "height": "20px"
+                      }
+                    },
+                    {
+                      "position": "2",
+                      "rendertype": "icon",
+                      "rowItemCount": "col-2",
+                      "containerStyle": {},
+                      "style": {
+                        "color": "Colors.gray",
+                        "fontSize": "FontSize[12]",
+                        "textAlign": "right",
+                        "iconBackgroundColor": "Colors.E9E9ED",
+                        "fontFamily": "Fonts.nunitoMedium",
+                        "maxHeight": "20px",
+                        "height": "20px"
+                      }
+                    },
+                    {
+                      "position": "3",
+                      "rendertype": "chart",
+                      "side": "body",
+                      "rowItemCount": "col-12",
+                      "containerStyle": {},
+                      "style": {
+                        "maxHeight" : "220px",
+                        "height" : "220px"
+                      },
+                      "chartoption": {"tooltip":{"trigger":"item","show":false},"grid":{"show":false,"top":0,"left":0,"right":0,"bottom":0},"legend":{"show":true,"bottom":"bottom"},"color":["#FF7E79","#39E0CF","#E6ECF6"],"series":[{"type":"pie","height":480,"top":-60,"radius":["40%","70%"],"startAngle":180,"label":{"show":true,"position":"center","fontSize":"32","formatter":"35.8%"},"itemStyle":{"borderRadius":5,"borderColor":"#fff","borderWidth":0},"data":[{"value":1048,"name":"Шийдвэрлэлтийн хувь"},{"value":735,"name":"Хугацаандаа шийдвэрлэсэн"},{"value":580,"name":""},{"value":2363,"itemStyle":{"color":"none","decal":{"symbol":"none"}},"label":{"show":false}}]}]}
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "row_column",
+              "rowItemCount": "col-12",
+              "widgetCode": "column-1-2",
+              "itemStyle": {
+                "minHeight" : "max-height",
+                "maxHeight" : "max-height",
+                "paddingLeft" : "10px !important"
+              },
+              "children": [
+                {
+                  
+                "type": "column",
+                "rowItemCount": "col-10",
+                "widgetCode": "column-1-2-1a",
+                "itemStyle": {
+                  "padding" : "0",
+                  "maxHeight" : "max-content",
+                  "minHeight": "450px",
+                  "borderRadius": "6px",
+                  "boxShadow": "0px 0px 20px 0px #4C577D05",
+                  "margin": "0",
+                  "backgroundColor": "#FFF",
+                  "rowGap": "15px",
+                  "padding": "15px"
+                },
+                "children": [{
+                  "type": "card",
+                  "widgetCode": "column-1-2-1a-1",
+                  "widgetName": "",
+                  "rowItemCount": "col-12",
+                  "body": {
+                    "gap": "4"
+                  },
+                  "itemStyle": {
+                    "height": "100%",
+                    "borderRadius": "6px",
+                    "border": "none",
+                    "boxShadow": "none",
+                    "margin": "0",
+                    "marginBottom": "10px !important"
+                  },
+                  "defaultRawData": [{
+                      "position1Value": "Upcoming tasks",
+                      "position2Value": "fa fa-link"
+                  }],
+                  "showFields": [
+                    {
+                      "position": "1",
+                      "rendertype": "text",
+                      "side": "body",
+                      "rowItemCount": "col-8",
+                      "defaultVal": "position1Value",
+                      "containerStyle": {},
+                      "style": {
+                        "fontSize": "FontSize[18]",
+                        "fontWeight": "FontWeight[700]",
+                        "color": "Colors.dark",
+                        "border": "none",
+                        "padding": "0",
+                        "backgroundColor": "#FFF"
+                      },
+                      "chartoption": {}
+                    },
+                    {
+                      "position": "2",
+                      "rendertype": "icon",
+                      "side": "body",
+                      "rowItemCount": "col-4",
+                      "defaultVal": "position2Value",
+                      "containerStyle": {},
+                      "style": {
+                        "color": "Colors.dark",
+                        "fontSize": "FontSize[18]",
+                        "borderRadius": "6px",
+                        "iconBackgroundColor": "Colors.E9E9ED",
+                        "boxShadow": "0px 0px 20px 0px #4C577D05",
+                        "margin": "0",
+                        "padding": "0",
+                        "textAlign": "center",
+                        "display": "flex",
+                        "alignItems": "center",
+                        "justifyContent": "right"
+                      },
+                      "chartoption": {}
+                    }
+                  ]
+                },{
+                  "meta": {
+                    "metadataid": "1679971477585122",
+                    "metadatacode": "HP_MAIN_MENU",
+                    "metatypeid": "200101010000016"
+                  },
+                  "type": "row_column",
+                  "itemCount": 4,
+                  "widgetCode": "column-1-2-1",
+                  "widgetName": "",
+                  "rowItemCount": "col-12",
+                  "body": {
+                    "gap": "4"
+                  },
+                  "itemStyle": {
+                    "padding" : "0",
+                    "maxHeight" : "max-content",
+                    "height" : "100%",
+                    "borderRadius": "6px",
+                    "boxShadow": "0px 0px 20px 0px #4C577D05",
+                    "margin": "0",
+                    "backgroundColors": ["#F9F9F9"]
+                  },
+                  "children": [{
+                    "type": "card",
+                    "widgetCode": "column-1-2-1",
+                    "widgetName": "",
+                    "rowItemCount": "col-3",
+                    "body": {
+                      "gap": "4"
+                    },
+                    "itemStyle": {
+                      "height": "450px",
+                      "borderRadius": "6px",
+                      "boxShadow": "0px 0px 20px 0px #4C577D05",
+                      "margin": "0",
+                      "padding": "15px"
+                    },
+                    "defaultRawData": [{
+                        "position1Value": "middleware/views/widget/render/data/page/clock.png",
+                        "position2Value": "Task",
+                        "position3Value": "Төлөвлөгөөт",
+                        "position4Value": "2023/11/24",
+                        "position5Value": "Task"
+                    }],
+                    "showFields": [
+                      {
+                        "position": "1",
+                        "rendertype": "image",
+                        "side": "body",
+                        "rowItemCount": "col-12",
+                        "defaultVal": "position1Value",
+                        "containerStyle": {},
+                        "style": {
+                          "borderRadius": "6px",
+                          "backgroundColor": "#FFF",
+                          "background": "url('middleware/views/widget/render/data/page/clock.png');",
+                          "background-size": "contain",
+                          "background-repeat": "no-repeat",
+                          "background-position": "center",
+                          "boxShadow": "0px 0px 20px 0px #4C577D05",
+                          "margin": "0",
+                          "height": "60%"
+                        },
+                        "chartoption": {}
+                      },
+                      {
+                        "position": "2",
+                        "rendertype": "text",
+                        "side": "body",
+                        "rowItemCount": "col-12",
+                        "defaultVal": "position2Value",
+                        "containerStyle": {},
+                        "style": {
+                          "fontSize": "FontSize[18]",
+                          "fontWeight": "FontWeight[700]",
+                          "color": "Colors.dark",
+                          "height": "16px",
+                          "borderRadius": "6px",
+                          "backgroundColor": "#FFF",
+                          "boxShadow": "0px 0px 20px 0px #4C577D05",
+                          "margin": "0"
+                        },
+                        "chartoption": {}
+                      },
+                      {
+                        "position": "3",
+                        "rendertype": "text",
+                        "side": "body",
+                        "rowItemCount": "col-12",
+                        "defaultVal": "position3Value",
+                        "containerStyle": {},
+                        "style": {
+                          "fontSize": "FontSize[14]",
+                          "fontWeight": "FontWeight[400]",
+                          "color": "Colors.gray",
+                          "height": "16px",
+                          "borderRadius": "6px",
+                          "backgroundColor": "#FFF",
+                          "boxShadow": "0px 0px 20px 0px #4C577D05",
+                          "margin": "0"
+                        },
+                        "chartoption": {}
+                      },
+                      {
+                        "position": "4",
+                        "rendertype": "icon",
+                        "side": "body",
+                        "rowItemCount": "col-6",
+                        "defaultVal": "position4Value",
+                        "containerStyle": {},
+                        "style": {
+                          "color": "Colors.dark",
+                          "fontSize": "FontSize[18]",
+                          "borderRadius": "6px",
+                          "backgroundColor": "#FFF",
+                          "boxShadow": "0px 0px 20px 0px #4C577D05",
+                          "margin": "0",
+                          "textAlign": "center",
+                          "height": "80px",
+                          "display": "flex",
+                          "alignItems": "end",
+                          "justifyContent": "left"
+                        },
+                        "chartoption": {}
+                      },
+                      {
+                        "position": "5",
+                        "rendertype": "button",
+                        "side": "body",
+                        "rowItemCount": "col-6",
+                        "defaultVal": "position5Value",
+                        "containerStyle": {},
+                        "style": {
+                          "color": "Colors.dark",
+                          "fontSize": "FontSize[18]",
+                          "borderRadius": "6px",
+                          "backgroundColor": "#FFF",
+                          "boxShadow": "0px 0px 20px 0px #4C577D05",
+                          "margin": "0",
+                          "textAlign": "center",
+                          "height": "80px",
+                          "display": "flex",
+                          "alignItems": "end",
+                          "justifyContent": "right"
+                        },
+                        "chartoption": {}
+                      }
+                    ]
+                  }]
+                }]
+                },
+                {
+                  "meta": {
+                    "metadataid": "1679971477585122",
+                    "metadatacode": "HP_MAIN_MENU",
+                    "metatypeid": "200101010000016"
+                  },
+                  "widgetCode": "column-1-2-2",
+                  "widgetName": "",
+                  "type": "card",
+                  "itemCount": 4,
+                  "rowItemCount": "col-2",
+                  "body": {
+                    "gap": "4"
+                  },
+                  "itemStyle": {
+                    "borderRadius": "6px",
+                    "boxShadow": "0px 0px 20px 0px #4C577D05",
+                    "maxHeight" : "max-content",
+                    "minHeight" : "100%",
+                    "height" : "450px",
+                    "margin": "0",
+                    "padding": "15px",
+                    "background": "linear-gradient(90.81deg, #37DECD 0.62%, #08A897 99.24%);"
+                  },
+                  "defaultRawData": [{
+                      "position1Value": "Create new tasks!",
+                      "position2Value": "middleware/views/widget/render/data/page/objects.png",
+                      "position3Value": "Create now",
+                      "position4Value": "2023/11/24",
+                      "position5Value": "Task"
+                  }],
+                  "showFields": [
+                    {
+                      "position": "1",
+                      "rendertype": "text",
+                      "side": "body",
+                      "rowItemCount": "col-12",
+                      "defaultVal": "position1Value",
+                      "containerStyle": {},
+                      "style": {
+                        "fontSize": "FontSize[18]",
+                        "fontWeight": "FontWeight[700]",
+                        "color": "Colors.white",
+                        "height": "20px",
+                        "borderRadius": "6px",
+                        "backgroundColor": "#FFF",
+                        "boxShadow": "0px 0px 20px 0px #4C577D05",
+                        "margin": "0"
+                      },
+                      "chartoption": {}
+                    },
+                    {
+                      "position": "2",
+                      "rendertype": "image",
+                      "side": "body",
+                      "rowItemCount": "col-12",
+                      "containerStyle": {},
+                      "defaultVal": "position2Value",
+                      "style": {
+                        "borderRadius": "6px",
+                        "backgroundColor": "#FFF",
+                        "background": "url('middleware/views/widget/render/data/page/objects.png');",
+                        "background-size": "contain",
+                        "background-repeat": "no-repeat",
+                        "background-position": "center",
+                        "boxShadow": "0px 0px 20px 0px #4C577D05",
+                        "margin": "0",
+                        "height": "70%"
+                      },
+                      "chartoption": {}
+                    },
+                    {
+                      "position": "3",
+                      "rendertype": "button",
+                      "side": "body",
+                      "rowItemCount": "col-12",
+                      "defaultVal": "position3Value",
+                      "containerStyle": {},
+                      "style": {
+                        "color": "Colors.white",
+                        "fontSize": "FontSize[18]",
+                        "borderRadius": "6px",
+                        "backgroundColor": "#FFF",
+                        "boxShadow": "0px 0px 20px 0px #4C577D05",
+                        "margin": "0",
+                        "textAlign": "center",
+                        "height": "80px",
+                        "display": "flex",
+                        "alignItems": "center",
+                        "justifyContent": "center"
+                      },
+                      "chartoption": {}
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "column",
+          "widgetCode": "column-2",
+          "rowItemCount": "col-3",
+          "itemStyle": {
+            "maxHeight" : "max-content",
+            "padding": "0"
+          },
+          "children": [
+            {
+              "type": "row_column",
+              "rowItemCount": "",
+              "widgetCode": "column-2-1",
+              "itemStyle": {
+                "padding" : "10px"
+              },
+              "children": [{
+                "type": "row_column",
+                "rowItemCount": "",
+                "widgetCode": "column-2-1a",
+                "itemStyle": {
+                  "padding" : "0",
+                  "maxHeight" : "max-content",
+                  "borderRadius": "6px",
+                  "boxShadow": "0px 0px 20px 0px #4C577D05",
+                  "margin": "0",
+                  "backgroundColor": "#FFF",
+                  "rowGap": "15px",
+                  "padding": "15px"
+                },
+                "children": [{
+                  "type": "card",
+                  "widgetCode": "column-1-1-1-1",
+                  "widgetName": "",
+                  "rowItemCount": "col-12",
+                  "body": {
+                    "gap": "4"
+                  },
+                  "itemStyle": {
+                    "height": "100%",
+                    "borderRadius": "6px",
+                    "border": "none",
+                    "boxShadow": "none",
+                    "margin": "0",
+                    "padding": "0 10px"
+                  },
+                  "defaultRawData": [{
+                      "position1Value": "<strong class=\"pull-left w-100\">Graphic designer</strong><span class=\"pull-left text-muted w-100\" style=\"font-size: 12px\">Avg. 72% completed tasks</span>",
+                      "position2Value": "fa fa-link"
+                  }],
+                  "showFields": [
+                    {
+                      "position": "1",
+                      "rendertype": "text",
+                      "side": "body",
+                      "rowItemCount": "col-8",
+                      "defaultVal": "position1Value",
+                      "containerStyle": {},
+                      "style": {
+                        "fontSize": "FontSize[18]",
+                        "fontWeight": "FontWeight[700]",
+                        "color": "Colors.dark",
+                        "border": "none",
+                        "backgroundColor": "#FFF",
+                        "margin": "0"
+                      },
+                      "chartoption": {}
+                    },
+                    {
+                      "position": "2",
+                      "rendertype": "icon",
+                      "side": "body",
+                      "rowItemCount": "col-4",
+                      "defaultVal": "position2Value",
+                      "containerStyle": {},
+                      "style": {
+                        "color": "Colors.dark",
+                        "fontSize": "FontSize[18]",
+                        "borderRadius": "6px",
+                        "iconBackgroundColor": "Colors.E9E9ED",
+                        "boxShadow": "0px 0px 20px 0px #4C577D05",
+                        "margin": "0",
+                        "textAlign": "center",
+                        "display": "flex",
+                        "alignItems": "center",
+                        "justifyContent": "right"
+                      },
+                      "chartoption": {}
+                    }
+                  ]
+                },
+                {
+                    "meta": {
+                      "metadataid": "1679971477585122",
+                      "metadatacode": "HP_MAIN_MENU",
+                      "metatypeid": "200101010000016"
+                    },
+                    "type": "row_column",
+                    "itemCount": 10,
+                    "widgetCode": "column-2-1-1",
+                    "widgetName": "",
+                    "rowItemCount": "col-12",
+                    "body": {
+                      "gap": "4"
+                    },
+                    "itemStyle": {
+                      "padding" : "0",
+                      "maxHeight" : "max-content",
+                      "borderRadius": "6px",
+                      "boxShadow": "0px 0px 20px 0px #4C577D05",
+                      "margin": "0",
+                      "backgroundColors": ["#FFF"],
+                      "rowGap": "15px"
+                    },
+                    "children": [{
+                      "type": "card",
+                      "widgetCode": "column-2-1-1",
+                      "widgetName": "",
+                      "rowItemCount": "col-12",
+                      "body": {
+                        "gap": "4"
+                      },
+                      "itemStyle": {
+                        "padding": "10px",
+                        "border": "none",
+                        "boxShadow": "none",
+                        "borderRadius": "none",
+                        "borderBottom": "1px dashed #E1E3EA"
+                      },
+                      "defaultRawData": [{
+                          "position1Value": "<strong>Graphic designer</strong><br><span class=\"text-muted\">3 Hours</span>",
+                          "position2Value": "<div class=\"progress\" style=\"border-radius: 6px; height: 6px; width: 100%;\"><div class=\"progress-bar\" style=\"width: 50%; border-radius: 6px;\"><span class=\"sr-only\">50% Complete</span></div></div>"
+                      }],
+                      "showFields": [
+                        {
+                          "position": "1",
+                          "rendertype": "text",
+                          "rowItemCount": "col-6",
+                          "defaultVal": "position1Value",
+                          "containerStyle": {},
+                          "style": {
+                            "color": "Colors.TEXT_COLOR",
+                            "fontSize": "FontSize[12]",
+                            "fontFamily": "Fonts.nunitoMedium"
+                          }
+                        },
+                        {
+                          "position": "2",
+                          "rendertype": "text",
+                          "side": "body",
+                          "rowItemCount": "col-6",
+                          "defaultVal": "position2Value",
+                          "containerStyle": {},
+                          "style": {
+                            "color": "Colors.TEXT_COLOR",
+                            "fontSize": "FontSize[12]",
+                            "textAlign": "right",
+                            "fontFamily": "Fonts.nunitoMedium",
+                            "display": "flex",
+                            "alignItems": "center",
+                            "justifyContent": "center"
+                          }
+                        }
+                      ]
+                    }]
+                  }
+                ]
+              }]
+            }
+          ]
+        },
+        {
+          "type": "column",
+          "widgetCode": "column-3",
+          "rowItemCount": "col-12",
+          "itemStyle": {
+            "padding": "20px"
+          },
+          "children": [{
+          "type": "row_column",
+          "widgetCode": "column-3-1",
+          "rowItemCount": "col-12",
+          "itemStyle": {
+            "borderRadius": "6px",
+            "backgroundColor": "#FFF",
+            "padding": "15px"
+          },
+          "children": [{
+            "meta": {
+              "metadataid": "1679971477585122",
+              "metadatacode": "HP_MAIN_MENU",
+              "metatypeid": "200101010000016"
+            },
+            "widgetCode": "column-3-1-1",
+            "widgetName": "",
+            "type": "card",
+            "rowItemCount": "col-6",
+            "body": {
+              "gap": "4"
+            },
+            "itemStyle": {
+              "borderRadius": "6px",
+              "backgroundColor": "#FFF",
+              "padding": "15px",
+              "boxShadow": "0px 0px 20px 0px #4C577D05",
+              "height": "100%"
+            },
+            "defaultRawData": [{
+                "position1Value": "Ажлын төрлөөр",
+                "position2Value": "fa fa-link"
+            }],
+            "showFields": [
+              {
+                "position": "1",
+                "rendertype": "text",
+                "rowItemCount": "col-10",
+                "containerStyle": {},
+                "defaultVal": "position1Value",
+                "style": {
+                  "color": "Colors.dark",
+                  "fontSize": "FontSize[18]",
+                  "fontFamily": "Fonts.nunitoMedium",
+                  "fontWeight": "FontWeight[700]",
+                  "maxHeight": "20px",
+                  "height": "20px"
+                }
+              },
+              {
+                "position": "2",
+                "rendertype": "icon",
+                "rowItemCount": "col-2",
+                "defaultVal": "position2Value",
+                "containerStyle": {},
+                "style": {
+                  "color": "Colors.gray",
+                  "fontSize": "FontSize[12]",
+                  "textAlign": "right",
+                  "iconBackgroundColor": "Colors.E9E9ED",
+                  "fontFamily": "Fonts.nunitoMedium",
+                  "maxHeight": "20px",
+                  "height": "20px"
+                }
+              },
+              {
+                "position": "3",
+                "rendertype": "chart",
+                "side": "body",
+                "rowItemCount": "col-12",
+                "containerStyle": {},
+                "style": {
+                  "maxHeight" : "450px",
+                  "height" : "450px"
+                },
+                "chartoption": {"tooltip":{"trigger":"item"},"series":[{"name":"Access From","type":"pie","radius":["40%","70%"],"label":{"position":"outside","formatter":"{b}:  {d}%"},"itemStyle":{"borderRadius":[-1,10,-1,10],"borderColor":"#fff","borderWidth":0},"labelLine":{"show":true},"data":[{"value":1048,"name":"CRM Team Performance:"},{"value":735,"name":"Recurring Calls"},{"value":580,"name":"Tickets Raised"},{"value":484,"name":"Tickets Raised 1"},{"value":300,"name":"Tickets Raised 2"}]}]}
+              }
+            ]
+          },
+          {
+            "meta": {
+              "metadataid": "1679971477585122",
+              "metadatacode": "HP_MAIN_MENU",
+              "metatypeid": "200101010000016"
+            },
+            "widgetCode": "column-3-1-2",
+            "widgetName": "",
+            "type": "card",
+            "rowItemCount": "col-6",
+            "body": {
+              "gap": "4"
+            },
+            "itemStyle": {
+              "borderRadius": "6px",
+              "padding": "15px",
+              "backgroundColor": "#FFF",
+              "boxShadow": "0px 0px 20px 0px #4C577D05",
+              "height": "100%"
+            },
+            "defaultRawData": [{
+                "position1Value": "Ажлын төрлөөр",
+                "position2Value": "fa fa-link"
+            }],
+            "showFields": [
+              {
+                "position": "1",
+                "rendertype": "text",
+                "rowItemCount": "col-10",
+                "containerStyle": {},
+                "defaultVal": "position1Value",
+                "style": {
+                  "color": "Colors.dark",
+                  "fontSize": "FontSize[18]",
+                  "fontWeight": "FontWeight[700]",
+                  "maxHeight": "20px",
+                  "height": "20px"
+                }
+              },
+              {
+                "position": "2",
+                "rendertype": "icon",
+                "rowItemCount": "col-2",
+                "containerStyle": {},
+                "defaultVal": "position2Value",
+                "style": {
+                  "color": "Colors.gray",
+                  "fontSize": "FontSize[12]",
+                  "textAlign": "right",
+                  "iconBackgroundColor": "Colors.E9E9ED",
+                  "fontFamily": "Fonts.nunitoMedium",
+                  "maxHeight": "20px",
+                  "height": "20px"
+                }
+              },
+              {
+                "position": "3",
+                "rendertype": "chart",
+                "side": "body",
+                "rowItemCount": "col-12",
+                "containerStyle": {},
+                "style": {
+                  "maxHeight" : "450px",
+                  "height" : "450px"
+                },
+                "chartoption": {"tooltip":{"trigger":"item"},"legend":{"type":"scroll","orient":"vertical","left":"left","top":"middle","textStyle":{"fontWeight":"bold"},"formatter":"{name}"},"color":["#9b8bba","#e098c7","#8fd3e8","#71669e","#cc70af","#7cb4cc"],"series":[{"left":"40%","name":"Access From","type":"pie","radius":["40%","70%"],"label":{"position":"outside","formatter":"{b}: {d}"},"itemStyle":{"borderRadius":10,"borderColor":"#fff","borderWidth":0},"labelLine":{"show":false},"data":[{"value":1048,"name":"CRM Team Performance:"},{"value":735,"name":"Recurring Calls"},{"value":580,"name":"Tickets Raised"},{"value":484,"name":"Tickets Raised 1"},{"value":300,"name":"Tickets Raised 2"}]}]}
+              }
+            ]
+          }]
+        }]
+        },
+        {
+          "type": "column",
+          "widgetCode": "column-4",
+          "rowItemCount": "col-12",
+          "itemStyle": {
+            "padding": "20px"
+          },
+          "children": [{
+          "type": "row_column",
+          "widgetCode": "column-4-1",
+          "rowItemCount": "col-12",
+          "itemStyle": {
+            "borderRadius": "6px",
+            "backgroundColor": "#FFF",
+            "padding": "15px"
+          },
+          "children": [{
+            "meta": {
+              "metadataid": "1679971477585122",
+              "metadatacode": "HP_MAIN_MENU",
+              "metatypeid": "200101010000016"
+            },
+            "widgetCode": "column-4-1-1",
+            "widgetName": "",
+            "type": "card",
+            "rowItemCount": "col-6",
+            "body": {
+              "gap": "4"
+            },
+            "itemStyle": {
+              "borderRadius": "6px",
+              "backgroundColor": "#FFF",
+              "padding": "15px",
+              "boxShadow": "0px 0px 20px 0px #4C577D05",
+              "height": "100%"
+            },
+            "defaultRawData": [{
+                "position1Value": "Төлөвлөсөн vs Гүйцэтгэсэн",
+                "position2Value": "fa fa-link"
+            }],
+            "showFields": [
+              {
+                "position": "1",
+                "rendertype": "text",
+                "rowItemCount": "col-10",
+                "containerStyle": {},
+                "defaultVal": "position1Value",
+                "style": {
+                  "color": "Colors.dark",
+                  "fontSize": "FontSize[18]",
+                  "fontFamily": "Fonts.nunitoMedium",
+                  "fontWeight": "FontWeight[700]",
+                  "maxHeight": "20px",
+                  "height": "20px"
+                }
+              },
+              {
+                "position": "2",
+                "rendertype": "icon",
+                "rowItemCount": "col-2",
+                "defaultVal": "position2Value",
+                "containerStyle": {},
+                "style": {
+                  "color": "Colors.gray",
+                  "fontSize": "FontSize[12]",
+                  "textAlign": "right",
+                  "iconBackgroundColor": "Colors.E9E9ED",
+                  "fontFamily": "Fonts.nunitoMedium",
+                  "maxHeight": "20px",
+                  "height": "20px"
+                }
+              },
+              {
+                "position": "3",
+                "rendertype": "chart",
+                "side": "body",
+                "rowItemCount": "col-12",
+                "containerStyle": {},
+                "style": {
+                  "maxHeight" : "450px",
+                  "height" : "450px"
+                },
+                "chartoption": {"tooltip":{"trigger":"axis","axisPointer":{"type":"cross","label":{"backgroundColor":"#6a7985"}}},"color":["#516b91","#39E0CF"],"grid":{"left":"3%","right":"4%","bottom":"3%","containLabel":true},"xAxis":[{"type":"category","boundaryGap":false,"data":["Mon","Tue","Wed","Thu","Fri","Sat","Sun"]}],"yAxis":[{"type":"value"}],"series":[{"name":"Email","type":"line","stack":"Total","areaStyle":{"color":{"colorStops":[{"offset":0,"color":"rgba(58,77,233,0.8)"},{"offset":1,"color":"rgba(58,77,233,0.3)"}],"x":0,"y":0,"x2":0,"y2":1,"type":"linear","global":false}},"emphasis":{"focus":"series"},"data":[120,132,101,101,90,150,210]},{"name":"Union Ads","type":"line","stack":"Total","areaStyle":{"color":{"colorStops":[{"offset":0,"color":"rgba(57, 224, 207,0.8)"},{"offset":1,"color":"rgba(57, 224, 207,0.3)"}],"x":0,"y":0,"x2":0,"y2":1,"type":"linear","global":false}},"emphasis":{"focus":"series"},"data":[220,182,191,191,90,150,310]}]}
+              }
+            ]
+          },
+          {
+            "meta": {
+              "metadataid": "1679971477585122",
+              "metadatacode": "HP_MAIN_MENU",
+              "metatypeid": "200101010000016"
+            },
+            "widgetCode": "column-4-1-2",
+            "widgetName": "",
+            "type": "card",
+            "rowItemCount": "col-6",
+            "body": {
+              "gap": "4"
+            },
+            "itemStyle": {
+              "borderRadius": "6px",
+              "padding": "15px",
+              "backgroundColor": "#FFF",
+              "boxShadow": "0px 0px 20px 0px #4C577D05",
+              "height": "100%"
+            },
+            "defaultRawData": [{
+                "position1Value": "Төлөвлөсөн цаг vs Гүйцэтгэсэн цаг",
+                "position2Value": "fa fa-link"
+            }],
+            "showFields": [
+              {
+                "position": "1",
+                "rendertype": "text",
+                "rowItemCount": "col-10",
+                "containerStyle": {},
+                "defaultVal": "position1Value",
+                "style": {
+                  "color": "Colors.dark",
+                  "fontSize": "FontSize[18]",
+                  "fontWeight": "FontWeight[700]",
+                  "maxHeight": "20px",
+                  "height": "20px"
+                }
+              },
+              {
+                "position": "2",
+                "rendertype": "icon",
+                "rowItemCount": "col-2",
+                "containerStyle": {},
+                "defaultVal": "position2Value",
+                "style": {
+                  "color": "Colors.gray",
+                  "fontSize": "FontSize[12]",
+                  "textAlign": "right",
+                  "iconBackgroundColor": "Colors.E9E9ED",
+                  "fontFamily": "Fonts.nunitoMedium",
+                  "maxHeight": "20px",
+                  "height": "20px"
+                }
+              },
+              {
+                "position": "3",
+                "rendertype": "chart",
+                "side": "body",
+                "rowItemCount": "col-12",
+                "containerStyle": {},
+                "style": {
+                  "maxHeight" : "450px",
+                  "height" : "450px"
+                },
+                "chartoption": {"tooltip":{"trigger":"axis","axisPointer":{"type":"cross","crossStyle":{"color":"#999"}}},"color":["#516b91","#39E0CF"],"toolbox":{"feature":{"dataView":{"show":true,"readOnly":false},"magicType":{"show":true,"type":["line","bar"]},"restore":{"show":true},"saveAsImage":{"show":true}}},"xAxis":[{"type":"category","data":["Mon","Tue","Wed","Thu","Fri","Sat","Sun"],"axisPointer":{"type":"shadow"}}],"yAxis":[{"type":"value","name":"Precipitation","min":0,"max":250,"interval":50,"axisLabel":{"formatter":"{value} ml"}},{"type":"value","name":"Temperature","min":0,"max":25,"interval":5,"axisLabel":{"formatter":"{value} °C"}}],"series":[{"name":"Evaporation","type":"bar","tooltip":{},"data":[2,4.9,7,23.2,25.6,76.7,135.6,162.2,32.6,20,6.4,3.3]},{"name":"Temperature","type":"line","yAxisIndex":1,"tooltip":{},"data":[2,2.2,3.3,4.5,6.3,10.2,20.3,23.4,23,16.5,12,6.2]}]}
+              }
+            ]
+          }]
+        }]
+        }
+      ]
+    },
+    "footer": {
+      "children": []
+    }
+  }
+}

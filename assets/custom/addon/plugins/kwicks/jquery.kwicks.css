@@ -1,0 +1,281 @@
+/*!
+ *  Kwicks: Sexy Sliding Panels for jQuery - v2.2.1
+ *  http://devsmash.com/projects/kwicks
+ *
+ *  Copyright 2013 Jeremy Martin (jmar777)
+ *  Contributors: Duke Speer (Duke3D), Guillermo Guerrero (gguerrero)
+ *  Released under the MIT license
+ *  http://www.opensource.org/licenses/mit-license.php
+ */
+/*
+ *  This file contains styles that are common to all kwicks instances.  Note that each kwicks instance requires
+ *  additional styling - please see the examples for more info.
+ */
+.kwicks {
+    display: block;
+    list-style-type: none;
+    list-style: none;
+    position: relative;
+    margin: 0;
+    padding: 0;
+    width: 95%;
+    min-height: 50px;
+    margin-left: 25px;
+    max-width: 600px;
+}
+.kwicks > li {
+    height: auto;
+    /* overridden by kwicks but good for when JavaScript is disabled */
+    width: auto;
+    margin: 0px;
+    padding: 0px;
+    height: 50px;
+    line-height: 50px;
+    float: left;
+    background: #F0EEE3;
+    white-space: nowrap;
+    cursor: pointer;
+    color:#666;
+	-webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -o-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+.kwicks > li:before {
+    width:0px;
+    height:0px;
+    border-top: 25px solid #F0EEE3;
+    border-bottom: 25px solid #F0EEE3;
+    border-left:25px solid transparent;
+    position: absolute;
+    content: "";
+    top: 0px;
+    left: -25px;
+}
+.kwicks > li:after {
+    width: 0;
+    height: 0;
+    border-top: 25px solid transparent;
+    border-bottom: 25px solid transparent;
+    border-left:25px solid #F0EEE3;
+    position: absolute;
+    content: "";
+    top: 0px;
+    right: -25px;
+}
+.kwicks > li .steps-container {
+    overflow: hidden;
+    margin-left: -10px;
+    padding: 0;
+    white-space: nowrap;
+    height: 50px;
+}
+.kwicks > li .steps-container .step{
+    float: left;
+    position: relative;
+    padding-left: 25px;
+}
+.kwicks > li .steps-container .step .chevron {
+    border: 24px solid transparent;
+    border-left: 24px solid #d4d4d4;
+    border-right: 0;
+    display: block;
+    position: absolute;
+    right: -14px;
+    top: 0;
+    z-index: 1;
+}
+.kwicks > li .steps-container .step .chevron:before {
+    border: 24px solid transparent;
+    border-left: 24px solid #F0EEE3;
+    border-right: 0;
+    content: "";
+    display: block;
+    position: absolute;
+    right: 1px;
+    top: -24px;
+}
+.kwicks.kwicks-processed > * {
+    margin: 0;
+    position: absolute;
+}
+.kwicks-horizontal > * {
+    float: left;
+}
+.kwicks-horizontal > :first-child {
+    margin-left: 0;
+}
+.kwicks-vertical > :first-child {
+    margin-top: 0;
+}
+/*
+.kwicks > li.kwicks-collapsed { 
+    color: #319155; 
+}
+.kwicks > li.kwicks-collapsed .badge {
+    background-color: #319155;
+    font-weight: bold
+}
+*/
+.kwicks > li.kwicks-expanded .main {
+    font-weight: bold;
+    color: #000; 
+}
+.kwicks > li.kwicks-expanded .main .badge {
+    background-color: #000;
+    font-weight: bold;
+}
+.kwicks > li.kwicks-selected .main { 
+    font-weight: bold;
+    color: #3399ff; 
+}
+.kwicks > li.kwicks-selected .main .badge {
+    background-color: #3399ff;
+    font-weight: bold;
+}
+.kwicks > li.kwicks-completed .main { 
+    font-weight: bold;
+    color: #53b388; 
+}
+.kwicks > li.kwicks-completed .main .badge {
+    background-color: #53b388;
+    font-weight: bold;
+}
+.kwicks > li .steps-container .sub {
+    font-size: 11px;
+    z-index: 10;
+}
+.kwicks > li .steps-container .sub:hover{
+    font-weight: bold;
+    color: #000;
+}
+.kwicks > li .steps-container .sub:hover .badge{
+    font-weight: bold;
+    background: #000;
+}
+.kwicks > li .steps-container .complete-step {
+    font-weight: bold;
+    color: #53b388;
+}
+.kwicks > li .steps-container .complete-step .badge {
+    background-color: #53b388;
+    font-weight: bold;
+}
+.kwicks > li .steps-container .active-step {
+    font-weight: bold;
+    color: #3399ff;
+}
+.kwicks > li .steps-container .active-step .badge {
+    background-color: #3399ff;
+    font-weight: bold;
+}
+/*
+.kwicks > li.kwicks-collapsed { background-color: #319155; }
+.kwicks > li.kwicks-expanded { background-color: #86e6bb; }
+.kwicks > li.kwicks-selected { background-color: #ff7744; }
+*/
+/* = STEPS CONTAINER
+----------------------------*/
+.wizard-steps {
+    margin:5px 10px 0px 20px;
+    padding:0px;
+    position: relative;
+    font-weight: bold;
+}
+.wizard-steps div {
+    position:relative;
+}
+/* = STEP NUMBERS
+----------------------------*/
+/* = DEFAULT STEPS
+----------------------------*/
+.wizard-steps a {
+    position:relative;
+    display:block;
+    width:auto;
+    height:44px;
+    margin-right: 28px;
+    padding:0px 10px 0px 6px;
+    float: left;
+    font-size:12px;
+    line-height:44px;
+    color:#666;
+    background: #F0EEE3;
+    text-decoration:none;
+}
+.wizard-steps a:before {
+    width:0px;
+    height:0px;
+    border-top: 22px solid #F0EEE3;
+    border-bottom: 22px solid #F0EEE3;
+    border-left:22px solid transparent;
+    position: absolute;
+    content: "";
+    top: 0px;
+    left: -22px;
+}
+.wizard-steps a:after {
+    width: 0;
+    height: 0;
+    border-top: 22px solid transparent;
+    border-bottom: 22px solid transparent;
+    border-left:22px solid #F0EEE3;
+    position: absolute;
+    content: "";
+    top: 0px;
+    right: -22px;
+}
+
+/* = COMPLETED STEPS
+----------------------------*/
+
+.wizard-steps .completed-step a {
+    color:#53b388;
+}
+.wizard-steps .completed-step .badge {
+    background: #53b388;
+    font-weight: bold
+}
+/* = ACTIVE STEPS
+----------------------------*/
+.wizard-steps .active-step a {
+    color:#3399ff;
+}
+.wizard-steps .active-step .badge {
+    background: #3399ff;
+    font-weight: bold
+}
+/* = HOVER STATES
+----------------------------*/
+
+.wizard-steps a:hover, .wizard-steps a:visited {
+    background:#dedeca;
+}
+.wizard-steps a:hover:before, .wizard-steps a:visited:before {
+    width:0px;
+    height:0px;
+    border-top: 22px solid #dedeca;
+    border-bottom: 22px solid #dedeca;
+    border-left:22px solid transparent;
+    position: absolute;
+    content: "";
+    top: 0px;
+    left: -22px;
+}
+.wizard-steps a:hover:after, .wizard-steps a:hover:visited {
+    width: 0;
+    height: 0;
+    border-top: 22px solid transparent;
+    border-bottom: 22px solid transparent;
+    border-left:22px solid #dedeca;
+    position: absolute;
+    content: "";
+    top: 0px;
+    right: -22px;
+}
+.wizard-steps a badge:hover {
+    color:#000;
+    font-weight: bold
+}

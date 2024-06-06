@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="middleware/assets/css/layout-theme/gallery/style.css" />
+
+<div class="show-type-slider" id="galleryId">
+  <div class="show-type-gallery show-type-slider-inner">
+    <div class="gallery-child show-type-data-section-item" data-section="1">
+      <div class="photo">
+        <img src="{data-parameter-1}" data-parameter="1" alt="" />
+      </div>
+      <div class="body-text">
+        <h4 class="title" data-parameter="2">
+          {data-parameter-2}
+        </h4>
+        <span class="description" data-parameter="3">
+          {data-parameter-3}
+        </span>
+      </div>
+    </div>  
+  </div>
+</div>
+
+<script type="text/javascript" src="middleware/assets/js/layout-theme/gallery/main.js"></script>
+<script type="text/javascript">
+  $(document).ready(function(){
+    gallery.init();
+  });
+</script>

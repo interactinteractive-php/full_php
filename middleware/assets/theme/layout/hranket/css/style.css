@@ -1,0 +1,214 @@
+.hranket-bp .card>.card-title {
+    border-bottom: 0;
+    margin-bottom: 0;
+    min-height: 20px;
+}
+.hranket-bp .card.light .card-title {
+    color: #000 !important;
+}
+.hranket-bp .card.light .card-title .caption {
+    color: #0074af;
+    font-size: 20px;
+}
+.hranket-general-value {
+    display: block;
+    font-weight: 700;
+    color: #000;
+}
+.hranket-table {
+    width: 100%;
+}
+.hranket-table td {
+    vertical-align: top;
+    padding-top: 15px;
+    border-bottom: 1px #ccc solid;
+}
+.hranket-table > tbody > tr:last-child > td {
+    border-bottom: 0;
+}
+.hranket-address {
+    float: left;
+    width: 380px;
+    margin-top: 10px;
+    margin-bottom: 5px;
+}
+.hranket-address-icon {
+    float: left;
+    width: 80px;
+}
+.hranket-address-info {
+    float: left;
+    padding-left: 5px;
+    width: 295px;
+    line-height: 15px;
+}
+
+.hranket-education-table thead > tr > th {
+    font-weight: normal;
+    padding: 5px;
+    color: #287fb5;
+}
+.hranket-education-table > tbody {
+    background-image: url('../img/cell-bg-line-green.png');
+    background-repeat: no-repeat;
+    background-position: 16px top;
+}
+.hranket-education-table > tbody > tr > td {
+    padding: 10px 5px;
+}
+.hranket-education-table > tbody > tr > td:first-child {
+    vertical-align: middle;
+    padding-left: 12px;
+}
+.hranket-education-table > tbody > tr:hover > td {
+    background-color: #f8f8f8;
+}
+
+.hranket-punishment-table thead > tr > th {
+    font-weight: normal;
+    padding: 5px;
+    color: #287fb5;
+}
+.hranket-punishment-table > tbody {
+    background-image: url('../img/cell-bg-line-red.png');
+    background-repeat: no-repeat;
+    background-position: 16px top;
+}
+.hranket-punishment-table > tbody > tr > td {
+    padding: 10px 5px;
+}
+.hranket-punishment-table > tbody > tr > td:first-child {
+    vertical-align: middle;
+    padding-left: 12px;
+}
+.hranket-skill-progress {
+    float: left;
+    width: 400px;
+    margin-top: 10px;
+    margin-right: 60px;
+    margin-bottom: 10px;
+}
+.hranket-skill-progress .progress {
+    background-color: #d9d9d9;
+    height: 3px;
+    margin: 5px 0 5px 0;
+}
+.hranket-skill-progress .progress > .progress-bar-success {
+    background-color: #0173b1;
+}
+.hranket-skill-progress-bar {
+    float: left;
+    width: 340px;
+}
+.hranket-skill-amount {
+    float: right;
+    width: 50px;
+    font-weight: bold;
+    padding-top: 15px;
+    font-size: 14px;
+}
+.hranket-progress-parent {
+    float: left;
+    margin: 10px 30px 10px 0;
+}
+.hranket-progress-name {
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+.hranket-progress-circle {
+    float: left;
+    font-size: 14px;
+    margin-right: 20px;
+    position: relative;
+    padding: 0;
+    width: 120px;
+    height: 120px;
+    background-color: #dcdcdc;
+    border-radius: 50%;
+    line-height: 120px;
+}
+.hranket-progress-circle:after {
+    border: none;
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    text-align: center;
+    display: block;
+    border-radius: 50%;
+    width: 110px;
+    height: 110px;
+    background-color: white;
+    content: " ";
+}
+.hranket-progress-circle span {
+    position: absolute;
+    line-height: 140px;
+    width: 120px;
+    text-align: center;
+    display: block;
+    color: #000;
+    z-index: 2;
+}
+.hranket-progress-circle span.span2 {
+    line-height: 92px;
+    font-weight: 600;    
+}
+.hranket-progress-circle .left-half-clipper {
+    border-radius: 50%;
+    width: 120px;
+    height: 120px;
+    position: absolute;
+    clip: rect(0, 120px, 120px, 60px);
+}
+.hranket-progress-circle.p1 .first50-bar, 
+.hranket-progress-circle.p2 .first50-bar {
+    display: none;
+}
+.hranket-progress-circle.p3 .left-half-clipper, 
+.hranket-progress-circle.p4 .left-half-clipper, 
+.hranket-progress-circle.p5 .left-half-clipper {
+    clip: rect(auto,auto,auto,auto);
+}
+.hranket-progress-circle .value-bar {
+    position: absolute;
+    clip: rect(0, 60px, 120px, 0);
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    border: 7px solid #ffaf46;
+    box-sizing: border-box;
+}
+.hranket-progress-circle.p1 .value-bar {
+    transform: rotate(72deg);
+}
+.hranket-progress-circle.p2 .value-bar {
+    transform: rotate(144deg);
+}
+.hranket-progress-circle.p3 .value-bar {
+    transform: rotate(216deg);
+}
+.hranket-progress-circle.p4 .value-bar {
+    transform: rotate(288deg);
+}
+.hranket-progress-circle.p5 .value-bar {
+    transform: rotate(360deg);
+}
+.hranket-progress-circle.p3 .first50-bar, 
+.hranket-progress-circle.p4 .first50-bar, 
+.hranket-progress-circle.p5 .first50-bar {
+    position: absolute;
+    clip: rect(0, 120px, 120px, 60px);
+    background-color: #ffaf46;
+    border-radius: 50%;
+    width: 120px;
+    height: 120px;
+}
+.hranket-hobby {
+    float: left;
+    width: 100px;
+    text-align: center;
+    margin: 10px 25px 10px 0;
+}
+.hranket-hobby-name {
+    padding-top: 10px;
+}

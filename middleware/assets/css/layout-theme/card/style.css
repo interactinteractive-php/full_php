@@ -1,0 +1,29 @@
+.layout-card-child {
+    
+    background: #a1e2ab;
+    height: 100%;
+    width: 100%;
+    padding: 10px;
+    display: table;    
+    opacity: 0.8;
+    cursor: pointer;
+}
+.layout-card-child:hover {
+    opacity: 1;    
+}
+.layout-card-child a.cell {
+    display: table-cell;    
+    vertical-align: middle;
+    color: #fff;
+}
+.layout-card-child a.cell:hover {
+    text-decoration: none;
+}
+.layout-card-child .text {
+    font-size: 18px;
+    color: #fff;
+    margin: 0px;
+    font-weight: 600;
+    display: table-cell;    
+    vertical-align: middle;
+}

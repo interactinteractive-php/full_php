@@ -1,0 +1,74 @@
+<style type="text/css">
+  .ad-type {
+      padding: 10px;
+      position: relative;
+      height: 256px;
+  }
+  .ad-blue {
+      background-color: #0090D9;
+  }
+  .ad-green {
+      background-color: #5CA59E;
+  }
+  .ad-red {
+      background-color: #DB8ED2;
+  }
+  .ad-gray {
+      background-color: #737F72;
+  }
+  h4.title {
+      color: #fff;
+      line-height: 18px;
+      margin: 5px;
+      font-weight: 600;
+  }
+  .overlayer {
+      bottom: 0;
+      left: 0;
+      position: absolute;
+      width: 100%;
+      padding: 10px;
+  }
+  .profile-wrapper {
+      position: relative;
+      overflow: hidden;
+      max-height: 40px;
+      background-color: #fff;
+  }
+
+  .profile-wrapper {
+      border-radius: 100px;
+      display: inline-block;
+      float: left;
+      overflow: hidden;
+      margin: 6px 8px 0 0;
+  }
+  .comment {
+      display: inline-block;
+      float: left;
+      color: #fff;
+  }
+  .comment .body {
+      font-size: 14px;
+  }
+  .comment .text {
+      font-size: 12px;
+      opacity: 0.8;
+  }
+</style>
+
+<div class="ad-type ad-blue">
+  <h4 class="title" data-position="1">{data-position-1}</h4>
+  <div class="overlayer">
+    <div class="user-comment-wrapper">
+      <div class="profile-wrapper">
+        <!--<img width="35" height="35" alt="" src="{data-position-3}"  data-position="3">--> 
+        <img width="40" height="40" alt="" src="assets/core/global/img/user.png"  data-position="3" class="img-fluid avatar"> 
+      </div>
+      <div class="comment">
+        <div class="body"><span data-position="3">{data-position-3}</span></div>
+        <p class="text" data-position="4">{data-position-4}</p>
+      </div>
+    </div>
+  </div>
+</div>

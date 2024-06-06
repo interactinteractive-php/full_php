@@ -1,0 +1,12 @@
+<% var className = (me) ? 'own d-flex justify-content-end' : 'notown d-flex justify-content-start'; %>
+<div class="chat-user-message <%=className%>" data-mid="<%=mid%>" data-in="<%=isRead%>">
+    <%=memberPicture%>
+    <div class="d-flex flex-column">
+        <div class="msg_container">
+            <%=memberName%>
+            <span class="chat-msg"><%=message%></span>
+        </div>
+        <span class="msg_time"><%=dateTime%></span>
+    </div>
+    <div class="clearfix"></div>
+</div>
