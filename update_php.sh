@@ -1,12 +1,16 @@
 #!/bin/bash
 
 REPO_URL="https://github.com/interactinteractive-php/full-php.git"
-TARGET_DIR="HOME_DIR_LOCATION"
+TARGET_DIR="/home/frontend/full_php"
 
 check_git_installed() {
     if ! command -v git &> /dev/null; then
-        echo "Git is not installed. Please install Git and try again."
-        exit 1
+        echo "Git is not installed. Installing Git..."
+        sudo yum install -y git
+        if [ $? -ne 0 ]; then
+            echo "Failed to install Git. Please install Git manually and try again."
+            exit 1
+        fi
     fi
 }
 
