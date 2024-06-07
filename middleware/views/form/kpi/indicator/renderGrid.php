@@ -116,7 +116,13 @@
                                             'onclick' => 'dataListUseBasketView_' . $this->indicatorId . '(this);',
                                             'title' => $this->lang->line('META_00113'),
                                         ), true
-                                    );                                    
+                                    ); 
+                                    
+                                    echo Mdcommon::listHelpContentButton([
+                                        'contentId' => $this->helpContentId, 
+                                        'sourceId' => $this->indicatorId, 
+                                        'fromType' => 'mv_list'
+                                    ]);
                                     ?>
                                 </div>
                             </div>

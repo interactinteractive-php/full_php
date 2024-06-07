@@ -211,13 +211,6 @@
                                         ), true
                                 );
                                 echo Html::anchor(
-                                        'javascript:;', '<i class="fa fa-question-circle"></i> Тусламж', array(
-                                        'onclick' => 'pfHelpDataView(\''. $this->metaDataId .'\');',
-                                        'title' => 'Тусламж',
-                                        'class' => 'dropdown-item'
-                                    ), (issetParam($this->row['IS_KNOWLEDGE']) == '1')
-                                );
-                                echo Html::anchor(
                                     'javascript:;', (new Mduser())->iconQuickMenu($this->metaDataId) . ' QuickMenu', array(
                                     'onclick' => 'toQuickMenu(\'' . $this->metaDataId . '\', \'dataview\', this);',
                                     'class' => 'dropdown-item',
@@ -231,6 +224,12 @@
                                     'title' => '',
                                         ), $this->isReportTemplate
                                 );
+                                echo Mdcommon::listHelpContentButton([
+                                    'contentId' => issetParam($this->row['HELP_CONTENT_ID']), 
+                                    'sourceId' => $this->metaDataId, 
+                                    'fromType' => 'meta_dv', 
+                                    'parentControl' => 'dropdown'
+                                ]);
                                 ?>
                             </div>
                         </li>

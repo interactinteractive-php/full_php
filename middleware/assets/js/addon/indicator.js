@@ -404,6 +404,16 @@ function manageKpiIndicatorValue(elem, kpiTypeId, indicatorId, isEdit, opt, call
                         }
                     });
                 }
+                
+                if (typeof is_pfd != 'undefined' && is_pfd && (postData.param).hasOwnProperty('crudIndicatorId') && postData.param.crudIndicatorId) {
+                    buttons.splice(0, 0, {
+                        text: plang.get('set_help_content_btn'),
+                        class: 'btn btn-sm green-meadow float-left bp-btn-help',
+                        click: function(e) {
+                            setHelpContent($(e.target), data.helpContentId, postData.param.crudIndicatorId, 'mv_method');
+                        }
+                    });
+                }
     
                 $dialog.empty().append('<form method="post" enctype="multipart/form-data">' + data.html + '</form>');
                 $dialog.dialog({

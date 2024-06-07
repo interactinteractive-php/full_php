@@ -82,13 +82,11 @@ if ($this->isDialog == false) {
 
     if ($this->mainBpTab['ticket'] == '0') {
         $mainProcessBtnBar .= '<div class="ml-auto">
-                ' . Form::button(
-            array(
-                'class' => 'btn btn-info btn-circle btn-sm mr-1 bp-btn-help',
-                'value' => $this->lang->line('menu_system_guide'),
-                'onclick' => "redirectHelpContent(this, '".$this->helpContentId."', '".$this->methodId."', 'meta_process');"
-            ), ($this->helpContentId ? true : false)
-            ) . html_tag(
+                ' . Mdcommon::helpContentButton([
+                'contentId' => $this->helpContentId, 
+                'sourceId' => $this->methodId, 
+                'fromType' => 'meta_process'
+            ]) . html_tag(
             'button',
             array(
                 'type' => 'button',

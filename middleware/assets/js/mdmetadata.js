@@ -11068,9 +11068,19 @@ function runBusinessProcessWithDataView(dataGrid, mainMetaDataId, processMetaDat
                 if (data.hasOwnProperty('helpContentId') && data.helpContentId !== null && data.helpContentId !== '') {
                     buttons.splice(0, 0, {
                         text: plang.get('menu_system_guide'),
-                        class: 'btn btn-info btn-sm float-left bp-btn-help',
+                        class: 'btn green-meadow btn-sm float-left bp-btn-help',
                         click: function(e) {
                             redirectHelpContent($(e.target), data.helpContentId, data.metaDataId, 'meta_process');
+                        }
+                    });
+                }
+                
+                if (typeof is_pfd != 'undefined' && is_pfd) {
+                    buttons.splice(0, 0, {
+                        text: plang.get('set_help_content_btn'),
+                        class: 'btn green-meadow btn-sm float-left bp-btn-help',
+                        click: function(e) {
+                            setHelpContent($(e.target), data.helpContentId, data.metaDataId, 'meta_process');
                         }
                     });
                 }
@@ -12025,9 +12035,19 @@ function runBusinessProcessGetDataWithDataView(dataGrid, mainMetaDataId, process
                 if (data.hasOwnProperty('helpContentId') && data.helpContentId !== null && data.helpContentId !== '') {
                     buttons.splice(0, 0, {
                         text: plang.get('menu_system_guide'),
-                        class: 'btn btn-info btn-sm float-left bp-btn-help',
+                        class: 'btn green-meadow btn-sm float-left bp-btn-help',
                         click: function(e) {
                             redirectHelpContent($(e.target), data.helpContentId, data.metaDataId, 'meta_process');
+                        }
+                    });
+                }
+                
+                if (typeof is_pfd != 'undefined' && is_pfd) {
+                    buttons.splice(0, 0, {
+                        text: plang.get('set_help_content_btn'),
+                        class: 'btn green-meadow btn-sm float-left bp-btn-help',
+                        click: function(e) {
+                            setHelpContent($(e.target), data.helpContentId, data.metaDataId, 'meta_process');
                         }
                     });
                 }

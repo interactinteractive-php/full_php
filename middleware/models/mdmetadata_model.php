@@ -1015,7 +1015,8 @@ class Mdmetadata_Model extends Model {
             'MODIFIED_DATE' => $currentDate, 
             'IS_SYSTEM' => 1,
             'IS_ACTIVE' => 1, 
-            'META_ICON_ID' => Input::post('metaIconId'),
+            'META_ICON_ID' => Input::numeric('metaIconId'),
+            'HELP_CONTENT_ID' => Input::numeric('helpContentId'),
             'ICON_NAME' => Input::post('metaIconName'),
             'STATUS_ID' => 1 
         );
@@ -1162,7 +1163,6 @@ class Mdmetadata_Model extends Model {
                 $dataBusinessProcess['REF_META_GROUP_ID'] = Input::post('refMetaGroupId');
                 $dataBusinessProcess['SKIN'] = Input::post('skin');
                 $dataBusinessProcess['RUN_MODE'] = Input::post('runMode');
-                $dataBusinessProcess['HELP_CONTENT_ID'] = Input::post('helpContentId');
                 $dataBusinessProcess['IS_SHOW_PREVNEXT'] = Input::postCheck('isShowPrevNext') ? 1 : null;
                 $dataBusinessProcess['IS_WIDGET'] = Input::postCheck('isWidget') ? 1 : null;
                 $dataBusinessProcess['IS_TOOLS_BTN'] = Input::postCheck('isToolsBtn') ? 1 : null;
@@ -1804,7 +1804,8 @@ class Mdmetadata_Model extends Model {
                 'META_DATA_NAME' => Input::post('META_DATA_NAME'),
                 'DESCRIPTION' => Input::post('DESCRIPTION'),
                 'META_TYPE_ID' => $metaTypeId,
-                'META_ICON_ID' => Input::post('metaIconId'),
+                'META_ICON_ID' => Input::numeric('metaIconId'),
+                'HELP_CONTENT_ID' => Input::numeric('helpContentId'),
                 'ICON_NAME' => Input::post('metaIconName'),
                 'MODIFIED_USER_ID' => $sessionUserId,
                 'MODIFIED_DATE' => Date::currentDate('Y-m-d H:i:s')
@@ -2003,7 +2004,6 @@ class Mdmetadata_Model extends Model {
                     $dataBusinessProcess['THEME_CODE'] = Input::post('themeCode');
                     $dataBusinessProcess['SKIN'] = Input::post('skin');
                     $dataBusinessProcess['RUN_MODE'] = Input::post('runMode');
-                    $dataBusinessProcess['HELP_CONTENT_ID'] = Input::post('helpContentId');
                     $dataBusinessProcess['IS_SHOW_PREVNEXT'] = Input::postCheck('isShowPrevNext') ? 1 : null;
                     $dataBusinessProcess['IS_WIDGET'] = Input::postCheck('isWidget') ? 1 : null;
                     $dataBusinessProcess['IS_TOOLS_BTN'] = Input::postCheck('isToolsBtn') ? 1 : null;
@@ -6896,7 +6896,7 @@ class Mdmetadata_Model extends Model {
                 PL.THEME_CODE,
                 PL.SKIN,
                 PL.RUN_MODE,
-                PL.HELP_CONTENT_ID,
+                MDD.HELP_CONTENT_ID, 
                 PL.IS_SHOW_PREVNEXT,
                 PL.IS_WIDGET, 
                 PL.MOBILE_THEME, 
@@ -6908,6 +6908,7 @@ class Mdmetadata_Model extends Model {
                 PL.JSON_CONFIG, 
                 PL.IS_SAVE_VIEW_LOG
             FROM META_BUSINESS_PROCESS_LINK PL 
+                INNER JOIN META_DATA MDD ON MDD.META_DATA_ID = PL.META_DATA_ID 
                 LEFT JOIN WEB_SERVICE_LANGUAGE SL ON SL.SERVICE_LANGUAGE_ID = PL.SERVICE_LANGUAGE_ID 
                 LEFT JOIN META_DATA MD ON MD.META_DATA_ID = PL.GETDATA_PROCESS_ID 
                 LEFT JOIN META_DATA MDG ON MDG.META_DATA_ID = PL.SYSTEM_META_GROUP_ID 

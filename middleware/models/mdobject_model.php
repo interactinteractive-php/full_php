@@ -239,7 +239,7 @@ class Mdobject_Model extends Model {
                     GL.LAYOUT_META_DATA_ID, 
                     MD.META_DATA_CODE, 
                     GL.REF_STRUCTURE_ID, 
-                    GL.IS_ALL_NOT_SEARCH ,
+                    GL.IS_ALL_NOT_SEARCH, 
                     GL.IS_USE_RT_CONFIG, 
                     GL.IS_USE_WFM_CONFIG,
                     GL.IS_USE_SIDEBAR,
@@ -278,15 +278,6 @@ class Mdobject_Model extends Model {
                         FROM META_GROUP_GRID_OPTIONS 
                         WHERE MAIN_META_DATA_ID = $metaDataIdPh 
                     ) AS SUBGRIDEXCEL, 
-                    CASE 
-                        WHEN (
-                            SELECT 
-                                COUNT(ID) 
-                            FROM KNOWLEDGE_META_DATA_MAP 
-                            WHERE META_DATA_ID = $metaDataIdPh 
-                        ) > 0 
-                        THEN 1 
-                    ELSE 0 END AS IS_KNOWLEDGE, 
                     MW.WS_URL, 
                     GL.CALCULATE_PROCESS_ID, 
                     GL.BEFORE_SERVICE, 
@@ -320,7 +311,8 @@ class Mdobject_Model extends Model {
                     GL.IS_IGNORE_CLEAR_FILTER, 
                     GL.WS_URL AS DV_WS_URL, 
                     MD.DESCRIPTION, 
-                    GL.DRAG_ROWS_RUN_PROCESS_ID 
+                    GL.DRAG_ROWS_RUN_PROCESS_ID, 
+                    MD.HELP_CONTENT_ID 
                 FROM META_GROUP_LINK GL 
                     INNER JOIN META_DATA MD ON MD.META_DATA_ID = GL.META_DATA_ID 
                     LEFT JOIN META_DATA_FOLDER_MAP MFM ON MFM.META_DATA_ID = GL.META_DATA_ID 

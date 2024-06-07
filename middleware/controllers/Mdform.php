@@ -1717,6 +1717,7 @@ class Mdform extends Controller {
         $this->view->isUseWorkflow = $this->view->row['IS_USE_WORKFLOW'];
         $this->view->isFilterShowData = $this->view->row['IS_FILTER_SHOW_DATA'];
         $this->view->isPrint = $this->view->row['COUNT_REPORT_TEMPLATE'] ? true : false;
+        $this->view->helpContentId = $this->view->row['CONTENT_ID'];
         
         $this->view->isDataMart = $this->view->row['KPI_TYPE_ID'] == '1040' ? true : false; 
         $this->view->isCallWebService = ($this->view->row['KPI_TYPE_ID'] == '1080' || $this->view->row['KPI_TYPE_ID'] == '1160' || $this->view->row['KPI_TYPE_ID'] == '1161');

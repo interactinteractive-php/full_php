@@ -804,4 +804,15 @@ class Mdhelpdesk extends Controller {
         }
     }
     
+    public function setCloudHelpForm() {
+        Auth::handleLogin();
+        $this->view->render('setCloudHelp', $this->viewPath);
+    }
+    
+    public function setCloudHelpSave() {
+        Auth::handleLogin();
+        $response = $this->model->setCloudHelpSaveModel();
+        convJson($response);
+    }
+    
 }

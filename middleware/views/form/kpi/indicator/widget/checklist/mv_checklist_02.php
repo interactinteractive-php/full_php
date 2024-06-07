@@ -88,14 +88,11 @@ $renderType = $this->methodRow['RENDER_THEME'];
                                     </div>
                                     <div class="ml-auto">
                                         <?php
-                                        if (Mdform::$helpContentId) {
-                                            echo html_tag('button', [
-                                                    'type' => 'button', 
-                                                    'class' => 'btn btn-sm btn-circle btn-success bp-btn-help', 
-                                                    'onclick' => 'redirectHelpContent(this, \''.Mdform::$helpContentId.'\', \''.$this->structureIndicatorId.'\', \'mv_method\');'
-                                                ], $this->lang->line('menu_system_guide')
-                                            );
-                                        }
+                                        echo Mdcommon::helpContentButton([
+                                            'contentId' => Mdform::$helpContentId, 
+                                            'sourceId' => $this->methodIndicatorId, 
+                                            'fromType' => 'mv_method'
+                                        ]);
                                         ?>
                                         <button type="button" class="ml-1 btn btn-sm btn-circle btn-success bp-btn-check" onclick="saveMvCheckListCheck(this);">
                                             <i class="icon-checkmark-circle2"></i> Шалгах

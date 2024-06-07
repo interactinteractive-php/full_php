@@ -10793,3 +10793,111 @@ function redirectHelpContent(elem, contentId, sourceId, fromType) {
         error: function(e) { console.log(e); }
     });
 }
+function setHelpContent(elem, contentId, sourceId, fromType) {
+    $.ajax({
+        type: 'post',
+        url: 'mdhelpdesk/setCloudHelpForm',
+        data: {contentId: contentId, sourceId: sourceId, fromType: fromType},
+        success: function(data) {
+            var $dialogName = '#dialog-sethelp-content';
+            if (!$($dialogName).length) {
+                $('<div id="' + $dialogName.replace('#', '') + '"></div>').appendTo('body');
+            }
+            var $dialog = $($dialogName);
+
+            $dialog.empty().append(data);
+            $dialog.dialog({
+                cache: false,
+                resizable: false,
+                bgiframe: true,
+                autoOpen: false,
+                title: 'Гарын авлага тохируулах',
+                width: 860,
+                minWidth: 860,
+                height: 'auto',
+                modal: true,
+                closeOnEscape: isCloseOnEscape,
+                close: function() {
+                    $dialog.empty().dialog('destroy').remove();
+                },
+                buttons: [{
+                        text: plang.get('save_btn'),
+                        class: 'btn btn-sm green-meadow',
+                        click: function() {
+                            
+                            var $form = $dialog.find('form');
+                            $form.validate({ errorPlacement: function() {} });
+
+                            if ($form.valid()) {
+                                $form.ajaxSubmit({
+                                    type: 'post',
+                                    url: 'mdhelpdesk/setCloudHelpSave',
+                                    dataType: 'json',
+                                    beforeSubmit: function(formData, jqForm, options) {
+                                        formData.push({name: 'contentId', value: contentId});
+                                        formData.push({name: 'sourceId', value: sourceId});
+                                        formData.push({name: 'fromType', value: fromType});
+                                    },
+                                    beforeSend: function() {
+                                        Core.blockUI({message: 'Loading...', boxed: true});
+                                    },
+                                    success: function(dataJson) {
+                                        PNotify.removeAll();
+                                        new PNotify({
+                                            title: dataJson.status,
+                                            text: dataJson.message,
+                                            type: dataJson.status,
+                                            sticker: false, 
+                                            addclass: pnotifyPosition
+                                        });
+
+                                        if (dataJson.status === 'success') {
+                                            $dialog.dialog('close');
+                                            
+                                            var $clickButton = $(elem);
+                                            
+                                            if (fromType == 'mv_list' || fromType == 'meta_dv') {
+                                                if ($clickButton.next('[onclick*="redirectHelpContent("]').length) {
+                                                    $clickButton.next('[onclick*="redirectHelpContent("]').remove();
+                                                }
+                                                if ($clickButton.hasClass('dropdown-item')) {
+                                                    $clickButton.after('<a href="javascript:;" onclick="redirectHelpContent(this, \''+dataJson.setContentId+'\', \''+sourceId+'\', \''+fromType+'\');" title="'+plang.get('menu_system_guide')+'" class="dropdown-item"><i class="far fa-info"></i> '+plang.get('menu_system_guide')+'</a>');
+                                                } else {
+                                                    $clickButton.after('<a href="javascript:;" onclick="redirectHelpContent(this, \''+dataJson.setContentId+'\', \''+sourceId+'\', \''+fromType+'\');" title="'+plang.get('menu_system_guide')+'" class="btn btn-secondary btn-circle btn-sm default"><i class="far fa-info"></i></a>');
+                                                }
+                                            } else {
+                                            
+                                                if ($clickButton.closest('.ui-dialog-buttonset').length) {
+                                                    if ($clickButton.next('.bp-btn-help').length) {
+                                                        $clickButton.next('.bp-btn-help').remove();
+                                                    }
+                                                    $clickButton.after('<button type="button" onclick="redirectHelpContent(this, \''+dataJson.setContentId+'\', \''+sourceId+'\', \''+fromType+'\');" class="btn btn-info btn-sm float-left bp-btn-help">'+plang.get('menu_system_guide')+'</button>');
+                                                } else {
+                                                    if ($clickButton.next('.bp-btn-help').length) {
+                                                        $clickButton.next('.bp-btn-help').remove();
+                                                    }
+                                                    $clickButton.after('<button type="button" onclick="redirectHelpContent(this, \''+dataJson.setContentId+'\', \''+sourceId+'\', \''+fromType+'\');" class="btn btn-sm btn-circle btn-success bp-btn-help bpMainSaveButton mr-1">'+plang.get('menu_system_guide')+'</button>');
+                                                }
+                                            }
+                                        }
+                                        Core.unblockUI();
+                                    },
+                                    error: function() { alert("Error"); Core.unblockUI(); }
+                                });
+                            }
+                        }
+                    },
+                    {
+                        text: plang.get('close_btn'),
+                        class: 'btn btn-sm blue-hoki',
+                        click: function() {
+                            $dialog.dialog('close');
+                        }
+                    }
+                ]
+            });
+            $dialog.dialog('open');
+        },
+        error: function(e) { console.log(e); }
+    });
+}

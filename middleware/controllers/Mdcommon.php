@@ -1973,4 +1973,75 @@ class Mdcommon extends Controller {
         return $button;
     }
     
+    public static function helpContentButton($attr) {
+        
+        $button = null;
+        $isDev  = Config::getFromCache('IS_DEV');
+        
+        if ($attr['sourceId']) {
+            
+            if ($isDev) {
+                $button = html_tag('button', [
+                    'type' => 'button', 
+                    'class' => 'btn btn-sm btn-circle btn-success bp-btn-help mr-1', 
+                    'onclick' => 'setHelpContent(this, \''.$attr['contentId'].'\', \''.$attr['sourceId'].'\', \''.$attr['fromType'].'\');'
+                ], Lang::line('set_help_content_btn'));
+            }
+            
+            if ($attr['contentId']) {
+                $button .= html_tag('button', [
+                    'type' => 'button', 
+                    'class' => 'btn btn-sm btn-circle btn-success bp-btn-help mr-1', 
+                    'onclick' => 'redirectHelpContent(this, \''.$attr['contentId'].'\', \''.$attr['sourceId'].'\', \''.$attr['fromType'].'\');'
+                ], Lang::line('menu_system_guide'));
+            }
+        }
+        
+        return $button;
+    }
+    
+    public static function listHelpContentButton($attr) {
+        
+        $button = null;
+        $isDev  = Config::getFromCache('IS_DEV');
+        
+        if ($attr['sourceId']) {
+            
+            $parentControl = isset($attr['parentControl']) ? $attr['parentControl'] : null;
+            $buttonClass   = 'btn btn-secondary btn-circle btn-sm default';
+            $setButtonTitle = Lang::line('set_help_content_btn');
+            $helpButtonTitle = Lang::line('menu_system_guide');
+            $setButtonText = '';
+            $helpButtonText = '';
+            
+            if ($parentControl == 'dropdown') {
+                $buttonClass = 'dropdown-item';
+                $setButtonText = ' '.$setButtonTitle;
+                $setButtonTitle = '';
+                $helpButtonText = ' '.$helpButtonTitle;
+                $helpButtonTitle = '';
+            }
+            
+            if ($isDev) {
+                $button = html_tag('a', [
+                    'href' => 'javascript:;', 
+                    'class' => $buttonClass, 
+                    'title' => $setButtonTitle, 
+                    'onclick' => 'setHelpContent(this, \''.$attr['contentId'].'\', \''.$attr['sourceId'].'\', \''.$attr['fromType'].'\');'
+                ], '<i class="far fa-user-headset"></i>'.$setButtonText);
+            }
+            
+            if ($attr['contentId']) {
+                $button .= html_tag('a', [
+                    'href' => 'javascript:;', 
+                    'class' => $buttonClass, 
+                    'title' => $helpButtonTitle, 
+                    'onclick' => 'redirectHelpContent(this, \''.$attr['contentId'].'\', \''.$attr['sourceId'].'\', \''.$attr['fromType'].'\');'
+                ], '<i class="far fa-info"></i>'.$helpButtonText);
+            }
+        }
+        
+        return $button;
+    }
+    
 }

@@ -86,13 +86,11 @@ if ($this->isDialog == false && Mdwebservice::$isLogViewMode == false) {
         
         $previewReportTemplateCode = issetParam($this->methodRow['PREVIEW_REPORT_TEMPLATE_CODE']);
         
-        $mainProcessBtnBar .= Form::button(
-            array(
-                'class' => 'btn btn-info btn-circle btn-sm mr-1 bp-btn-help',
-                'value' => $this->lang->line('menu_system_guide'),
-                'onclick' => "redirectHelpContent(this, '".$this->helpContentId."', '".$this->methodId."', 'meta_process');"
-            ), ($this->helpContentId ? true : false)
-            ) . Form::button(
+        $mainProcessBtnBar .= Mdcommon::helpContentButton([
+                'contentId' => $this->helpContentId, 
+                'sourceId' => $this->methodId, 
+                'fromType' => 'meta_process'
+            ]) . Form::button(
             array(
                 'class' => 'btn btn-sm btn-circle btn-success mr5',
                 'value' => '<i class="fa fa-arrow-left"></i> ' . $this->lang->line('prev'),

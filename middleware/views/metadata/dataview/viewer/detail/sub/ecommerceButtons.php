@@ -38,16 +38,12 @@ if (issetParam($this->dataGridOptionData['HIDELAYOUTVIEWER']) != 'true') {
         'onclick' => 'dataViewPivotView(\'' . $this->metaDataId . '\', this);'
             ), (defined('CONFIG_PIVOT_SERVICE_ADDRESS') && CONFIG_PIVOT_SERVICE_ADDRESS)
     );
-    ?>
-    <?php
     echo Html::anchor(
             'javascript:;', '<i class="fa fa-qrcode"></i> Qrcode', array(
         'onclick' => 'dataViewStatementPreview_' . $this->metaDataId . '(\'' . $this->metaDataId . '\', true, \'toolbar\', this);',
         'class' => 'dropdown-item',
             ), $this->isStatementBtnSee
     );
-    ?>
-    <?php
     echo Html::anchor(
             'javascript:;', '<i class="fa fa-folder"></i> Detail view', array(
                 'title' => 'Detail view',
@@ -55,8 +51,6 @@ if (issetParam($this->dataGridOptionData['HIDELAYOUTVIEWER']) != 'true') {
                 'onclick' => 'dataViewer_' . $this->metaDataId . '(this, \'explorer\', \'' . $this->metaDataId . '\');'
             ), isset($this->row['dataViewLayoutTypes']['explorer']) && $this->row['dataViewLayoutTypes']['explorer']['LAYOUT_THEME'] ? true : false
     );
-    ?>
-    <?php
     echo Html::anchor(
             'javascript:;', '<i class="fa fa-bar-chart-o"></i> Layout', array(
         'class' => 'dropdown-item callLayoutDataView_' . $this->metaDataId,
@@ -64,8 +58,6 @@ if (issetParam($this->dataGridOptionData['HIDELAYOUTVIEWER']) != 'true') {
         'onclick' => 'callLayoutDataView_' . $this->metaDataId . '(' . $this->metaLayoutLinkId . ', this);'
             ), isset($this->metaLayoutBtn) ? $this->metaLayoutBtn : false
     );
-    ?>
-    <?php
     echo Html::anchor(
             'javascript:;', '<i class="fa fa-table"></i> Table', array(
         'class' => 'dropdown-item callDataView_' . $this->metaDataId,
@@ -73,8 +65,6 @@ if (issetParam($this->dataGridOptionData['HIDELAYOUTVIEWER']) != 'true') {
         'onclick' => 'callDataView_' . $this->metaDataId . '(' . $this->metaDataId . ', this);'
             ), isset($this->metaLayoutBtn) ? $this->metaLayoutBtn : false
     );
-    ?>
-    <?php
     echo Html::anchor(
             'javascript:;', '<i class="fa fa-map-marker"></i> Map', array(
         'class' => 'dropdown-item googleMapBtnByDataView_' . $this->metaDataId,
@@ -89,8 +79,6 @@ if (issetParam($this->dataGridOptionData['HIDELAYOUTVIEWER']) != 'true') {
         'onclick' => 'callCalendarByMeta(' . $this->calendarMetaDataId . ');'
             ), isset($this->isCalendarSee) ? $this->isCalendarSee : false
     );
-    ?>
-    <?php
     if (issetParam($this->row['IS_EXCEL_EXPORT_BTN']) != '') {
 
         if (strpos($commandBtn, '<!--excelexportbutton-->') !== false) {
@@ -111,8 +99,6 @@ if (issetParam($this->dataGridOptionData['HIDELAYOUTVIEWER']) != 'true') {
                 ), (!isset($this->row['IS_IGNORE_EXCEL_EXPORT']) || (isset($this->row['IS_IGNORE_EXCEL_EXPORT']) && $this->row['IS_IGNORE_EXCEL_EXPORT'] != '1'))
         );
     }
-    ?>
-    <?php
     echo Html::anchor(
             'javascript:;', '<i class="fa fa-file-text-o"></i> Text file', array(
             'title' => 'Text file',
@@ -127,29 +113,18 @@ if (issetParam($this->dataGridOptionData['HIDELAYOUTVIEWER']) != 'true') {
             'onclick' => 'dataViewExportToPrint_' . $this->metaDataId . '();'
         ), (issetParam($this->row['IS_DIRECT_PRINT']) == '1')
     );
-    ?>
-    <?php
     echo Html::anchor(
             'javascript:;', '<i class="icon-table2"></i> Merge cell', array(
         'class' => 'dropdown-item value-grid-merge-cell',
         'title' => 'Merge cell'
             ), ($this->dataGridOptionData['MERGECELLS'] == 'true' ? true : false)
     );
-    ?>
-    <?php
     echo Html::anchor(
             'javascript:;', '<i class="icon-cog"></i> '.$this->lang->line('user_configuration'), array(
         'title' => $this->lang->line('user_configuration'),
         'class' => 'dropdown-item',
         'onclick' => 'dataViewAdvancedConfig_' . $this->metaDataId . '(this);'
             ), true
-    );
-    echo Html::anchor(
-            'javascript:;', '<i class="fa fa-question-circle"></i> Тусламж', array(
-            'onclick' => 'pfHelpDataView(\''. $this->metaDataId .'\');',
-            'title' => 'Тусламж',
-            'class' => 'dropdown-item'
-        ), (issetParam($this->row['IS_KNOWLEDGE']) == '1')
     );
     echo Html::anchor(
             'javascript:;', (new Mduser())->iconQuickMenu($this->metaDataId) . ' QuickMenu', array(
@@ -165,5 +140,11 @@ if (issetParam($this->dataGridOptionData['HIDELAYOUTVIEWER']) != 'true') {
         'title' => '',
             ), $this->isReportTemplate
     );    
+    echo Mdcommon::listHelpContentButton([
+        'contentId' => issetParam($this->row['HELP_CONTENT_ID']), 
+        'sourceId' => $this->metaDataId, 
+        'fromType' => 'meta_dv', 
+        'parentControl' => 'dropdown'
+    ]);
     ?>
 </div>    

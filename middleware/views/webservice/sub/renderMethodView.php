@@ -54,13 +54,11 @@ if ($this->isDialog == false) {
         $reportPrint = '<button type="button" class="btn btn-sm btn-circle green ml5 bp-btn-print '.(($this->isEditMode == true) ? '' : 'disabled').'" id="printReportProcess" onclick="processPrintPreview(this, \'' . $this->methodId . '\',  \'' . (($this->isEditMode == true) ? $this->sourceId : '') . '\', \'' . (isset($this->getProcessId) ? $this->getProcessId : '') . '\');"><i class="fa fa-print"></i> ' . ($this->lang->line('printTemplate'.$this->methodId) == 'printTemplate'.$this->methodId ? $this->lang->line('printTemplate') : $this->lang->line('printTemplate'.$this->methodId)) . '</button>';
     }
     $mainProcessBtnBar .= '<div class="float-right">
-            ' . Form::button(
-                array(
-                    'class' => 'btn btn-info btn-circle btn-sm mr-1',
-                    'value' => $this->lang->line('menu_system_guide'),
-                    'onclick' => "redirectHelpContent(this, '".$this->helpContentId."', '".$this->methodId."', 'meta_process');"
-                ), ($this->helpContentId ? true : false)
-            ) . Form::button(
+            ' . Mdcommon::helpContentButton([
+                'contentId' => $this->helpContentId, 
+                'sourceId' => $this->methodId, 
+                'fromType' => 'meta_process'
+            ]) . Form::button(
                 array(
                     'class' => 'btn btn-sm btn-circle purple-plum ml5',
                     'value' => '<i class="fa fa-download"></i> ' . $this->lang->line('print_view_btn'),

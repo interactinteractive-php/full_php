@@ -56,13 +56,11 @@ if ($this->isDialog == false) {
     }
         
         $mainProcessBtnBar .= '<div class="float-right">
-            ' . Form::button(
-            array(
-                'class' => 'btn btn-info btn-circle btn-sm mr-1',
-                'value' => $this->lang->line('menu_system_guide'),
-                'onclick' => "redirectHelpContent(this, '".$this->helpContentId."', '".$this->methodId."', 'meta_process');"
-            ), ($this->helpContentId ? true : false)
-            ) .Form::button(
+            ' . Mdcommon::helpContentButton([
+                'contentId' => $this->helpContentId, 
+                'sourceId' => $this->methodId, 
+                'fromType' => 'meta_process'
+            ]) .Form::button(
                 array(
                     'class' => 'btn btn-sm btn-circle btn-success bpMainSaveButton',
                     'value' => '<i class="fa fa-save"></i> ' . $this->processActionBtn,

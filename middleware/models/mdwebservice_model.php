@@ -58,7 +58,7 @@ class Mdwebservice_Model extends Model {
                     PL.GETDATA_PROCESS_ID,  
                     DFG.META_DATA_CODE AS GETDATA_PROCESS_CODE, 
                     LOWER(PL.RUN_MODE) AS RUN_MODE, 
-                    PL.HELP_CONTENT_ID, 
+                    MD.HELP_CONTENT_ID, 
                     PL.IS_SHOW_PREVNEXT, 
                     PL.IS_UNLIMITED, 
                     PL.IS_WIDGET, 

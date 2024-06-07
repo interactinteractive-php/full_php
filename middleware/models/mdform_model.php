@@ -19431,7 +19431,7 @@ class Mdform_Model extends Model {
                     WHERE T0.PARENT_ID = $idPh1 
                         AND T0.KPI_TYPE_ID IN (1040, 1043, 1044, 1100, 1000, 2009) 
                         AND T0.DELETED_USER_ID IS NULL 
-                        AND (T0.QUERY_STRING IS NOT NULL OR T0.POSTGRE_SQL IS NOT NULL) 
+                        AND (T0.KPI_TYPE_ID <> 1043 OR (T0.KPI_TYPE_ID = 1043 AND (T0.QUERY_STRING IS NOT NULL OR T0.POSTGRE_SQL IS NOT NULL))) 
                     ORDER BY 
                         T0.ORDER_NUMBER ASC, 
                         T0.ID ASC", 

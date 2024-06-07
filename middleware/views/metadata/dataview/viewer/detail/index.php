@@ -411,13 +411,6 @@
                                                     ), (isset($this->useBasketBtn) && $this->layoutType != 'ecommerce_basket') ? $this->useBasketBtn : false
                                                 ); 
                                                 echo Html::anchor(
-                                                        'javascript:;', '<i class="icon-help"></i>', array(
-                                                        'onclick' => 'pfHelpDataView(\''. $this->metaDataId .'\');',
-                                                        'title' => 'Тусламж',
-                                                        'class' => 'dropdown-item',
-                                                    ), (issetParam($this->row['IS_KNOWLEDGE']) == '1')
-                                                );
-                                                echo Html::anchor(
                                                         'javascript:;', (new Mduser())->iconQuickMenu($this->metaDataId) . ' QuickMenu', array(
                                                         'onclick' => 'toQuickMenu(\''.$this->metaDataId.'\', \'dataview\', this);',
                                                         'class' => 'dropdown-item',
@@ -431,6 +424,12 @@
                                                         'title' => 'Translate',
                                                     ), Mdlanguage::isTranslateOptionByConfig() 
                                                 );
+                                                echo Mdcommon::listHelpContentButton([
+                                                    'contentId' => issetParam($this->row['HELP_CONTENT_ID']), 
+                                                    'sourceId' => $this->metaDataId, 
+                                                    'fromType' => 'meta_dv', 
+                                                    'parentControl' => 'dropdown'
+                                                ]);
                                                 ?>
                                             </div>
                                         </div>
@@ -588,13 +587,6 @@
                                                 ), isset($this->useBasketBtn) ? $this->useBasketBtn : false
                                             );
                                             echo Html::anchor(
-                                                    'javascript:;', '<i class="fa fa-question-circle"></i>', array(
-                                                    'class' => 'btn btn-secondary btn-sm btn-circle default',
-                                                    'onclick' => 'pfHelpDataView(\''. $this->metaDataId .'\');',
-                                                    'title' => 'Тусламж',
-                                                ), (issetParam($this->row['IS_KNOWLEDGE']) == '1')
-                                            );
-                                            echo Html::anchor(
                                                     'javascript:;', (new Mduser())->iconQuickMenu($this->metaDataId), array(
                                                     'class' => 'btn btn-secondary btn-sm btn-circle default',
                                                     'onclick' => 'toQuickMenu(\''.$this->metaDataId.'\', \'dataview\', this);',
@@ -615,6 +607,11 @@
                                                     'title' => 'Translate',
                                                 ), Mdlanguage::isTranslateOptionByConfig() 
                                             );
+                                            echo Mdcommon::listHelpContentButton([
+                                                'contentId' => issetParam($this->row['HELP_CONTENT_ID']), 
+                                                'sourceId' => $this->metaDataId, 
+                                                'fromType' => 'meta_dv'
+                                            ]);
                                             ?>
                                         </div>
                                     <?php } ?>
@@ -1033,13 +1030,6 @@
                                                 ), isset($this->useBasketBtn) ? $this->useBasketBtn : false
                                             ); 
                                             echo Html::anchor(
-                                                    'javascript:;', '<i class="fa fa-question-circle"></i>', array(
-                                                    'onclick' => 'pfHelpDataView(\''. $this->metaDataId .'\');',
-                                                    'title' => 'Тусламж',
-                                                    'class' => 'dropdown-item'
-                                                ), (issetParam($this->row['IS_KNOWLEDGE']) == '1')
-                                            );
-                                            echo Html::anchor(
                                                     'javascript:;', (new Mduser())->iconQuickMenu($this->metaDataId) . ' QuickMenu', array(
                                                     'onclick' => 'toQuickMenu(\''.$this->metaDataId.'\', \'dataview\', this);',
                                                     'class' => 'dropdown-item',
@@ -1053,6 +1043,12 @@
                                                     'title' => 'Translate',
                                                 ), Mdlanguage::isTranslateOptionByConfig() 
                                             );
+                                            echo Mdcommon::listHelpContentButton([
+                                                'contentId' => issetParam($this->row['HELP_CONTENT_ID']), 
+                                                'sourceId' => $this->metaDataId, 
+                                                'fromType' => 'meta_dv', 
+                                                'parentControl' => 'dropdown'
+                                            ]);
                                             ?>
                                         </div>
                                     </div>
@@ -1210,13 +1206,6 @@
                                             ), isset($this->useBasketBtn) ? $this->useBasketBtn : false
                                         );
                                         echo Html::anchor(
-                                                'javascript:;', '<i class="fa fa-question-circle"></i>', array(
-                                                'onclick' => 'pfHelpDataView(\''. $this->metaDataId .'\');',
-                                                'title' => 'Тусламж',
-                                                'class' => 'btn btn-secondary btn-sm btn-circle default'
-                                            ), (issetParam($this->row['IS_KNOWLEDGE']) == '1')
-                                        );
-                                        echo Html::anchor(
                                                 'javascript:;', (new Mduser())->iconQuickMenu($this->metaDataId), array(
                                                 'class' => 'btn btn-secondary btn-sm btn-circle default',
                                                 'onclick' => 'toQuickMenu(\''.$this->metaDataId.'\', \'dataview\', this);',
@@ -1230,6 +1219,11 @@
                                                 'title' => 'Translate',
                                             ), Mdlanguage::isTranslateOptionByConfig() 
                                         );
+                                        echo Mdcommon::listHelpContentButton([
+                                            'contentId' => issetParam($this->row['HELP_CONTENT_ID']), 
+                                            'sourceId' => $this->metaDataId, 
+                                            'fromType' => 'meta_dv'
+                                        ]);
                                         ?>
                                     </div>
                                 <?php } ?>
