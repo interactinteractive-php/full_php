@@ -218,11 +218,10 @@
                                     ), true
                                 );
                                 echo Html::anchor(
-                                        'javascript:;', '<i class="fa fa-file"></i> '.$this->lang->line('META_VIEW_REPORT_TEMPLATE'), array(
+                                    'javascript:;', '<i class="fa fa-file"></i> '.$this->lang->line('META_VIEW_REPORT_TEMPLATE'), array(
                                     'onclick' => 'objectReportTemplateView_'.$this->metaDataId.'();',
-                                    'class' => 'dropdown-item',
-                                    'title' => '',
-                                        ), $this->isReportTemplate
+                                    'class' => 'dropdown-item'
+                                    ), $this->isReportTemplate
                                 );
                                 echo Mdcommon::listHelpContentButton([
                                     'contentId' => issetParam($this->row['HELP_CONTENT_ID']), 
