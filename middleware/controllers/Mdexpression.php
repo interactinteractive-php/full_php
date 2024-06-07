@@ -1840,7 +1840,11 @@ class Mdexpression extends Controller {
                                         } elseif ($getMetaRow['type'] == 'button' && $getMetaRow['isShow'] == '1') {
                                             $expSetAttrExpression .= 'bpButtonDisable(\'' . $expSetAttrSplit . '\', ' . $mainSelector . ');';
                                         } elseif ($getMetaRow['type'] == 'text_editor' && $getMetaRow['isShow'] == '1') {
-                                            $expSetAttrExpression .= 'setTimeout(function(){ tinymce.get(\'param[' . $expSetAttrSplit . ']\').setMode(\'readonly\'); }, 1500);';
+                                            if (Mdform::$isIndicatorRendering == false) {
+                                                $expSetAttrExpression .= 'setTimeout(function(){ tinymce.get(\'param[' . $expSetAttrSplit . ']\').setMode(\'readonly\'); }, 1500);';
+                                            } else {
+                                                $expSetAttrExpression .= 'setTimeout(function(){ tinymce.get(\'mvParam[' . $expSetAttrSplit . ']\').setMode(\'readonly\'); }, 1500);';
+                                            }
                                         } elseif ($getMetaRow['type'] == 'file' && $getMetaRow['isShow'] == '1') {
                                             $expSetAttrExpression .= 'setBpHeaderFileFieldDisable(' . $mainSelector . ', \'' . $expSetAttrSplit . '\');';
                                         } else {
@@ -1882,7 +1886,11 @@ class Mdexpression extends Controller {
                                     } elseif ($getMetaRow['type'] == 'button' && $getMetaRow['isShow'] == '1') {
                                         $expSetAttrExpression .= 'bpButtonEnable(\'' . $expSetAttrSplit . '\', ' . $mainSelector . ');';
                                     } elseif ($getMetaRow['type'] == 'text_editor' && $getMetaRow['isShow'] == '1') {
-                                        $expSetAttrExpression .= 'setTimeout(function(){ tinymce.get(\'param[' . $expSetAttrSplit . ']\').setMode(\'design\'); }, 1500);';
+                                        if (Mdform::$isIndicatorRendering == false) {
+                                            $expSetAttrExpression .= 'setTimeout(function(){ tinymce.get(\'param[' . $expSetAttrSplit . ']\').setMode(\'design\'); }, 1500);';
+                                        } else {
+                                            $expSetAttrExpression .= 'setTimeout(function(){ tinymce.get(\'mvParam[' . $expSetAttrSplit . ']\').setMode(\'design\'); }, 1500);';
+                                        }
                                     } elseif ($getMetaRow['type'] == 'file' && $getMetaRow['isShow'] == '1') {
 
                                         $expSetAttrExpression .= 'setBpHeaderFileFieldEnable(' . $mainSelector . ', \'' . $expSetAttrSplit . '\');';
@@ -2027,7 +2035,12 @@ class Mdexpression extends Controller {
                                 } elseif ($typeCode == 'button' && $getMetaRow['isShow'] == '1') {
                                     $setDisable = 'bpButtonDisable(\'' . $expSetAttr[1] . '\', ' . $mainSelector . ');';
                                 } elseif ($typeCode == 'text_editor' && $getMetaRow['isShow'] == '1') {
-                                    $setDisable = 'setTimeout(function(){ tinymce.get(\'param[' . $expSetAttr[1] . ']\').setMode(\'readonly\'); }, 1500);';
+                                    
+                                    if (Mdform::$isIndicatorRendering == false) {
+                                        $setDisable = 'setTimeout(function(){ tinymce.get(\'param[' . $expSetAttr[1] . ']\').setMode(\'readonly\'); }, 1500);';
+                                    } else {
+                                        $setDisable = 'setTimeout(function(){ tinymce.get(\'mvParam[' . $expSetAttr[1] . ']\').setMode(\'readonly\'); }, 1500);';
+                                    }
                                 } elseif ($typeCode == 'file' && $getMetaRow['isShow'] == '1') {
                                     $setDisable = 'setBpHeaderFileFieldDisable(' . $mainSelector . ', \'' . $expSetAttr[1] . '\');';
                                 } else {
