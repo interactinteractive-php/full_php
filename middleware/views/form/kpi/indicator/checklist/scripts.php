@@ -1289,9 +1289,9 @@ function mvCheckListSidebarClose(elem) {
         $self.closest('.mv-checklist2-render-parent').find('.checklist2-content-section').css('max-width', wcontw+'px');   
         $self.closest(".d-flex").css({
             position: "absolute",
-            "margin-left": "7px",
+            "margin-left": "5px",
             padding: "4px",
-            "margin-top": "<?php echo $renderType == 'paper_main_window' ? '51' : '82' ?>px"
+            "margin-top": "<?php echo $renderType == 'paper_main_window' ? '25' : '82' ?>px"
         });
         $self.closest(".sidebar").css({
             position: "absolute",

@@ -43,5 +43,104 @@ class Mdeditor_model extends Model {
         $sql = "SELECT META_DATA_ID, META_DATA_NAME, META_DATA_CODE FROM META_DATA WHERE META_TYPE_ID = ".$this->processMetaTypeId." ORDER BY META_DATA_NAME ASC";
         return $this->db->GetAll($sql);
     }
+    
+    public function getDbtColumnsModel() {
+        
+        try {
+            
+            $dbs = Input::post('dbs');
+            $dbs = base64_decode(urldecode($dbs));
+            $dbs = rtrim($dbs, ';');
+            
+            if (DB_DRIVER == 'oci8') {
+                
+                $result = $this->db->Execute("SELECT * FROM ($dbs) WHERE 1 = 0");
+                $fieldObjs = Arr::objectToArray($result->_fieldobjs);
+
+            } elseif (DB_DRIVER == 'postgres9') {
+
+                $rs = $this->db->Execute("SELECT * FROM ($dbs) WHERE 1 = 0");
+                $fieldObjects = $rs->fieldTypesArray();
+                
+                $this->load->model('mdupgrade', 'middleware/models/');
+
+                $fieldObjs = $this->model->postgreArrayColumnsConvert($fieldObjects);
+            }
+            
+            $fields = [];
+            
+            foreach ($fieldObjs as $field) {
+                $fields[$field['name']] = $field['type'];
+            }
+            
+            $result = ['status' => 'success', 'columns' => $fields];
+            
+        } catch (Exception $ex) {
+            $result = ['status' => 'error', 'message' => $ex->msg];
+        }
+        
+        return $result;
+    }
+    
+    public function getDbtDataGridModel() {
+        
+        try {
+            
+            $dbs = Input::post('dbs');
+            $dbs = base64_decode(urldecode($dbs));
+            $dbs = rtrim($dbs, ';');
+            
+            $page = Input::post('page', 1);
+            $rows = Input::post('rows', 10);
+            $offset = ($page - 1) * $rows;
+            $subCondition = null;
+            $result = ['status' => 'success'];
+
+            if (Input::postCheck('filterRules')) {
+                $filterRules = json_decode(Str::cp1251_utf8($_POST['filterRules']), true);
+
+                foreach ($filterRules as $rule) {
+
+                    $field = $rule['field'];
+                    $value = Input::param(Str::lower($rule['value']));
+
+                    if (!empty($value)) {
+                        $subCondition .= " AND (LOWER($field) LIKE '%$value%')";
+                    }
+                }
+            }
+
+            $sortField = null;
+            $sortOrder = null;
+
+            if (Input::postCheck('sort') && Input::postCheck('order')) {
+                $sortField = Input::post('sort');
+                $sortOrder = Input::post('order');
+            }
+
+            $selectCount = "SELECT COUNT(1) AS ROW_COUNT FROM ($dbs) WHERE 1 = 1 $subCondition";
+            $selectList = "SELECT * FROM ($dbs) WHERE 1 = 1 $subCondition";
+            
+            if ($sortField && $sortOrder) {
+                $selectList .= " ORDER BY $sortField $sortOrder";
+            }
+
+            $rowCount = $this->db->GetRow($selectCount);
+
+            $result['total'] = $rowCount['ROW_COUNT'];
+            $result['rows'] = [];
+
+            $rs = $this->db->SelectLimit($selectList, $rows, $offset);
+
+            if (isset($rs->_array)) {
+                $result['rows'] = $rs->_array;
+            }
+        
+        } catch (Exception $ex) {
+            $result = ['status' => 'error', 'total' => 0, 'rows' => []];
+        }
+        
+        return $result;
+    }
 
 }

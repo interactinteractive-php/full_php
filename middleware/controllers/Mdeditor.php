@@ -14,7 +14,7 @@ if (!defined('_VALID_PHP'))
  */
 class Mdeditor extends Controller {
 
-    private static $viewPath = "middleware/views/editor/";
+    private static $viewPath = 'middleware/views/editor/';
 
     public function __construct() {
         parent::__construct();
@@ -346,6 +346,29 @@ class Mdeditor extends Controller {
             return $this->view->renderPrint('link/card/renderCard', self::$viewPath);
         }
     }
+    
+    public function dbt() {
+        
+        $this->view->title = 'DBT';
+        
+        $this->view->css = AssetNew::metaCss();
+        $this->view->js = AssetNew::metaOtherJs();
+        $this->view->fullUrlCss = ['assets/custom/addon/plugins/codemirror/lib/codemirror.v1.css'];
+        $this->view->fullUrlJs = ['assets/custom/addon/plugins/codemirror/lib/codemirror.min.js'];
+        
+        $this->view->render('header');  
+        $this->view->render('dbt', self::$viewPath);
+        $this->view->render('footer');
+    }
+    
+    public function getDbtColumns() {
+        $response = $this->model->getDbtColumnsModel();
+        convJson($response);
+    }
+    
+    public function getDbtDataGrid() {
+        $response = $this->model->getDbtDataGridModel();
+        convJson($response);
+    }
+    
 }
-
-?>

@@ -610,7 +610,7 @@ class Mdupgrade extends Controller {
         if (issetParam($data['status']) == 'success') {
             $response = $this->model->encryptedFileImportModel(array('encryptedSource' => $data['result']));
         } else {
-            $response = array('status' => 'error', 'message' => 'Unkhown error!');
+            $response = ['status' => 'error', 'message' => 'Unkhown error!'];
         }
         
         convJson($response);

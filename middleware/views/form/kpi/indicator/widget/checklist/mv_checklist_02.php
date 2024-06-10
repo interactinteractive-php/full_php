@@ -70,7 +70,7 @@ $renderType = $this->methodRow['RENDER_THEME'];
                     ?>
                 </ul>
                 <?php if ($renderType == 'paper_main_window') { ?>
-                    <div style="position: absolute;right: 15px;top: 15px;"><a title="Хаах" href="javascript:history.go(-1)"><i style="font-size: 15px;color:#737373" class="far fa-times"></i></a></div>        
+                    <div style="position: absolute;right: 15px;top: 15px;display: none"><a title="Хаах" href="javascript:history.go(-1)"><i style="font-size: 15px;color:#737373" class="far fa-times"></i></a></div>        
                 <?php } ?>
                 <div class="tab-content" style="padding-top: 0px;padding-bottom: 0px;"> 
                     <?php
@@ -274,6 +274,9 @@ if ($renderType == 'paper_main_window') {
 }
 .sidebar-dark .checklist-sidebar-close-btn {
     color: #fff;
+}
+.sidebar-dark .checklist-sidebar-close-btn .icon-arrow-right5 {
+    color: #333;
 }
 .sidebar-dark .nav-sidebar>.nav-item-open>.nav-link:not(.disabled), .sidebar-dark .nav-sidebar>.nav-item>.nav-link.active {
     background-color: rgba(255,255,255,.1);
