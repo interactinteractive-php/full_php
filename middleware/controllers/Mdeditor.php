@@ -349,6 +349,59 @@ class Mdeditor extends Controller {
     
     public function dbt() {
         
+        $username = null;
+        $password = null;
+
+        if (isset($_SERVER['PHP_AUTH_USER'])) {
+
+            $username = $_SERVER['PHP_AUTH_USER'];
+            $password = $_SERVER['PHP_AUTH_PW'];
+
+        } elseif (isset($_SERVER['HTTP_AUTHORIZATION'])) {
+
+            if (strpos(strtolower($_SERVER['HTTP_AUTHORIZATION']), 'basic') === 0) {
+                list($username, $password) = explode(':', base64_decode(substr($_SERVER['HTTP_AUTHORIZATION'], 6)));
+            }
+        }
+
+        if (!Session::isCheck(SESSION_PREFIX . 'loggedUrlAuthenticate')) { 
+
+            Session::set(SESSION_PREFIX . 'loggedUrlAuthenticate', false);
+
+        } else {
+            
+            $decrypt = Crypt::decrypt('Wm45c2JKTzlOZjBSdytSem1GRDdqMEppYW9rODNIb1l0ZzZGODlOSkhPZz0=', 'md');
+            $isCheckUserPass = false;
+            
+            if ($decrypt) {
+                $decryptArr = explode(':', $decrypt);
+                
+                if (count($decryptArr) == 2) {
+                    
+                    $usernameLower = strtolower($username);
+                    $usernameConfig = strtolower($decryptArr[0]);
+                    
+                    if ($username && $password && ($usernameLower == $usernameConfig && $password == $decryptArr[1])) {
+                        $isCheckUserPass = true;
+                    }
+                }
+            }
+            
+            if ($isCheckUserPass) {
+                Session::set(SESSION_PREFIX . 'loggedUrlAuthenticate', true);
+            }
+        }
+
+        if (!Session::get(SESSION_PREFIX . 'loggedUrlAuthenticate')) {
+
+            header('WWW-Authenticate: ' .  
+                'Basic realm="Protected Page: ' .  
+                'Enter your username and password for access."');  
+            header("HTTP/1.0 401 Unauthorized");  
+
+            die();
+        }   
+        
         $this->view->title = 'DBT';
         
         $this->view->css = AssetNew::metaCss();
