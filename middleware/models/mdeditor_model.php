@@ -49,7 +49,7 @@ class Mdeditor_model extends Model {
         try {
             
             $dbs = Input::post('dbs');
-            $dbs = base64_decode(urldecode($dbs));
+            $dbs = base64_decode($dbs);
             $dbs = rtrim($dbs, ';');
             
             if (DB_DRIVER == 'oci8') {
@@ -87,7 +87,7 @@ class Mdeditor_model extends Model {
         try {
             
             $dbs = Input::post('dbs');
-            $dbs = base64_decode(urldecode($dbs));
+            $dbs = base64_decode($dbs);
             $dbs = rtrim($dbs, ';');
             
             $page = Input::post('page', 1);

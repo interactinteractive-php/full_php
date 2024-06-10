@@ -85,7 +85,7 @@ function dbtRun(elem) {
     
     if (sqlQuerySql !== null && sqlQuerySql !== '') {
         
-        var dbs = encodeURIComponent(window.btoa(sqlQuerySql));
+        var dbs = btoa(unescape(encodeURIComponent(sqlQuerySql)));
         
         $.ajax({
             type: 'post',
