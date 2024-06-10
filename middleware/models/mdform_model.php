@@ -30124,7 +30124,8 @@ class Mdform_Model extends Model {
                     T0.DESCRIPTION, 
                     T0.WIDGET_CODE, 
                     T0.IS_DATAMART_RENDER,
-                    T5.IS_SEPERATOR
+                    T5.IS_SEPERATOR,
+                    T5.IS_OPEN_GROUP 
                 FROM ( 
                     $checkPermissionWithAs 
                     SELECT 

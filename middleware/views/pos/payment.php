@@ -89,7 +89,7 @@
                                         </div>
                                         <div class="col-md-5 pr0">
                                             <?php 
-                                            echo str_replace('<option value="'.$bankRow['bankid'].'"', '<option value="'.$bankRow['bankid'].'" selected="selected"', $this->bankCombo); 
+                                            echo str_replace('<option value="'.$bankRow['bankid'].'"', '<option value="'.$bankRow['bankid'].'" selected="selected"', $this->bankCardCombo); 
                                             ?>
                                         </div>    
                                         <div class="col-md-1">
@@ -361,7 +361,7 @@
                                     </div>
                                     <div class="col-md-5 pr0">
                                         <?php 
-                                        echo str_replace('<option value="'.$accountTransferRow['bankid'].'"', '<option value="'.$accountTransferRow['bankid'].'" selected="selected"', str_replace('posBankIdDtl[]', 'accountTransferBankIdDtl[]', $this->bankCombo)); 
+                                        echo str_replace('<option value="'.$accountTransferRow['bankid'].'"', '<option value="'.$accountTransferRow['bankid'].'" selected="selected"', str_replace('posBankIdDtl[]', 'accountTransferBankIdDtl[]', $this->bankTransferCombo)); 
                                         ?>
                                     </div>    
                                     <div class="col-md-1">
@@ -1647,7 +1647,7 @@ $(function(){
             <input type="hidden" name="deviceTraceNo[]" />                
         </div>
         <div class="col-md-5 pr0 <?php echo issetParam($this->bankAmountDisable) ? "hidden" : "";?>">
-            <?php echo $this->bankCombo; ?>
+            <?php echo $this->bankCardCombo; ?>
         </div>    
         <div class="float-left pl10">
             <?php if (Session::get(SESSION_PREFIX.'posUseIpTerminal') == '1') { ?>
@@ -1724,7 +1724,7 @@ $(function(){
             <input type="hidden" name="accountTransferDescrDtl[]">
         </div>
         <div class="col-md-5 pr0 <?php echo issetParam($this->accountTransferAmountDisable) ? "hidden" : "";?>">
-            <?php echo str_replace('posBankIdDtl[]', 'accountTransferBankIdDtl[]', $this->bankCombo); ?>
+            <?php echo str_replace('posBankIdDtl[]', 'accountTransferBankIdDtl[]', $this->bankTransferCombo); ?>
         </div>    
         <div class="float-left pl10">
             <button type="button" class="btn btn-circle btn-sm green" onclick="addPosAccountTransferRow(this);" data-row-action="add" title="<?php echo $this->lang->line('addrow'); ?>"><i class="icon-plus3 font-size-12"></i></button>

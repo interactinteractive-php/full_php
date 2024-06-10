@@ -19,15 +19,15 @@ class Mdhelpdesk_Model extends Model {
                 $sourceId     = Input::numeric('sourceId');
                 $setContentId = $urlArr['filterid'];
                 
-                if ($fromType == 'meta_process') {
+                if ($fromType == 'meta_process' || $fromType == 'meta_dv') {
                     
                     $this->db->AutoExecute('META_DATA', ['HELP_CONTENT_ID' => $setContentId], 'UPDATE', "META_DATA_ID = $sourceId");
-                    (new Mdmeta())->bpParamsClearCache($sourceId, null);
                     
-                } elseif ($fromType == 'meta_dv') {
-                    
-                    $this->db->AutoExecute('META_DATA', ['HELP_CONTENT_ID' => $setContentId], 'UPDATE', "META_DATA_ID = $sourceId");
-                    (new Mdmeta())->dvCacheClearByMetaId($sourceId);
+                    if ($fromType == 'meta_process') {
+                        (new Mdmeta())->bpParamsClearCache($sourceId, null);
+                    } elseif ($fromType == 'meta_dv') {
+                        (new Mdmeta())->dvCacheClearByMetaId($sourceId);
+                    }
                     
                 } elseif ($fromType == 'mv_method' || $fromType == 'mv_list') {
                     

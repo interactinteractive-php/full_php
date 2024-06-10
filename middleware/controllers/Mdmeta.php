@@ -1567,7 +1567,8 @@ class Mdmeta extends Controller {
         
         if ($this->view->row['META_TYPE_ID'] == Mdmetadata::$businessProcessMetaTypeId) {
             $bpRow = $this->model->getMetaBusinessProcessLinkModel($metaDataId);
-            if ($bpRow['METHOD_NAME'] && in_array(strtolower($bpRow['METHOD_NAME']), Mdmetadata::$ignoreMethodNames) && Ue::sessionUserId() != '144617860666271') {
+            $sessionUserId = Ue::sessionUserId();
+            if ($bpRow['METHOD_NAME'] && in_array(strtolower($bpRow['METHOD_NAME']), Mdmetadata::$ignoreMethodNames) && $sessionUserId != '144617860666271' && $sessionUserId != '1453998999913' && $sessionUserId != '1479354351113') {
                 jsonResponse(array('status' => 'error', 'message' => 'Хуулах боломжгүй процесс байна! Та бүтээгдэхүүн хөгжүүлэлтийн хэлтэсийн захиралд хандана уу.'));
             }
         }

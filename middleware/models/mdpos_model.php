@@ -317,6 +317,88 @@ class Mdpos_Model extends Model {
             
         return $data;
     }
+    
+    public function getBankListCardModel() {
+        
+        //$cache = phpFastCache(); 
+        //$data = $cache->get('getPosBankList');               
+        $data = null;               
+        
+        $cashRegisterId = Session::get(SESSION_PREFIX.'cashRegisterId');
+        $storeId = Session::get(SESSION_PREFIX.'storeId');
+        $param = array(
+            'systemMetaGroupId' => Config::getFromCache('POS_CARD_BANK_LIST') ? Config::getFromCache('POS_CARD_BANK_LIST') : self::$bankInfoByStoreIdDvId,
+            'ignorePermission' => 1, 
+            'showQuery' => 0,
+            'criteria' => array(
+                'storeId' => array(
+                    array(
+                        'operator' => '=',
+                        'operand' => $storeId
+                    )
+                ),
+                'cashRegisterId' => array(
+                    array(
+                        'operator' => '=',
+                        'operand' => $cashRegisterId
+                    )
+                )
+            )
+        );
+
+        $result = $this->ws->runSerializeResponse(self::$gfServiceAddress, Mddatamodel::$getDataViewCommand, $param);
+
+        if (isset($result['result']) && isset($result['result'][0])) {
+            unset($result['result']['aggregatecolumns']);
+            unset($result['result']['paging']);
+            $data = $result['result'];
+        } else {
+            $data = null;
+        }
+            
+        return $data;
+    }
+    
+    public function getBankListTransferModel() {
+        
+        //$cache = phpFastCache(); 
+        //$data = $cache->get('getPosBankList');               
+        $data = null;               
+        
+        $cashRegisterId = Session::get(SESSION_PREFIX.'cashRegisterId');
+        $storeId = Session::get(SESSION_PREFIX.'storeId');
+        $param = array(
+            'systemMetaGroupId' => Config::getFromCache('POS_TRANSFER_BANK_LIST') ? Config::getFromCache('POS_TRANSFER_BANK_LIST') : self::$bankInfoByStoreIdDvId,
+            'ignorePermission' => 1, 
+            'showQuery' => 0,
+            'criteria' => array(
+                'storeId' => array(
+                    array(
+                        'operator' => '=',
+                        'operand' => $storeId
+                    )
+                ),
+                'cashRegisterId' => array(
+                    array(
+                        'operator' => '=',
+                        'operand' => $cashRegisterId
+                    )
+                )
+            )
+        );
+
+        $result = $this->ws->runSerializeResponse(self::$gfServiceAddress, Mddatamodel::$getDataViewCommand, $param);
+
+        if (isset($result['result']) && isset($result['result'][0])) {
+            unset($result['result']['aggregatecolumns']);
+            unset($result['result']['paging']);
+            $data = $result['result'];
+        } else {
+            $data = null;
+        }
+            
+        return $data;
+    }
 
     public function getBillNumModel() {
         

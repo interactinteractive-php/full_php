@@ -515,6 +515,9 @@
 .mv-checklist2-render-parent #pos-bottom-bar td {
     background-color: #fff !important;
 }
+.mv-checklist2-render-parent .tab-pane .meta-toolbar span {
+    color: rgba(51, 51, 51, .8);
+}
 .mv-checklist2-render-parent .pos-left {
     background-color: #fff;
     border-radius: .75rem;

@@ -2007,19 +2007,17 @@ class Mdcommon extends Controller {
         
         if ($attr['sourceId']) {
             
-            $parentControl = isset($attr['parentControl']) ? $attr['parentControl'] : null;
-            $buttonClass   = 'btn btn-secondary btn-circle btn-sm default';
-            $setButtonTitle = Lang::line('set_help_content_btn');
+            $parentControl   = isset($attr['parentControl']) ? $attr['parentControl'] : null;
+            $buttonClass     = 'btn btn-secondary btn-circle btn-sm default';
+            $setButtonTitle  = Lang::line('set_help_content_btn');
             $helpButtonTitle = Lang::line('menu_system_guide');
-            $setButtonText = '';
-            $helpButtonText = '';
+            $setButtonText   = $helpButtonText = '';
             
             if ($parentControl == 'dropdown') {
                 $buttonClass = 'dropdown-item';
                 $setButtonText = ' '.$setButtonTitle;
-                $setButtonTitle = '';
                 $helpButtonText = ' '.$helpButtonTitle;
-                $helpButtonTitle = '';
+                $helpButtonTitle = $setButtonTitle = '';
             }
             
             if ($isDev) {

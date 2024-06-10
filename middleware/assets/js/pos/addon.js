@@ -1144,7 +1144,19 @@ function posLockerUnilock(elem, processMetaDataId, dataViewId, selectedRow, para
 $(document.body).on("keydown", "#newLockerNfcCartReader", function (e) {
     var keyCode = e.keyCode ? e.keyCode : e.which;
     if (keyCode == 13) {
-        posLockerUnilockCheckNew($(this).val());
+        var tval  = $(this).val().replace(/№/g, 1)
+            .replace(/-/g, 2)
+            .replace(/"/g, 3)
+            .replace(/₮/g, 4)
+            .replace(/\:/g, 5)
+            .replace(/\./g, 6)
+            .replace(/\_/g, 7)
+            .replace(/,/g, 8)
+            .replace(/\%/g, 9)
+            .replace(/\?/g, 0);
+    
+        $(this).val(tval);    
+        posLockerUnilockCheckNew(tval);
     }    
 });
 

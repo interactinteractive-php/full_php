@@ -4,10 +4,18 @@ class DBUtil extends DBSql {
     
     public static function toShortName($driverName) 
     {
-        $result = str_replace(
-            array('oracle', 'mysql', 'mssql', 'mysqli', 'postgresql'), 
-            array('oci8', 'mysql', 'mssql', 'mysqli', 'postgres9'), 
-            $driverName
+        $result = strtr($driverName, 
+            [
+                'oracle'      => 'oci8', 
+                'oci'         => 'oci8', 
+                'mysql'       => 'mysqli', 
+                'mssql'       => 'mssql', 
+                'mysqli'      => 'mysqli', 
+                'postgresql'  => 'postgres9', 
+                'postgre'     => 'postgres9', 
+                'postgres'    => 'postgres9', 
+                'postgre_sql' => 'postgres9'
+            ]
         );
         
         return $result;
@@ -27,14 +35,14 @@ class DBUtil extends DBSql {
         global $db;
         
         $data = $db->GetAll("SELECT ID, DB_NAME, USER_NAME FROM MDM_CONNECTIONS WHERE IS_ACTIVE = 1 AND (IS_EXTERNAL IS NULL OR IS_EXTERNAL = 0) ORDER BY ID ASC");
-        $array = array();
+        $array = [];
         
         foreach ($data as $row) {
             
-            $array[] = array(
+            $array[] = [
                 'dbId'   => Crypt::encrypt($row['ID'], 'db00x'), 
                 'dbName' => $row['DB_NAME']
-            );
+            ];
         }
         
         return $array;

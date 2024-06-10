@@ -109,6 +109,15 @@ class Mdtimestable extends Controller {
         $this->view->balanceBtn = $this->model->getWfmStatusByBalanceBtnModel($this->view->sessionDepartmentId, $this->view->uniqId);
         $this->view->searchTnaEmployeeStatusList = $this->model->searchTnaEmployeeStatusListModel($this->view->golomtView);
         $this->view->calcList = $this->model->getCalcListModel();
+        
+        $this->view->isShowCalcButton = 1;
+        $existMetaId = (new Mdmetadata())->getMetaData('17170618248163');        
+        if ($existMetaId) {
+            $bresult = $this->ws->runResponse(GF_SERVICE_ADDRESS, 'checkPermissionCalcTms_004', array());
+            if (isset($bresult['result'])) {
+                $this->view->isShowCalcButton = issetParam($bresult['result']['result']);
+            }
+        }            
 
         $this->view->isAdmin = $this->model->getTnaIsApprovedDeparmentModel($this->view->sessionDepartmentId, $this->view->uniqId);
         

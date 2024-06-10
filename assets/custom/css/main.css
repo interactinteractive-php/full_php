@@ -14326,7 +14326,7 @@ table#externalContent thead td ul,
 
 .report-preview .report-preview-container page p {
     margin-top: 0 !important;
-    margin-bottom: 0 !important;
+    /*margin-bottom: 0 !important;*/
 }
 
 .report-preview-container span[contenteditable="true"] {
@@ -28846,8 +28846,8 @@ div.texteditor_clicktoedit_tinymceInit[contenteditable]:focus {
     right: 0;
     bottom: 0;
     background-color: #afafaf;
-    -webkit-transition: .4s;
-    transition: .4s;
+    -webkit-transition: .2s;
+    transition: .2s;
 }
 .bp-toggle-btn-slider:before {
     position: absolute;

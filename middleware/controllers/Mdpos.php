@@ -646,6 +646,8 @@ class Mdpos extends Controller {
         $this->view->invInfoTransactionValue  = '';
         $this->view->reasonReturnHtml         = '';        
         $bankList = $this->model->getBankListModel();
+        $bankCardList = $this->model->getBankListCardModel();
+        $bankTransferList = $this->model->getBankListTransferModel();
         
         $this->view->isDelivery = Input::post('isDelivery');
         
@@ -670,6 +672,72 @@ class Mdpos extends Controller {
                 array(
                     'name' => 'posBankIdDtl[]',
                     'data' => $bankList,
+                    'op_value' => 'bankid',
+                    'op_text' => 'bankname',
+                    'op_custom_attr' => array(array(
+                        'attr' => 'data-bankcode',
+                        'key' => 'bankcode'
+                    )),                    
+                    'class' => 'form-control form-control-sm select2', 
+                    'text' => '- '.$this->lang->line('POS_0059').' -'
+                )
+            );
+        }
+        
+        if (Session::get(SESSION_PREFIX.'posUseIpTerminal') === '1') {
+            $this->view->bankCardCombo = Form::select(
+                array(
+                    'name' => 'posBankIdDtl[]',
+                    'data' => $bankCardList,
+                    'op_value' => 'bankid',
+                    'op_id' => 'terminalid',
+                    'op_text' => 'bankname',
+                    'op_custom_attr' => array(array(
+                        'attr' => 'data-bankcode',
+                        'key' => 'bankcode'
+                    )),
+                    'text' => '- '.$this->lang->line('POS_0059').' -',
+                    'class' => 'form-control form-control-sm select2'
+                )
+            );
+        } else {
+            $this->view->bankCardCombo = Form::select(
+                array(
+                    'name' => 'posBankIdDtl[]',
+                    'data' => $bankCardList,
+                    'op_value' => 'bankid',
+                    'op_text' => 'bankname',
+                    'op_custom_attr' => array(array(
+                        'attr' => 'data-bankcode',
+                        'key' => 'bankcode'
+                    )),                    
+                    'class' => 'form-control form-control-sm select2', 
+                    'text' => '- '.$this->lang->line('POS_0059').' -'
+                )
+            );
+        }
+        
+        if (Session::get(SESSION_PREFIX.'posUseIpTerminal') === '1') {
+            $this->view->bankTransferCombo = Form::select(
+                array(
+                    'name' => 'posBankIdDtl[]',
+                    'data' => $bankTransferList,
+                    'op_value' => 'bankid',
+                    'op_id' => 'terminalid',
+                    'op_text' => 'bankname',
+                    'op_custom_attr' => array(array(
+                        'attr' => 'data-bankcode',
+                        'key' => 'bankcode'
+                    )),
+                    'text' => '- '.$this->lang->line('POS_0059').' -',
+                    'class' => 'form-control form-control-sm select2'
+                )
+            );
+        } else {
+            $this->view->bankTransferCombo = Form::select(
+                array(
+                    'name' => 'posBankIdDtl[]',
+                    'data' => $bankTransferList,
                     'op_value' => 'bankid',
                     'op_text' => 'bankname',
                     'op_custom_attr' => array(array(

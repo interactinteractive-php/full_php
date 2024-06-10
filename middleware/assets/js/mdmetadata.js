@@ -1213,7 +1213,7 @@ function dataViewSelectableGrid(metaDataCode, processMetaDataId, lookupMetaDataI
         $('<div id="' + $dialogName + '"></div>').appendTo('body');
     }
     var $dialog = $('#' + $dialogName);
-
+    
     $.ajax({
         type: 'post',
         url: 'mdmetadata/dataViewSelectableGrid',
@@ -6024,7 +6024,9 @@ function checkXypNtr(elem, processMetaDataId, dataViewId, selectedRow) {
                                         break;
                                 }
                                 
-                                fingerWithXypData($selectedItem, data.uniqId, $propertyNumber, $stateRegNumber, $legalEntityNumber, $civilNumber);
+                                if (typeof window['fingerWithXypData' + data.uniqId] !== 'undefined') {
+                                    window['fingerWithXypData' + data.uniqId]($selectedItem, data.uniqId, $propertyNumber, $stateRegNumber, $legalEntityNumber, $civilNumber);
+                                }
                             }
                         },
                         {

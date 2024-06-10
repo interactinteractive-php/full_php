@@ -93,7 +93,7 @@ class Login_Model extends Model {
 
         if (Config::getFromCache('CONFIG_USE_LDAP') && Config::getFromCache('ldap_login') == '3') {
             
-            if (in_array(strtolower($param['username']), array('admin', 'cadmin', 'uadmin'))) {
+            if (in_array(strtolower($param['username']), ['admin', 'cadmin', 'uadmin'])) {
                 $param['isLdap'] = 0;
             } else {
                 $param['isLdap'] = 1;
@@ -130,6 +130,13 @@ class Login_Model extends Model {
         if (isset($result['status'])) {
             
             if ($connectionId = issetParam($result['result']['connectionid'])) {
+                
+                Session::set(SESSION_PREFIX.'isUseMultiDatabase', true);
+                $this->setSessionDatabaseConnection(null, $connectionId);
+                
+            } elseif ($connectionId = issetParam($result['result']['unitname'])) {
+                
+                Session::set(SESSION_PREFIX.'isUseMultiDatabase', true);
                 $this->setSessionDatabaseConnection(null, $connectionId);
             }
             
@@ -1140,7 +1147,7 @@ class Login_Model extends Model {
                     MESSAGE 
                 FROM EML_TEMPLATE 
                 WHERE ID = ".$this->db->Param(0), 
-                array($emailTemplateId)
+                [$emailTemplateId]
             );
             
             $email = Session::get(SESSION_PREFIX . 'email');
@@ -1158,7 +1165,7 @@ class Login_Model extends Model {
         
                 $client = new Browser();
                 
-                $arr = array(
+                $arr = [
                     '[username]'       => $userName, 
                     '[loginDate]'      => Date::currentDate('Y-m-d'), 
                     '[loginTime]'      => Date::currentDate('H:i:s'), 
@@ -1167,21 +1174,19 @@ class Login_Model extends Model {
                     '[browserName]'    => $client->getBrowser(), 
                     '[browserVersion]' => $client->getVersion(), 
                     '[userAgent]'      => $client->getUserAgent()
-                );
+                ];
                 
                 foreach ($arr as $key => $val) {
                     $subject = str_ireplace($key, $val, $subject);
                     $body = str_ireplace($key, $val, $body);
                 }
                 
-                Mail::sendPhpMailer(
-                    array(
-                        'subject' => $subject, 
-                        'altBody' => $subject, 
-                        'body'    => $body, 
-                        'toMail'  => $email 
-                    )
-                );
+                Mail::sendPhpMailer([
+                    'subject' => $subject, 
+                    'altBody' => $subject, 
+                    'body'    => $body, 
+                    'toMail'  => $email 
+                ]);
             }
         }
         
@@ -1214,6 +1219,7 @@ class Login_Model extends Model {
             
             $dbId           = Crypt::decrypt(Input::post('dbName'), 'db00x');
             $connectionInfo = DBUtil::getConnectionByDbId($dbId);
+            
             if ($connectionInfo) {
                 
                 global $db;
@@ -1243,7 +1249,7 @@ class Login_Model extends Model {
                     if (!is_ajax_request()) {
                         Message::add('d', $e->msg, $redirectUrl ? $redirectUrl : AUTH_URL . 'login');
                     } else {
-                        jsonResponse(array('status' => 'warning', 'message' => $e->msg));
+                        jsonResponse(['status' => 'warning', 'message' => $e->msg]);
                     }
                 }
                 
@@ -1254,13 +1260,13 @@ class Login_Model extends Model {
                 $secondDb = $dbHost . '|$|' . $dbUser . '|$|' . $dbPass . '|$|' . $dbSID . '|$|' . (int)$connectSID;
                 $secondDb = Crypt::encrypt($secondDb, 'db49x');
                 
-                Session::set(SESSION_PREFIX . 'sdbun', $dbUser);
+                Session::set(SESSION_PREFIX . 'sdbun', (DB_DRIVER == 'oci8' ? $dbUser : $connectionInfo['ID']));
                 Session::set(SESSION_PREFIX . 'sdbid', $connectionInfo['ID']);
                 Session::set(SESSION_PREFIX . 'sdbnm', $connectionInfo['DB_NAME']);
                 Session::set(SESSION_PREFIX . 'sdb', $secondDb);
                 
-                Config::$configArr = array();
-                Config::$allConfigCodeArr = array();
+                Config::$configArr = [];
+                Config::$allConfigCodeArr = [];
             }
         }
         
@@ -1289,16 +1295,14 @@ class Login_Model extends Model {
         
         if ($this->isUseMultiDatabaseModel()) {
             
-            $combo = Form::select(
-                array(
-                    'name'     => 'dbName', 
-                    'class'    => 'select-rounded', 
-                    'data'     => DBUtil::getConnections(), 
-                    'op_value' => 'dbId', 
-                    'op_text'  => 'dbName', 
-                    'text'     => 'Бааз сонгох'
-                )
-            );
+            $combo = Form::select([
+                'name'     => 'dbName', 
+                'class'    => 'select-rounded', 
+                'data'     => DBUtil::getConnections(), 
+                'op_value' => 'dbId', 
+                'op_text'  => 'dbName', 
+                'text'     => 'Бааз сонгох'
+            ]);
             
             $control = '<div class="form-group form-group-feedback form-group-feedback-left database-choose">
                 <div class="form-group">
@@ -1323,19 +1327,17 @@ class Login_Model extends Model {
         
         if (Config::getFromCache('showLoginRegister') === '1') {
             
-            $combo = Form::select(
-                array(
-                    'name'     => 'isCustomer', 
-                    'class'    => 'select-rounded', 
-                    'data'     => array(
-                        array('id' => '0', 'name' => Lang::line('system_user')),
-                        array('id' => '1', 'name' => Lang::line('customer'))
-                    ), 
-                    'op_text'  => 'name', 
-                    'op_value' => 'id', 
-                    'text'     => 'notext'
-                )
-            );
+            $combo = Form::select([
+                'name'     => 'isCustomer', 
+                'class'    => 'select-rounded', 
+                'data'     => [
+                    ['id' => '0', 'name' => Lang::line('system_user')],
+                    ['id' => '1', 'name' => Lang::line('customer')]
+                ], 
+                'op_text'  => 'name', 
+                'op_value' => 'id', 
+                'text'     => 'notext'
+            ]);
             
             $control = '<div class="form-group form-group-feedback form-group-feedback-left database-choose">
                 <div class="form-group">
@@ -1356,7 +1358,7 @@ class Login_Model extends Model {
     
     public function getBackgroundImagesModel() {
         
-        $background = array();
+        $background = [];
         
         for ($b = 1; $b <= 6; $b++) {
             
@@ -1367,11 +1369,11 @@ class Login_Model extends Model {
                 $configBackgroundTitle = Config::getFromCache('login_background_title' . $b);
                 $configBackgroundDescr = Config::getFromCache('login_background_descr' . $b);
                 
-                $background[] = array(
+                $background[] = [
                     'image' => $configBackground, 
                     'title' => $configBackgroundTitle, 
                     'descr' => $configBackgroundDescr
-                );
+                ];
             } 
         }
         
@@ -1397,25 +1399,25 @@ class Login_Model extends Model {
         
         if ($dvId = Config::getFromCache('loginChooseUserKeyDvId')) {
             
-            $param = array(
+            $param = [
                 'systemMetaGroupId' => $dvId,
                 'showQuery' => 0, 
                 'ignorePermission' => 1, 
-                'criteria' => array(
-                    'userId' => array(
-                        array(
+                'criteria' => [
+                    'userId' => [
+                        [
                             'operator' => '=',
                             'operand' => Session::get(SESSION_PREFIX . 'systemUserId')
-                        )
-                    )
-                )
-            );
+                        ]
+                    ]
+                ]
+            ];
             
             if ($parentId = Input::numeric('parentId')) {
-                $param['criteria']['parentId'][] = array(
+                $param['criteria']['parentId'][] = [
                     'operator' => '=',
                     'operand' => $parentId
-                );
+                ];
             }
 
             $result = $this->ws->runResponse(GF_SERVICE_ADDRESS, Mddatamodel::$getDataViewCommand, $param);
@@ -1425,9 +1427,9 @@ class Login_Model extends Model {
                 unset($result['result']['paging']);
                 unset($result['result']['aggregatecolumns']);
 
-                $response = array('status' => 'success', 'data' => $result['result']);
+                $response = ['status' => 'success', 'data' => $result['result']];
             } else {
-                $response = array('status' => 'error', 'message' => $this->ws->getResponseMessage($result));
+                $response = ['status' => 'error', 'message' => $this->ws->getResponseMessage($result)];
             }
             
         } else {
@@ -1445,7 +1447,7 @@ class Login_Model extends Model {
             FROM UM_USER UM 
                 INNER JOIN UM_SYSTEM_USER US ON US.USER_ID = UM.SYSTEM_USER_ID 
             WHERE UM.USER_ID = ".$this->db->Param(0), 
-            array($userKeyId)
+            [$userKeyId]
         );
         
         return $row;
@@ -1459,7 +1461,7 @@ class Login_Model extends Model {
             FROM UM_SYSTEM_USER UM 
                 INNER JOIN UM_USER_OTP US ON US.USER_ID = UM.USER_ID 
             WHERE US.PASSCODE = ".$this->db->Param(0), 
-            array($hash)
+            [$hash]
         );
         
         return $row;

@@ -33,7 +33,7 @@ class Mdsalary extends Controller {
             
       $this->view->lookUpEmployee = $this->model->getLookUpCalcModel('PAYROLL_EMPLOYEE_LIST');
       $this->view->singleEditMode = false;
-      $this->view->isChange = '0';
+      $this->view->isChange = '0';  
       
       if (Input::postCheck('isChange')) {
           $this->view->isChange = '1';      

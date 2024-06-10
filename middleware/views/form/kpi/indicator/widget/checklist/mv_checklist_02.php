@@ -8,7 +8,9 @@ $renderType = $this->methodRow['RENDER_THEME'];
                 $headerTitleCss = 'position: fixed;
                 top: 12px;
                 z-index: 99;
-                left: 185px;
+                text-align: center;
+                width: 100%;
+                text-transform: uppercase;
                 font-size: 16px;
                 font-weight: 600;'; 
             } 
@@ -113,9 +115,10 @@ $renderType = $this->methodRow['RENDER_THEME'];
                     ?>                    
                         <div class="tab-pane <?php echo ($this->isIgnoreHeaderProcess ? ($tabId == 1 ? 'active' : '') : ''); ?>" id="maintabcustom_<?php echo $this->uniqId; ?>_<?php echo $tabId; ?>" style="padding-bottom: 0 !important;padding-top: 0 !important;padding-right: 0 !important;">
                             <div class="d-flex" style="background-color: rgb(244, 244, 244)">
-                                <div class="sidebar sidebar-light sidebar-secondary sidebar-expand-md mt-2 ml-2" style="width:280px;border-radius: .75rem;">
+<!--                                sidebar-light-->
+                                <div class="sidebar sidebar-dark sidebar-secondary sidebar-expand-md mt-2 ml-2" style="width:280px;border-radius: .75rem;">
                                     <div class="d-flex justify-content-end">
-                                        <a href="javascript:;" title="Sidebar хураах" onclick="mvCheckListSidebarClose(this)" style="color: #333;font-size: 15px;line-height: 0;margin-top: 5px;margin-right: 12px;"><i class="far fa-arrow-alt-to-left"></i></a>
+                                        <a href="javascript:;" title="Sidebar хураах" class="checklist-sidebar-close-btn" onclick="mvCheckListSidebarClose(this)" style=""><i class="icon-arrow-left5"></i></a>
                                     </div>
                                     <div class="sidebar-content">
 
@@ -201,7 +204,7 @@ $renderType = $this->methodRow['RENDER_THEME'];
                                                         }
 
                                                         if ($groupName != 'яяяrow') {
-                                                            echo '<li class="nav-item nav-item-submenu '.(!$n2 ? 'nav-group-sub-mv-opened' : '').'">';
+                                                            echo '<li class="nav-item nav-item-submenu '.(!$n2 || $row['IS_OPEN_GROUP'] ? 'nav-group-sub-mv-opened' : '').'">';
                                                                 echo '<a href="javascript:;" class="nav-link mv_checklist_02_groupname">'.$this->lang->line($groupName).'</a>';
                                                                 echo '<ul class="nav nav-group-sub">';
                                                         }
@@ -214,7 +217,7 @@ $renderType = $this->methodRow['RENDER_THEME'];
                                                             echo '</li>';
                                                             
                                                             if ($groupRow['row']['IS_SEPERATOR'] == 1) {
-                                                                echo '<li class="nav-item" style="margin-top: 10px;margin-bottom: 10px;"><div style="border: 1px solid rgb(244, 244, 244);margin-left: 20px;margin-right: 20px;"></div></li>';
+                                                                echo '<li class="nav-item" style="margin-top: 10px;margin-bottom: 10px;"><div style="border: 1px solid rgb(82 82 82);margin-left: 20px;margin-right: 20px;"></div></li>';
                                                             }
                                                         }
                                                     }
@@ -266,6 +269,22 @@ if ($renderType == 'paper_main_window') {
 .mv-checklist2-render-parent .mv-checklist-render-comment .dialog-chat .avatar {
     display: none;
 }   
+.sidebar-dark .nav-link.mv_checklist_02_groupname {
+    color: #c1bdab !important;
+}
+.sidebar-dark .checklist-sidebar-close-btn {
+    color: #fff;
+}
+.sidebar-dark .nav-sidebar>.nav-item-open>.nav-link:not(.disabled), .sidebar-dark .nav-sidebar>.nav-item>.nav-link.active {
+    background-color: rgba(255,255,255,.1);
+}
+.checklist-sidebar-close-btn {
+    color: #333;
+    font-size: 15px;
+    line-height: 0;
+    margin-top: 15px;
+    margin-right: 15px;
+}
 .nav-link.mv_checklist_02_groupname {
     font-size: 13px;
     color: #333 !important;
@@ -275,12 +294,12 @@ if ($renderType == 'paper_main_window') {
     text-transform: none !important;
 }    
 .nav-link.mv_checklist_02_sub {
-    padding-top: 2px;
-    padding-bottom: 2px;
+    padding-top: 5px;
+    padding-bottom: 3px;
     font-size: 12px;
 }
 .nav-link.mv_checklist_02_sub i {
-    color: #1B84FF !important;
+    color: #b0b7ee !important;
     margin-top: 2px;
     font-size: <?php echo $renderType == 'paper_main_window' ? '13px' : '18px'; ?>;    
     margin-right: 13px;

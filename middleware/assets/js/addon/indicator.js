@@ -404,16 +404,6 @@ function manageKpiIndicatorValue(elem, kpiTypeId, indicatorId, isEdit, opt, call
                         }
                     });
                 }
-                
-                if (typeof is_pfd != 'undefined' && is_pfd && (postData.param).hasOwnProperty('crudIndicatorId') && postData.param.crudIndicatorId) {
-                    buttons.splice(0, 0, {
-                        text: plang.get('set_help_content_btn'),
-                        class: 'btn btn-sm green-meadow float-left bp-btn-help',
-                        click: function(e) {
-                            setHelpContent($(e.target), data.helpContentId, postData.param.crudIndicatorId, 'mv_method');
-                        }
-                    });
-                }
     
                 $dialog.empty().append('<form method="post" enctype="multipart/form-data">' + data.html + '</form>');
                 $dialog.dialog({
@@ -2336,26 +2326,6 @@ function kpiIndicatorGoogleMapViewLoad(indicatorId, data, map) {
     var ROUTE = 'M24-28.3c-.2-13.3-7.9-18.5-8.3-18.7l-1.2-.8-1.2.8c-2 1.4-4.1 2-6.1 2-3.4 0-5.8-1.9-5.9-1.9l-1.3-1.1-1.3 1.1c-.1.1-2.5 1.9-5.9 1.9-2.1 0-4.1-.7-6.1-2l-1.2-.8-1.2.8c-.8.6-8 5.9-8.2 18.7-.2 1.1 2.9 22.2 23.9 28.3 22.9-6.7 24.1-26.9 24-28.3z';
     var SQUARE = 'M-24-48h48v48h-48z';
     var SQUARE_ROUNDED = 'M24-8c0 4.4-3.6 8-8 8h-32c-4.4 0-8-3.6-8-8v-32c0-4.4 3.6-8 8-8h32c4.4 0 8 3.6 8 8v32z';
-    var markerIconObj = {
-        path: MAP_PIN, 
-        scale: 0.6,
-        strokeWeight: 0.2,
-        strokeColor: 'black',
-        strokeOpacity: 1,
-        fillColor: color,
-        fillOpacity: 1, 
-        labelOrigin: new google.maps.Point(0, -27)
-    };
-    
-    if (icon) {
-        var markerObjLabel = {
-            fontFamily: "'Font Awesome 5 Pro'",
-            text: icon, 
-            color: '#fff', 
-            fontSize: '12px'
-        };
-    }
-    
     var savedPolygonData = [];
     
     if (polygonField) {
@@ -2428,83 +2398,82 @@ function kpiIndicatorGoogleMapViewLoad(indicatorId, data, map) {
     }
     
     var roId = rows[0].hasOwnProperty('RULE_CODE') ? rows[0]['RULE_CODE'] : '';
-    var rowsLength = rows.length, i = 0;
-    
-    for (i; i < rowsLength; i++) {
-        var row = rows[i];
+    $.each(rows, function(index, row) {
         var coordinateVal = row[coordinateField];
-        
-        if (polygonField) {
-            var polygonVal = row[polygonField];
-            if (polygonVal !== '' && polygonVal !== null) {
-                try {
-                    polygonVal = JSON.parse(html_entity_decode(polygonVal, 'ENT_QUOTES'));
-                    var indicatorPolygon = new google.maps.Polygon({
-                        paths: polygonVal.coordinates,
-                        poool: 1,
-                        strokeColor: (row.REGION_COLOR ? row.REGION_COLOR : polygonVal.color),
-                        strokeOpacity: 0.8,
-                        strokeWeight: 2,
-                        fillColor: (row.REGION_COLOR ? row.REGION_COLOR : polygonVal.color),
-                        fillOpacity: 0.35
-                    });    
-                    indicatorPolygon.setMap(map);              
-                    window['kpiMapLayer_' + indicatorId][row.SEGMENTATION_ID] = indicatorPolygon;                
-                    savedPolygonData.push('<div class="mb10 mr-3 cursor-pointer ml1 polygon-row" data-rowdata="'+encodeURIComponent(JSON.stringify(row))+'" style="border-left: 4px solid '+row.REGION_COLOR+';" data-id="'+row.SEGMENTATION_ID+'">\n\
-                        <div class="d-flex justify-content-between pt-1">\n\
-                            <div class="ml-1"><input type="checkbox" checked id="visible_polygon_btn_'+row.SEGMENTATION_ID+'" class="notuniform visible_polygon_btn"/> <label class="ml-1" for="visible_polygon_btn_'+row.SEGMENTATION_ID+'">'+row.SEGMENTATION_NAME+'</label></div> \n\
-                            <div><i class="show_polygon_marker_btn fa fa-map-marker" style="color:'+(row.REGION_COLOR ? row.REGION_COLOR : '#575757')+'" title="marker"></i> '+(roId == 1 ? '<i class="edit_polygon_btn fa fa-edit ml-1" style="color:'+(row.REGION_COLOR ? row.REGION_COLOR : '#575757')+'" title="засах"></i>' : '')+'</div>\n\
-                        </div>\n\
-                    </div>');
+        var polygonVal = row[polygonField];
 
-                    indicatorPolygon.addListener('click', function(event) {
-                        $.ajax({
-                            type: 'post',
-                            url: 'mdobject/generateDataviewFields',
-                            dataType: "json",
-                            data: {metaDataId: "1714556994466811"},
-                            success: function (data) {             
-                                var dvFields = data;
-                                $.ajax({
-                                    type: 'post',
-                                    url: 'api/callDataview',
-                                    data: {
-                                        dataviewId: '1714556994466811',
-                                        criteriaData: {
-                                            filterSegmentId: [{ operator: '=', operand: row.SEGMENTATION_ID }]
+        //if (polygonVal != '' && polygonVal != null && polygonVal.indexOf('{') !== -1) {                           
+            try {
+                polygonVal = JSON.parse(html_entity_decode(polygonVal, 'ENT_QUOTES'));
+                var indicatorPolygon = new google.maps.Polygon({
+                  paths: polygonVal.coordinates,
+                  poool: 1,
+                  strokeColor: (row.REGION_COLOR ? row.REGION_COLOR : polygonVal.color),
+                  strokeOpacity: 0.8,
+                  strokeWeight: 2,
+                  fillColor: (row.REGION_COLOR ? row.REGION_COLOR : polygonVal.color),
+                  fillOpacity: 0.35
+                });    
+                indicatorPolygon.setMap(map);              
+                window['kpiMapLayer_' + indicatorId][row.SEGMENTATION_ID] = indicatorPolygon;                
+                savedPolygonData.push('<div class="mb10 mr-3 cursor-pointer ml1 polygon-row" data-rowdata="'+encodeURIComponent(JSON.stringify(row))+'" style="border-left: 4px solid '+row.REGION_COLOR+';" data-id="'+row.SEGMENTATION_ID+'">\n\
+                    <div class="d-flex justify-content-between pt-1">\n\
+                        <div class="ml-1"><input type="checkbox" checked id="visible_polygon_btn_'+row.SEGMENTATION_ID+'" class="notuniform visible_polygon_btn"/> <label class="ml-1" for="visible_polygon_btn_'+row.SEGMENTATION_ID+'">'+row.SEGMENTATION_NAME+'</label></div> \n\
+                        <div><i class="show_polygon_marker_btn fa fa-map-marker" style="color:'+(row.REGION_COLOR ? row.REGION_COLOR : '#575757')+'" title="marker"></i> '+(roId == 1 ? '<i class="edit_polygon_btn fa fa-edit ml-1" style="color:'+(row.REGION_COLOR ? row.REGION_COLOR : '#575757')+'" title="засах"></i>' : '')+'</div>\n\
+                    </div>\n\
+                </div>');
+            
+                indicatorPolygon.addListener('click', function(event) {
+                    $.ajax({
+                        type: 'post',
+                        url: 'mdobject/generateDataviewFields',
+                        dataType: "json",
+                        data: {metaDataId: "1714556994466811"},
+                        beforeSend: function () {
+                        },
+                        success: function (data) {             
+                            var dvFields = data;
+                            $.ajax({
+                                type: "post",
+                                url: "api/callDataview",
+                                data: {
+                                  dataviewId: "1714556994466811",
+                                  criteriaData: {
+                                    filterSegmentId: [{ operator: "=", operand: row.SEGMENTATION_ID }],
+                                  },
+                                },
+                                dataType: "json",
+                                async: false,
+                                success: function (data) {
+                                    if (data.status === "success" && data.result[0]) {                    
+                                        var tbl = [];
+                                        tbl.push('<table class="table table-bordered">');
+
+                                        for (var s = 0; s < dvFields.length; s++) {
+                                            tbl.push('<tr>');
+                                                tbl.push('<td style="background-color: #f5f5f5;">'+plang.get(dvFields[s]['LABEL_NAME'])+':</td>');
+                                                tbl.push('<td>'+dvFieldValueShow(data.result[0][dvFields[s]['FIELD_PATH']])+'</td>');
+                                            tbl.push('</tr>');
                                         }
-                                    },
-                                    dataType: 'json',
-                                    async: false,
-                                    success: function (data) {
-                                        if (data.status === "success" && data.result[0]) {                    
-                                            var tbl = [];
-                                            tbl.push('<table class="table table-bordered">');
 
-                                            for (var s = 0; s < dvFields.length; s++) {
-                                                tbl.push('<tr>');
-                                                    tbl.push('<td style="background-color: #f5f5f5;">'+plang.get(dvFields[s]['LABEL_NAME'])+':</td>');
-                                                    tbl.push('<td>'+dvFieldValueShow(data.result[0][dvFields[s]['FIELD_PATH']])+'</td>');
-                                                tbl.push('</tr>');
-                                            }
+                                        tbl.push('</table>');
 
-                                            tbl.push('</table>');
-
-                                            $('div[data-id="'+row.SEGMENTATION_ID+'"]').find('.edit_polygon_btn').trigger('click');                    
-                                            infowindow.setContent(tbl.join(''));
-                                            infowindow.setPosition(event.latLng);
-                                            infowindow.open(map);                  
-                                        }
+                                        $('div[data-id="'+row.SEGMENTATION_ID+'"]').find('.edit_polygon_btn').trigger('click');                    
+                                        infowindow.setContent(tbl.join(''));
+                                        infowindow.setPosition(event.latLng);
+                                        infowindow.open(map);                  
                                     }
-                                });          
-                            },
-                            error: function () { alert("Error"); }
-                        });                    
-                    });                
-
-                } catch(e) {}
-            }
-        }
+                                }
+                            });          
+                        },
+                        error: function () {
+                            alert("Error");
+                        }
+                    });                    
+                });                
+                
+            } catch(e) {}
+        //}
         
         if (coordinateVal != '' && coordinateVal != null && (coordinateVal.indexOf('|') !== -1 || coordinateVal.indexOf(',') !== -1)) {
             
@@ -2531,24 +2500,42 @@ function kpiIndicatorGoogleMapViewLoad(indicatorId, data, map) {
                 
                 var markerObj = {
                     position: new google.maps.LatLng(lat, lng),
+                    animation: google.maps.Animation.DROP,
                     map: map,
                     rowData: row
                 };
                 
-                if (typeof row.markerphoto != 'undefined' && row.markerphoto !== null && row.markerphoto !== '') {
+                if (typeof row.markerphoto != 'undefined' && row.markerphoto) {
                     markerObj.icon = {
                         url: row.markerphoto,
                         scaledSize: new google.maps.Size(42, 42)
                     };
-                } else if (rowsLength < 1000) {
-                    markerObj.icon = markerIconObj;
+                } else {
+                    /*markerObj.icon = {
+                        url: 'http://mt.googleapis.com/vt/icon/name=icons/spotlight/spotlight-poi.png&scale=1'
+                    };*/
+                    markerObj.icon = {
+                        path: MAP_PIN, 
+                        scale: 0.6,
+                        strokeWeight: 0.2,
+                        strokeColor: 'black',
+                        strokeOpacity: 1,
+                        fillColor: color,
+                        fillOpacity: 1, 
+                        labelOrigin: new google.maps.Point(0, -27)
+                    };
                     
                     if (row.hasOwnProperty('MARKER_COLOR') && row.MARKER_COLOR) {
                         markerObj.icon.fillColor = row.MARKER_COLOR;
                     }
                     
                     if (icon) {
-                        markerObj.label = markerObjLabel;
+                        markerObj.label = {
+                            fontFamily: "'Font Awesome 5 Pro'",
+                            text: icon, 
+                            color: '#fff', 
+                            fontSize: '12px'
+                        };
                     }
                 }
 
@@ -2598,10 +2585,8 @@ function kpiIndicatorGoogleMapViewLoad(indicatorId, data, map) {
                 })(marker, showColumns));
             }
         }
-    }
-    
-    delete data;
-    delete rows;
+        
+    });
     
     if (Object.keys(savedPolygonData).length) {
         $('.indicator-polygon-data').html(savedPolygonData.join(''));
@@ -4201,7 +4186,16 @@ function chooseKpiIndicatorRowsFromBasket(elem, indicatorId, chooseType, funcNam
                         text: plang.get('addbasket_btn'),
                         class: 'btn green-meadow btn-sm float-left',
                         click: function() {
-                            window['basketCommonSelectableDataGrid_' + indicatorId]();
+                            if (chooseType === 'single' && $dialog.parent().find('.ui-dialog-buttonset > .datagrid-choose-btn').length > 0) {
+                                window['basketCommonSelectableDataGrid_' + indicatorId]();
+                                Core.blockUI({message: 'Loading...', boxed: true});
+                                setTimeout(() => {
+                                    $dialog.parent().find('.ui-dialog-buttonset > .datagrid-choose-btn').trigger('click');
+                                    Core.unblockUI();
+                                }, 1000);
+                            } else {
+                                window['basketCommonSelectableDataGrid_' + indicatorId]();
+                            }
                         }
                     },
                     {

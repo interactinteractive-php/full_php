@@ -332,7 +332,9 @@
                             <div class="row main-balance-btn">
                                 <div class="col-6">
                                     <?php echo Form::button(array('class' => 'btn btn-circle btn-sm btn-success float-left search-tms-btn', 'onclick' => 'getBalanceList(\''. $this->uniqId .'\')', 'value' => '<i class="fa fa-search"></i> ' . $this->lang->line('search_btn'))); ?>
-                                    <button type="button" data-uniqid='<?php echo $this->uniqId ?>' class="btn btn-sm blue btn-circle float-left downloadDataIO" title="Бодолт хийх"><i class="fa fa-calculator"></i> Бодолт хийх</button>
+                                    <?php if ($this->isShowCalcButton) { ?>
+                                        <button type="button" data-uniqid='<?php echo $this->uniqId ?>' class="btn btn-sm blue btn-circle float-left downloadDataIO" title="Бодолт хийх"><i class="fa fa-calculator"></i> Бодолт хийх</button>
+                                    <?php } ?>
                                 </div>
                                 <div class="col-6 pl-0 pr-0">
                                     <?php if ($this->getMetaDataIdWorkflow) { ?>

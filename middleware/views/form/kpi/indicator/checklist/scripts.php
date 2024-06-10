@@ -1113,7 +1113,9 @@ $(function() {
     ?> 
     
     $(".new-vlogo-link-backpage").css("background", "#fff");
-    $(".new-vlogo-link-backpage").find("img").attr("src", "<?php echo issetParam($logoImage) ?>");
+    <?php if ($renderType == 'paper_main_window') { ?>
+        $(".new-vlogo-link-backpage").find("img").attr("src", "<?php echo issetParam($logoImage) ?>");
+    <?php } ?>
     $(".appmenu-newdesign-header-1").css("box-shadow", "none");
     
     $(".mv-checklist2-render-parent").on("click", ".mv-checklist-section-sidebar a", function(){
@@ -1190,11 +1192,7 @@ function saveKpiIndicatorHeaderForm(elem) {
                         }
                     }
                     
-                    $parent.find('.mv-checklist-menu').find('.nav-link.disabled').removeClass('disabled');
-                    
-                    if ($parent.find('.mv-checklist-tab-link:visible:eq(0)').length == 1) {
-                        $parent.find('.mv-checklist-tab-link:visible:eq(0)').trigger('click');
-                    }
+                    $parent.find('.mv-checklist-menu').find('.nav-link.disabled').removeClass('disabled');                    
                     
                     window['kpiIndicatorAfterSave_' + uniqId]($this, data.status, data);
                     
@@ -1283,10 +1281,10 @@ function checkListSaveKpiIndicatorForm(elem) {
 }
 function mvCheckListSidebarClose(elem) {
     var $self = $(elem);    
-    if ($self.find("i").hasClass("fa-arrow-alt-to-left")) {
+    if ($self.find("i").hasClass("icon-arrow-left5")) {
         $self.attr("title", "Sidebar нээх");
         $self.closest(".sidebar").css("width", "0").find(".sidebar-content").hide();
-        $self.find("i").removeClass("fa-arrow-alt-to-left").addClass("fa-arrow-alt-to-right");
+        $self.find("i").removeClass("icon-arrow-left5").addClass("icon-arrow-right5");
         var wcontw = $self.closest('.mv-checklist2-render-parent').width() - 0;
         $self.closest('.mv-checklist2-render-parent').find('.checklist2-content-section').css('max-width', wcontw+'px');   
         $self.closest(".d-flex").css({
@@ -1305,7 +1303,7 @@ function mvCheckListSidebarClose(elem) {
         $self.closest(".d-flex").removeAttr("style");
         $self.closest(".sidebar").removeAttr("style");
         $self.closest(".sidebar").css({"width": "280px","border-radius": ".75rem"}).find(".sidebar-content").show();
-        $self.find("i").removeClass("fa-arrow-alt-to-right").addClass("fa-arrow-alt-to-left");
+        $self.find("i").removeClass("icon-arrow-right5").addClass("icon-arrow-left5");
         var wcontw = $self.closest('.mv-checklist2-render-parent').width() - 280;
         $self.closest('.mv-checklist2-render-parent').find('.checklist2-content-section').css('max-width', wcontw+'px');
         $(window).trigger("resize");
@@ -1431,6 +1429,13 @@ function checkListParentMenuShowHide(uniqId, $parent) {
                 });
             } 
         }
+        
+        setTimeout(function() {
+            if ($parent.find('.mv-checklist-tab-link:visible:eq(0)').length == 1) {
+                $parent.find('.mv-checklist-tab-link:visible:eq(0)').trigger('click');
+            }        
+        }, 100);
+        
     }, 1);
 }
 function checklistCloseDialog (elem) {
