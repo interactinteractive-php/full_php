@@ -2150,7 +2150,6 @@ class Mdwebservice extends Controller {
                 $attrArray['placeholder'] = Lang::line($param['PLACEHOLDER_NAME']);
                 
                 if ($fillParamValue = self::findRowKeyValFillData($fillParamData, $lowerParamName)) {
-                    
                     $fillParamValue = Mdmetadata::objectDeCompress($fillParamValue);
                     $attrArray['value'] = $fillParamValue;
                 }

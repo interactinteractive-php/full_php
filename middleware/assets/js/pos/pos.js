@@ -3275,7 +3275,6 @@ $(function () {
     "change",
     '#pos-payment-form input[data-path="serviceCustomerId"]',
     function () {
-      return;
       var $deliveryPanel = $(".pos-payment-delivery-header");
       var $this = $(this),
         rowData = JSON.parse($this.attr("data-row-data"));
@@ -3301,6 +3300,10 @@ $(function () {
       if (rowData.phonenumber1) {
         descr += rowData.phonenumber1;
       }
+      
+      $("#invInfoTransactionValue").val(descr.trim());
+      
+      return;
 
       $("#pos-org-name").val("");
       $("#pos-org-number").val("");
@@ -3360,9 +3363,7 @@ $(function () {
 
           Core.unblockUI();
         },
-      });
-
-      $("#invInfoTransactionValue").val(descr.trim());
+      });     
 
       if ($deliveryPanel.is(":visible")) {
         $("#recipientName").val(rowData.customername);

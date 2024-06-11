@@ -396,7 +396,6 @@ class Mdintegration extends Controller {
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
             curl_setopt($ch, CURLOPT_HTTPHEADER, array('Cache-Control: no-cache', 'Content-Length: 0')); //, 'Content-Type: text/html'
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
 
             $output = curl_exec($ch);
             $err = curl_error($ch);
@@ -432,7 +431,6 @@ class Mdintegration extends Controller {
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
             curl_setopt($ch, CURLOPT_HTTPHEADER, array('Cache-Control: no-cache', 'Content-Length: 0')); //, 'Content-Type: text/html'
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
 
             $output = curl_exec($ch);
             $err = curl_error($ch);

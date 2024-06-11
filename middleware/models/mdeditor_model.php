@@ -113,7 +113,7 @@ class Mdeditor_model extends Model {
             $selectCount = "SELECT COUNT(1) AS ROW_COUNT FROM ($dbs) WHERE 1 = 1 $subCondition";
             $selectList = "SELECT * FROM ($dbs) WHERE 1 = 1 $subCondition";
 
-            if (Input::postCheck('sort') && Input::postCheck('order')) {
+            if (Input::isEmpty('sort') == false && Input::isEmpty('order') == false) {
                 
                 $sortField = Input::post('sort');
                 $sortOrder = Input::post('order');

@@ -579,6 +579,8 @@ if (!$this->isAjax) {
         border-radius: 50%;
         border-left-color: #333;
         margin-top: 1px;    
+        padding: 0px 5px;
+        height: 20px;        
     }
     .jeasyuiTheme3 .datagrid-header .datagrid-cell span {
         font-size: 11px;
@@ -766,8 +768,8 @@ if (!$this->isAjax) {
     background-color: #41c3f1 !important;
     }
     #calculateSalarySheetDiv_<?php echo $this->uniqId; ?> .jeasyuiTheme3 .form-control {
-        height: <?php echo Config::getFromCacheDefault('PayrollWindowRowPX', null, '28px') ?> !important;
-        min-height: <?php echo Config::getFromCacheDefault('PayrollWindowRowPX', null, '28px') ?> !important;
+        height: <?php echo Config::getFromCacheDefault('PayrollWindowRowPX', null, '24px') ?> !important;
+        min-height: <?php echo Config::getFromCacheDefault('PayrollWindowRowPX', null, '24px') ?> !important;
     }
     #calculateSalarySheetDiv_<?php echo $this->uniqId; ?> .jeasyuiTheme3 .datagrid-row {
         height: <?php echo Config::getFromCacheDefault('PayrollWindowRowPX', null, '25px') ?> !important;

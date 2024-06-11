@@ -4026,7 +4026,7 @@ class Mdstatement extends Controller {
         
         $statementId = Input::numeric('statementId');
         $columnName  = Input::post('columnName');
-        $rId         = Input::numeric('rId');
+        $rId         = Input::post('rId');
         
         if ($rId == 'iframe') {
             

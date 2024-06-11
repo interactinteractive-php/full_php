@@ -12300,7 +12300,91 @@ class Mdform_Model extends Model {
             }
             
             $sessionValues = Session::get(SESSION_PREFIX . 'sessionValues');
-            $sessionName   = issetDefaultVal($sessionValues['sessionusername'], Ue::getSessionPersonWithLastName());            
+            $sessionName   = issetDefaultVal($sessionValues['sessionusername'], Ue::getSessionPersonWithLastName());
+            
+            /**
+             * Start Microflow expression
+             */
+            if (!isset($postData['isMicroFlow'])) { 
+                $this->db->BeginTrans(); 
+                
+                $getExpIndicatorId = self::getParentIndicatorFunctionModel($crudIndicatorId);
+                $expIndicatorId = '';
+                
+                if ($getExpIndicatorId) {                    
+                    $expIndicatorId = $getExpIndicatorId['SRC_RECORD_ID'];                    
+                } elseif ($kpiTypeId === '2009') {
+                    $expIndicatorId = $kpiMainIndicatorId;
+                }
+                
+                if ($expIndicatorId) {
+                    $flowData = Mdform::$mvSaveParams;
+                    $flowData['indicatorinfo_id'] = $kpiMainIndicatorId;
+                    $microFlowResponce = (new Mdexpression())->executeMicroFlowExpression($expIndicatorId, $flowData);
+                    
+                    if ($microFlowResponce != '_microflow_success') {
+                        $this->db->RollbackTrans();
+                        
+                        if (issetParam($microFlowResponce['status']) === 'microflowConfirmation') {
+                            return $microFlowResponce;
+                        }
+                        
+                        if (isset($microFlowResponce['data']) && issetParam($microFlowResponce['data']['type']) === 'message') {
+                            $messageStr = '<ul style="padding-left: 20px;">';
+                            foreach ($microFlowResponce['data']['result'] as $messRow)
+                                $messageStr .= '<li>'.$messRow['message'].'</li>';
+                            $messageStr .= '</ul>';
+                        }
+                        if (isset($messageStr)) {
+                            $microFlowResponce = $messageStr;
+                        }
+                        $response = (is_array($microFlowResponce) && isset($microFlowResponce['message'])) ? $microFlowResponce : ['status' => 'error', 'message' => $microFlowResponce];
+                        
+                        return $response;
+                    }                               
+                }          
+
+                /*if ($kpiTypeId === '16641793815766') {
+                    $getTypeIndicatorId = $this->db->GetOne("SELECT RELATED_INDICATOR_ID FROM KPI_TYPE WHERE ID = ".$this->db->Param(0), array($kpiTypeId));
+
+                    $flowData = Mdform::$mvSaveParams;
+                    $flowData['indicatorinfo_id'] = $kpiMainIndicatorId;              
+                    $microFlowResponce = (new Mdexpression())->executeMicroFlowExpression($getTypeIndicatorId, $flowData);            
+                    if ($microFlowResponce != '_microflow_success') {
+                        $this->db->RollbackTrans();
+                        
+                        if (issetParam($microFlowResponce['status']) === 'microflowConfirmation') {
+                            return $microFlowResponce;
+                        }
+                        
+                        if (isset($microFlowResponce['data']) && issetParam($microFlowResponce['data']['type']) === 'message') {
+                            $messageStr = '<ul style="padding-left: 20px;">';
+                            foreach ($microFlowResponce['data']['result'] as $messRow)
+                                $messageStr .= '<li>'.$messRow['message'].'</li>';
+                            $messageStr .= '</ul>';
+                        }
+                        if (isset($messageStr)) {
+                            $microFlowResponce = $messageStr;
+                        }
+                        $response = array('status' => 'error', 'message' => $microFlowResponce);
+                        return $response;
+                    }                           
+                }*/           
+            }
+
+            if ($kpiTypeId == '2009') {
+                $response = array('status' => 'success', 'message' => Lang::line('msg_save_success'), 'uniqId' => getUID());             
+                return $response;
+            }            
+
+            if (isset($getExpIndicatorId) && isset($_POST['isMicroFlowSelfSave']) && !$isExcelImport) { 
+                $this->db->CommitTrans();
+                $response = array('status' => 'success', 'message' => Lang::line('msg_save_success'), 'uniqId' => getUID());             
+                return $response;
+            }            
+            /**
+             * End Microflow expression
+             */
             
             if ($configRow['COUNT_UNIQUE']) {
                 $checkUnique = self::beforeSaveCheckUnique($kpiMainIndicatorId, $isIgnoreAlter, $tblName, $kpiTblIdField, $columnsData, Mdform::$mvSaveParams, $kpiTblId);
@@ -12665,90 +12749,6 @@ class Mdform_Model extends Model {
                     }
                 }
             }
-            
-            /**
-             * Start Microflow expression
-             */
-            if (!isset($postData['isMicroFlow'])) { 
-                $this->db->BeginTrans(); 
-                
-                $getExpIndicatorId = self::getParentIndicatorFunctionModel($crudIndicatorId);
-                $expIndicatorId = '';
-                
-                if ($getExpIndicatorId) {                    
-                    $expIndicatorId = $getExpIndicatorId['SRC_RECORD_ID'];                    
-                } elseif ($kpiTypeId === '2009') {
-                    $expIndicatorId = $kpiMainIndicatorId;
-                }
-                
-                if ($expIndicatorId) {
-                    $flowData = Mdform::$mvSaveParams;
-                    $flowData['indicatorinfo_id'] = $kpiMainIndicatorId;
-                    $microFlowResponce = (new Mdexpression())->executeMicroFlowExpression($expIndicatorId, $flowData);
-                    
-                    if ($microFlowResponce != '_microflow_success') {
-                        $this->db->RollbackTrans();
-                        
-                        if (issetParam($microFlowResponce['status']) === 'microflowConfirmation') {
-                            return $microFlowResponce;
-                        }
-                        
-                        if (isset($microFlowResponce['data']) && issetParam($microFlowResponce['data']['type']) === 'message') {
-                            $messageStr = '<ul style="padding-left: 20px;">';
-                            foreach ($microFlowResponce['data']['result'] as $messRow)
-                                $messageStr .= '<li>'.$messRow['message'].'</li>';
-                            $messageStr .= '</ul>';
-                        }
-                        if (isset($messageStr)) {
-                            $microFlowResponce = $messageStr;
-                        }
-                        $response = (is_array($microFlowResponce) && isset($microFlowResponce['message'])) ? $microFlowResponce : ['status' => 'error', 'message' => $microFlowResponce];
-                        
-                        return $response;
-                    }                               
-                }          
-
-                /*if ($kpiTypeId === '16641793815766') {
-                    $getTypeIndicatorId = $this->db->GetOne("SELECT RELATED_INDICATOR_ID FROM KPI_TYPE WHERE ID = ".$this->db->Param(0), array($kpiTypeId));
-
-                    $flowData = Mdform::$mvSaveParams;
-                    $flowData['indicatorinfo_id'] = $kpiMainIndicatorId;              
-                    $microFlowResponce = (new Mdexpression())->executeMicroFlowExpression($getTypeIndicatorId, $flowData);            
-                    if ($microFlowResponce != '_microflow_success') {
-                        $this->db->RollbackTrans();
-                        
-                        if (issetParam($microFlowResponce['status']) === 'microflowConfirmation') {
-                            return $microFlowResponce;
-                        }
-                        
-                        if (isset($microFlowResponce['data']) && issetParam($microFlowResponce['data']['type']) === 'message') {
-                            $messageStr = '<ul style="padding-left: 20px;">';
-                            foreach ($microFlowResponce['data']['result'] as $messRow)
-                                $messageStr .= '<li>'.$messRow['message'].'</li>';
-                            $messageStr .= '</ul>';
-                        }
-                        if (isset($messageStr)) {
-                            $microFlowResponce = $messageStr;
-                        }
-                        $response = array('status' => 'error', 'message' => $microFlowResponce);
-                        return $response;
-                    }                           
-                }*/           
-            }
-
-            if ($kpiTypeId == '2009') {
-                $response = array('status' => 'success', 'message' => Lang::line('msg_save_success'), 'uniqId' => getUID());             
-                return $response;
-            }            
-
-            if (isset($getExpIndicatorId) && isset($_POST['isMicroFlowSelfSave']) && !$isExcelImport) { 
-                $this->db->CommitTrans();
-                $response = array('status' => 'success', 'message' => Lang::line('msg_save_success'), 'uniqId' => getUID());             
-                return $response;
-            }            
-            /**
-             * End Microflow expression
-             */            
             
             if (!isset($postData['isMicroFlow']) && !$isExcelImport) { 
                 
@@ -14971,7 +14971,7 @@ class Mdform_Model extends Model {
                     INNER JOIN KPI_INDICATOR_INDICATOR_MAP T4 ON T4.ID IN ($mapIds) 
                         AND T4.TRG_INDICATOR_MAP_ID = T1.ID 
                     INNER JOIN KPI_INDICATOR_INDICATOR_MAP T5 ON T5.MAIN_INDICATOR_ID = T4.MAIN_INDICATOR_ID 
-                        AND T5.ID = T4.RELATED_INDICATOR_MAP_ID     
+                        AND T5.ID = T4.RELATED_INDICATOR_MAP_ID 
                 WHERE T1.ID IN ($trgMapIds)");
             
             if ($mapConfigs) {
@@ -14988,7 +14988,7 @@ class Mdform_Model extends Model {
 
                 $mapConfigs = Arr::groupByArray($mapConfigs, 'TABLE_NAME');
                 $mainSelectColumn = $selectColumn = $leftJoin = null;
-                $aliasNum = 2;
+                $aliasNum = 1;
                 
                 foreach ($columns as $columnRow) {
                     
@@ -14998,25 +14998,31 @@ class Mdform_Model extends Model {
                 }
 
                 foreach ($mapConfigs as $joinTableName => $mapConfig) {
-
-                    $mapConfigRow = $mapConfig['row'];
+                    
+                    $checkJoin = [];
                     $mapConfigRows = $mapConfig['rows'];
-
-                    $pkColumnName = $mapConfigRow['PK_COLUMN_NAME'];
-                    $mainJoinColumnName = $mapConfigRow['MAIN_JOIN_COLUMN_NAME'];
                     
                     if (strlen($joinTableName) > 30 && stripos($joinTableName, 'select') !== false && stripos($joinTableName, 'from') !== false) {
                         $joinTableName = "($joinTableName)";
                     }
-
-                    $leftJoin .= "LEFT JOIN $joinTableName T$aliasNum ON T$aliasNum.$pkColumnName = T1.$mainJoinColumnName ";
-
-                    foreach ($mapConfigRows as $config) {
-
-                        $selectColumn .= "T$aliasNum.".$config['TRG_COLUMN_NAME']." AS ".$config['MAIN_SELECT_COLUMN_NAME'].", ";
+                    
+                    foreach ($mapConfigRows as $mapConfigR) {
+                        
+                        if (!isset($checkJoin[$mapConfigR['PK_COLUMN_NAME'].'_'.$mapConfigR['MAIN_JOIN_COLUMN_NAME']])) {
+                            
+                            $aliasNum ++;
+                            
+                            $checkJoin[$mapConfigR['PK_COLUMN_NAME'].'_'.$mapConfigR['MAIN_JOIN_COLUMN_NAME']] = $aliasNum;
+                            
+                            $leftJoin .= "LEFT JOIN $joinTableName T$aliasNum ON T$aliasNum.".$mapConfigR['PK_COLUMN_NAME']." = T1.".$mapConfigR['MAIN_JOIN_COLUMN_NAME']." ";
+                            $selectColumn .= "T$aliasNum.".$mapConfigR['TRG_COLUMN_NAME']." AS ".$mapConfigR['MAIN_SELECT_COLUMN_NAME'].", ";
+                            
+                        } else {
+                            
+                            $prevAliasNum = $checkJoin[$mapConfigR['PK_COLUMN_NAME'].'_'.$mapConfigR['MAIN_JOIN_COLUMN_NAME']];
+                            $selectColumn .= "T$prevAliasNum.".$mapConfigR['TRG_COLUMN_NAME']." AS ".$mapConfigR['MAIN_SELECT_COLUMN_NAME'].", ";
+                        }
                     }
-
-                    $aliasNum ++;
                 }
 
                 $selectColumn = rtrim(trim($selectColumn), ',');
@@ -15690,6 +15696,12 @@ class Mdform_Model extends Model {
                 foreach ($filterParams as $filterParam) {
                     
                     if ($filterParam['TRG_ALIAS_NAME'] != '') {    
+                        
+                        if (strtoupper($filterParam['TRG_ALIAS_NAME']) == 'FILTERNEXTWFMUSERID' && $filterParam['DEFAULT_VALUE'] != '') {
+                            $filterNextWfmUserId = Mdmetadata::setDefaultValue($filterParam['DEFAULT_VALUE']);
+                            continue;
+                        }
+                    
                         $bindVal = ($filterParam['DEFAULT_VALUE'] != '') ? "'".Mdmetadata::setDefaultValue($filterParam['DEFAULT_VALUE'])."'" : 'NULL';
                         $tableName = str_ireplace(':'.$filterParam['TRG_ALIAS_NAME'], $bindVal, $tableName);
                     }
@@ -26288,8 +26300,6 @@ class Mdform_Model extends Model {
                                     throw new Exception($dataJson['GET_INDICATOR_ID'] . ' - GET_INDICATOR_ID тохиргоо олдсонгүй!');
                                 }
                                 
-                                $isMethodWithParam = 0;
-                                
                                 if ($crudIndicatorId) {
                                     $isMethodWithParam = self::getKpiIndicatorMapChildCountModel($crudIndicatorId);
                                     
@@ -26298,181 +26308,33 @@ class Mdform_Model extends Model {
                                     }
                                 }
                                 
-                                $fillMapTableName = $getIndicatorRow['TABLE_NAME'] ? $getIndicatorRow['TABLE_NAME'] : $fillMapRow['QUERY_STRING'];
-                                
-                                if ($dataJson['GET_INDICATOR_ID'] == issetVar($_POST['param']['indicatorId']) || $isMethodWithParam || !$fillMapTableName) {
-                                    
-                                    if (!isset($equalVal)) {
-                                        throw new Exception('Шүүх талбарын тохиргоо олдсонгүй!');
-                                    }
-                                    
-                                    if (is_array($equalVal)) {
-                                        
-                                        $resultData = [];
-                                        
-                                        foreach ($equalVal as $eVal) {
-                                            $getDetailData = self::getKpiIndicatorDetailDataModel($dataJson['GET_INDICATOR_ID'], $eVal, $trg);
-                                            
-                                            if ($detailData = issetParam($getDetailData['detailData'])) {
-                                                $resultData[] = $detailData;
-                                            }
-                                        }
-                                        
-                                        return isset($setRowsPath) ? [$setRowsPath => $resultData] : $resultData;              
-                                        
-                                    } else {
-                                        
-                                        //$getDetailData = self::getKpiIndicatorDetailDataModel($dataJson['GET_INDICATOR_ID'], $equalVal, $trg);
-                                        $getDetailData = self::getMetaVerseDataModel($dataJson['GET_INDICATOR_ID'], [$trg => $equalVal]);
-                                        
-                                        if ($detailData = issetParam($getDetailData['data'])) {
-                                            return isset($setRowsPath) ? [$setRowsPath => $detailData] : $detailData;                
-                                        }
-                                    }
+                                if (!isset($equalVal)) {
+                                    throw new Exception('Шүүх талбарын тохиргоо олдсонгүй!');
                                 }
-                                
-                            } else {
-                                
-                                $fillMapTableName = $fillMapRow['TABLE_NAME'] ? $fillMapRow['TABLE_NAME'] : $fillMapRow['SRC_TABLE_NAME'];
-                            
-                                if (!$fillMapTableName) {
-                                    $fillMapTableName = '('.($fillMapRow['QUERY_STRING'] ? $fillMapRow['QUERY_STRING'] : $fillMapRow['SRC_QUERY_STRING']).')';
-                                }
-                            }
-                            
-                            $fillMapTableName = self::parseQueryString($fillMapTableName);
-                            $queryNamedParams = DBSql::getQueryNamedParams($fillMapTableName);
-                            
-                            foreach ($queryNamedParams as $queryNamedParam) {
-                                $fillMapTableName = str_ireplace($queryNamedParam, "''", $fillMapTableName);
-                            }
-                            
-                            $rowData = $this->db->GetRow("SELECT * FROM $fillMapTableName WHERE 1 = 1 $where");
-                            
-                            if ($rowData) {
-                                
-                                $trgIndicatorId = (isset($isFillRelation) && $isFillRelation) ? issetVar($_POST['param']['indicatorId']) : $fillMapRow['ID'];
-                                $dataJsonArr    = (isset($rowData['DATA']) && $rowData['DATA']) ? @json_decode($rowData['DATA'], true) : [];
-                                
-                                unset($rowData['DATA']);
-                                
-                                if (isset($isFillRelation)) {
-                                    $tmpIndicatorId = $indicatorId;
-                                    $indicatorId = $trgIndicatorId;
-                                    $trgIndicatorId = $tmpIndicatorId;
-                                    $linkIndicatorId = $indicatorId;
-                                } else {
-                                    $linkIndicatorId = $trgIndicatorId;
-                                }
-                                
-                                $pathRelationConfigs = $this->db->GetAll("
-                                    SELECT 
-                                        LOWER(T0.ALIAS_NAME) AS ALIAS_NAME, 
-                                        T0.COLUMN_NAME, 
-                                        T0.SHOW_TYPE,
-                                        T0.ID,
-                                        T0.PARENT_ID, 
-                                        T1.TRG_INDICATOR_ID, 
-                                        T1.SEMANTIC_TYPE_ID, 
-                                        T1.COLUMN_NAME AS TRG_COLUMN_NAME, 
-                                        T1.SHOW_TYPE AS TRG_SHOW_TYPE,
-                                        T1.ID AS TRG_ID,
-                                        T1.PARENT_ID AS TRG_PARENT_ID 
-                                    FROM (
-                                        SELECT 
-                                            CASE WHEN T1.TRG_ALIAS_NAME IS NULL 
-                                                THEN T0.TRG_ALIAS_NAME 
-                                            ELSE T1.TRG_ALIAS_NAME||'.'||T0.TRG_ALIAS_NAME 
-                                            END AS ALIAS_NAME, 
-                                            T0.ID,
-                                            T0.COLUMN_NAME, 
-                                            T0.SHOW_TYPE,
-                                            T0.PARENT_ID, 
-                                            T0.ORDER_NUMBER, 
-                                            T0.TRG_INDICATOR_ID, 
-                                            T0.SEMANTIC_TYPE_ID 
-                                        FROM KPI_INDICATOR_INDICATOR_MAP T0 
-                                            LEFT JOIN KPI_INDICATOR_INDICATOR_MAP T1 ON T1.ID = T0.PARENT_ID 
-                                        WHERE T0.MAIN_INDICATOR_ID = ".$this->db->Param(0)." 
-                                            AND T0.TRG_ALIAS_NAME IS NOT NULL
-                                    ) T0 
-                                    INNER JOIN (
-                                        SELECT 
-                                            CASE WHEN T1.TRG_ALIAS_NAME IS NULL 
-                                                THEN T0.TRG_ALIAS_NAME 
-                                            ELSE T1.TRG_ALIAS_NAME||'.'||T0.TRG_ALIAS_NAME 
-                                            END AS ALIAS_NAME, 
-                                            T0.ID,
-                                            T0.COLUMN_NAME, 
-                                            T0.SHOW_TYPE,
-                                            T0.PARENT_ID, 
-                                            T0.TRG_INDICATOR_ID, 
-                                            T0.SEMANTIC_TYPE_ID 
-                                        FROM KPI_INDICATOR_INDICATOR_MAP T0 
-                                            LEFT JOIN KPI_INDICATOR_INDICATOR_MAP T1 ON T1.ID = T0.PARENT_ID 
-                                        WHERE T0.MAIN_INDICATOR_ID = ".$this->db->Param(1)." 
-                                            AND T0.TRG_ALIAS_NAME IS NOT NULL 
-                                    ) T1 ON LOWER(T1.ALIAS_NAME) = LOWER(T0.ALIAS_NAME) 
-                                    ORDER BY T0.PARENT_ID DESC, T0.ORDER_NUMBER ASC", 
-                                    array($indicatorId, $trgIndicatorId)    
-                                );
-                                
-                                foreach ($pathRelationConfigs as $p => $pathRelationConfig) {
-                                    
-                                    $srcColumnName = $pathRelationConfig['COLUMN_NAME'];
-                                    $srcShowType = $pathRelationConfig['SHOW_TYPE'];
-                                    $srcParentId = $pathRelationConfig['PARENT_ID'];
-                                    
-                                    $trgColumnName = $pathRelationConfig['TRG_COLUMN_NAME'];
-                                    $trgShowType = $pathRelationConfig['TRG_SHOW_TYPE'];
-                                    $trgParentId = $pathRelationConfig['TRG_PARENT_ID'];
-                                    $mapIndicatorId = $pathRelationConfig['TRG_INDICATOR_ID'];
-                                    $semanticTypeId = $pathRelationConfig['SEMANTIC_TYPE_ID'];
-                                    $savedSubTableRows = [];
-                                    
-                                    if ($srcShowType != 'rows' && $srcParentId == '') {
-                                        
-                                        $fillData[$srcColumnName] = issetParam($rowData[$trgColumnName]);
-                                        
-                                        unset($pathRelationConfigs[$p]);
-                                        
-                                    } elseif ($srcShowType == 'rows') {
-                                        
-                                        if ($trgIndicatorId && $semanticTypeId == '10000002') {
-                                            
-                                            $srcRowId = $rowData['ID'];
-                                            $savedSubTableRows = self::getKpiSubTableRowsModel($linkIndicatorId, $mapIndicatorId, $srcRowId, $trgColumnName);
-                                            
-                                        } elseif ($dataJsonArr) {
-                                            
-                                            $savedSubTableRows = issetParamArray($dataJsonArr[$trgColumnName]);
-                                        }
-                                        
-                                        unset($pathRelationConfigs[$p]);
-                                    }
-                                    
-                                    if ($savedSubTableRows) {
-                                            
-                                        $subRows = array();
-                                        
-                                        foreach ($savedSubTableRows as $s => $savedSubTableRow) {
-                                            
-                                            foreach ($pathRelationConfigs as $pathRelationConfigSub) {
-                                                
-                                                if ($pathRelationConfig['TRG_ID'] == $pathRelationConfigSub['TRG_PARENT_ID'] 
-                                                    && isset($savedSubTableRow[$pathRelationConfigSub['TRG_COLUMN_NAME']])) {
 
-                                                    $subRows[$s][$pathRelationConfigSub['COLUMN_NAME']] = $savedSubTableRow[$pathRelationConfigSub['TRG_COLUMN_NAME']];
-                                                }
-                                            }
-                                        }
-                                        
-                                        if ($subRows) {
-                                            $fillData[$srcColumnName] = $subRows;
+                                if (is_array($equalVal)) {
+
+                                    $resultData = [];
+
+                                    foreach ($equalVal as $eVal) {
+                                        $getDetailData = self::getKpiIndicatorDetailDataModel($dataJson['GET_INDICATOR_ID'], $eVal, $trg);
+
+                                        if ($detailData = issetParam($getDetailData['detailData'])) {
+                                            $resultData[] = $detailData;
                                         }
                                     }
+
+                                    return isset($setRowsPath) ? [$setRowsPath => $resultData] : $resultData;              
+
+                                } else {
+
+                                    $getDetailData = self::getMetaVerseDataModel($dataJson['GET_INDICATOR_ID'], [$trg => $equalVal]);
+
+                                    if ($detailData = issetParam($getDetailData['data'])) {
+                                        return isset($setRowsPath) ? [$setRowsPath => $detailData] : $detailData;                
+                                    }
                                 }
-                            }
+                            } 
                             
                         } catch (Exception $ex) { }
                         
@@ -30124,7 +29986,6 @@ class Mdform_Model extends Model {
                     T0.DESCRIPTION, 
                     T0.WIDGET_CODE, 
                     T0.IS_DATAMART_RENDER,
-                    T0.IS_SEPERATOR AS IS_SEPERATOR_MAP,
                     T5.IS_SEPERATOR,
                     T5.IS_OPEN_GROUP 
                 FROM ( 
@@ -30146,7 +30007,6 @@ class Mdform_Model extends Model {
                         T1.IS_COMMENT, 
                         T1.ICON, 
                         T1.DESCRIPTION, 
-                        T1.IS_SEPERATOR,
                         T6.CODE AS WIDGET_CODE, 
                         T3.META_DATA_ID, 
                         ".$this->db->IfNull('T4.LIST_NAME', $this->db->IfNull('T5.PROCESS_NAME', 'T3.META_DATA_NAME'))." AS META_DATA_NAME, 
@@ -30191,7 +30051,6 @@ class Mdform_Model extends Model {
                         T1.IS_COMMENT, 
                         T1.ICON, 
                         T1.DESCRIPTION, 
-                        T1.IS_SEPERATOR,
                         T6.CODE, 
                         T3.META_DATA_ID, 
                         T3.META_DATA_NAME, 
