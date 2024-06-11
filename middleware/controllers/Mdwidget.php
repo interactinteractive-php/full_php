@@ -4578,7 +4578,7 @@ class Mdwidget extends Controller {
                 $listCount = issetParam($rowParent['attributes']['data-listcount']);
             }
             
-            $lowerType = Str::lower($row['type']);
+            $lowerType = Str::lower(checkDefaultVal($row['attributes']['data-type'], $row['type']));
             $attrs = $mainId = '';
 
             if ($lowerType !== 'script') {
@@ -4601,10 +4601,10 @@ class Mdwidget extends Controller {
                     }
                 }
 
-                $parentLowerType = Str::lower($rowParent['type']);
+                $parentLowerType = Str::lower(checkDefaultVal($rowParent['attributes']['data-type'], $rowParent['type']));
                 $pageHtml .= '<' . $parentLowerType . $parentAttrs . '>';
 
-                $lowerType = Str::lower($row['type']);
+                $lowerType = Str::lower(checkDefaultVal($row['attributes']['data-type'], $row['type']));
                 $attrs = $mainId = '';
                 $chartData = array();
 
@@ -4637,7 +4637,7 @@ class Mdwidget extends Controller {
         } else {
             foreach ($body as $row) {
                 if (is_array($row)) {
-                    $lowerType = Str::lower($row['type']);
+                    $lowerType = Str::lower(checkDefaultVal($row['attributes']['data-type'], $row['type']));
                     $widgetSimpleDataRow = $fillDataRow;
                     $widgetSimpleDataRows = $fillDataArr;
 
@@ -4645,7 +4645,7 @@ class Mdwidget extends Controller {
                         $attrs = $mainId = '';
                         $chartData = array();
                         if (issetParamArray($row['attributes'])) {
-
+                            unset($row['attributes']['styleFields']);
                             if (issetParam($row['attributes']['data-widgetid']) !== '') {
                                 $_POST['indicatorId'] = $row['attributes']['data-widgetid'];
                                 $mdf = &getInstance();
@@ -4768,7 +4768,7 @@ class Mdwidget extends Controller {
         (String) $pageHtml = $pageCss = '';
         foreach ($body as $row) {
             if (is_array($row)) {
-                $lowerType = Str::lower($row['type']);
+                $lowerType = Str::lower(checkDefaultVal($row['attributes']['data-type'], $row['type']));
 
                 if ($lowerType !== 'script') {
                     $attrs = $mainId = '';
@@ -5035,14 +5035,10 @@ class Mdwidget extends Controller {
 
         $postData = Input::postData();
         $jsonConfig = $postData['json'];
-
-        /* 
         $checkJson = json_decode(html_entity_decode($jsonConfig, ENT_QUOTES, 'UTF-8'), true);
-        $checkWidgetId = array();
-
-        array_walk_recursive($checkJson, function ($item, $key) use (&$checkWidgetId) { if ($key === 'data-widgetid' && $item) { $checkWidgetId[$key] = $item; }  });
-        */
-
+        array_walk_recursive($checkJson, 'changeValueByKey');
+        $jsonConfig = json_encode($checkJson);
+        
         $_POST = array (
             'param' =>  array (
                 'id' => issetParam($postData['indicatorId']),
@@ -5060,7 +5056,7 @@ class Mdwidget extends Controller {
                 ),
                 'widgetDtl.widgetConfig' =>  array (
                     array (
-                    0 => issetParam($jsonConfig),
+                        0 => issetParam($jsonConfig),
                     ),
                 ),
                 'categoryMap.id' =>  array (

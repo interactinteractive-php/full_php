@@ -30,7 +30,7 @@ $renderType = $this->methodRow['RENDER_THEME'];
             </a>
         </div>   
         <?php if ($renderType == 'paper_main_window') { ?>
-            <p class="mb-0 mt-0" style="font-size: 20px;font-weight: bold;<?php echo $headerTitleCss ?>"><?php echo $this->title ?></p>
+            <p class="mb-0 mt-0 paper_main_window_sys_title_<?php echo Config::getFromCacheDefault('IS_APPMENU_NEWDESIGN', null, 0); ?>" style="font-size: 20px;font-weight: bold;<?php echo $headerTitleCss ?>"><?php echo $this->title ?></p>
         <?php } ?>
         <div class="row mv-checklist-render-parent mv-checklist2-render-parent" id="mv-checklist-render-parent-<?php echo $this->uniqId; ?>">
 
@@ -199,6 +199,10 @@ $renderType = $this->methodRow['RENDER_THEME'];
                                                                     <i class="'.$iconName.'"></i> <span class="pt1">'.$name.'</span>
                                                                 </a>
                                                             </li>';
+                                                            
+                                                            if ($row['IS_SEPERATOR_MAP'] == 1) {
+                                                                $item .= '<li class="nav-item" style="margin-top: 10px;margin-bottom: 10px;"><div style="border: 1px solid rgb(82 82 82);margin-left: 20px;margin-right: 20px;"></div></li>';
+                                                            }
 
                                                             $n ++;
                                                         }
@@ -609,7 +613,7 @@ if ($renderType == 'paper_main_window') {
     margin-top: 1.1rem;
 }
 .kpi-form-paper-portrait.paper_main_window .mv-main-tabs {
-    margin-top: -3px !important;
+    margin-top: <?php echo Config::getFromCacheDefault('IS_APPMENU_NEWDESIGN', null, 0) ? -3 : 10; ?>px !important;
 }
 .kpi-form-paper-portrait table.kpi-dtl-table tbody td input::-webkit-input-placeholder {
     color: transparent !important;

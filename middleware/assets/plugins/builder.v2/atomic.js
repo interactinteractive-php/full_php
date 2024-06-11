@@ -1103,6 +1103,8 @@ var Atomic = function() {
         //Recursively loop through DOM elements and assign properties to object
         function treeHTML(element, object) {
             object["type"] = element.nodeName;
+            object["attributes"] = {};
+
             var nodeList = element.childNodes;
             if (nodeList != null) {
                 if (nodeList.length) {
@@ -1119,14 +1121,40 @@ var Atomic = function() {
             }
             if (element.attributes != null) {
                 if (element.attributes.length) {
-                    object["attributes"] = {};
                     for (var i = 0; i < element.attributes.length; i++) {
+                        if (element.attributes[i].nodeName === 'style') {
+                            const cssObj = camelCase(css2obj(element.attributes[i].nodeValue));
+                            
+                            object["attributes"]['styleFields'] = cssObj;
+                        }
                         object["attributes"][element.attributes[i].nodeName] = element.attributes[i].nodeValue;
                     }
                 }
             }
+
+            object["attributes"]["data-type"] = element.nodeName;
         }
+        
+        function camelCase(obj) {
+            var newObj = {};
+            for (d in obj) {
+            if (obj.hasOwnProperty(d)) {
+                newObj[d.replace(/(\-\w)/g, function(k) {
+                    return k[1].toUpperCase();
+                })] = obj[d];
+            }
+            }
+            return newObj;
+        }
+         
+        const css2obj = css => {
+            const r = /(?<=^|;)\s*([^:]+)\s*:\s*([^;]+)\s*/g, o = {};
+            css.replace(r, (m,p,v) => o[p] = v);
+            return o;
+        };
+          
         treeHTML(element, treeObject);
+        console.log(treeObject);
         
         return (json) ? JSON.stringify(treeObject) : treeObject;
     };

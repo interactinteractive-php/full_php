@@ -110,18 +110,14 @@ class Mdeditor_model extends Model {
                 }
             }
 
-            $sortField = null;
-            $sortOrder = null;
-
-            if (Input::postCheck('sort') && Input::postCheck('order')) {
-                $sortField = Input::post('sort');
-                $sortOrder = Input::post('order');
-            }
-
             $selectCount = "SELECT COUNT(1) AS ROW_COUNT FROM ($dbs) WHERE 1 = 1 $subCondition";
             $selectList = "SELECT * FROM ($dbs) WHERE 1 = 1 $subCondition";
-            
-            if ($sortField && $sortOrder) {
+
+            if (Input::postCheck('sort') && Input::postCheck('order')) {
+                
+                $sortField = Input::post('sort');
+                $sortOrder = Input::post('order');
+                
                 $selectList .= " ORDER BY $sortField $sortOrder";
             }
 

@@ -50,6 +50,9 @@ var dbt_editor = CodeMirror.fromTextArea(document.getElementById('dbt_editor'), 
             if (cm.getOption("fullScreen")) {
                 cm.setOption("fullScreen", false);
             } 
+        }, 
+        "Ctrl-Enter": function(cm) {
+            dbtRun(cm);
         }
     }
 });    
@@ -75,6 +78,7 @@ $(function() {
             showGridMessage($dbtDatagrid);
         }
     });
+    
 });
 
 function dbtRun(elem) {
@@ -101,13 +105,18 @@ function dbtRun(elem) {
                     var setColumns = [], getColumns = data.columns;
                     
                     for (var c in getColumns) {
-                        setColumns.push({field: c, title: c, width: 130});
+                        setColumns.push({field: c, title: c, width: 130, sortable: true});
                     }
                     
                     $dbtDatagrid.datagrid({
                         queryParams: {dbs: dbs}, 
                         columns: [setColumns]
                     });
+                    
+                    $dbtDatagrid.datagrid('resetSort');
+                    $dbtDatagrid.datagrid('removeFilterRule');
+                    $dbtDatagrid.datagrid('destroyFilter');
+                    $dbtDatagrid.datagrid('enableFilter');
                     
                 } else {
                     new PNotify({

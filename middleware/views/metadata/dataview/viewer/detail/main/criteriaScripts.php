@@ -329,7 +329,37 @@
         var code = e.keyCode || e.which;
 
         if (code == '13') {
-            criteria_search_<?php echo $this->metaDataId; ?>.find('button.dataview-default-filter-btn').trigger('click');
+            if (criteria_search_<?php echo $this->metaDataId; ?>.find('input[data-path="filterRegisterNumReal"]').length > 0 && criteria_search_<?php echo $this->metaDataId; ?>.find('input[data-path="filterRegisterNumReal"]').val()) {
+                $.ajax({
+                    type: 'post',
+                    url: 'mddoc/checkRegister',
+                    data: {registerNum: criteria_search_<?php echo $this->metaDataId; ?>.find('input[data-path="filterRegisterNumReal"]').val()},
+                    dataType: 'json',
+                    beforeSend: function () {
+                        Core.blockUI({message: 'Түр хүлээнэ үү...', boxed: true});
+                    },
+                    success: function (response) {
+                        if (typeof response['rdcheck'] !== 'undefined' && response['rdcheck'] !== '1') {
+                            new PNotify({
+                                title: "Error",
+                                text: 'Регистерийн дугаар буруу байна',
+                                type: 'error',
+                                sticker: false
+                            });
+                            Core.unblockUI();
+                        } else {
+                            criteria_search_<?php echo $this->metaDataId; ?>.find('button.dataview-default-filter-btn').trigger('click');
+                        }
+                        Core.unblockUI();
+                    },
+                    error: function (jqXHR, exception) {
+                        Core.unblockUI();
+                        Core.showErrorMessage(jqXHR, exception);
+                    }
+                });
+            } else {
+                criteria_search_<?php echo $this->metaDataId; ?>.find('button.dataview-default-filter-btn').trigger('click');
+            }
         }
     });
 

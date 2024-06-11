@@ -12300,91 +12300,7 @@ class Mdform_Model extends Model {
             }
             
             $sessionValues = Session::get(SESSION_PREFIX . 'sessionValues');
-            $sessionName   = issetDefaultVal($sessionValues['sessionusername'], Ue::getSessionPersonWithLastName());
-            
-            /**
-             * Start Microflow expression
-             */
-            if (!isset($postData['isMicroFlow'])) { 
-                $this->db->BeginTrans(); 
-                
-                $getExpIndicatorId = self::getParentIndicatorFunctionModel($crudIndicatorId);
-                $expIndicatorId = '';
-                
-                if ($getExpIndicatorId) {                    
-                    $expIndicatorId = $getExpIndicatorId['SRC_RECORD_ID'];                    
-                } elseif ($kpiTypeId === '2009') {
-                    $expIndicatorId = $kpiMainIndicatorId;
-                }
-                
-                if ($expIndicatorId) {
-                    $flowData = Mdform::$mvSaveParams;
-                    $flowData['indicatorinfo_id'] = $kpiMainIndicatorId;
-                    $microFlowResponce = (new Mdexpression())->executeMicroFlowExpression($expIndicatorId, $flowData);
-                    
-                    if ($microFlowResponce != '_microflow_success') {
-                        $this->db->RollbackTrans();
-                        
-                        if (issetParam($microFlowResponce['status']) === 'microflowConfirmation') {
-                            return $microFlowResponce;
-                        }
-                        
-                        if (isset($microFlowResponce['data']) && issetParam($microFlowResponce['data']['type']) === 'message') {
-                            $messageStr = '<ul style="padding-left: 20px;">';
-                            foreach ($microFlowResponce['data']['result'] as $messRow)
-                                $messageStr .= '<li>'.$messRow['message'].'</li>';
-                            $messageStr .= '</ul>';
-                        }
-                        if (isset($messageStr)) {
-                            $microFlowResponce = $messageStr;
-                        }
-                        $response = (is_array($microFlowResponce) && isset($microFlowResponce['message'])) ? $microFlowResponce : ['status' => 'error', 'message' => $microFlowResponce];
-                        
-                        return $response;
-                    }                               
-                }          
-
-                /*if ($kpiTypeId === '16641793815766') {
-                    $getTypeIndicatorId = $this->db->GetOne("SELECT RELATED_INDICATOR_ID FROM KPI_TYPE WHERE ID = ".$this->db->Param(0), array($kpiTypeId));
-
-                    $flowData = Mdform::$mvSaveParams;
-                    $flowData['indicatorinfo_id'] = $kpiMainIndicatorId;              
-                    $microFlowResponce = (new Mdexpression())->executeMicroFlowExpression($getTypeIndicatorId, $flowData);            
-                    if ($microFlowResponce != '_microflow_success') {
-                        $this->db->RollbackTrans();
-                        
-                        if (issetParam($microFlowResponce['status']) === 'microflowConfirmation') {
-                            return $microFlowResponce;
-                        }
-                        
-                        if (isset($microFlowResponce['data']) && issetParam($microFlowResponce['data']['type']) === 'message') {
-                            $messageStr = '<ul style="padding-left: 20px;">';
-                            foreach ($microFlowResponce['data']['result'] as $messRow)
-                                $messageStr .= '<li>'.$messRow['message'].'</li>';
-                            $messageStr .= '</ul>';
-                        }
-                        if (isset($messageStr)) {
-                            $microFlowResponce = $messageStr;
-                        }
-                        $response = array('status' => 'error', 'message' => $microFlowResponce);
-                        return $response;
-                    }                           
-                }*/           
-            }
-
-            if ($kpiTypeId == '2009') {
-                $response = array('status' => 'success', 'message' => Lang::line('msg_save_success'), 'uniqId' => getUID());             
-                return $response;
-            }            
-
-            if (isset($getExpIndicatorId) && isset($_POST['isMicroFlowSelfSave']) && !$isExcelImport) { 
-                $this->db->CommitTrans();
-                $response = array('status' => 'success', 'message' => Lang::line('msg_save_success'), 'uniqId' => getUID());             
-                return $response;
-            }            
-            /**
-             * End Microflow expression
-             */
+            $sessionName   = issetDefaultVal($sessionValues['sessionusername'], Ue::getSessionPersonWithLastName());            
             
             if ($configRow['COUNT_UNIQUE']) {
                 $checkUnique = self::beforeSaveCheckUnique($kpiMainIndicatorId, $isIgnoreAlter, $tblName, $kpiTblIdField, $columnsData, Mdform::$mvSaveParams, $kpiTblId);
@@ -12749,6 +12665,90 @@ class Mdform_Model extends Model {
                     }
                 }
             }
+            
+            /**
+             * Start Microflow expression
+             */
+            if (!isset($postData['isMicroFlow'])) { 
+                $this->db->BeginTrans(); 
+                
+                $getExpIndicatorId = self::getParentIndicatorFunctionModel($crudIndicatorId);
+                $expIndicatorId = '';
+                
+                if ($getExpIndicatorId) {                    
+                    $expIndicatorId = $getExpIndicatorId['SRC_RECORD_ID'];                    
+                } elseif ($kpiTypeId === '2009') {
+                    $expIndicatorId = $kpiMainIndicatorId;
+                }
+                
+                if ($expIndicatorId) {
+                    $flowData = Mdform::$mvSaveParams;
+                    $flowData['indicatorinfo_id'] = $kpiMainIndicatorId;
+                    $microFlowResponce = (new Mdexpression())->executeMicroFlowExpression($expIndicatorId, $flowData);
+                    
+                    if ($microFlowResponce != '_microflow_success') {
+                        $this->db->RollbackTrans();
+                        
+                        if (issetParam($microFlowResponce['status']) === 'microflowConfirmation') {
+                            return $microFlowResponce;
+                        }
+                        
+                        if (isset($microFlowResponce['data']) && issetParam($microFlowResponce['data']['type']) === 'message') {
+                            $messageStr = '<ul style="padding-left: 20px;">';
+                            foreach ($microFlowResponce['data']['result'] as $messRow)
+                                $messageStr .= '<li>'.$messRow['message'].'</li>';
+                            $messageStr .= '</ul>';
+                        }
+                        if (isset($messageStr)) {
+                            $microFlowResponce = $messageStr;
+                        }
+                        $response = (is_array($microFlowResponce) && isset($microFlowResponce['message'])) ? $microFlowResponce : ['status' => 'error', 'message' => $microFlowResponce];
+                        
+                        return $response;
+                    }                               
+                }          
+
+                /*if ($kpiTypeId === '16641793815766') {
+                    $getTypeIndicatorId = $this->db->GetOne("SELECT RELATED_INDICATOR_ID FROM KPI_TYPE WHERE ID = ".$this->db->Param(0), array($kpiTypeId));
+
+                    $flowData = Mdform::$mvSaveParams;
+                    $flowData['indicatorinfo_id'] = $kpiMainIndicatorId;              
+                    $microFlowResponce = (new Mdexpression())->executeMicroFlowExpression($getTypeIndicatorId, $flowData);            
+                    if ($microFlowResponce != '_microflow_success') {
+                        $this->db->RollbackTrans();
+                        
+                        if (issetParam($microFlowResponce['status']) === 'microflowConfirmation') {
+                            return $microFlowResponce;
+                        }
+                        
+                        if (isset($microFlowResponce['data']) && issetParam($microFlowResponce['data']['type']) === 'message') {
+                            $messageStr = '<ul style="padding-left: 20px;">';
+                            foreach ($microFlowResponce['data']['result'] as $messRow)
+                                $messageStr .= '<li>'.$messRow['message'].'</li>';
+                            $messageStr .= '</ul>';
+                        }
+                        if (isset($messageStr)) {
+                            $microFlowResponce = $messageStr;
+                        }
+                        $response = array('status' => 'error', 'message' => $microFlowResponce);
+                        return $response;
+                    }                           
+                }*/           
+            }
+
+            if ($kpiTypeId == '2009') {
+                $response = array('status' => 'success', 'message' => Lang::line('msg_save_success'), 'uniqId' => getUID());             
+                return $response;
+            }            
+
+            if (isset($getExpIndicatorId) && isset($_POST['isMicroFlowSelfSave']) && !$isExcelImport) { 
+                $this->db->CommitTrans();
+                $response = array('status' => 'success', 'message' => Lang::line('msg_save_success'), 'uniqId' => getUID());             
+                return $response;
+            }            
+            /**
+             * End Microflow expression
+             */            
             
             if (!isset($postData['isMicroFlow']) && !$isExcelImport) { 
                 
@@ -30124,6 +30124,7 @@ class Mdform_Model extends Model {
                     T0.DESCRIPTION, 
                     T0.WIDGET_CODE, 
                     T0.IS_DATAMART_RENDER,
+                    T0.IS_SEPERATOR AS IS_SEPERATOR_MAP,
                     T5.IS_SEPERATOR,
                     T5.IS_OPEN_GROUP 
                 FROM ( 
@@ -30145,6 +30146,7 @@ class Mdform_Model extends Model {
                         T1.IS_COMMENT, 
                         T1.ICON, 
                         T1.DESCRIPTION, 
+                        T1.IS_SEPERATOR,
                         T6.CODE AS WIDGET_CODE, 
                         T3.META_DATA_ID, 
                         ".$this->db->IfNull('T4.LIST_NAME', $this->db->IfNull('T5.PROCESS_NAME', 'T3.META_DATA_NAME'))." AS META_DATA_NAME, 
@@ -30189,6 +30191,7 @@ class Mdform_Model extends Model {
                         T1.IS_COMMENT, 
                         T1.ICON, 
                         T1.DESCRIPTION, 
+                        T1.IS_SEPERATOR,
                         T6.CODE, 
                         T3.META_DATA_ID, 
                         T3.META_DATA_NAME, 
