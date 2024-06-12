@@ -413,6 +413,9 @@
                                                             <td style="width:30px;"></td>
                                                             <td style="width:30px;"></td>
                                                             <td style="width:100px;"></td>
+                                                            <?php if (Config::getFromCacheDefault('IS_SHOW_CUSTOMER_DEPR', null, '') == '1') { ?>
+                                                            <td></td>
+                                                            <?php } ?>
                                                             <td style="width:100px;"></td>
                                                             <td style="width:150px;"></td>
                                                             <td style="width:80px;"></td>

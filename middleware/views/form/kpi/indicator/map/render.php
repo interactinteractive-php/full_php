@@ -44,7 +44,7 @@
                             </div>
                         </div>
                         <div class="mt10 "><h5>Бүсчлэл</h5></div>
-                        <div class="indicator-polygon-data" style="max-height: 57vh; overflow: auto;"></div>
+                        <div class="indicator-polygon-data" style=""></div>
                         <div class="mb10 mr-3">
                             <button class="indicator_save_polygon btn btn-light bg-primary btn-sm btn-block">Бүс хадгалах</button>
                         </div>

@@ -32,10 +32,10 @@
     <th class="rowNumber"></th>
     <th class="rowNumber" style="min-width:30px;"></th>
     <th><input type="text" data-fieldname="accountname" data-condition="like"/></th>
+    <th><input type="text" data-fieldname="assetcode" data-condition="like"/></th>
     <?php if (Config::getFromCacheDefault('IS_SHOW_CUSTOMER_DEPR', null, '') == '1') { ?>
     <th><input type="text" data-fieldname="customercode" data-condition="like"/></th>
     <?php } ?>
-    <th><input type="text" data-fieldname="assetcode" data-condition="like"/></th>
     <th><input type="text" data-fieldname="assetname" data-condition="like"/></th>
     <th><input type="text" data-fieldname="assetnumber" data-condition="like"/></th>
     <th><input type="text" data-fieldname="serialnumber" data-condition="like"/></th>

@@ -1592,12 +1592,14 @@ class Login extends Controller {
             Message::add('d', 'Token parameter is required!', URL . 'login');
         }
         
-        $licenseKeyId = Hash::decryption($token);
-        if (!$licenseKeyId) {
+        $customerId = Hash::decryption($token);
+        if (!$customerId) {
             Message::add('d', 'Token is wrong!', URL . 'login');
         }
         
-        $checkLicense = $this->model->checkCloudUserLicenseKeyIdModel($licenseKeyId);
+        $this->model->deleteSessionDatabaseConnection();
+        
+        $checkLicense = $this->model->checkCloudUserCustomerIdModel($customerId);
         if ($checkLicense['status'] != 'success') {
             Message::add('d', $checkLicense['message'], URL . 'login');
         }
@@ -1659,6 +1661,8 @@ class Login extends Controller {
         $_POST['isSystemMeta'] = 'false';
         $_POST['isDialog'] = false;
         $_POST['nult'] = true;
+        
+        $this->model->setDbConnectionBySignupModel($checkLicense['connectionId']);
         
         $bpContent = (new Mdwebservice())->callMethodByMeta($this->view->processId, null, true);
 

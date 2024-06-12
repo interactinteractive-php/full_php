@@ -57,6 +57,13 @@ if (isset($this->fullUrlJs)) {
     }
 }
 ?>
+<script type="text/javascript">   
+$.ajaxPrefilter(function (options, originalOptions, jqXHR) {
+    if (options.type.toLowerCase() == 'post') {
+        options.data += '&nult=1';
+    }
+});
+</script>    
 <script src="<?php echo autoVersion('assets/custom/js/core.js'); ?>" type="text/javascript"></script>
 <script src="<?php echo autoVersion('middleware/assets/js/pki/sign.js'); ?>" type="text/javascript"></script>
 <script src="<?php echo autoVersion('middleware/assets/js/mdmetadata.js'); ?>" type="text/javascript"></script>
@@ -67,11 +74,6 @@ if (isset($this->fullUrlJs)) {
 $(document).ready(function(){
     Core.init();
     Core.blockUI({message: 'Loading...', boxed: true});
-});
-$.ajaxSetup({
-    global: false,
-    type: 'post', 
-    data: {nult: 1}
 });
 </script>
 <section id="body" class="section-anket">

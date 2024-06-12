@@ -1219,12 +1219,17 @@ function bpAddRow(mainSelector, elem, groupPath, rowCount, fillType, async, from
         }
         
         var $getTableBody = $parent.find('.tbody:eq(0)');
+        var isAsync = (typeof isAddRowAsync !== 'undefined' ? isAddRowAsync : false);
+        
+        if (typeof async !== 'undefined') {
+            isAsync = async;
+        }
         
         $.ajax({
             type: 'post',
             url: 'mdcommon/'+addUrl,
             data: urlData,
-            async: (typeof isAddRowAsync !== 'undefined' ? isAddRowAsync : false), 
+            async: isAsync, 
             success: function (dataStr) {
                 
                 var $html = $('<div />', {html: dataStr});

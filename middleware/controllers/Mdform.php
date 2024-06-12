@@ -6309,7 +6309,32 @@ class Mdform extends Controller {
             );
         }*/
         
-        if ($trgRecordId) {
+        $mapData = $this->model->getIndicatorSrcTrgPathModel($srcMapId, $trgIndicatorId);
+        
+        if ($mapData) {
+            
+            $selectedRow = Input::post('selectedRow');
+            $selectedRow = Arr::changeKeyLower($selectedRow);
+            $getParams = [];
+            
+            foreach ($mapData as $mapRow) {
+                if ($mapRow['SRC_INDICATOR_PATH'] == '' && $mapRow['DEFAULT_VALUE'] != '') {
+                    $setValue = Mdmetadata::setDefaultValue($mapRow['DEFAULT_VALUE']);
+                } else {
+                    $setValue = issetParam($selectedRow[strtolower($mapRow['SRC_INDICATOR_PATH'])]);
+                }
+                $getParams[strtoupper($mapRow['TRG_INDICATOR_PATH'])] = $setValue;
+
+                $trgRefStructureId = $mapRow['GET_ID'];
+            }
+            
+            $getDetailData = $this->model->getMetaVerseDataModel($trgRefStructureId, $getParams);
+            
+            if ($getData = issetParam($getDetailData['data'])) {
+                $_POST['transferSelectedRow'] = $getData;
+            }
+        
+        } elseif ($trgRecordId) {
             
             $_POST['param']['dynamicRecordId'] = $trgRecordId; 
             $_POST['param']['idField'] = 'IDFIELD';
@@ -6342,6 +6367,10 @@ class Mdform extends Controller {
                         $setValue = issetParam($selectedRow[strtolower($mapRow['SRC_INDICATOR_PATH'])]);
                     }
                     $getParams[strtoupper($mapRow['TRG_INDICATOR_PATH'])] = $setValue;
+                    
+                    if ($mapRow['GET_ID'] && $mapRow['SEMANTIC_TYPE_ID'] == 120) {
+                        $trgRefStructureId = $mapRow['GET_ID'];
+                    }
                 }
                 
                 $getDetailData = $this->model->getMetaVerseDataModel($trgRefStructureId, $getParams);

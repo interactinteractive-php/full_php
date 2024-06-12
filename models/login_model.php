@@ -1280,7 +1280,7 @@ class Login_Model extends Model {
         Message::add($mType ? $mType : 'd', $msg, $redirectUrl ? $redirectUrl : AUTH_URL.'login');
     }
     
-    private function deleteSessionDatabaseConnection() {
+    public function deleteSessionDatabaseConnection() {
         
         Session::delete(SESSION_PREFIX . 'sdbun');
         Session::delete(SESSION_PREFIX . 'sdbid');
@@ -1822,17 +1822,24 @@ class Login_Model extends Model {
         return $response;
     }
     
-    private static $mainCloudServiceAddress = 'https://172.169.88.84:8181/erp-services/RestWS/runJson';
+    private static $mainCloudServiceAddress = 'http://172.23.0.3:8080/erp-services/RestWS/runJson';
     
-    public function checkCloudUserLicenseKeyIdModel($licenseKeyId) {
+    public function checkCloudUserCustomerIdModel($customerId) {
         
-        $result = $this->ws->runRestJson(self::$mainCloudServiceAddress, 'checkCloudLicenseStatus_004', ['filterId' => $licenseKeyId]);
+        $result = $this->ws->runRestJson(self::$mainCloudServiceAddress, 'checkCloudLicenseStatus_004', ['filterId' => $customerId]);
         
         if ($result['status'] == 'success' && isset($result['result'])) {
             
             if (array_key_exists('isvalid', $result['result'])) {
+                
                 if ($result['result']['isvalid'] == '1') {
-                    $response = ['status' => 'success', 'email' => issetParam($result['result']['email'])];
+                    
+                    $response = [
+                        'status'       => 'success', 
+                        'email'        => issetParam($result['result']['email']), 
+                        'connectionId' => issetParam($result['result']['connectionid'])
+                    ];
+                    
                 } else {
                     $response = ['status' => 'error', 'message' => 'Өмнө нь хэрэглэсэн token байна!'];
                 }
@@ -1845,6 +1852,14 @@ class Login_Model extends Model {
         }
         
         return $response;
+    }
+    
+    public function setDbConnectionBySignupModel($connectionId) {
+        
+        Session::set(SESSION_PREFIX.'isUseMultiDatabase', true);
+        $this->setSessionDatabaseConnection(null, $connectionId);
+        
+        return true;
     }
     
     public function cloudUserSignupSaveModel() {
@@ -1865,8 +1880,8 @@ class Login_Model extends Model {
                 throw new Exception('Token parameter is required!');
             }
             
-            $licenseKeyId = Hash::decryption($token);
-            if (!$licenseKeyId) {
+            $customerId = Hash::decryption($token);
+            if (!$customerId) {
                 throw new Exception('Token is wrong!');
             }
             
@@ -1879,7 +1894,7 @@ class Login_Model extends Model {
 
             $_POST['nult'] = true;
             $_POST['responseType'] = 'outputArray';
-            $_POST['param']['licenseKeyId'] = $licenseKeyId;
+            $_POST['param']['customerId'] = $customerId;
 
             $response = (new Mdwebservice())->runProcess();
             

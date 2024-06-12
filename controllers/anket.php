@@ -38,11 +38,11 @@ class Anket extends Controller {
 
     public function form($campaignKeyId = '', $positionId = '', $kpiTemplateId = '') {
 
-        Session::init();
         $logged = Session::isCheck(SESSION_PREFIX.'LoggedIn');
         
         if ($logged == false) {
             Session::set(SESSION_PREFIX . 'LoggedIn', true);
+            Session::set(SESSION_PREFIX . 'lastTime', time());
         }
         
         $this->getAnketConfig();

@@ -15701,9 +15701,12 @@ class Mdform_Model extends Model {
                             $filterNextWfmUserId = Mdmetadata::setDefaultValue($filterParam['DEFAULT_VALUE']);
                             continue;
                         }
-                    
-                        $bindVal = ($filterParam['DEFAULT_VALUE'] != '') ? "'".Mdmetadata::setDefaultValue($filterParam['DEFAULT_VALUE'])."'" : 'NULL';
-                        $tableName = str_ireplace(':'.$filterParam['TRG_ALIAS_NAME'], $bindVal, $tableName);
+                        
+                        if (stripos($tableName, ':'.$filterParam['TRG_ALIAS_NAME']) !== false) {
+                            $bindVal = ($filterParam['DEFAULT_VALUE'] != '') ? "'".Mdmetadata::setDefaultValue($filterParam['DEFAULT_VALUE'])."'" : 'NULL';
+                            $tableName = str_ireplace(':'.$filterParam['TRG_ALIAS_NAME'], $bindVal, $tableName);
+                            $isSubCondition = true;
+                        }
                     }
                 }
             }
@@ -16046,7 +16049,9 @@ class Mdform_Model extends Model {
                     $rows = $tmpRows;
                 }
                 
-                if (Input::numeric('isLowerCase')) {
+                $isLowerCase = Input::numeric('isLowerCase');
+                
+                if ($isLowerCase) {
                     $rows = Arr::changeKeyLower($rows);
                     $childRecordCountKey = 'childrecordcount';
                     $iconColorCodeKey = 'icon_color_code';
@@ -16066,12 +16071,46 @@ class Mdform_Model extends Model {
                             $isIconColorCode = true;
                         }
                         
-                        foreach ($rows as $rowIndex => $rowData) {
-                            $rows[$rowIndex]['state'] = (isset($rowData[$childRecordCountKey]) && $rowData[$childRecordCountKey]) ? 'closed' : 'open';
+                        if (false /*$isSubCondition*/) {
                             
-                            if ($isIconColorCode) {
-                                $rows[$rowIndex]['iconCls'] = $rowData[$iconColorCodeKey];
-                            }   
+                            function buildTree($elements, $parentId = null) {
+                                $branch = [];
+
+                                foreach ($elements as $element) {
+                                    if ($element['parent_id'] == $parentId) {
+                                        $children = buildTree($elements, $element['id']);
+                                        if ($children) {
+                                            $element['children'] = $children;
+                                        }
+                                        $branch[] = $element;
+                                    }
+                                }
+
+                                return $branch;
+                            }
+                            
+                            if ($isLowerCase) {
+                                $idField     = strtolower($idField);
+                                $parentField = strtolower($parentField);
+                            }
+                            
+                            foreach ($rows as $rowIndex => $rowData) {
+                                $rows[$rowIndex]['state'] = (isset($rowData[$childRecordCountKey]) && $rowData[$childRecordCountKey]) ? 'closed' : 'open';
+
+                                if ($isIconColorCode) {
+                                    $rows[$rowIndex]['iconCls'] = $rowData[$iconColorCodeKey];
+                                }   
+                            }
+                            
+                        } else {
+                            
+                            foreach ($rows as $rowIndex => $rowData) {
+                                $rows[$rowIndex]['state'] = (isset($rowData[$childRecordCountKey]) && $rowData[$childRecordCountKey]) ? 'closed' : 'open';
+
+                                if ($isIconColorCode) {
+                                    $rows[$rowIndex]['iconCls'] = $rowData[$iconColorCodeKey];
+                                }   
+                            }
                         }
                     }
 
@@ -16120,9 +16159,9 @@ class Mdform_Model extends Model {
     public function responseGridExceptionMessage($message) {
         
         if (strpos($message, 'ORA-00942') !== false) {
-            $response = array('status' => 'success', 'message' => $message, 'rows' => array(), 'total' => 0);
+            $response = ['status' => 'success', 'message' => $message, 'rows' => [], 'total' => 0];
         } else {
-            $response = array('status' => 'error', 'message' => $message, 'rows' => array(), 'total' => 0);
+            $response = ['status' => 'error', 'message' => $message, 'rows' => [], 'total' => 0];
         }
         
         return $response;
@@ -30143,6 +30182,8 @@ class Mdform_Model extends Model {
     public function getSrcTrgPathModel($srcMapId, $trgIndicatorId) {
         $data = $this->db->GetAll("
             SELECT 
+                GET_ID, 
+                SEMANTIC_TYPE_ID, 
                 SRC_INDICATOR_PATH, 
                 TRG_INDICATOR_PATH, 
                 DEFAULT_VALUE, 
@@ -30153,7 +30194,41 @@ class Mdform_Model extends Model {
                 AND TRG_INDICATOR_PATH IS NOT NULL 
                 AND (SRC_INDICATOR_PATH IS NOT NULL OR DEFAULT_VALUE IS NOT NULL) 
             GROUP BY 
-                SRC_INDICATOR_PATH, TRG_INDICATOR_PATH, DEFAULT_VALUE, CRITERIA", 
+                GET_ID, 
+                SEMANTIC_TYPE_ID, 
+                SRC_INDICATOR_PATH, 
+                TRG_INDICATOR_PATH, 
+                DEFAULT_VALUE, 
+                CRITERIA", 
+            [$srcMapId, $trgIndicatorId]
+        );
+        
+        return $data;
+    }
+    
+    public function getIndicatorSrcTrgPathModel($srcMapId, $trgIndicatorId) {
+        $data = $this->db->GetAll("
+            SELECT 
+                GET_ID, 
+                SEMANTIC_TYPE_ID, 
+                SRC_INDICATOR_PATH, 
+                TRG_INDICATOR_PATH, 
+                DEFAULT_VALUE, 
+                CRITERIA 
+            FROM KPI_INDICATOR_INDICATOR_MAP 
+            WHERE SRC_INDICATOR_MAP_ID = ".$this->db->Param(0)." 
+                AND TRG_INDICATOR_ID = ".$this->db->Param(1)." 
+                AND TRG_INDICATOR_PATH IS NOT NULL 
+                AND (SRC_INDICATOR_PATH IS NOT NULL OR DEFAULT_VALUE IS NOT NULL) 
+                AND SEMANTIC_TYPE_ID = 120 
+                AND GET_ID IS NOT NULL 
+            GROUP BY 
+                GET_ID, 
+                SEMANTIC_TYPE_ID, 
+                SRC_INDICATOR_PATH, 
+                TRG_INDICATOR_PATH, 
+                DEFAULT_VALUE, 
+                CRITERIA", 
             [$srcMapId, $trgIndicatorId]
         );
         

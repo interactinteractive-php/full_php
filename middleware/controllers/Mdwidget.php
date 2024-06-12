@@ -5005,7 +5005,7 @@ class Mdwidget extends Controller {
         } else {
             switch ($returnType) {
                 case 'render':
-                    $this->view->render('/widget/render', "projects/views/contentui/build");
+                    return $this->view->renderPrint('/widget/layout', "projects/views/contentui/build");
                     break;
                 case 'html':
                     $this->view->render('/widget/index', "projects/views/contentui/build");
