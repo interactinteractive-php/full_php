@@ -1822,11 +1822,9 @@ class Login_Model extends Model {
         return $response;
     }
     
-    private static $mainCloudServiceAddress = 'http://172.23.0.3:8080/erp-services/RestWS/runJson';
-    
     public function checkCloudUserCustomerIdModel($customerId) {
         
-        $result = $this->ws->runRestJson(self::$mainCloudServiceAddress, 'checkCloudLicenseStatus_004', ['filterId' => $customerId]);
+        $result = $this->ws->runResponse(GF_SERVICE_ADDRESS, 'checkCloudLicenseStatus_004', ['filterId' => $customerId]);
         
         if ($result['status'] == 'success' && isset($result['result'])) {
             
