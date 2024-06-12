@@ -1826,7 +1826,7 @@ class Login_Model extends Model {
         
         $result = $this->ws->runResponse(GF_SERVICE_ADDRESS, 'checkCloudLicenseStatus_004', ['filterId' => $customerId]);
         
-        if ($result['status'] == 'success' && isset($result['result'])) {
+        if (isset($result['status']) && isset($result['result']) && $result['status'] == 'success') {
             
             if (array_key_exists('isvalid', $result['result'])) {
                 
