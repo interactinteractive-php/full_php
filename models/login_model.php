@@ -1211,7 +1211,7 @@ class Login_Model extends Model {
 
     private function setSessionDatabaseConnection($redirectUrl = null, $connectionId = null) {
         
-        if ($connectionId) { 
+        if ($connectionId && is_numeric($connectionId)) { 
             $_POST['dbName'] = Crypt::encrypt($connectionId, 'db00x');
         }
 
