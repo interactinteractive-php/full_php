@@ -4430,6 +4430,13 @@ $(function () {
     stopPropagation: true,
     ignoreIfFocusOn: $("body").find("input.ignorebarcode"),
     onComplete: function (barcode, qty) {
+//        if ($("#scanItemCode").length) {
+//            $("#scanItemCode").val(barcode);
+//            var e = jQuery.Event("keydown");
+//            e.keyCode = e.which = 13;
+//            $("#scanItemCode").trigger(e);          
+//            console.log('barcode',barcode)
+//        }
       if (
         $("body").find("#dialog-pos-payment").length > 0 &&
         $("body").find("#dialog-pos-payment").is(":visible")

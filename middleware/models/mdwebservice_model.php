@@ -6603,25 +6603,27 @@ class Mdwebservice_Model extends Model {
     
     public function afterRunAdditionalProcessModel($processId, $processCode) {
         
-        $mvProcessIds = array(
+        $mvProcessIds = [
             '16413659216321', '16413780044111', '16424366404971', 
             '16424366405551', '16424911282141', '16705727269419', 
             '16425125580661', '16660589496259', '17091132313599', 
             '17091133076179'
-        );
+        ];
         
         if (in_array($processId, $mvProcessIds) && isset(Mdwebservice::$responseData['jsonid'])) {
             
             try {
             
                 WebService::$addonHeaderParam['windowSessionId'] = null;
-                $param = array('filterId' => Mdwebservice::$responseData['jsonid']);
+                $param = ['filterId' => Mdwebservice::$responseData['jsonid']];
 
                 $result = $this->ws->runSerializeResponse(Mdwebservice::$gfServiceAddress, 'getMetaVerseFullInfo_004', $param);
 
                 if ($result['status'] == 'success' && isset($result['result'])) {
                     
                     $json = json_encode($result['result'], JSON_UNESCAPED_UNICODE);
+                    $json = str_replace('\\', '\\\\', $json);
+                    
                     $this->db->UpdateClob('KPI_INDICATOR', 'JSON_CONFIG', $json, 'ID = '.$param['filterId']);
                     
                     return true;

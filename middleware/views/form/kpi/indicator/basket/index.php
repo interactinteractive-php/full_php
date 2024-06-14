@@ -17,7 +17,6 @@
         </div>
     </div>
     <div class="tab-pane fade" id="kpibasket-basket-<?php echo $this->indicatorId; ?>">
-        
         <div class="jeasyuiTheme3 selectableGrid-datatable-<?php echo $this->indicatorId; ?>">
             <table id="commonSelectableBasketDataGrid_<?php echo $this->indicatorId ?>"></table>
         </div>

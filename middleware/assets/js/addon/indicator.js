@@ -6893,6 +6893,17 @@ function mvProductRender(elem, url, indicatorId) {
                     $dialog.dialog('open');
                 }                                   
                 
+            } else if (data.status == 'info') {
+                
+                PNotify.removeAll();
+                new PNotify({
+                    title: data.status,
+                    text: data.message,
+                    type: data.status,
+                    sticker: false, 
+                    addclass: 'pnotify-center'
+                });
+                
             } else if (url) {
                 window.location = url;
             }

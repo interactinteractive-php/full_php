@@ -165,7 +165,7 @@ class Appmenu_Model extends Model {
         return false;
     }
     
-    public function getMetaVerseLicenseListModel() {
+    public function getMetaVerseLicenseListModel($indicatorId = null) {
         
         $result = [];
         $cloudDomainName = Config::getFromCache('cloud_domain_name');
@@ -241,7 +241,12 @@ class Appmenu_Model extends Model {
                 $rdb->Close();
                 
                 foreach ($data as $row) {
+                    
                     $result[$row['ID']] = ['isActive' => $row['IS_ACTIVE'], 'statusName' => $row['STATUS_NAME']];
+                    
+                    if ($indicatorId && $row['ID'] == $indicatorId) {
+                        return $result[$row['ID']];
+                    }
                 }
                 
             } catch (Exception $ex) {

@@ -2749,11 +2749,14 @@ class Mdintegration_model extends Model {
                 if ($resultLog) {
                     
                     $resultData['result']['logid'] = $methodId;
+                    unset($resultData['return']);
+                    array_walk_recursive($outPutParam, 'changeNullValueByKey');
+                    array_walk_recursive($resultData, 'changeNullValueByKey');
 
                     if (Config::getFromCache('setNullClobValueByXyp') === '1') {       
                         unset($resultData['return']);
-                        array_walk_recursive($outPutParam, 'changeNullValueByKey');
-                        array_walk_recursive($resultData, 'changeNullValueByKey');
+                        array_walk_recursive($outPutParam, 'changeNullValueByImg');
+                        array_walk_recursive($resultData, 'changeNullValueByImg');
                     }
 
                     if (Config::getFromCache('USE_SAVE_LOG_YEAR') === '1') {
@@ -2807,10 +2810,14 @@ class Mdintegration_model extends Model {
                 } else {
                     $resultLog = $this->db->AutoExecute('SYSINT_SERVICE_METHOD_LOG', $data);
                 }
+                
+                unset($resultData['return']);
+                array_walk_recursive($outPutParam, 'changeNullValueByKey');
+                array_walk_recursive($resultData, 'changeNullValueByKey');
+
                 if (Config::getFromCache('setNullClobValueByXyp') === '1') {       
-                    unset($resultData['return']);
-                    array_walk_recursive($outPutParam, 'changeNullValueByKey');
-                    array_walk_recursive($resultData, 'changeNullValueByKey');
+                    array_walk_recursive($outPutParam, 'changeNullValueByImg');
+                    array_walk_recursive($resultData, 'changeNullValueByImg');
                 }
                 if ($resultLog) {
                     if (Config::getFromCache('USE_SAVE_LOG_YEAR') === '1') {

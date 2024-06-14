@@ -1123,8 +1123,92 @@ var Atomic = function() {
                 if (element.attributes.length) {
                     for (var i = 0; i < element.attributes.length; i++) {
                         if (element.attributes[i].nodeName === 'style') {
-                            const cssObj = camelCase(css2obj(element.attributes[i].nodeValue));
+                            var cssObj = camelCase(css2obj(element.attributes[i].nodeValue));
                             
+                            $.each(cssObj, function (c, o) {
+                                switch (c) {
+                                    case 'padding':
+                                        var paddingObj = o.split(' ');
+                                        if (paddingObj.length == 1) {
+                                            cssObj = {
+                                                ...cssObj,
+                                                paddingTop: o,
+                                                paddingRight: o,
+                                                paddingBottom: o,
+                                                paddingLeft: o,
+                                            };
+                                        }
+                                        if (paddingObj.length == 2) {
+                                            cssObj = {
+                                                ...cssObj,
+                                                paddingTop: paddingObj[0],
+                                                paddingRight: paddingObj[1],
+                                                paddingBottom: paddingObj[0],
+                                                paddingLeft: paddingObj[1],
+                                            };
+                                        }
+                                        if (paddingObj.length == 3) {
+                                            cssObj = {
+                                                ...cssObj,
+                                                paddingTop: paddingObj[0],
+                                                paddingRight: paddingObj[1],
+                                                paddingBottom: paddingObj[2],
+                                                paddingLeft: paddingObj[1],
+                                            };
+                                        }
+                                        if (paddingObj.length == 4) {
+                                            cssObj = {
+                                                ...cssObj,
+                                                paddingTop: paddingObj[0],
+                                                paddingRight: paddingObj[1],
+                                                paddingBottom: paddingObj[2],
+                                                paddingLeft: paddingObj[3],
+                                            };
+                                        }
+                                        delete cssObj['padding'];
+                                        break;
+                                    case 'margin':
+                                        var marginObj = o.split(' ');
+                                        if (marginObj.length == 1) {
+                                            cssObj = {
+                                                ...cssObj,
+                                                marginTop: o,
+                                                marginRight: o,
+                                                marginBottom: o,
+                                                marginLeft: o,
+                                            };
+                                        }
+                                        if (marginObj.length == 2) {
+                                            cssObj = {
+                                                ...cssObj,
+                                                marginTop: marginObj[0],
+                                                marginRight: marginObj[1],
+                                                marginBottom: marginObj[0],
+                                                marginLeft: marginObj[1],
+                                            };
+                                        }
+                                        if (marginObj.length == 3) {
+                                            cssObj = {
+                                                ...cssObj,
+                                                marginTop: marginObj[0],
+                                                marginRight: marginObj[1],
+                                                marginBottom: marginObj[2],
+                                                marginLeft: marginObj[1],
+                                            };
+                                        }
+                                        if (marginObj.length == 4) {
+                                            cssObj = {
+                                                ...cssObj,
+                                                marginTop: marginObj[0],
+                                                marginRight: marginObj[1],
+                                                marginBottom: marginObj[2],
+                                                marginLeft: marginObj[3],
+                                            };
+                                        }
+                                        delete cssObj['margin'];
+                                        break;
+                                }
+                            });
                             object["attributes"]['styleFields'] = cssObj;
                         }
                         object["attributes"][element.attributes[i].nodeName] = element.attributes[i].nodeValue;
