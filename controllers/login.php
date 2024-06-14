@@ -881,8 +881,14 @@ class Login extends Controller {
             $_POST['csrf_token'] = $this->model->getCsrfTokenModel();
             $_POST['user_name'] = $userData['username'];
             $_POST['pass_word'] = $userData['password'];
-            $_POST['monpassUserId'] = null;
             $_POST['isHash'] = 1;
+
+            if (issetParam($userData['iscustomer']) == '1') {
+                $_POST['isCustomer'] = '1';
+                $_POST['isHash'] = 0;
+            }
+            
+            $_POST['monpassUserId'] = null;
 
             $response = $this->model->runModel();
         

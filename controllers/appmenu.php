@@ -6,7 +6,7 @@ class Appmenu extends Controller {
         parent::__construct();
         Auth::handleLogin();
     }
-    
+
     public function index($menuCode = null) 
     {                     
         //$defaultModuleId = Session::get(SESSION_PREFIX . 'defaultModuleId');
@@ -65,7 +65,8 @@ class Appmenu extends Controller {
         $this->view->isAppmenuNewDesign = Config::getFromCacheDefault('IS_APPMENU_NEWDESIGN', null, 0);
         $this->view->colorSet = '#FF7E79,#9370DB,#00B9F6,#00C9CC,#FF986E,#4169E1,#FFA07A,#98CF5D,#EC87C0,#EB735B,#A88BF1,#29C88F,#FDB600';
         $this->view->isAppmenuPage = true;
-
+        
+        $this->view->licenseList = $this->model->getMetaVerseLicenseListModel();
         $this->view->moduleList = $this->model->getMetaVerseModuleListModel();
         
         if ($this->view->moduleList) {

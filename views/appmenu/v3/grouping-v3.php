@@ -123,8 +123,15 @@
                         if ($bgImageStyle) {
                             $appInfoTextStyle = 'text-shadow: 2px 2px 2px rgba(0,0,0,0.6);';
                         }
+                        
 
                         $cards[] = '<a href="' . $linkHref . '" target="' . $linkTarget . '" style="'.$cartbgColor.$bgImageStyle.'" onclick="' . $linkOnClick . '" data-code="' . $k . '" data-modulename="' . $this->lang->line($row['NAME']) . '" class="vr-menu-tile mix ' . $k . $class . '" data-metadataid="' . $row['META_DATA_ID'] . '" data-pfgotometa="1">';
+                        
+                        if (isset($this->licenseList[$indicatorId]) && $licenseRow = $this->licenseList[$indicatorId]) {
+                            
+                            $cards[] = '<span class="appmenu-license-label appmenu-license-label-'.strtolower($licenseRow['statusName']).'">'.$licenseRow['statusName'].'</span>';
+                        }
+                        
                             $cards[] = '<div class="d-flex align-items-center">';
                                 $cards[] = '<div class="vr-menu-cell">';
                                       if (!$this->isAppmenuNewDesign) {

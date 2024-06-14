@@ -1767,11 +1767,12 @@ class Login_Model extends Model {
                 $result = (new Mdwebservice())->runProcess();
                 var_dump($result);
                 die;
+
                 if (issetParam($result['status']) === 'success') {
                     $result = Functions::runProcess('CHECK_UM_USER_004', array('filterusername' => $data['username']));
                     
                     unset($_POST);
-
+                    
                     $_POST['isHash'] = '1';
                     $_POST['user_name'] = issetParam($result['result']['username']);
                     $_POST['pass_word'] = issetParam($result['result']['passwordhash']);
@@ -1897,6 +1898,8 @@ class Login_Model extends Model {
             $response = (new Mdwebservice())->runProcess();
             
             if ($response['status'] == 'success') {
+                
+                $this->deleteSessionDatabaseConnection();
                 $response['message'] = 'Бүртгэл амжилттай боллоо та нэвтрэх товчийг дарж нэвтэрнэ үү.';
             }
             

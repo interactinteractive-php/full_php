@@ -462,3 +462,22 @@ body  {
 .modname.justify-content-end {
     justify-content: flex-end !important;
 }
+.appmenu-license-label {
+    position: absolute;
+    background-color: #e0960f;
+    margin-top: -22px;
+    margin-left: -22px;
+    color: #fff;
+    padding: 2px 8px 2px 8px;
+    border-radius: 6px;
+    font-size: 12px;
+}
+.appmenu-license-label-active {
+    background-color: #3bc704;
+}
+.appmenu-license-label-trial {
+    background-color: #e0960f;
+}
+.appmenu-license-label-expired {
+    background-color: #f2493a;
+}

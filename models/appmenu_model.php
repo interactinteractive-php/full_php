@@ -165,6 +165,93 @@ class Appmenu_Model extends Model {
         return false;
     }
     
+    public function getMetaVerseLicenseListModel() {
+        
+        $result = [];
+        $cloudDomainName = Config::getFromCache('cloud_domain_name');
+        
+        if ($cloudDomainName == Uri::domain()) {
+            
+            try {
+                
+                $sessionUserId = Ue::sessionUserId();
+
+                $rdb = ADONewConnection(DB_DRIVER);
+                $rdb->debug = DB_DEBUG;
+                $rdb->connectSID = defined('DB_SID') ? DB_SID : true;
+                $rdb->autoRollback = true;
+                $rdb->datetime = true;
+
+                try {
+                    $rdb->Connect(DB_HOST, DB_USER, DB_PASS, DB_NAME, false, true);
+                } catch (Exception $e) { } 
+
+                $rdb->SetCharSet(DB_CHATSET);
+                
+                $idPh = $rdb->Param(0);
+                
+                $data = $rdb->GetAll("
+                    WITH TMP_LICENSE AS (
+                        SELECT 
+                            KI.ID, 
+                            PP.BPA_CODE AS CODE, 
+                            PP.BPA_NAME AS NAME, 
+                            SLK.START_DATE,
+                            CASE WHEN SLK.END_DATE > SYSDATE AND SLK.IS_ACTIVE = 1 THEN 1 ELSE 0 END AS IS_ACTIVE, 
+                            CASE WHEN SLK.END_DATE > SYSDATE AND SLK.IS_ACTIVE = 1 THEN 'Active' ELSE 'Expired' END STATUS_NAME 
+                        FROM SYS_LICENSE_USER SLU 
+                            INNER JOIN SYS_LICENSE_KEY SLK ON SLK.LICENSE_KEY_ID = SLU.LICENSE_KEY_ID 
+                            INNER JOIN PLM_PRODUCT PP ON PP.ID = SLK.PRODUCT_ID 
+                            INNER JOIN KPI_INDICATOR KI ON PP.SRC_RECORD_ID = KI.ID
+                        WHERE SLU.SYSTEM_USER_ID = $idPh 
+                    ) 
+                    SELECT ID, CODE, NAME, IS_ACTIVE, STATUS_NAME FROM TMP_LICENSE 
+                    
+                    UNION ALL 
+                    
+                    SELECT 
+                        K.ID, 
+                        K.CODE, 
+                        K.NAME,            
+                        CASE WHEN ADD_MONTHS(SYSDATE,-1) > (SELECT MIN(START_DATE) FROM TMP_LICENSE) THEN 0 ELSE 1 END AS IS_ACTIVE,
+                        CASE WHEN ADD_MONTHS(SYSDATE,-1) > (SELECT MIN(START_DATE) FROM TMP_LICENSE) THEN 'Trial expired' ELSE 'Trial' END AS STATUS_NAME
+                    FROM (
+                        SELECT 
+                            KI.ID, 
+                            PP.BPA_CODE AS CODE, 
+                            PP.BPA_NAME AS NAME, 
+                            PP.MENU_INDICATOR_ID,
+                            (
+                                SELECT 
+                                    COUNT(1) 
+                                FROM KPI_INDICATOR_INDICATOR_MAP 
+                                WHERE SRC_INDICATOR_ID = KI.ID 
+                                    AND SEMANTIC_TYPE_ID IN (44, 79) 
+                            ) AS IS_RELATION 
+                        FROM KPI_INDICATOR KI 
+                            INNER JOIN PLM_PRODUCT PP ON PP.SRC_RECORD_ID = KI.ID 
+                        WHERE KI.KPI_TYPE_ID = 16818054066154 
+                            AND PP.BPA_NAME IS NOT NULL 
+                    ) K 
+                    WHERE (K.MENU_INDICATOR_ID IS NOT NULL OR K.IS_RELATION > 0) 
+                        AND K.ID NOT IN (SELECT ID FROM TMP_LICENSE)", 
+                    [$sessionUserId]
+                );
+                
+                $rdb->Close();
+                
+                foreach ($data as $row) {
+                    $result[$row['ID']] = ['isActive' => $row['IS_ACTIVE'], 'statusName' => $row['STATUS_NAME']];
+                }
+                
+            } catch (Exception $ex) {
+                $result = [];
+            }
+        }
+        
+        return $result;
+    }
+    
     public function getMetaVerseModuleListModel() {
         
         $sessionUserKeyId = Ue::sessionUserKeyId();
