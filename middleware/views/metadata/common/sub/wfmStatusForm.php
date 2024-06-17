@@ -135,7 +135,7 @@
                                                                     <td>
                                                                         <div class="d-flex align-items-center">
                                                                             <div class="mr-2">
-                                                                                <img class="rounded-circle" src="<?php echo isset($wfmLog['picture']) ? 'api/image_thumbnail?width=40&src='.$wfmLog['picture'] : ''; ?>" onerror="onUserLogoError(this);" width="40" height="40">
+                                                                                <img class="rounded-circle" style="object-fit:contain" src="<?php echo isset($wfmLog['picture']) ? 'api/image_thumbnail?width=40&src='.$wfmLog['picture'] : ''; ?>" onerror="onUserLogoError(this);" width="40" height="40">
                                                                             </div> 
                                                                             <div class="line-height-normal">
                                                                                 <label class="text-default font-weight-bold"><?php echo issetParam($wfmLog['username']); ?></label>
@@ -575,7 +575,7 @@
                                                                                         <td style="border-top:none">
                                                                                             <div class="d-flex align-items-center">
                                                                                                 <div class="mr-2">
-                                                                                                    <img class="rounded-circle" src="api/image_thumbnail?width=40&src=<?php echo $wfmLogNext['picture']; ?>" onerror="onUserLogoError(this);" width="40" height="40" title="<?php echo $wfmLogNext['username']; ?> <?php echo (isset($wfmLogNext['departmentname']) ? '('.$wfmLogNext['departmentname'].')' : ''); ?>"/>
+                                                                                                    <img class="rounded-circle" style="object-fit:contain" src="api/image_thumbnail?width=40&src=<?php echo $wfmLogNext['picture']; ?>" onerror="onUserLogoError(this);" width="40" height="40" title="<?php echo $wfmLogNext['username']; ?> <?php echo (isset($wfmLogNext['departmentname']) ? '('.$wfmLogNext['departmentname'].')' : ''); ?>"/>
                                                                                                 </div> 
                                                                                                 <div class="line-height-normal" style="-ms-flex: 1;flex: 1;">
                                                                                                     

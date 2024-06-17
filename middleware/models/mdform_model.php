@@ -7808,6 +7808,12 @@ class Mdform_Model extends Model {
             }
             break;
         
+            case 'badge':
+            {
+                $control = '<span data-path="'.$columnNamePath.'">'.html_entity_decode($value, ENT_QUOTES, 'UTF-8').'</span>';
+            }
+            break;
+        
             default:
                 
                 if (is_array($value)) {

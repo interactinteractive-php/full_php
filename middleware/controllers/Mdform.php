@@ -1330,10 +1330,9 @@ class Mdform extends Controller {
                 $this->view->showBanner = self::getFormBanner($this->view->indicatorId);
                 $this->view->renderComponentsBanner = ($this->view->showBanner) ? '1' : '0';
                 
-//                pa($methodRow);
-//                if (true) {
-//                    $this->view->form = self::widgetBuilderRender($this->view->crudIndicatorId);
-//                }
+                if ($this->view->crudIndicatorId == 166126219) {
+                    $this->view->form = self::widgetBuilderRender($structureIndicatorId);
+                }
 
                 $this->view->form = $this->view->renderPrint('kpi/indicator/form', self::$viewPath);
                 
@@ -7050,8 +7049,8 @@ class Mdform extends Controller {
         return $result;
     }    
     
-    public function widgetBuilderRender($crudIndicatorId) {
-        $columnsData = $this->model->getKpiIndicatorColumnsModel('16570237736369');
+    public function widgetBuilderRender($indicatorId) {
+        $columnsData = $this->model->getKpiIndicatorColumnsModel($indicatorId);
         $columnsGroupData = self::groupByArrayIsset($columnsData, "WIDGET_POSITION");
         $getData = Mdform::$kpiDmMart;
         $getToPosition = [];
