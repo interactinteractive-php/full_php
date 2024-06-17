@@ -396,5 +396,63 @@ class Mdwidget_Model extends Model {
         return issetParamArray($dataResult['result']);
         
     }
+
+    public function fileUpload ($fileAttr) {
+        
+        $filePath = self::bpTemplateUploadGetPath($path = UPLOADPATH . 'customer/', false);;
+        $newFileName = 'file_' . getUID();
+        
+        $fileName      = $fileAttr['name'];
+        $fileExtension = strtolower(substr($fileName, strrpos($fileName, '.') + 1));
+        $fileName      = $newFileName . '.' . $fileExtension;
+        
+        if (in_array($fileExtension, array('jpg', 'jpeg', 'png'))) {
+            Upload::$File = $fileAttr;
+            Upload::$method = 0;
+            Upload::$SavePath = $filePath;
+            Upload::$NewWidth = 2000;
+            Upload::$NewName = $newFileName;
+            Upload::$OverWrite = true;
+            Upload::$CheckOnlyWidth = true;
+                
+            $uploadError = Upload::UploadFile();
+
+            if ($uploadError == '') {
+                
+                $response = array(
+                    'status'   => 'success', 
+                    'size'      => $fileAttr['size'], 
+                    'extension' => $fileExtension, 
+                    'name'      => $fileAttr['name'], 
+                    'path'      => $filePath, 
+                    'newname'   => $fileName
+                );
+                
+                return $response;
+            }
+        } else {
+            $response = array(
+                'success'   => 'warning', 
+                'text'      => 'Approved file type: [jpg, jpeg, png]', 
+            );
+        }
+        
+        return $response;
+    }
+    
+    public function bpTemplateUploadGetPath($path = UPLOADPATH . 'content/', $userDate = true) {
+        if (!is_dir($path)) {
+            mkdir($path, 0777, true);
+        }
+
+        $date = Date::currentDate('Y/m/d');
+        $newPath = $path . $date . '/';
+
+        if (!is_dir($newPath)) {
+            mkdir($newPath, 0777, true);
+        }
+
+        return $newPath;
+    }
     
 }

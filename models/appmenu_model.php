@@ -170,7 +170,7 @@ class Appmenu_Model extends Model {
         $result = [];
         $cloudDomainName = Config::getFromCache('cloud_domain_name');
         
-        if ($cloudDomainName == Uri::domain()) {
+        if ($cloudDomainName == Uri::domain() && Session::unitName()) {
             
             try {
                 

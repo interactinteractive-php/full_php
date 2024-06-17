@@ -558,7 +558,7 @@
         height: auto;
         align-self: flex-start;
 
-        div[class*="col-"]:empty:before, 
+         
         form:empty:before, 
         .row:empty:before, 
         .form-row:empty:before, 
@@ -588,7 +588,8 @@
             font-size: 12px;
             padding: 0 10px;
         }
-
+        
+        div[class*="col-"]:empty:before,
         div.col:empty:before {
             background-color: #eee;
             content: 'Empty Column';
@@ -606,7 +607,8 @@
             cursor: pointer;
         }
         
-        img:not([src]):not([srcset]) {
+        img:not([src]):not([srcset]),
+        img[src=""] {
             width: 100px;
             height: 80px;
             position: relative;

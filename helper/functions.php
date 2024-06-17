@@ -2341,6 +2341,33 @@ function changeValueBase(&$value, $key)  {
     }
 }
 
+function changeNullValueByImg(&$value, $key)  {
+    if (strtolower($key) == 'image') { 
+        $value = '';
+    }
+}
+
+function changeNullValueByKey(&$value, $key)  {
+    if (strtolower($key) == 'fingerprint') { 
+        $value = '';
+    }
+    if (strtolower($key) == 'signature') { 
+        $value = '';
+    }
+}
+
+function changeValueByKey(&$value, $key)  {
+    
+    if (strtolower($key) == 'type' && $value === 'DIV') { 
+        $value = 'VIEW';
+    }
+
+    if (strtolower($key) == 'type' && in_array($value, array('H1', 'SPAN', 'STRONG'))) { 
+        $value = 'TEXT';
+    }
+    
+}
+
 function getYoutubeVideoID($youtube_video_url) {
 
     $pattern = '#([\/|\?|&]vi?[\/|=]|youtu\.be\/|embed\/)([a-zA-Z0-9_-]+)#';

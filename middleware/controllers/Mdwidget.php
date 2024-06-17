@@ -5038,7 +5038,8 @@ class Mdwidget extends Controller {
         $checkJson = json_decode(html_entity_decode($jsonConfig, ENT_QUOTES, 'UTF-8'), true);
         array_walk_recursive($checkJson, 'changeValueByKey');
         $jsonConfig = json_encode($checkJson);
-        
+        /* var_dump($jsonConfig);
+        die; */
         $_POST = array (
             'param' =>  array (
                 'id' => issetParam($postData['indicatorId']),
@@ -5087,6 +5088,12 @@ class Mdwidget extends Controller {
         
         $response = (new Mdwebservice())->runProcess();
         convJson($response);
+    }
+
+    public function saveWidgetFile () {
+        $fileData = Input::fileData();
+        $response = $this->model->fileUpload($fileData['imageFile']);
+        convJson($response); exit;
     }
 
 }
