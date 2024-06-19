@@ -106,8 +106,6 @@ $(function () {
 
             if ($parent.find('.nav-group-sub').length == 0) {
                 
-                console.log(7);
-                
                 $.ajax({
                     type: 'post',
                     url: 'mdobject/dvPanelChildDataList',

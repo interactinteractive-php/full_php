@@ -71,6 +71,12 @@
                             $linkTarget = $row['urltrg'];
                             $linkOnClick = '';
                             
+                        } elseif ($row['ID'] == '17141485912232') {
+                            
+                            $linkHref = 'appmenu/card/17141485912232';
+                            $linkTarget = '_self';
+                            $linkOnClick = '';       
+                            
                         } elseif (!empty($row['MENU_INDICATOR_ID']) && !$row['IS_RELATION']) {
                             
                             $linkHref = 'appmenu/module/'.$row['MENU_INDICATOR_ID'].'?kmid='.$row['MENU_INDICATOR_ID'];
@@ -195,6 +201,10 @@ if (Config::getFromCache('isAppmenuBigCard')) {
 
 <script type="text/javascript">
     $(function(){        
+        
+        if ($(".vr-menu-tile").length === 1) {
+            $(".vr-menu-tile").click();
+        }
 
         $('ul.mix-filter > li > ul.sub-mix-filter > li').on('click', function(e){
             var $this = $(this);

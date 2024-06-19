@@ -1584,6 +1584,7 @@ if ($this->isDialog == false) {
             <div id="bprocessCoreParam">
                 <?php
                 echo Form::hidden(array('name' => 'methodId', 'value' => $this->methodId));
+                echo Form::hidden(array('name' => 'methodCode', 'value' => issetParam($this->methodRow['META_DATA_CODE'])));
                 echo Form::hidden(array('name' => 'processSubType', 'value' => $this->processSubType));
                 echo Form::hidden(array('name' => 'create', 'value' => ($this->processActionType == 'insert' ? '1' : '0')));
                 echo Form::hidden(array('name' => 'responseType', 'value' => $this->responseType));

@@ -18411,6 +18411,139 @@ function beforeHardSignChangeWfmStatusId(elem, wfmStatusId, metaDataId, refStruc
     $("#callIframeCanvasHardSign").dialog('open');
 }
 
+function beforeWaterMarkChangeWfmStatusId(elem, wfmStatusId, metaDataId, refStructureId, newWfmStatusColor, newWfmStatusName) {
+    signPdfWithCoordinate = function signPdfWithCoordinate(coordinate){
+        $('#callIframeCanvasHardSign').empty().dialog('destroy').remove();
+        
+        if (isObject(refStructureId)) {
+            var row = refStructureId;
+        } else {
+            var rows = getDataViewSelectedRows(metaDataId);
+            var row = rows[0];
+        }
+        
+        var funcArguments = [elem, wfmStatusId, metaDataId, refStructureId, newWfmStatusColor, newWfmStatusName];
+
+        if (typeof row.physicalpath !== 'undefined') {
+            var physicalpath = row.physicalpath;
+            if (physicalpath.split('.').pop().toLowerCase() === 'pdf') {
+                var contentId = null;
+                if (row.hasOwnProperty('contentid')) {
+                    contentId = row.contentid;
+                }
+                var paperSize = 573;
+                if (row.hasOwnProperty('printpapersize') && (row.printpapersize).toLowerCase() === 'a5') {
+                    paperSize = 470;
+                }
+                var fileName = URL_APP + row.physicalpath;
+                var server = URL_APP + 'mddoceditor/fileUpload';
+                var funcName = 'changeWfmStatusId';
+                var pdfPath = fileName.replace(URL_APP, '');
+
+                $.ajax({
+                    type: 'post',
+                    url: 'mdpki/setDocumentSign',
+                    data: {
+                        filePath: pdfPath,
+                        x: Math.floor(1.33333333* coordinate.x),
+                        y: Math.floor(1.33333333 * (paperSize-coordinate.y)),
+                        y: Math.floor(1.33333333 * (paperSize-coordinate.y)),
+                        pageNum: coordinate.pageNum,
+                        selectedRow: row,
+                    },
+                    dataType: 'json',
+                    beforeSend: function() {
+                        Core.blockUI({message: 'Loading...', boxed: true});
+                    },
+                    success: function (data) {
+                        Core.unblockUI();
+                        PNotify.removeAll();
+                        new PNotify({
+                            title: data.status,
+                            text: data.message,
+                            type: data.status,
+                            sticker: false
+                        });
+                        console.log(data);
+                        if (data.status === 'success') {
+                            setTimeout(function(){ window[funcName].apply(null, funcArguments); }, 2000);
+                        }  
+                        
+                        return false;
+                        if (data.status !== 'success') {
+                        }
+                        signPdfAndTextRun(data, pdfPath, contentId, function (t) {
+                            if (t.status === 'success') {
+                                setTimeout(function(){ window[funcName].apply(null, funcArguments); }, 2000);
+                            }   
+                        }, Math.floor(1.33333333* coordinate.x), Math.floor(1.33333333 * (paperSize-coordinate.y)), coordinate.pageNum, responseData.signatureImage);
+                    },
+                    error: function (jqXHR, exception) {
+                        Core.unblockUI();
+                        Core.showErrorMessage(jqXHR, exception);
+                    }
+                });
+
+            } else {
+                new PNotify({
+                    title: 'Error',
+                    text: 'PDF файл олдсонгүй.',
+                    type: 'error',
+                    sticker: false
+                });
+            }
+        } else {
+            new PNotify({
+                title: 'Error',
+                text: 'PDF файл олдсонгүй.',
+                type: 'error',
+                sticker: false
+            });
+        }
+    };
+    
+    if (isObject(refStructureId)) {
+        var row = refStructureId;
+    } else {
+        var rows = getDataViewSelectedRows(metaDataId);
+        var row = rows[0];
+    }
+    var pdfPath = row.physicalpath;
+
+    var filename = pdfPath.replace(/^.*[\\\/]/, '');
+    iframe = '<iframe id="frameStampPos" src="mddoc/canvasStampPos?uniqid=HardSignWindow&pdfPath='+pdfPath+'" height="100%" width="100%" frameBorder="0"></iframe>';
+
+    if (!$('#callIframeCanvasHardSign').length) {
+        var div = document.createElement("div");
+        div.id = 'callIframeCanvasHardSign';
+        div.style = 'display: none';
+        document.body.appendChild(div);
+    }
+
+    $('#callIframeCanvasHardSign').empty().append(iframe);
+    $("#callIframeCanvasHardSign").dialog({
+        cache: false,
+        resizable: false,
+        bgiframe: true,
+        autoOpen: false,
+        title: 'Тамганы байршил',
+        width: 491,
+        height: 720,
+        modal: false,
+        open: function (event, ui) {
+            $('#callIframeCanvasHardSign').css('overflow', 'hidden'); 
+        },
+        close: function () {
+            $('#callIframeCanvasHardSign').empty().dialog('destroy').remove();
+        },
+        buttons: [{text: 'Сонгох', class: 'btn blue-madison btn-sm', click: function () {
+            var frame = $('#frameStampPos')[0];
+            frame.contentWindow.postMessage({call:'canvasClickSendValue_HardSignWindow', value: {'pdfPath': pdfPath}})}
+        }]
+    });
+    $("#callIframeCanvasHardSign").dialog('open');
+}
+
 function dialogOpenFunction(metaDataId, mainMetaDataId, dataHtml, title, closeBtn) {
     if (!$('#dialog-drilldown-dataview-' + metaDataId).length) {
         $("<div id='dialog-drilldown-dataview-" + metaDataId + "'></div>").appendTo('body');
@@ -20728,7 +20861,8 @@ function bpIDCardReadWtemplate(elem, widgetExpression, grouPath, callbackFunctio
                                                                     operatorFinger: $fingerBase, 
                                                                     finger: $fingerPrint, 
                                                                     registerNumber: $stateRegNumber,
-                                                                    isaddress: 1
+                                                                    isaddress: 1,
+                                                                    methodCode: _process.find('#bprocessCoreParam > input[name="methodCode"]').val()
                                                                 },
                                                                 dataType: 'json',
                                                                 beforeSend: function() {
@@ -24466,10 +24600,10 @@ function bpPropertyData(elem, propertyNumber, processId, callbackFunction) {
     
     if (typeof isGovNotaryAddonScript === 'undefined') {
         $.getScript(URL_APP + 'projects/assets/custom/projects/notary.js').done(function() {
-            getPropertyDataXyp(elem, propertyNumber, processId, callbackFunction);
+            getPropertyDataXyp(elem, propertyNumber, processId, callbackFunction, processCode);
         });
     } else {
-        getPropertyDataXyp(elem, propertyNumber, processId, callbackFunction);
+        getPropertyDataXyp(elem, propertyNumber, processId, callbackFunction, processCode);
     }
 
 }
@@ -24478,10 +24612,10 @@ function bpPropertyDataGazar(elem, propertyNumber, processId, callbackFunction) 
     
     if (typeof isGovNotaryAddonScript === 'undefined') {
         $.getScript(URL_APP + 'projects/assets/custom/projects/notary.js').done(function() {
-            getPropertyDataGazar(elem, propertyNumber, processId, callbackFunction);
+            getPropertyDataGazar(elem, propertyNumber, processId, callbackFunction, processCode);
         });
     } else {
-        getPropertyDataGazar(elem, propertyNumber, processId, callbackFunction);
+        getPropertyDataGazar(elem, propertyNumber, processId, callbackFunction, processCode);
     }
 
 }
@@ -24773,7 +24907,11 @@ function bpCitizenAddressData(elem, widgetExpression, grouPath) {
     $.ajax({
         type: 'post',
         url: 'mddoc/saveFingerDataTemp',
-        data: { finger: $fingerBase, registerNumber: $stateRegNumber },
+        data: { 
+            finger: $fingerBase, 
+            registerNumber: $stateRegNumber ,
+            methodCode: _process.find('#bprocessCoreParam > input[name="methodCode"]').val()
+        },
         dataType: 'json',
         beforeSend: function() {
             Core.blockUI({message: plang.get('Loading...'), boxed: true});

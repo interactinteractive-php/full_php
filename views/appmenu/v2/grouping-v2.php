@@ -1,6 +1,16 @@
 <div class="appmenu-table appmenu-newdesign-<?php echo $this->isAppmenuNewDesign; ?>">
     <div class="appmenu-table-row">
         <div class="appmenu-table-cell-left">
+            <!-- <div class="sidebar-mobile-toggler text-center">
+                <a href="#" class="sidebar-mobile-main-toggle">
+                    <i class="icon-arrow-left8"></i>
+                </a>
+                Navigation
+                <a href="#" class="sidebar-mobile-expand">
+                    <i class="icon-screen-full"></i>
+                    <i class="icon-screen-normal"></i>
+                </a>
+            </div> -->
             <ul class="mix-filter">
                 <?php 
                 $cloneMenuList = $this->menuList;
@@ -69,7 +79,7 @@
                         $cartbgColor = '';
                         
                         if ($this->isAppmenuNewDesign) {
-                            if ($row['menucolor']) {
+                            if (issetParam($row['menucolor'])) {
                                 $cartbgColor = 'background-color:'.$row['menucolor'].';';
                             } else {
                                 $cartbgColor = 'background-color:'.$colorSet[$colorSetIndex].';';

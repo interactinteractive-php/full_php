@@ -378,4 +378,122 @@ class Mdpki extends Controller {
             jsonResponse(json_decode($response));
         }  
     }
+
+    public function setDocumentSign () {
+        
+        $postData = Input::postData();
+        $selectedRow = Input::post('selectedRow');
+        
+        try {
+            
+            $signatureImage = '';
+
+            if (issetParam($selectedRow['signatureimage']) !== '') {
+                $isBase64 = preg_match('/^[a-zA-Z0-9\/\r\n+]*={0,2}$/', $selectedRow['signatureimage']);
+                if (!$isBase64) {
+                    $imgfilePath = $selectedRow['signatureimage'];
+                } else {
+                    $signatureImage = $selectedRow['signatureimage'];
+                    $imgfilePath = Mdwebservice::bpUploadGetPath('');
+                    $imgfilePath .= getUID() . '.png';
+                    @file_put_contents($imgfilePath, base64_decode($signatureImage));
+                }
+            }
+            if ($imgfilePath === '') {
+                $imgfilePath = Config::getFromCache('stamp_filepath');
+            }
+
+            if (!file_exists($imgfilePath)) {
+                throw new Exception(Lang::line('STAMP_IMG_NOT_FOUND'));
+            } 
+            
+            if (!file_exists($postData['filePath'])) {
+                throw new Exception(Lang::line('STAMP_FILE_NOT_FOUND'));
+            }
+
+            $imgsize_arr = getimagesize($imgfilePath);
+            if (150 < $imgsize_arr[0]) {
+                $image = imagecreatefromjpeg($imgfilePath);
+                $newFilePath = Mdwebservice::bpUploadGetPath('');
+                $newFilePath .= getUID() . '.png';
+    
+                // Scale the image
+                $new_width = 150; // New width for the image
+                $new_height = 70; // New height for the image
+                $resized_image = imagescale($image, $new_width, $new_height);
+    
+                // Save the resized image
+                imagejpeg($resized_image, $newFilePath);
+                imagedestroy($image);
+                imagedestroy($resized_image);
+                $imgfilePath = $newFilePath;
+            }
+            
+            $pdfFilePath = $postData['filePath'];
+            if (strpos($pdfFilePath, UPLOADPATH) === 0) { 
+                $pdfFilePath = $_SERVER['DOCUMENT_ROOT'] . '/' . $postData['filePath'];
+            }
+
+            $param = array(
+                'pdfFilePath' => $pdfFilePath,
+                'stampImagePath' =>   $_SERVER['DOCUMENT_ROOT'] . '/' . $imgfilePath,
+                'pageNumber' => Input::post('pageNum'),
+                'locationX' => Input::post('x'),
+                'locationY' => Input::post('y'),
+            );
+
+            $result = $this->ws->runResponse(GF_SERVICE_ADDRESS, 'PDF_WATERMARK', $param);
+
+            if (issetParam($result['result']['stampedpdfb64'])) {
+                $pdf_b64 = base64_decode($result['result']['stampedpdfb64']);
+
+                if (issetParam($selectedRow['contentid']) !== '') { 
+                    
+                    $filePath = Mdwebservice::bpUploadGetPath('');
+                    $filePath .= getUID() . '.pdf';
+                    $fileWrite = @file_put_contents($filePath, $pdf_b64);
+                    if ($fileWrite) {
+                        $this->model->checkIsSigned($selectedRow['contentid'], $filePath);
+                    } else {
+                        throw new Exception(Lang::line('CANT_WRITE_STAMPED_FILE'));
+                    }
+                } else {
+                    file_put_contents($postData['filePath'], $pdf_b64);
+                }
+
+                $response = array(
+                    'filePath'    => $filePath, 
+                    'status'    => 'success', 
+                    'message' => Lang::line('msg_stamped_success')
+                );
+            } elseif (issetParam($result['result']['stampedpdfpath'])) {
+                if (issetParam($selectedRow['contentid']) === '') { 
+                    throw new Exception(Lang::line('NOT_FOUND_CONTENT_ID')); 
+                } 
+                else {
+                    $filePath = str_replace($_SERVER['DOCUMENT_ROOT'] . '/', '', $result['result']['stampedpdfpath']);
+                    $this->model->checkIsSigned($selectedRow['contentid'], $filePath);
+                    $response = array(
+                        'filePath'    => $filePath, 
+                        'status'    => 'success', 
+                        'message' => Lang::line('msg_stamped_success')
+                    );
+                }
+            } else {
+                throw new Exception(Lang::line('CANT_STAMPED_FILE'));
+            }
+
+        }  catch (Exception $ex) {
+
+            (Array) $result = array();
+
+            $response['status'] = 'error';
+            $response['message'] = $ex->getMessage();
+
+        }
+
+        convJson($response);
+        exit;
+
+    }
 }

@@ -2373,6 +2373,8 @@ class Mdintegration_model extends Model {
                         'code'    => 'curl', 
                         'message' => $resultArray['Document']['Body']['Error']['ErrorDetail']['ErrorDesc'] . ' - ' . $url
                     );
+                    
+                    self::createServiceMethodLog($url, 'golomtbankTransactionPdf', $xmlParams, $resultArray['Document']['Body']['Error']['ErrorDetail']['ErrorDesc']);
                 }
                 
             } else {
@@ -2575,7 +2577,7 @@ class Mdintegration_model extends Model {
             
             $beforeDate = Date::beforeDate('Y-m-d', '-2 month');
         
-            $this->db->Execute("DELETE FROM SYSINT_SERVICE_METHOD_LOG WHERE WEB_SERVICE_NAME IN ('golomtbankTransfer', 'golomtbankStatements', 'khanbankTransfer', 'khanbankStatements') AND CREATED_DATE < ".$this->db->ToDate("'$beforeDate'", 'YYYY-MM-DD'));
+            $this->db->Execute("DELETE FROM SYSINT_SERVICE_METHOD_LOG WHERE WEB_SERVICE_NAME IN ('golomtbankTransfer', 'golomtbankStatements', 'khanbankTransfer', 'khanbankStatements', 'golomtbankTransactionPdf') AND CREATED_DATE < ".$this->db->ToDate("'$beforeDate'", 'YYYY-MM-DD'));
 
             $response = array('status' => 'success');
 
@@ -2749,14 +2751,18 @@ class Mdintegration_model extends Model {
                 if ($resultLog) {
                     
                     $resultData['result']['logid'] = $methodId;
-                    unset($resultData['return']);
+                    /* unset($resultData['return']); */
                     array_walk_recursive($outPutParam, 'changeNullValueByKey');
-                    array_walk_recursive($resultData, 'changeNullValueByKey');
+                    if ($resultData) {
+                        array_walk_recursive($resultData, 'changeNullValueByKey');
+                    }
 
                     if (Config::getFromCache('setNullClobValueByXyp') === '1') {       
-                        unset($resultData['return']);
+                        /* unset($resultData['return']); */
                         array_walk_recursive($outPutParam, 'changeNullValueByImg');
-                        array_walk_recursive($resultData, 'changeNullValueByImg');
+                        if ($resultData) {
+                            array_walk_recursive($resultData, 'changeNullValueByImg');
+                        }
                     }
 
                     if (Config::getFromCache('USE_SAVE_LOG_YEAR') === '1') {
@@ -2811,13 +2817,17 @@ class Mdintegration_model extends Model {
                     $resultLog = $this->db->AutoExecute('SYSINT_SERVICE_METHOD_LOG', $data);
                 }
                 
-                unset($resultData['return']);
+                /* unset($resultData['return']); */
                 array_walk_recursive($outPutParam, 'changeNullValueByKey');
-                array_walk_recursive($resultData, 'changeNullValueByKey');
+                if ($resultData) {
+                    array_walk_recursive($resultData, 'changeNullValueByKey');
+                }
 
                 if (Config::getFromCache('setNullClobValueByXyp') === '1') {       
                     array_walk_recursive($outPutParam, 'changeNullValueByImg');
-                    array_walk_recursive($resultData, 'changeNullValueByImg');
+                    if ($resultData) {
+                        array_walk_recursive($resultData, 'changeNullValueByImg');
+                    }
                 }
                 if ($resultLog) {
                     if (Config::getFromCache('USE_SAVE_LOG_YEAR') === '1') {

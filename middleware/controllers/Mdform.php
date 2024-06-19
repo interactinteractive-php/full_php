@@ -3186,7 +3186,7 @@ class Mdform extends Controller {
             $this->view->css = AssetNew::metaCss();
             $this->view->js = AssetNew::metaOtherJs();
             $this->view->fullUrlJs = AssetNew::amChartJs();
-        
+            
             $this->view->render('header');
         } 
         
@@ -3217,6 +3217,37 @@ class Mdform extends Controller {
             case '13':
                 self::indicatorChecklist($this->view->indicatorId, $isReturnArray);
                 break;
+            case '1070':
+                /* BP render default */
+                $param = array(
+                    'systemMetaGroupId' => '17186926548051',
+                    'showQuery' => 0, 
+                    'ignorePermission' => 1, 
+                    'criteria' => array(
+                        'filtermainid' => array(
+                            array(
+                                'operator' => '=',
+                                'operand' => $this->view->indicatorId
+                            )
+                        ),
+                        'isdefault' => array(
+                            array(
+                                'operator' => '=',
+                                'operand' => '1'
+                            )
+                        )
+                    )
+                );   
+                $resultData = $this->ws->runResponse(GF_SERVICE_ADDRESS, 'PL_MDVIEW_004', $param);
+                if (issetParam($resultData['result']['0']['indicatorid'])) {
+                    $_POST['param']['indicatorId'] = $resultData['result']['0']['mainindicatorid'];
+                    $_POST['param']['crudIndicatorId'] = $resultData['result']['0']['indicatorid'];
+                    $_POST['isResponseArray'] = '1';
+                    $response = self::kpiIndicatorTemplateRender();
+                    echo $response['html'];
+                }
+                
+                break;
             default:
                 echo 'Харуулах боломжгүй байна.';
                 break;
@@ -3232,6 +3263,30 @@ class Mdform extends Controller {
             return array('html' => $this->view->renderPrint('kpi/indicator/area/index', self::$viewPath));
         } else {
             return $this->view->render('kpi/indicator/area/index', self::$viewPath);
+        }        
+    }
+
+    public function defaultBpRender($isReturnArray, $indicatorId, $indicatorName) {
+        $this->view->generateBpmnScript = '';
+        $this->view->savedValue = [];
+
+        $this->load->model('mdprocessflow', 'middleware/models/');
+        $metaRow = $this->model->getBpmnXmlIndicatorModel($indicatorId);
+        if ($metaRow) {
+            $this->view->generateBpmnScript = $metaRow["GRAPH_JSON"];
+            $this->view->savedValue = $metaRow;
+        }
+        $this->view->mainBpId = $indicatorId;
+        $this->view->uniqId = getUID();
+        $this->view->bpUniqId = Input::post('bpUniqId');
+        $this->view->indicatorId = $indicatorId;
+        $this->view->indicatorName = $indicatorName;
+        $this->view->bpPath = "";
+
+        if ($isReturnArray) {
+            return array('html' => $this->view->renderPrint('indexindicator2', 'middleware/views/bpmn/'));
+        } else {
+            return $this->view->render('indexindicator2', 'middleware/views/bpmn/');
         }        
     }
 
@@ -6351,7 +6406,7 @@ class Mdform extends Controller {
         } else {
         
             $mapData = $this->model->getSrcTrgPathModel($srcMapId, $trgIndicatorId);
-
+            
             if ($mapData) {
                 
                 $selectedRowPost = Input::post('selectedRow');
@@ -6369,19 +6424,17 @@ class Mdform extends Controller {
                 }     
                 
                 foreach ($mapData as $mapRow) {
+                    
                     if ($mapRow['SRC_INDICATOR_PATH'] == '' && $mapRow['DEFAULT_VALUE'] != '') {
                         $setValue = Mdmetadata::setDefaultValue($mapRow['DEFAULT_VALUE']);
                     } else {
                         $setValue = issetParam($selectedRow[strtolower($mapRow['SRC_INDICATOR_PATH'])]);
                     }
-                    $getParams[strtoupper($mapRow['TRG_INDICATOR_PATH'])] = $setValue;
                     
-                    if ($mapRow['GET_ID'] && $mapRow['SEMANTIC_TYPE_ID'] == 120) {
-                        $trgRefStructureId = $mapRow['GET_ID'];
-                    }
+                    $getParams[strtoupper($mapRow['TRG_INDICATOR_PATH'])] = $setValue;
                 }
                 
-                $getDetailData = $this->model->getMetaVerseDataModel($trgRefStructureId, $getParams);
+                $getDetailData = ($typeCode == 'create') ? [] : $this->model->getMetaVerseDataModel($trgRefStructureId, $getParams);
                 
                 if ($getData = issetParam($getDetailData['data'])) {
                     $_POST['transferSelectedRow'] = $getData;

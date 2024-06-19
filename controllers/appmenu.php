@@ -593,4 +593,48 @@ class Appmenu extends Controller {
         $this->view->render('footer');
     }    
     
+    public function card($id) 
+    {   
+        $this->view->title = 'APP CARD'; 
+        
+        $this->view->css = array_unique(array_merge(['custom/css/vr-card-menu.css'], AssetNew::metaCss()));
+        $this->view->js = array_unique(array_merge(['custom/addon/admin/pages/scripts/app.js'], AssetNew::metaOtherJs()));
+        $this->view->fullUrlJs = AssetNew::amChartJs();
+        $this->view->isAppmenuNewDesign = Config::getFromCacheDefault('IS_APPMENU_NEWDESIGN', null, 0);
+        $this->view->colorSet = '#FF7E79,#9370DB,#00B9F6,#00C9CC,#FF986E,#4169E1,#FFA07A,#98CF5D,#EC87C0,#EB735B,#A88BF1,#29C88F,#FDB600';
+        $this->view->isAppmenuPage = true;
+        
+        $this->load->model('mdform', 'middleware/models/');        
+        $this->view->getInfo = $this->model->getIndicatorModel($id);
+        
+        if (true) {
+            
+            $this->view->getResetUser = Config::getFromCache('IsChangePassword') == '1' ? $this->model->getResetPasswordUser() : false;
+            $this->view->js = array_unique(array_merge(['custom/addon/plugins/jquery-mixitup/jquery.mixitup.min.js'], $this->view->js));
+
+            $this->view->render('header');
+            $this->view->render('appmenu/card');
+            $this->view->render('footer');
+            
+        } else {
+            $this->view->render('header');
+            $this->view->render('appmenu/message');
+            $this->view->render('footer');
+        }
+    }    
+    
+    public function cardHtml() {
+        
+        $this->view->isAppmenuNewDesign = Config::getFromCacheDefault('IS_APPMENU_NEWDESIGN', null, 0);
+        $this->view->colorSet = '#FF7E79,#9370DB,#00B9F6,#00C9CC,#FF986E,#4169E1,#FFA07A,#98CF5D,#EC87C0,#EB735B,#A88BF1,#29C88F,#FDB600';
+        $this->view->isAppmenuPage = true;        
+        $this->view->parentId = Input::post('parentId');
+        $this->view->moduleList = $this->model->cardDataModel($this->view->parentId);
+        
+        $response = array(
+            'html' => $this->view->renderPrint('appmenu/cardhtml')
+        );
+        echo json_encode($response); exit;
+    }
+    
 }

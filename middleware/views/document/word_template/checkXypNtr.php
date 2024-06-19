@@ -66,11 +66,10 @@
             </div>
         </div>
     </div>
-    <div class="col-md-12 mt10 render-html-data-<?php echo $this->uniqId ?>">
-    </div>
+    <div class="col-md-12 mt10 render-html-data-<?php echo $this->uniqId ?>"></div>
 </div>
-
 <style type="text/css">
+
     .window-<?php echo $this->uniqId ?> .civilNumber{
         border-radius: 0.1875rem !important;
         border-top-right-radius: 0 !important;
@@ -85,8 +84,13 @@
         font-size: 13.5px;
     }
 </style>
+
 <script type="text/javascript">
     
+    $(function () {
+        $('.select-item-<?php echo $this->uniqId ?>:eq(0)').trigger('click');
+    });
+
     $('body').on('click', '.window-<?php echo $this->uniqId ?> input[data-path="temp-civilnumber"]', function () {
         var _this = $(this), 
         _parent = _this.closest('.window-<?php echo $this->uniqId ?>');
@@ -253,7 +257,7 @@
         }
     }
 
-    function fingerWithXypData($selectedItem, uniqId, $propertyNumber, $stateRegNumber, $legalEntityNumber, $civilNumber) {
+    function fingerWithXypData<?php echo $this->uniqId ?>($selectedItem, uniqId, $propertyNumber, $stateRegNumber, $legalEntityNumber, $civilNumber) {
         
         var $check_type = $('#xyp-check-<?php echo $this->uniqId ?>').find('select[data-path="temp-check-type"]').val();
         var $stateRegNumber = $('#xyp-check-<?php echo $this->uniqId ?>').find('input[data-path="temp-stateRegNumber"]').val();
@@ -281,7 +285,6 @@
             };
 
             if( request.data.length > 131072 ) {
-				
                 alert('Хэмжээ хэтэрсэн.');
                 return;
             }
@@ -303,7 +306,7 @@
                 var resultJson = JSON.parse(evt.data)
 
                 if (resultJson.hasOwnProperty('status') && resultJson['status'] === 'success') {
-                    callXypData(resultJson['signature'], uniqId, $propertyNumber, $stateRegNumber, $civilNumber, $legalEntityNumber, $selectedItem.attr('data-id'), $fingerPrint, $timestamp);
+                    callXypData<?php echo $this->uniqId ?>(resultJson['signature'], uniqId, $propertyNumber, $stateRegNumber, $civilNumber, $legalEntityNumber, $selectedItem.attr('data-id'), $fingerPrint, $timestamp);
                 } else {
                     var $message = resultJson.hasOwnProperty('message') ? resultJson['message'] : "ESign Клэнтээ унтрааж асууна уу?";
                     new PNotify({
@@ -346,7 +349,7 @@
                     var jsonData = JSON.parse(received_msg);
                     if (jsonData.status == 'success') {
 
-                        callXypData(jsonData.details[0].value, uniqId, $propertyNumber, $stateRegNumber, $civilNumber, $legalEntityNumber, $selectedItem.attr('data-id'), $fingerPrint);
+                        callXypData<?php echo $this->uniqId ?>(jsonData.details[0].value, uniqId, $propertyNumber, $stateRegNumber, $civilNumber, $legalEntityNumber, $selectedItem.attr('data-id'), $fingerPrint);
 
                     } else {
                         console.log(jsonData);
@@ -390,7 +393,7 @@
 
     }
     
-    function callXypData($fingerValue, uniqId, $propertyNumber, $stateRegNumber, $civilNumber, $legalEntityNumber, $typeId, $fingerPrint, $timestamp) {
+    function callXypData<?php echo $this->uniqId ?>($fingerValue, uniqId, $propertyNumber, $stateRegNumber, $civilNumber, $legalEntityNumber, $typeId, $fingerPrint, $timestamp) {
         $.ajax({
             type: 'post',
             url: 'mddoc/getXypInformationDataBySignature',
@@ -402,7 +405,8 @@
                 civilId: $civilNumber,
                 legalEntityNumber: $legalEntityNumber,
                 typeId: $typeId,
-                timestamp: $timestamp
+                timestamp: $timestamp,
+                calledProcessCode: 'static'
             },
             dataType: 'json',
             beforeSend: function () {

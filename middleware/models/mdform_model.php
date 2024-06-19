@@ -9818,7 +9818,23 @@ class Mdform_Model extends Model {
                 $fieldObjs = Arr::objectToArray($result->_fieldobjs);
 
             } elseif (DB_DRIVER == 'postgres9') {
-
+                
+                if (strlen($table) <= 30) {
+                    
+                    $table = strtolower($table);
+                    $checkTable = $this->db->GetOne("
+                        SELECT 
+                            TABLE_NAME 
+                        FROM INFORMATION_SCHEMA.TABLES 
+                        WHERE TABLE_SCHEMA NOT IN ('pg_catalog', 'information_schema') 
+                            AND TABLE_NAME = '$table'");
+                    
+                    if (!$checkTable) {
+                        self::$showErrorMessage = 'postgres9 error: [-18: ERROR: relation "'.$table.'" does not exist';
+                        return false;
+                    }
+                }
+                
                 $rs = $db->Execute("SELECT * FROM $table WHERE 1 = 0");
                 $fieldObjects = $rs->fieldTypesArray();
                 
@@ -11707,7 +11723,7 @@ class Mdform_Model extends Model {
 
             $columnsData = self::getKpiIndicatorColumnsModel($kpiMainIndicatorId, $configRow);
             $fieldConfig = self::getKpiIndicatorIdFieldModel($kpiMainIndicatorId, $columnsData);
-                    
+            
             $kpiDataTblName = $configRow['TABLE_NAME'];
             $namePattern    = $configRow['NAME_PATTERN'];
             $kpiTypeId      = $configRow['KPI_TYPE_ID'];
@@ -12773,6 +12789,7 @@ class Mdform_Model extends Model {
                 $this->db->CommitTrans();
                 
                 if (isset($endToEndLog['hdrId'])) {
+                    
                     $endToEndLogResult = self::saveEndToEndLog(issetVar($endToEndLog['listIndicatorId']), issetVar($endToEndLog['stepIndicatorId']), $kpiMainIndicatorId, issetVar($endToEndLog['recordId']), $rowId, Mdform::$mvDbParams['header']['data'], issetVar($endToEndLog['hdrId']));
 
                     if ($endToEndLogResult['status'] == 'success') {
@@ -12780,7 +12797,7 @@ class Mdform_Model extends Model {
                         Mdform::$mvDbParams['header']['data']['checkListStatus']  = $endToEndLogResult['checkListStatus'];
                     }
                 }
-            }             
+            }
             
             self::runGenerateKpiDataMartByIndicatorId($kpiMainIndicatorId, $sourceRecordId);
             self::runGenerateKpiRelationDataMartByIndicatorId($kpiMainIndicatorId);
@@ -30215,6 +30232,7 @@ class Mdform_Model extends Model {
             WHERE SRC_INDICATOR_MAP_ID = ".$this->db->Param(0)." 
                 AND TRG_INDICATOR_ID = ".$this->db->Param(1)." 
                 AND TRG_INDICATOR_PATH IS NOT NULL 
+                AND GET_ID IS NULL 
                 AND (SRC_INDICATOR_PATH IS NOT NULL OR DEFAULT_VALUE IS NOT NULL) 
             GROUP BY 
                 GET_ID, 

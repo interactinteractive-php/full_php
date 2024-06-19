@@ -526,3 +526,6 @@
 .paper_main_window_sys_title_0 {
     color: #fff;
 }
+.kpi-ind-tmplt-section .page.main {
+    min-height: 200px !important;
+}

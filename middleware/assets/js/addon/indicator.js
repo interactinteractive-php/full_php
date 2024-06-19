@@ -2417,7 +2417,7 @@ function kpiIndicatorGoogleMapViewLoad(indicatorId, data, map) {
         window['kpiMarkerObject'] = [];
     }
     
-    var roId = rows[0].hasOwnProperty('RULE_CODE') ? rows[0]['RULE_CODE'] : '';
+    var roId = (rows.length && rows[0].hasOwnProperty('RULE_CODE')) ? rows[0]['RULE_CODE'] : '';
     var rowsLength = rows.length, i = 0;
     
     for (i; i < rowsLength; i++) {

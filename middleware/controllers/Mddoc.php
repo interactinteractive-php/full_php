@@ -689,7 +689,7 @@ class Mddoc extends Controller {
         $mduser->load->model('mduser', 'middleware/models/');
         $this->view->operator = $mduser->model->gettokenDataByUserId();
         
-        $response = array(
+        $response = array (
             'status' => 'success',
             'html' => $this->view->renderPrint('word_template/checkXypNtr', self::$viewPath),
             'title' => 'Мэдээлэл шалгах', 
@@ -4526,6 +4526,7 @@ class Mddoc extends Controller {
         $registerNumber = Input::post('registerNumber');
         $civilId = Input::post('civilId');
         $serviceType = Input::post('serviceType');
+        $methodCode = Input::post('methodCode');
 
         $getUID = getUID();
         $sessionUserId = Ue::sessionUserId();
@@ -4590,15 +4591,51 @@ class Mddoc extends Controller {
         );
 
         $this->load->model('mdintegration', 'middleware/models/');
-                
+        
+        $configData = array();
         $processRow['WS_URL'] = 'https://xyp.gov.mn/citizen-'. Config::getFromCacheDefault('XYP_WSDL_VERSION', null, '1.3.0') .'/ws?WSDL';
-
+        
         if (Input::post('serviceType') === '2') {
             $processRow['CLASS_NAME'] = 'WS100133_getCitizenDeceaseInfo';
+
+            if ($methodCode) {
+                
+                $configParam = array(
+                    'processCode' => $methodCode,
+                    'typeCode' => 'citizen_idcard_info',
+                );
+                
+                $checkConfigGet = Config::getFromCacheDefault('checkXypVersionProcessGet', null, 'NTR_KHUR_SYSINT_PROCESS_TMP_004');
+                $configData = $this->ws->runResponse(self::$gfServiceAddress, $checkConfigGet, $configParam);
+            }
+            $processRow['WS_URL'] = checkDefaultVal($configData['serviceurl'], 'https://xyp.gov.mn/citizen-'. Config::getFromCacheDefault('XYP_WSDL_VERSION', null, '1.3.0') .'/ws?WSDL');
+            $processRow['CLASS_NAME'] = checkDefaultVal($configData['classname'], 'WS100101_getCitizenIDCardInfo');
+            
         } else {
-            $processRow['CLASS_NAME'] = (Input::post('isaddress')) ? 'WS100103_getCitizenAddressInfo' : 'WS100101_getCitizenIDCardInfo';
+
+            if (Input::post('isaddress')) {
+                $configParam = array(
+                    'processCode' => $methodCode,
+                    'typeCode' => 'citizen_addressinfo',
+                );
+                
+                $checkConfigGet = Config::getFromCacheDefault('checkXypVersionProcessGet', null, 'NTR_KHUR_SYSINT_PROCESS_TMP_004');
+                $configData = $this->ws->runResponse(self::$gfServiceAddress, $checkConfigGet, $configParam);
+                $processRow['CLASS_NAME'] = checkDefaultVal($configData['classname'], 'WS100103_getCitizenAddressInfo');
+            } else {
+                $configParam = array(
+                    'processCode' => $methodCode,
+                    'typeCode' => 'citizen_idcard_info',
+                );
+                
+                $checkConfigGet = Config::getFromCacheDefault('checkXypVersionProcessGet', null, 'NTR_KHUR_SYSINT_PROCESS_TMP_004');
+                $configData = $this->ws->runResponse(self::$gfServiceAddress, $checkConfigGet, $configParam);
+                $processRow['CLASS_NAME'] = checkDefaultVal($configData['classname'], 'WS100101_getCitizenIDCardInfo');
+            }
+            
         }
         
+        $processRow['WS_URL'] = checkDefaultVal($configData['serviceurl'], $processRow['WS_URL']);
         $result = $this->model->callXypService($processRow, $param);
 
         if (isset($result['data']['return']['resultcode']) && $result['data']['return']['resultcode'] != '0') {
@@ -4611,10 +4648,20 @@ class Mddoc extends Controller {
             if ($processRow['CLASS_NAME'] === 'WS100101_getCitizenIDCardInfo' /* && Config::getFromCacheDefault('CALL_WITH_ADDRESSINFO') === '1' */) {
                 $timestamp = (int) Input::post('timestamp');
                 $processRow['WS_URL'] = 'https://xyp.gov.mn/citizen-'. Config::getFromCacheDefault('XYP_WSDL_VERSION', null, '1.3.0') .'/ws?WSDL';
-                $processRow['CLASS_NAME'] = 'WS100103_getCitizenAddressInfo';
 
+                $configParam = array(
+                    'processCode' => $methodCode,
+                    'typeCode' => 'citizen_addressinfo',
+                );
+                
+                $checkConfigGet = Config::getFromCacheDefault('checkXypVersionProcessGet', null, 'NTR_KHUR_SYSINT_PROCESS_TMP_004');
+                $configData = $this->ws->runResponse(self::$gfServiceAddress, $checkConfigGet, $configParam);
+                $processRow['CLASS_NAME'] = checkDefaultVal($configData['classname'], 'WS100103_getCitizenAddressInfo');
+                $processRow['WS_URL'] = checkDefaultVal($configData['serviceurl'], $processRow['WS_URL']);
+                
                 $this->load->model('mdintegration', 'middleware/models/');
                 $resultAddress = $this->model->callXypService($processRow, $param, true, $timestamp);
+
                 $response['addressinfo'] = $addressinfo = issetParamArray($resultAddress['data']['return']['response']);
                 $response['addressinfo1'] = issetParamArray($resultAddress);
 
@@ -4775,6 +4822,14 @@ class Mddoc extends Controller {
         switch ($typeId) {
 
             case '1':
+                $configParam = array(
+                    'processCode' => Input::post('methodCode', 'NTR_TRUST_BOOK_DV_001'),
+                    'typeCode' => 'citizen_idcard_info',
+                );
+                
+                $checkConfigGet = Config::getFromCacheDefault('checkXypVersionProcessGet', null, 'NTR_KHUR_SYSINT_PROCESS_TMP_004');
+                $configData = $this->ws->runResponse(self::$gfServiceAddress, $checkConfigGet, $configParam);
+
                 $sessionUserId = Ue::sessionUserId();
                 $operatorData = $this->db->GetRow("SELECT 
                                                         t1.FILE_PATH, 
@@ -4816,8 +4871,8 @@ class Mddoc extends Controller {
 
                 $this->load->model('mdintegration', 'middleware/models/');
                 
-                $processRow['WS_URL'] = 'https://xyp.gov.mn/citizen-'. Config::getFromCacheDefault('XYP_WSDL_VERSION', null, '1.3.0') .'/ws?WSDL';
-                $processRow['CLASS_NAME'] = 'WS100101_getCitizenIDCardInfo';
+                $processRow['WS_URL'] = checkDefaultVal($configData['serviceurl'], 'https://xyp.gov.mn/citizen-'. Config::getFromCacheDefault('XYP_WSDL_VERSION', null, '1.3.0') .'/ws?WSDL');
+                $processRow['CLASS_NAME'] = checkDefaultVal($configData['classname'], 'WS100101_getCitizenIDCardInfo');
 
                 $result = $this->model->callXypService($processRow, $param);
                 
@@ -4831,6 +4886,14 @@ class Mddoc extends Controller {
                 
                 break;
             case '2':
+                $configParam = array(
+                    'processCode' => Input::post('methodCode', 'NTR_TRUST_BOOK_DV_001'),
+                    'typeCode' => 'get_property_list',
+                );
+                
+                $checkConfigGet = Config::getFromCacheDefault('checkXypVersionProcessGet', null, 'NTR_KHUR_SYSINT_PROCESS_TMP_004');
+                $configData = $this->ws->runResponse(self::$gfServiceAddress, $checkConfigGet, $configParam);
+
                 $sessionUserId = Ue::sessionUserId();
                 
                 $operatorData = $this->db->GetRow("SELECT 
@@ -4873,8 +4936,9 @@ class Mddoc extends Controller {
                 
                 $this->load->model('mdintegration', 'middleware/models/');
                 
-                $processRow['WS_URL'] = 'https://xyp.gov.mn/property-'. Config::getFromCacheDefault('XYP_WSDL_VERSION', null, '1.3.0') .'/ws?WSDL';
-                $processRow['CLASS_NAME'] = 'WS100202_getPropertyList';
+                $processRow['WS_URL'] = checkDefaultVal($configData['serviceurl'], 'https://xyp.gov.mn/property-'. Config::getFromCacheDefault('XYP_WSDL_VERSION', null, '1.3.0') .'/ws?WSDL');
+                $processRow['CLASS_NAME'] = checkDefaultVal($configData['classname'], 'WS100202_getPropertyList');
+
                 $result = $this->model->callXypService($processRow, $param);
                 
                 if (issetParamArray($result['data']['return']['resultcode']) && issetParamZero($result['data']['return']['resultcode']) != '0') {
@@ -4886,6 +4950,13 @@ class Mddoc extends Controller {
                 break;
             case '3':
                 $sessionUserId = Ue::sessionUserId();
+                $configParam = array(
+                    'processCode' => Input::post('methodCode', 'NTR_TRUST_BOOK_DV_001'),
+                    'typeCode' => 'property_info',
+                );
+                
+                $checkConfigGet = Config::getFromCacheDefault('checkXypVersionProcessGet', null, 'NTR_KHUR_SYSINT_PROCESS_TMP_004');
+                $configData = $this->ws->runResponse(self::$gfServiceAddress, $checkConfigGet, $configParam);
                 
                 $operatorData = $this->db->GetRow("SELECT 
                                                         t1.FILE_PATH, lower(T3.STATE_REG_NUMBER) AS STATE_REG_NUMBER, T3.LAST_NAME, T3.FIRST_NAME
@@ -4925,9 +4996,9 @@ class Mddoc extends Controller {
                 );
 
                 $this->load->model('mdintegration', 'middleware/models/');
-                
-                $processRow['WS_URL'] = 'https://xyp.gov.mn/property-'. Config::getFromCacheDefault('XYP_WSDL_VERSION', null, '1.3.0') .'/ws?WSDL';
-                $processRow['CLASS_NAME'] = 'WS100201_getPropertyInfo';
+
+                $processRow['WS_URL'] = checkDefaultVal($configData['serviceurl'], 'https://xyp.gov.mn/property-'. Config::getFromCacheDefault('XYP_WSDL_VERSION', null, '1.3.0') .'/ws?WSDL');
+                $processRow['CLASS_NAME'] = checkDefaultVal($configData['classname'], 'WS100201_getPropertyInfo');
                 $result = $this->model->callXypService($processRow, $param);
                 
                 if (isset($result['data']['return']['resultcode']) && $result['data']['return']['resultcode'] != '0') {
@@ -4939,7 +5010,14 @@ class Mddoc extends Controller {
                 break;
             case '4':
                 $sessionUserId = Ue::sessionUserId();
+                $configParam = array(
+                    'processCode' => Input::post('methodCode', 'NTR_TRUST_BOOK_DV_001'),
+                    'typeCode' => 'entityinfo',
+                );
                 
+                $checkConfigGet = Config::getFromCacheDefault('checkXypVersionProcessGet', null, 'NTR_KHUR_SYSINT_PROCESS_TMP_004');
+                $configData = $this->ws->runResponse(self::$gfServiceAddress, $checkConfigGet, $configParam);
+
                 $operatorData = $this->db->GetRow("SELECT 
                                                         t1.FILE_PATH, lower(T3.STATE_REG_NUMBER) AS STATE_REG_NUMBER, T3.LAST_NAME, T3.FIRST_NAME
                                                     FROM UM_USER t0
@@ -4975,9 +5053,9 @@ class Mddoc extends Controller {
                 );
 
                 $this->load->model('mdintegration', 'middleware/models/');
-                
-                $processRow['WS_URL'] = 'https://xyp.gov.mn/legal-entity-'. Config::getFromCacheDefault('XYP_WSDL_VERSION', null, '1.3.0') .'/ws?WSDL';
-                $processRow['CLASS_NAME'] = 'WS100301_getLegalEntityInfo';
+
+                $processRow['WS_URL'] = checkDefaultVal($configData['serviceurl'], 'https://xyp.gov.mn/legal-entity-'. Config::getFromCacheDefault('XYP_WSDL_VERSION', null, '1.3.0') .'/ws?WSDL');
+                $processRow['CLASS_NAME'] = checkDefaultVal($configData['classname'], 'WS100301_getLegalEntityInfo');
                 $result = $this->model->callXypService($processRow, $param);
                 
                 if (isset($result['data']['return']['resultcode']) && $result['data']['return']['resultcode'] != '0') {
@@ -4999,12 +5077,14 @@ class Mddoc extends Controller {
     } 
     
     public function getXypInformationDataBySignature() {
-        
+
         $postData = Input::postData();
         if (issetParam($postData['timestamp']) !== '') {
+
             $sessionUserId = Ue::sessionUserId();
 
             $filePath = Input::post('finger');
+            $calledProcessCode = Input::post('calledProcessCode');
 
             $propertyNumber = Str::lower(Input::post('propertyNumber')); 'ү22'; // жижигээр бичнэ
             $legalEntityNumber = Str::lower(Input::post('legalEntityNumber')); 'ү22'; // жижигээр бичнэ
@@ -5022,6 +5102,15 @@ class Mddoc extends Controller {
             switch ($typeId) {
 
                 case '1':
+
+                    $configParam = array(
+                        'processCode' => Input::post('methodCode', 'NTR_TRUST_BOOK_DV_001'),
+                        'typeCode' => 'citizen_idcard_info',
+                    );
+                    
+                    $checkConfigGet = Config::getFromCacheDefault('checkXypVersionProcessGet', null, 'NTR_KHUR_SYSINT_PROCESS_TMP_004');
+                    $configData = $this->ws->runResponse(self::$gfServiceAddress, $checkConfigGet, $configParam);
+
                     $sessionUserId = Ue::sessionUserId();
                     $operatorData = $this->db->GetRow("SELECT 
                                                             T2.CERTIFICATE_SERIAL_NUMBER,
@@ -5031,8 +5120,7 @@ class Mddoc extends Controller {
                                                         INNER JOIN UM_USER_MONPASS_MAP T2 ON T0.USER_ID = T2.USER_ID
                                                         INNER JOIN BASE_PERSON t3 ON t1.PERSON_ID = t3.PERSON_ID
                                                         WHERE T1.USER_ID = ". $this->db->Param(0) ." AND T2.IS_ACTIVE = 1", array($sessionUserId));
-
-
+                    
                     if (!isset($operatorData['CERTIFICATE_SERIAL_NUMBER'])) {
                         echo json_encode(array('message' => 'Үйлчилгээг үзүүлэгч ажилтны <strong>ТООН ГАРЫН ҮСГЭЭ</strong> бүртгүүлнэ үү!', 'status' => 'error'));
                         die;
@@ -5062,8 +5150,8 @@ class Mddoc extends Controller {
 
                     $this->load->model('mdintegration', 'middleware/models/');
 
-                    $processRow['WS_URL'] = 'https://xyp.gov.mn/citizen-'. Config::getFromCacheDefault('XYP_WSDL_VERSION', null, '1.3.0') .'/ws?WSDL';
-                    $processRow['CLASS_NAME'] = 'WS100101_getCitizenIDCardInfo';
+                    $processRow['WS_URL'] = checkDefaultVal($configData['serviceurl'], 'https://xyp.gov.mn/citizen-'. Config::getFromCacheDefault('XYP_WSDL_VERSION', null, '1.3.0') .'/ws?WSDL');
+                    $processRow['CLASS_NAME'] = checkDefaultVal($configData['classname'], 'WS100101_getCitizenIDCardInfo');
                     $result = $this->model->callXypService($processRow, $param, true, $timestamp);
 
                     if (isset($result['data']['return']['resultcode']) && $result['data']['return']['resultcode'] != '0') {
@@ -5075,6 +5163,13 @@ class Mddoc extends Controller {
 
                     break;
                 case '2':
+                    $configParam = array(
+                        'processCode' => Input::post('methodCode', 'NTR_TRUST_BOOK_DV_001'),
+                        'typeCode' => 'get_property_list',
+                    );
+                    
+                    $checkConfigGet = Config::getFromCacheDefault('checkXypVersionProcessGet', null, 'NTR_KHUR_SYSINT_PROCESS_TMP_004');
+                    $configData = $this->ws->runResponse(self::$gfServiceAddress, $checkConfigGet, $configParam);
                     $sessionUserId = Ue::sessionUserId();
                     $operatorData = $this->db->GetRow("SELECT 
                                                             T2.CERTIFICATE_SERIAL_NUMBER,
@@ -5115,8 +5210,8 @@ class Mddoc extends Controller {
 
                     $this->load->model('mdintegration', 'middleware/models/');
 
-                    $processRow['WS_URL'] = 'https://xyp.gov.mn/property-'. Config::getFromCacheDefault('XYP_WSDL_VERSION', null, '1.3.0') .'/ws?WSDL';
-                    $processRow['CLASS_NAME'] = 'WS100202_getPropertyList';
+                    $processRow['WS_URL'] = checkDefaultVal($configData['serviceurl'], 'https://xyp.gov.mn/property-'. Config::getFromCacheDefault('XYP_WSDL_VERSION', null, '1.3.0') .'/ws?WSDL');
+                    $processRow['CLASS_NAME'] = checkDefaultVal($configData['classname'], 'WS100202_getPropertyList');
 
                     $result = $this->model->callXypService($processRow, $param, true, $timestamp);
 
@@ -5128,6 +5223,13 @@ class Mddoc extends Controller {
 
                     break;
                 case '3':
+                    $configParam = array(
+                        'processCode' => Input::post('methodCode', 'NTR_TRUST_BOOK_DV_001'),
+                        'typeCode' => 'property_info',
+                    );
+                    
+                    $checkConfigGet = Config::getFromCacheDefault('checkXypVersionProcessGet', null, 'NTR_KHUR_SYSINT_PROCESS_TMP_004');
+                    $configData = $this->ws->runResponse(self::$gfServiceAddress, $checkConfigGet, $configParam);
                     $sessionUserId = Ue::sessionUserId();
                     $operatorData = $this->db->GetRow("SELECT 
                                                             T2.CERTIFICATE_SERIAL_NUMBER,
@@ -5167,8 +5269,8 @@ class Mddoc extends Controller {
 
                     $this->load->model('mdintegration', 'middleware/models/');
 
-                    $processRow['WS_URL'] = 'https://xyp.gov.mn/property-'. Config::getFromCacheDefault('XYP_WSDL_VERSION', null, '1.3.0') .'/ws?WSDL';
-                    $processRow['CLASS_NAME'] = 'WS100201_getPropertyInfo';
+                    $processRow['WS_URL'] = checkDefaultVal($configData['serviceurl'], 'https://xyp.gov.mn/property-'. Config::getFromCacheDefault('XYP_WSDL_VERSION', null, '1.3.0') .'/ws?WSDL');
+                    $processRow['CLASS_NAME'] = checkDefaultVal($configData['classname'], 'WS100201_getPropertyInfo');
                     $result = $this->model->callXypService($processRow, $param, true, $timestamp);
 
                     if (isset($result['data']['return']['resultcode']) && $result['data']['return']['resultcode'] != '0') {
@@ -5179,6 +5281,13 @@ class Mddoc extends Controller {
 
                     break;
                 case '4':
+                    $configParam = array(
+                        'processCode' => Input::post('methodCode', 'NTR_TRUST_BOOK_DV_001'),
+                        'typeCode' => 'entityinfo',
+                    );
+                    
+                    $checkConfigGet = Config::getFromCacheDefault('checkXypVersionProcessGet', null, 'NTR_KHUR_SYSINT_PROCESS_TMP_004');
+                    $configData = $this->ws->runResponse(self::$gfServiceAddress, $checkConfigGet, $configParam);
                     $sessionUserId = Ue::sessionUserId();
                     $operatorData = $this->db->GetRow("SELECT 
                                                             T2.CERTIFICATE_SERIAL_NUMBER,
@@ -5219,8 +5328,8 @@ class Mddoc extends Controller {
 
                     $this->load->model('mdintegration', 'middleware/models/');
 
-                    $processRow['WS_URL'] = 'https://xyp.gov.mn/legal-entity-'. Config::getFromCacheDefault('XYP_WSDL_VERSION', null, '1.3.0') .'/ws?WSDL';
-                    $processRow['CLASS_NAME'] = 'WS100301_getLegalEntityInfo';
+                    $processRow['WS_URL'] = checkDefaultVal($configData['serviceurl'], 'https://xyp.gov.mn/legal-entity-'. Config::getFromCacheDefault('XYP_WSDL_VERSION', null, '1.3.0') .'/ws?WSDL');
+                    $processRow['CLASS_NAME'] = checkDefaultVal($configData['classname'], 'WS100301_getLegalEntityInfo');
                     $result = $this->model->callXypService($processRow, $param, true, $timestamp);
 
                     if (isset($result['data']['return']['resultcode']) && $result['data']['return']['resultcode'] != '0') {

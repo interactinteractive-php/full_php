@@ -212,7 +212,7 @@ $(function() {
 });  
 
 $('body').on('change', 'select.data-indicator-id<?php echo $this->indicatorId ?>', function () {
-    var _this = $(this);
+    var _this = $(this);    
     kpiIndicatorGmapLoad_<?php echo $this->indicatorId; ?>();
 });
 
@@ -275,6 +275,7 @@ function kpiIndicatorGmapLoad_<?php echo $this->indicatorId; ?>() {
 
         var getFilterData = getKpiIndicatorFilterData($this, $parentFilter);
         var $mapFilter = $('.md-map-filter-panel-<?php echo $this->indicatorId; ?>');
+        window['kpiMarkerObject'] = [];
         
         $.each($mapFilter.find('.data-indicator-id').select2('val'), function(i, r) {
 

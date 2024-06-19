@@ -3,8 +3,12 @@ var isDataViewPanelOneColumn = true;
 var buildOneColSecondPart = function(uniqId, dvId, $this) {
     
     var metaDataId = $this.data('listmetadataid');
-
     var rowData = $this.data('rowdata');
+
+    if (typeof rowData !== 'object') {
+        rowData = JSON.parse(rowData);
+    }
+    
     if (rowData.hasOwnProperty('weblink') && rowData.weblink) {
         var urlLower = (rowData.weblink).toLowerCase();
         switch (urlLower) {
@@ -28,6 +32,21 @@ var buildOneColSecondPart = function(uniqId, dvId, $this) {
     }
     
     var metaTypeId = $this.data('metatypeid');
+    var $renderContainer = window['viewProcess_'+uniqId];
+    
+    if (rowData.hasOwnProperty('isignorenewload') && rowData.isignorenewload == '1') {
+        
+        $renderContainer.find('.one-col-ignore-newload').hide();
+        var renderContainerName = 'view_process_'+uniqId+'_'+metaDataId;
+        
+        if (!$('#' + renderContainerName).length) {
+            $renderContainer.append('<div id="' + renderContainerName + '" class="one-col-ignore-newload"></div>');
+            $renderContainer = $('#' + renderContainerName);
+        } else {
+            $renderContainer.find('#' + renderContainerName).show();
+            return false;
+        }
+    }
     
     if (metaTypeId == '200101010000016') { //Dataview
         
@@ -41,8 +60,8 @@ var buildOneColSecondPart = function(uniqId, dvId, $this) {
             },
             success: function (data) {
 
-                window['viewProcess_'+uniqId].empty().append(data.Html).promise().done(function () {
-                    window['viewProcess_'+uniqId].find('> .row > .col-md-12:eq(0)').remove();
+                $renderContainer.empty().append(data.Html).promise().done(function () {
+                    $renderContainer.find('> .row > .col-md-12:eq(0)').remove();
                     Core.unblockUI();
                 });
             },
@@ -50,12 +69,6 @@ var buildOneColSecondPart = function(uniqId, dvId, $this) {
         });
         
     } else if (metaTypeId == '200101010000011') { //Process
-        
-        var rowData = $this.data('rowdata');
-
-        if (typeof rowData !== 'object') {
-            rowData = JSON.parse(rowData);
-        }
         
         $.ajax({
             type: 'post',
@@ -76,9 +89,9 @@ var buildOneColSecondPart = function(uniqId, dvId, $this) {
                 Core.blockUI({message: 'Loading...', boxed: true});
             },
             success: function(data){
-                window['viewProcess_'+uniqId].empty().append(data.Html).promise().done(function () {
-                    window['viewProcess_'+uniqId].find('.bp-btn-back, .bpTestCaseSaveButton').remove();
-                    Core.initBPAjax(window['viewProcess_'+uniqId]);
+                $renderContainer.empty().append(data.Html).promise().done(function () {
+                    $renderContainer.find('.bp-btn-back, .bpTestCaseSaveButton').remove();
+                    Core.initBPAjax($renderContainer);
                     Core.unblockUI();
                 });
             },
@@ -106,8 +119,8 @@ var buildOneColSecondPart = function(uniqId, dvId, $this) {
                     Core.blockUI({message: 'Loading...', boxed: true});
                 },
                 success: function(data) {
-                    window['viewProcess_'+uniqId].empty().append(data.html).promise().done(function () {
-                        Core.initAjax(window['viewProcess_'+uniqId]);
+                    $renderContainer.empty().append(data.html).promise().done(function () {
+                        Core.initAjax($renderContainer);
                         Core.unblockUI();
                     });
                 }
@@ -116,19 +129,13 @@ var buildOneColSecondPart = function(uniqId, dvId, $this) {
         } else if (metaDataId == '1636438397801188') { //erdConfig
             
             window['viewProcess_'+uniqId].empty();
-            var $appendElement = window['viewProcess_'+uniqId];
+            var $appendElement = $renderContainer;
             var isReadOnly = obj.hasOwnProperty('isreadonly') ? obj.isreadonly : 0;
 
             erdConfigInit($this, metaDataId, metaDataId, {id: obj.id, isreadonly: isReadOnly}, $appendElement);
         }
         
     } else if (metaTypeId == '200101010000029') {
-        
-        var rowData = $this.data('rowdata');
-
-        if (typeof rowData !== 'object') {
-            rowData = JSON.parse(rowData);
-        }
         
         $.ajax({
             type: 'post',
@@ -144,15 +151,15 @@ var buildOneColSecondPart = function(uniqId, dvId, $this) {
 
                     var renderHtml = (data.Html).replace('report-preview-container', 'report-preview-container rt-set-autoheight');
 
-                    window['viewProcess_'+uniqId].empty().append(renderHtml).promise().done(function () {
+                    $renderContainer.empty().append(renderHtml).promise().done(function () {
                         Core.initAjax(window['viewProcess_'+uniqId]);
                         Core.unblockUI();
                         
                         if (typeof rowData.windowtype !== 'undefined' && rowData.windowtype === '2') {
-                            if (window['viewProcess_'+uniqId].find('.addonwindowType').length > 0) {
-                                window['viewProcess_'+uniqId].find('.addonwindowType').empty();
+                            if ($renderContainer.find('.addonwindowType').length > 0) {
+                                $renderContainer.find('.addonwindowType').empty();
                             } else {
-                                window['viewProcess_'+uniqId].append('<div class="w-100 pull-left addonwindowType"></div>');
+                                $renderContainer.append('<div class="w-100 pull-left addonwindowType"></div>');
                             }
                         }
                     });
@@ -172,19 +179,15 @@ var buildOneColSecondPart = function(uniqId, dvId, $this) {
         
     } else if (metaTypeId == '200101010000032') {
         
-        var rowData = $this.data('rowdata'), isAddonMsg = false,
+        var isAddonMsg = false,
             setHeight = window['viewProcess_'+uniqId].height() - 90;
-
-        if (typeof rowData !== 'object') {
-            rowData = JSON.parse(rowData);
-        }
         
         if (rowData.hasOwnProperty('metadatadescription') && rowData.metadatadescription) {
             
-            window['viewProcess_'+uniqId].prepend('<div id="addon-footer-msg" style="position:absolute;visibility:hidden;display:block">'+html_entity_decode(rowData.metadatadescription)+'</div>');
+            $renderContainer.prepend('<div id="addon-footer-msg" style="position:absolute;visibility:hidden;display:block">'+html_entity_decode(rowData.metadatadescription)+'</div>');
             
             isAddonMsg = true;
-            setHeight = setHeight - window['viewProcess_'+uniqId].find('#addon-footer-msg').height() - 5;
+            setHeight = setHeight - $renderContainer.find('#addon-footer-msg').height() - 5;
         }
         
         $.ajax({
@@ -207,20 +210,14 @@ var buildOneColSecondPart = function(uniqId, dvId, $this) {
                     renderHtml += html_entity_decode(rowData.metadatadescription);
                 }
                 
-                window['viewProcess_'+uniqId].empty().append(renderHtml).promise().done(function () {
-                    Core.initBPAjax(window['viewProcess_'+uniqId]);
+                $renderContainer.empty().append(renderHtml).promise().done(function () {
+                    Core.initBPAjax($renderContainer);
                     Core.unblockUI();
                 });
             }
         });
         
     } else if (metaTypeId == '200101010000033') { 
-        
-        var rowData = $this.data('rowdata');
-
-        if (typeof rowData !== 'object') {
-            rowData = JSON.parse(rowData);
-        }
         
         $.ajax({
             type: 'post',
@@ -235,19 +232,13 @@ var buildOneColSecondPart = function(uniqId, dvId, $this) {
                     renderHtml += html_entity_decode(rowData.metadatadescription);
                 }
                 
-                window['viewProcess_'+uniqId].empty().append(renderHtml).promise().done(function() {
+                $renderContainer.empty().append(renderHtml).promise().done(function() {
                     Core.unblockUI();
                 });
             }
         });
             
     } else if (metaTypeId == '200101010000034') { //Workspace
-        
-        var rowData = $this.data('rowdata');
-
-        if (typeof rowData !== 'object') {
-            rowData = JSON.parse(rowData);
-        }
                 
         $.ajax({
             type: 'post',
@@ -268,21 +259,15 @@ var buildOneColSecondPart = function(uniqId, dvId, $this) {
                     $.cachedScript("assets/custom/addon/plugins/jquery.sparkline.min.js");
                 }
 
-                window['viewProcess_'+uniqId].empty().append(data.html).promise().done(function () {
-                    window['viewProcess_'+uniqId].find('.close-btn').remove();
-                    Core.initAjax(window['viewProcess_'+uniqId]);
+                $renderContainer.empty().append(data.html).promise().done(function () {
+                    $renderContainer.find('.close-btn').remove();
+                    Core.initAjax($renderContainer);
                     Core.unblockUI();
                 });
             }
         });
         
     } else if (metaTypeId == '200101010000035') {
-        
-        var rowData = $this.data('rowdata');
-
-        if (typeof rowData !== 'object') {
-            rowData = JSON.parse(rowData);
-        }
         
         $.ajax({
             type: 'post',
@@ -298,18 +283,12 @@ var buildOneColSecondPart = function(uniqId, dvId, $this) {
                     renderHtml = html_entity_decode(rowData.metadatadescription) + renderHtml;
                 }
                 
-                window['viewProcess_'+uniqId].empty().append(renderHtml).promise().done(function() {
+                $renderContainer.empty().append(renderHtml).promise().done(function() {
                     Core.unblockUI();
                 });
             }
         });
     } else if (metaTypeId == '200101010000036') {
-        
-        var rowData = $this.data('rowdata');
-
-        if (typeof rowData !== 'object') {
-            rowData = JSON.parse(rowData);
-        }
         
         $.ajax({
             type: 'post',
@@ -326,18 +305,12 @@ var buildOneColSecondPart = function(uniqId, dvId, $this) {
                     renderHtml = html_entity_decode(rowData.metadatadescription) + renderHtml;
                 }
                 
-                window['viewProcess_'+uniqId].empty().append(renderHtml).promise().done(function() {
+                $renderContainer.empty().append(renderHtml).promise().done(function() {
                     Core.unblockUI();
                 });
             }
         });
     } else if (metaTypeId == 'indicator') {
-        
-        var rowData = $this.data('rowdata');
-
-        if (typeof rowData !== 'object') {
-            rowData = JSON.parse(rowData);
-        }
         
         $.ajax({
             type: 'post',
@@ -346,20 +319,14 @@ var buildOneColSecondPart = function(uniqId, dvId, $this) {
                 Core.blockUI({message: 'Loading...', boxed: true});
             },
             success: function(data) {
-                window['viewProcess_'+uniqId].empty().append(data).promise().done(function() {});
+                $renderContainer.empty().append(data).promise().done(function() {});
             }
         }).done(function() {
             Core.unblockUI();
         });
     } else if (metaTypeId == 'method') {
         
-        var rowData = $this.data('rowdata');
         var getIds = metaDataId.split('_');
-
-        if (typeof rowData !== 'object') {
-            rowData = JSON.parse(rowData);
-        }
-        
         var postData = {param: {indicatorId: getIds[1], crudIndicatorId: getIds[0]}};
         
         $.ajax({
@@ -374,7 +341,7 @@ var buildOneColSecondPart = function(uniqId, dvId, $this) {
                 PNotify.removeAll();
                 
                 if (data.status == 'success') {
-                    window['viewProcess_'+uniqId].empty().append('<form method="post" enctype="multipart/form-data" class="dv-process-buttons"><button type="button" class="btn btn-sm btn-circle btn-success" style="position: absolute;right: 0;top: 45px;" onclick="runMetaverseCrud(this);"><i class="icon-checkmark-circle2"></i> Хадгалах</button>' + data.html + '</form>').promise().done(function() {});                
+                    $renderContainer.empty().append('<form method="post" enctype="multipart/form-data" class="dv-process-buttons"><button type="button" class="btn btn-sm btn-circle btn-success" style="position: absolute;right: 0;top: 45px;" onclick="runMetaverseCrud(this);"><i class="icon-checkmark-circle2"></i> Хадгалах</button>' + data.html + '</form>').promise().done(function() {});                
                 } else {
                     new PNotify({
                         title: data.status,

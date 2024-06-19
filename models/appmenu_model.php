@@ -343,6 +343,39 @@ class Appmenu_Model extends Model {
             ORDER BY K.CATEGORY_ORDER, K.ORDER_NUMBER", [$sessionUserKeyId]);
         
         return $data;
-    }     
+    }
+    
+    public function cardDataModel($parentId) {
+
+        $param = array(
+            'systemMetaGroupId' => '1718707122196331',
+            'showQuery' => 0,
+            'treeGrid' => 1,
+            'ignorePermission' => 1, 
+            'criteria' => []
+        );               
+        
+        if ($parentId) {
+            $param['criteria'] = array(
+                'parentId' => array(
+                    array(
+                        'operator' => '=',
+                        'operand' => $parentId
+                    )
+                )
+            );
+        }
+
+        $data = $this->ws->runSerializeResponse(self::$gfServiceAddress, Mddatamodel::$getDataViewCommand, $param);
+
+        if (isset($data['result']) && isset($data['result'][0])) {
+            unset($data['result']['aggregatecolumns']);
+            unset($data['result']['paging']);
+            
+            return $data['result'];
+        } else {
+            return null;
+        }
+    }    
 
 }
