@@ -661,10 +661,11 @@ class Cron_Model extends Model {
             $intm = &getInstance();
             $intm->load->model('mdintegration', 'middleware/models/');
             
-            $bankResponse = array();
+            $bankResponse = [];
             
             $khanBankId = Mdintegration::getBankId('khan');
             $golomtBankId = Mdintegration::getBankId('golomt');
+            $phpUrl = Config::getFromCache('PHP_URL');
             
             if ($date && $date != 'sysdate') {
                 
@@ -919,6 +920,330 @@ class Cron_Model extends Model {
         }
         
         return $result;
+    }
+    
+    public function cloudDbPrepareModel() {
+        
+        try {
+            
+            $bankBillingData = $this->db->GetAll("
+                SELECT 
+                    T1.ID, 
+                    T1.DESCRIPTION, 
+                    T1.AMOUNT, 
+                    TT.INVOICE_ID, 
+                    TT.BOOK_NUMBER, 
+                    LL.COMPANY_NAME, 
+                    LL.EMAIL1 AS EMAIL, 
+                    LL.PHONE_NUMBER1 AS PHONE_NUMBER, 
+                    LL.LEAD_ID 
+                FROM CM_BANK_BILLING T1 
+                    INNER JOIN FIN_INVOICE TT ON REGEXP_LIKE (T1.DESCRIPTION, TT.BOOK_NUMBER) 
+                    INNER JOIN CRM_LEAD LL ON TT.LEAD_ID = LL.LEAD_ID 
+                    LEFT JOIN META_DM_RECORD_MAP T2 ON T1.ID = T2.SRC_RECORD_ID 
+                        AND TT.INVOICE_ID = T2.TRG_RECORD_ID 
+                        AND T2.SRC_TABLE_NAME = 'CM_BANK_BILLING' 
+                        AND T2.TRG_TABLE_NAME = 'FIN_INVOICE' 
+                WHERE T2.ID IS NULL 
+                    AND LL.COMPANY_NAME IS NOT NULL 
+                    AND LL.EMAIL1 IS NOT NULL 
+                    AND T1.AMOUNT > 0");
+            
+            if ($bankBillingData) {
+                
+                includeLib('Mail/Mail');
+                
+                $currentDate        = Date::currentDate();
+                $customerGroupId    = 17141037295452;
+                $finInvoiceStatusId = 1712908080417136;
+                $apiEnvironmentId   = 1711935661499533;
+                $ntfNotificationId  = 17116810804369;
+                $dbType             = 'postgre';
+                $dbPort             = '5432';
+                $dbServiceName      = 'cloud_platform_uat';
+                $dbUserName         = 'cloud_client';
+                $dbUserPass         = '2sfu{r21>EaTF%kU';
+                
+                $idPh               = $this->db->Param(0);
+                $emailTemplateRow   = self::getCloudPrepareEmailTemplate($idPh, $ntfNotificationId);
+                
+                if (!$emailTemplateRow) {
+                    throw new Exception($ntfNotificationId . ' ntfNotificationId not found!'); 
+                }
+                
+                foreach ($bankBillingData as $b => $bankBillingRow) {
+                    
+                    $this->db->BeginTrans(); 
+                    
+                    $billingId   = $bankBillingRow['ID'];
+                    $description = $bankBillingRow['DESCRIPTION'];
+                    $invoiceId   = $bankBillingRow['INVOICE_ID'];
+                    $bookNumber  = $bankBillingRow['BOOK_NUMBER'];
+                    $companyName = $bankBillingRow['COMPANY_NAME'];
+                    $phoneNumber = $bankBillingRow['PHONE_NUMBER'];
+                    $email       = $bankBillingRow['EMAIL'];
+                    $crmLeadId   = $bankBillingRow['LEAD_ID'];
+                    $domainName  = cyrillicToLatin($companyName);
+                    $domainName  = trim(Str::remove_doublewhitespace(Str::remove_whitespace_feed(Str::remove_whitespace($domainName))));
+                    $domainName  = strtolower($domainName);
+                    $dbName      = $domainName.'-database-service';
+                    
+                    $recordMapData = [
+                        'ID'             => getUIDAdd($b), 
+                        'SRC_TABLE_NAME' => 'CM_BANK_BILLING', 
+                        'TRG_TABLE_NAME' => 'FIN_INVOICE', 
+                        'SRC_RECORD_ID'  => $billingId, 
+                        'TRG_RECORD_ID'  => $invoiceId, 
+                        'CREATED_DATE'   => $currentDate
+                    ];
+                    
+                    $this->db->AutoExecute('META_DM_RECORD_MAP', $recordMapData);
+                    
+                    $finInvoiceChangeStatusData = [
+                        'WFM_STATUS_ID'   => $finInvoiceStatusId, 
+                        'WFM_DESCRIPTION' => 'Банкны хуулгаар төлбөр орж ирэв'
+                    ];
+                    
+                    $this->db->AutoExecute('FIN_INVOICE', $finInvoiceChangeStatusData, 'UPDATE', "INVOICE_ID = $invoiceId");
+                    
+                    $customerId = getUIDAdd($b + 1);
+                    $customerData = [
+                        'CUSTOMER_ID'       => $customerId, 
+                        'CUSTOMER_CODE'     => $bookNumber, 
+                        'CUSTOMER_NAME'     => $companyName, 
+                        'PHONE_NUMBER'      => $phoneNumber, 
+                        'EMAIL'             => $email, 
+                        'DOMAIN_NAME'       => $domainName,
+                        'DESCRIPTION'       => $description, 
+                        'CUSTOMER_GROUP_ID' => $customerGroupId, 
+                        'IS_ACTIVE'         => 1, 
+                        'CREATED_DATE'      => $currentDate
+                    ];
+                    
+                    $this->db->AutoExecute('CRM_CUSTOMER', $customerData);
+                    
+                    $departmentId = getUIDAdd($b + 2);
+                    $departmentData = [
+                        'DEPARTMENT_ID'   => $departmentId, 
+                        'DEPARTMENT_CODE' => $bookNumber, 
+                        'DEPARTMENT_NAME' => $companyName, 
+                        'TYPE_ID'         => 4, 
+                        'CUSTOMER_ID'     => $customerId, 
+                        'IS_ACTIVE'       => 1, 
+                        'CREATED_DATE'    => $currentDate
+                    ];
+                    
+                    $this->db->AutoExecute('ORG_DEPARTMENT', $departmentData);
+                    
+                    $connectionId = getUIDAdd($b + 3);
+                    $connectionData = [
+                        'ID'            => $connectionId, 
+                        'DB_TYPE'       => $dbType, 
+                        'HOST_NAME'     => $dbName, 
+                        'PORT'          => $dbPort, 
+                        'SERVICE_NAME'  => $dbServiceName, 
+                        'USER_NAME'     => $dbUserName,
+                        'USER_PASSWORD' => $dbUserPass, 
+                        'DB_NAME'       => $companyName, 
+                        'IS_ACTIVE'     => 1, 
+                        'IS_REPORT'     => 0, 
+                        'CUSTOMER_ID'   => $customerId, 
+                        'DEPARTMENT_ID' => $departmentId
+                    ];
+                    
+                    $this->db->AutoExecute('MDM_CONNECTIONS', $connectionData);
+                    
+                    $this->db->AutoExecute('CRM_LEAD', ['CUSTOMER_ID' => $customerId], 'UPDATE', "LEAD_ID = $crmLeadId");
+                    
+                    $packageProductDtl = $this->db->GetAll("
+                        SELECT 
+                            PP.ID AS PRODUCT_ID, 
+                            K.DURATION_TIME AS LICENSE_MONTH, 
+                            FI.BOOK_DATE AS START_DATE, 
+                            ADD_MONTHS(FI.BOOK_DATE, K.DURATION_TIME) AS END_DATE, 
+                            1 AS LICENSE_TYPE_ID, 
+                            1 AS LICENSE_QTY, 
+                            1 AS IS_ACTIVE, 
+                            NULL AS LICENSE_NUMBER, 
+                            NULL AS CONTRACT_ID, 
+                            NULL AS WFM_STATUS_ID 
+                        FROM CRM_LEAD CL 
+                            LEFT JOIN FIN_INVOICE FI ON CL.LEAD_ID = FI.LEAD_ID
+                            LEFT JOIN FIN_INVOICE_DTL FID ON FI.INVOICE_ID = FID.INVOICE_ID
+                            LEFT JOIN WH_SALE_PRICE_KEY K ON FID.RELATED_DTL_ID = K.ID
+                            LEFT JOIN IM_PACKAGE IP ON FID.ITEM_ID = IP.ITEM_ID
+                            LEFT JOIN IM_PACKAGE_DTL IPD ON IP.ID = IPD.PACKAGE_ID
+                            LEFT JOIN PLM_PRODUCT PP ON IPD.ITEM_ID = PP.ITEM_ID 
+                        WHERE CL.LEAD_ID = $idPh", [$crmLeadId]
+                    );
+                    
+                    if ($packageProductDtl) {
+                        
+                        foreach ($packageProductDtl as $p => $packageProductRow) {
+                            
+                            $productId        = $packageProductRow['PRODUCT_ID'];
+                            $contractId       = $packageProductRow['CONTRACT_ID'];
+                            $licenseTypeId    = $packageProductRow['LICENSE_TYPE_ID'];
+                            $licenseQty       = $packageProductRow['LICENSE_QTY'];
+                            $licenseStartDate = $packageProductRow['START_DATE'];
+                            $licenseEndDate   = $packageProductRow['END_DATE'];
+                            $licenseDataCount = 1;
+                            
+                            $licenseKeyData = [
+                                'LICENSE_KEY_ID'  => getUIDAdd(($b + 4).$p), 
+                                'PRODUCT_ID'      => $productId, 
+                                'CUSTOMER_ID'     => $customerId, 
+                                'CONTRACT_ID'     => $contractId, 
+                                'LICENSE_TYPE_ID' => $licenseTypeId, 
+                                'LICENSE_QTY'     => $licenseQty, 
+                                'DATA_COUNT'      => $licenseDataCount, 
+                                'START_DATE'      => $licenseStartDate, 
+                                'END_DATE'        => $licenseEndDate, 
+                                'IS_ACTIVE'       => 1, 
+                                'CREATED_DATE'    => $currentDate
+                            ];
+                            
+                            $this->db->AutoExecute('SYS_LICENSE_KEY', $licenseKeyData);
+                        }
+                        
+                        $apiEnvironmentData = self::getApiEnvironment($idPh, $apiEnvironmentId); 
+                        
+                        if ($apiEnvironmentData) {
+                            
+                            foreach ($apiEnvironmentData as $apiEnvironmentRow) {
+                                
+                                $apiUrl      = $apiEnvironmentRow['URL'];
+                                $apiAuthType = $apiEnvironmentRow['AUTHORIZATION_TYPE'];
+                                $apiToken    = $apiEnvironmentRow['TOKEN'];
+                                $apiJson     = $apiEnvironmentRow['JSON_CONFIG'];
+                                $apiJson     = str_replace('\"', '"', $apiJson);
+                                $apiJson     = str_replace('{{DOMAIN}}', $domainName, $apiJson);
+                                
+                                $curl = curl_init();
+
+                                curl_setopt_array($curl, [
+                                    CURLOPT_URL => $apiUrl,
+                                    CURLOPT_RETURNTRANSFER => true,
+                                    CURLOPT_MAXREDIRS => 10,
+                                    CURLOPT_TIMEOUT => 30,
+                                    CURLOPT_FOLLOWLOCATION => true,
+                                    CURLOPT_SSL_VERIFYHOST => false,
+                                    CURLOPT_SSL_VERIFYPEER => false,
+                                    CURLOPT_POST => true,
+                                    CURLOPT_CUSTOMREQUEST => 'POST',
+                                    CURLOPT_POSTFIELDS => $apiJson,
+                                    CURLOPT_HTTPHEADER => [
+                                        'Content-Type: application/json;charset=UTF-8',
+                                        'Authorization: '.$apiAuthType.' '.$apiToken
+                                    ] 
+                                ]);
+
+                                $response = curl_exec($curl);
+                                
+                                if (curl_errno($curl)) {
+                
+                                    $msg = curl_error($curl);
+                                    curl_close($curl);
+                                    
+                                    throw new Exception('api curl - '.$msg); 
+                                    
+                                } else {
+                                    curl_close($curl);
+                                    
+                                    if ($response) {
+                                        
+                                        $result = json_decode($response, true);
+
+                                        if (isset($result['status']) && is_string($result['status']) && (stripos($result['status'], 'fail') !== false)) {
+                                            throw new Exception('api - '.$result['status']); 
+                                        }
+                                        
+                                    } else {
+                                        throw new Exception('api - no response'); 
+                                    }
+                                }
+                            }
+                            
+                        } else {
+                            throw new Exception('apiEnvironmentData - No data!'); 
+                        }
+                        
+                    } else {
+                        throw new Exception('packageProductDtl - No data!'); 
+                    }
+                    
+                    $encryptCustomerId = Hash::encryption($customerId);
+                    
+                    $emailSubject      = $emailTemplateRow['SUBJECT'];
+                    $emailSubject      = html_entity_decode($emailSubject, ENT_QUOTES, 'UTF-8');
+                    $emailTemplate     = $emailTemplateRow['MESSAGE'];
+                    $emailTemplate     = html_entity_decode($emailTemplate, ENT_QUOTES, 'UTF-8');
+                    $emailTemplate     = str_replace('[passcode]', $encryptCustomerId, $emailTemplate);
+                    
+                    $mailResult = Mail::sendPhpMailer([
+                        'subject' => $emailSubject, 
+                        'altBody' => 'CloudUser - ' . $emailSubject, 
+                        'body'    => $emailTemplate, 
+                        'toMail'  => $email 
+                    ]);
+
+                    if ($mailResult['status'] != 'success') {
+                        throw new Exception('mail send - ' . $mailResult['message']);
+                    }
+                    
+                    $this->db->CommitTrans();
+                }
+                
+                $result = ['status' => 'success'];
+                
+            } else {
+                $result = ['status' => 'info', 'message' => 'BankBilling, FinInvoice data empty!'];
+            }
+            
+        } catch (Exception $ex) {
+            
+            $this->db->RollbackTrans();
+            $result = ['status' => 'error', 'message' => $ex->getMessage()];
+        }
+        
+        return $result;
+    }
+    
+    public function getApiEnvironment($idPh, $id) {
+        
+        $data = $this->db->GetAll("
+            SELECT 
+                T0.API_ENVIRONMENT_ID, 
+                T1.TOKEN, 
+                T1.AUTHORIZATION_TYPE, 
+                T0.METHOD_TYPE, 
+                T0.IS_SAVE_LOG, 
+                T0.IS_PARSE_TO_DATA_ELEMENT, 
+                T0.PARSE_TO_JSON_FOR_PARAMETER_TYPE, 
+                T1.URL||T0.SUB_URL AS URL, 
+                T0.JSON_CONFIG 
+            FROM API_DETAIL_INFO T0 
+                INNER JOIN API_ENVIRONMENT T1 ON T1.ID = T0.API_ENVIRONMENT_ID 
+            WHERE T0.API_ENVIRONMENT_ID = $idPh", [$id]
+        );
+        
+        return $data;
+    }
+    
+    public function getCloudPrepareEmailTemplate($idPh, $id) {
+        
+        $row = $this->db->GetRow("
+            SELECT 
+                SUBJECT, 
+                MESSAGE 
+            FROM NTF_NOTIFICATION 
+            WHERE NOTIFICATION_ID = $idPh 
+                AND SUBJECT IS NOT NULL 
+                AND MESSAGE IS NOT NULL", 
+            [$id]
+        );
+        
+        return $row;
     }
 
 }

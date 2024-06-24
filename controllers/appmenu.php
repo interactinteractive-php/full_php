@@ -626,7 +626,7 @@ class Appmenu extends Controller {
     public function cardHtml() {
         
         $this->view->isAppmenuNewDesign = Config::getFromCacheDefault('IS_APPMENU_NEWDESIGN', null, 0);
-        $this->view->colorSet = '#FF7E79,#9370DB,#00B9F6,#00C9CC,#FF986E,#4169E1,#FFA07A,#98CF5D,#EC87C0,#EB735B,#A88BF1,#29C88F,#FDB600';
+        $this->view->colorSet = '#fff';
         $this->view->isAppmenuPage = true;        
         $this->view->parentId = Input::post('parentId');
         $this->view->moduleList = $this->model->cardDataModel($this->view->parentId);

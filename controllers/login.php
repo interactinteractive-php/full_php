@@ -86,7 +86,7 @@ class Login extends Controller {
             }
         }
         
-        if ($loginLayout) {
+        if ($loginLayout && file_exists('views/login/layout/' . $loginLayout . '/index.php')) {
             
             $this->view->selectLoginTypeControl = $this->model->selectLoginTypeControl();
 			
@@ -1667,8 +1667,6 @@ class Login extends Controller {
         $_POST['isSystemMeta'] = 'false';
         $_POST['isDialog'] = false;
         $_POST['nult'] = true;
-        
-        $this->model->setDbConnectionBySignupModel($checkLicense['connectionId']);
         
         $bpContent = (new Mdwebservice())->callMethodByMeta($this->view->processId, null, true);
 

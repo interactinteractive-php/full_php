@@ -1884,26 +1884,186 @@ class Login_Model extends Model {
                 throw new Exception('Token is wrong!');
             }
             
-            $logged = Session::isCheck(SESSION_PREFIX.'LoggedIn');
-                    
-            if ($logged == false) {
-                Session::set(SESSION_PREFIX . 'LoggedIn', true);
-                Session::set(SESSION_PREFIX . 'lastTime', time());
-            }
-
-            $_POST['nult'] = true;
-            $_POST['responseType'] = 'outputArray';
-            $_POST['param']['customerId'] = $customerId;
-
-            $response = (new Mdwebservice())->runProcess();
+            $password        = issetVar($_POST['param']['password']);
+            $confirmPassword = issetVar($_POST['param']['passwordRepeat']);
             
-            if ($response['status'] == 'success') {
+            if (!$password || !$confirmPassword) {
+                throw new Exception('Нууц үгээ оруулна уу!');
+            }
+            
+            if ($password != $confirmPassword) {
+                throw new Exception('Нууц үг ижил биш байна!');
+            }
+            
+            $passwordPattern = '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/';
+    
+            if (!preg_match($passwordPattern, $confirmPassword)) {
+                throw new Exception('Нууц үг нь хамгийн багадаа 1 том, 1 жижиг, 1 тоо, 1 тусгай тэмдэгт бүхий 8 тэмдэгтээс багагүй урттай байх ёстой!');
+            }
+            
+            $this->deleteSessionDatabaseConnection();
+            
+            $idPh = $this->db->Param(0);
+            
+            $customerRoleData = $this->db->GetAll("
+                SELECT 
+                    K.LICENSE_KEY_ID, 
+                    RR.ROLE_ID, 
+                    CC.CUSTOMER_NAME, 
+                    CC.EMAIL, 
+                    CC.PHONE_NUMBER, 
+                    MD.ID AS CONNECTION_ID, 
+                    MD.DEPARTMENT_ID 
+                FROM CRM_CUSTOMER CC 
+                    INNER JOIN SYS_LICENSE_KEY K ON K.CUSTOMER_ID = CC.CUSTOMER_ID 
+                    INNER JOIN PLM_PRODUCT_ROLE RR ON K.PRODUCT_ID = RR.PRODUCT_ID 
+                    INNER JOIN MDM_CONNECTIONS MD ON MD.CUSTOMER_ID = CC.CUSTOMER_ID  
+                WHERE CC.CUSTOMER_ID = $idPh 
+                    AND RR.ROLE_ID IS NOT NULL 
+                GROUP BY 
+                    K.LICENSE_KEY_ID, 
+                    RR.ROLE_ID, 
+                    CC.CUSTOMER_NAME, 
+                    CC.EMAIL, 
+                    CC.PHONE_NUMBER, 
+                    MD.ID", [$customerId]
+            );
+            
+            if ($customerRoleData) {
+                
+                $customerRow   = $customerRoleData[0];
+                $customerName  = $customerRow['CUSTOMER_NAME'];
+                $customerEmail = $customerRow['EMAIL'];
+                $customerPhone = $customerRow['PHONE_NUMBER'];
+                $connectionId  = $customerRow['CONNECTION_ID'];
+                $departmentId  = $customerRow['DEPARTMENT_ID'];
+                
+                $passwordHash  = Hash::create('sha256', $confirmPassword);
+                
+                $currentDate   = Date::currentDate();
+                $personId      = getUID();
+                $systemUserId  = getUID();
+                $userId        = getUID();
+                
+                Session::set(SESSION_PREFIX.'isUseMultiDatabase', true);
+                $this->setSessionDatabaseConnection(null, $connectionId);
+                
+                $basePersonData = [
+                    'PERSON_ID'    => $personId, 
+                    'FIRST_NAME'   => $customerName,
+                    'LAST_NAME'    => null,
+                    'IS_ACTIVE'    => 1, 
+                    'FIRST_EMAIL'  => $customerEmail, 
+                    'FIRST_PHONE'  => $customerPhone, 
+                    'CREATED_DATE' => $currentDate
+                ];
+                
+                $this->db->AutoExecute('BASE_PERSON', $basePersonData);
+                
+                $umSystemUserData = [
+                    'USER_ID'                  => $systemUserId, 
+                    'USERNAME'                 => $customerEmail,
+                    'PASSWORD_HASH'            => $passwordHash,
+                    'PASSWORD_SALT'            => $password, 
+                    'ALLOW_CON_CURRENT_LOGINS' => 1, 
+                    'INACTIVE'                 => 0, 
+                    'EMAIL'                    => $customerEmail, 
+                    'PERSON_ID'                => $personId, 
+                    'USER_FULL_NAME'           => $customerName, 
+                    'IS_USE_CHAT'              => 0, 
+                    'CREATED_DATE'             => $currentDate
+                ];
+                
+                $this->db->AutoExecute('UM_SYSTEM_USER', $umSystemUserData);
+                
+                $umUserData = [
+                    'USER_ID'                  => $userId, 
+                    'SYSTEM_USER_ID'           => $systemUserId,
+                    'USERNAME'                 => $customerEmail,
+                    'IS_MOBILE'                => 1, 
+                    'IS_MOBILE_DEFAULT'        => 1, 
+                    'IS_USE_FOLDER_PERMISSION' => 1,
+                    'IS_ACTIVE'                => 1, 
+                    'IS_MAIN'                  => 1, 
+                    'CREATED_DATE'             => $currentDate
+                ];
+                
+                $this->db->AutoExecute('UM_USER', $umUserData);
+                
+                $this->db->AutoExecute('ORG_DEPARTMENT', ['DEPARTMENT_NAME' => $customerName, 'CLOUD_DEPARTMENT_ID' => $departmentId], 'UPDATE', 'DEPARTMENT_ID = 1');
+                $this->db->AutoExecute('FIN_EXPENSE_CENTER', ['NAME' => $customerName], 'UPDATE', 'ID = 1');
+                
+                $checkAlreadyLicenseKey = [];
+                
+                foreach ($customerRoleData as $c => $customerRoleRow) {
+                    
+                    $umUserRoleData = [
+                        'ID'           => getUIDAdd($c), 
+                        'USER_ID'      => $userId, 
+                        'ROLE_ID'      => $customerRoleRow['ROLE_ID'], 
+                        'IS_ACTIVE'    => 1, 
+                        'CREATED_DATE' => $currentDate
+                    ];
+
+                    $this->db->AutoExecute('UM_USER_ROLE', $umUserRoleData);
+                    
+                    $licenseKeyId = $customerRoleRow['LICENSE_KEY_ID'];
+                    
+                    if (!isset($checkAlreadyLicenseKey[$licenseKeyId])) {
+                        
+                        $sysLicenseUser = [
+                            'ID'             => getUIDAdd($c), 
+                            'LICENSE_KEY_ID' => $licenseKeyId, 
+                            'SYSTEM_USER_ID' => $systemUserId, 
+                            'CREATED_DATE'   => $currentDate
+                        ];
+                        $this->db->AutoExecute('SYS_LICENSE_USER', $sysLicenseUser);
+                        
+                        $checkAlreadyLicenseKey[$licenseKeyId] = $sysLicenseUser;
+                    }
+                }
+                
+                $mdb = ADONewConnection(DB_DRIVER);
+                $mdb->debug = DB_DEBUG;
+                $mdb->connectSID = defined('DB_SID') ? DB_SID : true;
+                $mdb->autoRollback = true;
+                $mdb->datetime = true;
+
+                try {
+                    $mdb->Connect(DB_HOST, DB_USER, DB_PASS, DB_NAME, false, true);
+                } catch (Exception $e) { } 
+
+                $mdb->SetCharSet(DB_CHATSET);
+                
+                $mdb->AutoExecute('BASE_PERSON', $basePersonData);
+                $mdb->AutoExecute('UM_SYSTEM_USER', $umSystemUserData);
+                $mdb->AutoExecute('UM_USER', $umUserData);
+                
+                $connectionUserMap = [
+                    'ID'             => getUID(), 
+                    'SYSTEM_USER_ID' => $systemUserId,
+                    'CONNECTION_ID'  => $connectionId,
+                    'IS_ACTIVE'      => 1, 
+                    'CREATED_DATE'   => $currentDate
+                ];
+                
+                $mdb->AutoExecute('MDM_CONNECTIONS_USER_MAP', $connectionUserMap);
+                
+                foreach ($checkAlreadyLicenseKey as $checkAlreadyLicenseKeyRow) {
+                    $mdb->AutoExecute('SYS_LICENSE_USER', $checkAlreadyLicenseKeyRow);
+                }
+                
+                $mdb->Close();
                 
                 $this->deleteSessionDatabaseConnection();
                 $response['message'] = 'Бүртгэл амжилттай боллоо та нэвтрэх товчийг дарж нэвтэрнэ үү.';
+                
+            } else {
+                throw new Exception('Token is wrong!');
             }
             
         } catch (Exception $ex) {
+            $this->deleteSessionDatabaseConnection();
             $response = ['status' => 'error', 'message' => $ex->getMessage()];
         }
         

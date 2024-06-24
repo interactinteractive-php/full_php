@@ -444,10 +444,10 @@ body  {
 .appmenu-newdesign-1 .appmenu-table-cell-right {
     background-color: #F3F4F6;
 }
-.appmenu-newdesign-1 .vr-menu-name {
+.appmenu-newdesign-1 .appmenu-table-cell-right .vr-menu-title .vr-menu-row .vr-menu-name {
     font-size: 16px !important;
     font-weight: 500 !important;
-    color: #fff !important;
+    color: #fff;
     font-family: 'Rubik';
 }
 .appmenu-table.appmenu-newdesign-1 .appmenu-table-row .appmenu-table-cell-left {

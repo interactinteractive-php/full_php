@@ -212,4 +212,9 @@ class Cron extends Controller {
         convJson($response);
     }
     
+    public function cloudDbPrepare() {
+        $response = $this->model->cloudDbPrepareModel();
+        convJson($response);
+    }
+    
 }

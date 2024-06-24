@@ -15,10 +15,7 @@
         max-height: 33px !important;
     }    
     .appmenu-newdesign-1 .appmenu-table-cell-right {
-        background-color: #fff;
-    }
-    .appmenu-table.appmenu-newdesign-1 {
-        background-color: #fff;
+        /*background-color: #fff;*/
     }
     .back-item-btn {
         background: #FFFFFF;
@@ -28,7 +25,7 @@
         width: 40px;
         height: 40px;
         text-align: center;
-        padding-top: 6px;
+        padding-top: 9px;
     }      
     .item-card-toptitle {
         color: #3C3C3C;
@@ -37,13 +34,23 @@
         text-transform: uppercase;
         font-weight: 600;        
     }
-    .appmenu-newdesign-1 .white-card-menu .vr-menu-title .vr-menu-row .vr-menu-name, 
-    .appmenu-newdesign-1 .appmenu-table-cell-right .vr-menu-title .vr-menu-row .vr-menu-name {
-        max-height: 38px;
+    .appmenu-newdesign-1 .white-card-menu .vr-menu-title .vr-menu-row .vr-menu-name,     
+    .appmenu-newdesign-1 .appmenu-table-cell-right .vr-menu-title .vr-menu-row .vr-menu-name {        
+        color: #fff;
+    }
+    .appmenu-newdesign-1 .appmenu-table-cell-right .vr-menu-title .vr-menu-row i {
+        color: #fff;
     }
     .appmenu-newdesign-1 .white-card-menu .vr-menu-tile, .appmenu-newdesign-1 .appmenu-table-cell-right .vr-menu-tile {
         height: 98px;
     }    
+    .appmenu-newdesign-1 .appmenu-table-cell-right .vr-menu-tile:hover {
+        background-color: #596fff !important;
+    }    
+    .appmenu-newdesign-1 .appmenu-table-cell-right .vr-menu-tile:hover .vr-menu-row .vr-menu-name,
+    .appmenu-newdesign-1 .appmenu-table-cell-right .vr-menu-tile:hover .vr-menu-row i {
+        color: #fff !important;
+    }
     .appmenu-newdesign-1 .white-card-menu .vr-menu-title, .appmenu-newdesign-1 .appmenu-table-cell-right .vr-menu-title {
         margin-top: 30px;
     }
@@ -59,7 +66,15 @@
     .appmenu-newdesign-1 .white-card-menu .vr-menu-tile.random-border-radius3, 
     .appmenu-newdesign-1 .appmenu-table-cell-right .vr-menu-tile.random-border-radius3 {
         border-radius: 15px;
+        box-shadow: 0px 4px 6px 0px rgba(0, 0, 0, 0.06);
     }
+    .page-content {
+        background-color: #F3F4F6;
+    }    
+    .appmenu-newdesign-1 .white-card-menu .vr-menu-title .vr-menu-row .vr-menu-name, 
+    .appmenu-newdesign-1 .appmenu-table-cell-right .vr-menu-title .vr-menu-row .vr-menu-name {
+        max-height: 38px;
+    }    
 </style>
 
 <script type="text/javascript">
@@ -92,7 +107,7 @@
 
             var htmlStr = '';
             if (id != '') {
-                htmlStr += '<h2 class="ml-2 pt10 pb10" style="display: flex;width: 100%;text-transform: uppercase;font-family: Arial;font-size: 16px;"><a href="javascript:;" class="back-item-btn d-block" data-parentid=""><i class="icon-arrow-left8" style="color:#000"></i></a><span class="pt6 pl12">'+$(elem).data('modulename')+'</span></h2>';
+                htmlStr += '<h2 class="ml-2 pt10 pb10" style="display: flex;width: 100%;text-transform: uppercase;font-family: Arial;font-size: 16px;"><a href="javascript:;" class="back-item-btn d-block" data-parentid=""><i class="icon-arrow-left8" style="color:#000"></i></a><span class="pt11 pl12">'+$(elem).data('modulename')+'</span></h2>';
             }
             htmlStr += data.html;
 
@@ -105,6 +120,133 @@
     }
     
     itemCardGroupInit('');
+    
+    function mvProductAppmenuCardRender(indicatorId) {
+        $.ajax({
+            type: 'post',
+            url: 'mdform/mvProductRender',
+            data: {
+                indicatorId: indicatorId,
+                appMenuCard: 1
+            }, 
+            dataType: 'json',
+            beforeSend: function() {
+                Core.blockUI({message: 'Loading...', boxed: true});
+            },
+            success: function(data) {
+
+                if (data.status == 'success') {
+
+                    if (data.renderType == 'paper_main_window') {
+                        window.location.href = URL_APP + 'appmenu/mvmodule/' + indicatorId;
+                    } else {
+                        var $dialogName = 'dialog-valuemap-'+indicatorId;
+                        if (!$("#" + $dialogName).length) {
+                            $('<div id="' + $dialogName + '"></div>').appendTo('body');
+                        }
+                        var $dialog = $('#' + $dialogName);
+
+                        $dialog.dialog({
+                            cache: false,
+                            resizable: true,
+                            bgiframe: true,
+                            autoOpen: false,
+                            title: '',
+                            width: 1000,
+                            height: 'auto',
+                            modal: true,
+                            closeOnEscape: false,
+                            open: function() {
+                                $dialog.append(data.html);
+                                $dialog.parent().find(">.ui-dialog-buttonpane").remove();
+                                $dialog.parent().find(">.ui-dialog-titlebar").remove();
+                                var dh = $dialog.parent().find(">.ui-dialog-content").height() + 110;
+                                $dialog.parent().find(">.ui-dialog-content").css("height", dh+"px");
+                            },
+                            beforeClose: function() {
+
+                                if ($dialog.data('can-close')) {
+                                    $dialog.removeData('can-close');
+                                    return true;
+                                }
+
+                                var dialogNameConfirm = '#dialog-mvproduct-confirm';
+                                if (!$(dialogNameConfirm).length) {
+                                    $('<div id="' + dialogNameConfirm.replace('#', '') + '"></div>').appendTo('body');
+                                }
+                                var $dialogConfirm = $(dialogNameConfirm);
+
+                                $dialogConfirm.html(plang.get('Та гарахдаа итгэлтэй байна уу?'));
+                                $dialogConfirm.dialog({
+                                    cache: false,
+                                    resizable: true,
+                                    bgiframe: true,
+                                    autoOpen: false,
+                                    title: plang.get('msg_title_confirm'), 
+                                    width: 300,
+                                    height: 'auto',
+                                    modal: true,
+                                    buttons: [
+                                        {text: plang.get('yes_btn'), class: 'btn green-meadow btn-sm', click: function() {
+                                            $dialogConfirm.dialog('close');
+                                            $dialog.data('can-close', true);
+                                            $dialog.dialog('close');
+                                        }},
+                                        {text: plang.get('no_btn'), class: 'btn blue-madison btn-sm', click: function () {
+                                            $dialogConfirm.dialog('close');
+                                        }}
+                                    ]
+                                });
+                                $dialogConfirm.dialog('open');
+
+                                return false;
+                            },
+                            close: function() {
+                                removeHtmlEditorByElement($dialog);
+                                $dialog.empty().dialog('destroy').remove();
+                            },
+                            buttons: [
+                                {text: plang.get('close_btn'), class: 'btn btn-sm blue-hoki bp-btn-close', click: function () {
+                                    $dialog.dialog('close');
+                                }}
+                            ]
+                        }).dialogExtend({
+                            "closable": true,
+                            "maximizable": true,
+                            "minimizable": true,
+                            "collapsable": true,
+                            "dblclick": "maximize",
+                            "minimizeLocation": "left",
+                            "icons": {
+                                "close": "ui-icon-circle-close",
+                                "maximize": "ui-icon-extlink",
+                                "minimize": "ui-icon-minus",
+                                "collapse": "ui-icon-triangle-1-s",
+                                "restore": "ui-icon-newwin"
+                            }
+                        });
+
+                        $dialog.dialogExtend('maximize');
+                        $dialog.dialog('open');
+                    }                                   
+
+                } else if (data.status == 'info') {
+
+                    PNotify.removeAll();
+                    new PNotify({
+                        title: data.status,
+                        text: data.message,
+                        type: data.status,
+                        sticker: false, 
+                        addclass: 'pnotify-center'
+                    });
+
+                }
+
+                Core.unblockUI();
+            }
+        });
+    }    
     
     $(function(){                
 

@@ -44,13 +44,13 @@ function aCardHtml(&$cards, $row, $colorSet, $parentId) {
     $linkHref = 'javascript:;';
     $linkTarget = '_self';
     $linkOnClick = '';
-    $class = ' random-border-radius3 card-ischild-'.(issetParam($row['children']) ? '1' : '0');
+    $class = ' random-border-radius3 card-ischild-'.((issetParam($row['children']) || issetParam($row['childrecordcount'])) ? '1' : '0');
     $cartbgColor = '';
 
     if ($row['menucolor']) {
         $cartbgColor = 'background-color:'.$row['menucolor'].';';
     } else {
-        $cartbgColor = 'background-color:'.$colorSet[$colorSetIndex].';';
+        $cartbgColor = 'background-color:'.(issetParam($row['color']) ? $row['color'] : '#FF7E79').';';
     }
 
     if ($row['isshowcard'] == 'true') {
@@ -126,7 +126,11 @@ function aCardHtml(&$cards, $row, $colorSet, $parentId) {
     $indicatorId = $row['ID'];
     $linkHref = 'javascript:;';
     $linkOnClick = 'itemCardGroupInit(\''.$indicatorId.'\', this);';    
-
+    
+    if (!issetParam($row['children']) && !issetParam($row['childrecordcount'])) {
+        $linkHref = 'javascript:;';
+        $linkOnClick = 'mvProductAppmenuCardRender(\''.$indicatorId.'\');';            
+    }
 
     $cards[] = '<a href="' . $linkHref . '" data-parentid="' . $parentId . '" target="' . $linkTarget . '" style="'.$cartbgColor.$bgImageStyle.'" onclick="' . $linkOnClick . '" data-code="" data-modulename="' . $row['name'] . '" class="vr-menu-tile mixa ' . $class . '" data-metadataid="' . $row['META_DATA_ID'] . '" data-pfgotometa="1">';
 
@@ -134,12 +138,12 @@ function aCardHtml(&$cards, $row, $colorSet, $parentId) {
             $cards[] = '<div class="vr-menu-cell">';
             $cards[] = '</div>';
             $cards[] = '<div class="vr-menu-title">';
-                $cards[] = '<div class="d-flex justify-content-between vr-menu-row'.(issetParam($row['menucode']) ? ' vr-menu-row-mcode' : '').'">';
-                    $cards[] = '<div class="vr-menu-name" data-app-name="true" style="'.$appInfoTextStyle.'">' . $row['name'] . '</div>';
+                $cards[] = '<div class="d-flex justify-content-between vr-menu-row'.(issetParam($row['menucode']) ? ' vr-menu-row-mcode' : '').'" style="height: 38px;">';
+                    $cards[] = '<div class="vr-menu-name align-self-end" data-app-name="true" style="'.$appInfoTextStyle.'">' . $row['name'] . '</div>';
                     if (issetParam($row['menucode'])) {
                         $cards[] = '<div class="vr-menu-code mt6" style="'.$appInfoTextStyle.'" data-app-code="true">' . issetParam($row['menucode']) . '</div>';
                     }   
-                $cards[] = '<div class="acard-is-child-div"><i class="icon-arrow-right8"></i></div>';
+                $cards[] = '<div class="acard-is-child-div align-self-end"><i class="icon-arrow-right8"></i></div>';
                 $cards[] = '</div>';
             $cards[] = '</div>';
         $cards[] = '</div>';
