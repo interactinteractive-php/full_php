@@ -1189,6 +1189,7 @@ class Cron_Model extends Model {
                     $emailSubject      = html_entity_decode($emailSubject, ENT_QUOTES, 'UTF-8');
                     $emailTemplate     = $emailTemplateRow['MESSAGE'];
                     $emailTemplate     = html_entity_decode($emailTemplate, ENT_QUOTES, 'UTF-8');
+                    $emailTemplate     = str_replace('[domain]', 'cloud.veritech.mn', $emailTemplate);
                     $emailTemplate     = str_replace('[passcode]', $encryptCustomerId, $emailTemplate);
                     
                     $mailResult = Mail::sendPhpMailer([
