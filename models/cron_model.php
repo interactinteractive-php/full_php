@@ -1119,7 +1119,6 @@ class Cron_Model extends Model {
                                 $apiAuthType = $apiEnvironmentRow['AUTHORIZATION_TYPE'];
                                 $apiToken    = $apiEnvironmentRow['TOKEN'];
                                 $apiJson     = $apiEnvironmentRow['JSON_CONFIG'];
-                                $apiJson     = str_replace('\"', '"', $apiJson);
                                 $apiJson     = str_replace('{{DOMAIN}}', $domainName, $apiJson);
                                 
                                 $curl = curl_init();
