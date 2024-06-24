@@ -2072,7 +2072,7 @@ class Login_Model extends Model {
                     $mdb->RollbackTrans();
                     $mdb->Close();
                     
-                    return ['status' => 'error', 'message' => $exceptionMessage];
+                    return ['status' => 'error', 'message' => 'master error - ' . $exceptionMessage];
                 }
                 
                 $mdb->Close();
