@@ -1204,6 +1204,8 @@ class Cron_Model extends Model {
                     
                     $this->db->CommitTrans();
                     
+                    sleep(20);
+                    
                     $this->load->model('login');
                 
                     Session::set(SESSION_PREFIX.'isUseMultiDatabase', true);
@@ -1212,6 +1214,9 @@ class Cron_Model extends Model {
                     $this->load->model('mdlanguage', 'middleware/models/');
                     $this->model->generateLanguageFileModel();
                 }
+                
+                $this->load->model('login');
+                $this->model->deleteSessionDatabaseConnection();
                 
                 $this->load->model('mdmeta', 'middleware/models/');
                 $this->model->serviceReloadConfigModel();
