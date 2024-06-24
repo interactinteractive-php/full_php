@@ -1226,8 +1226,21 @@ class Cron_Model extends Model {
             
             $this->db->RollbackTrans();
             
+            $exceptionMessage = $ex->getMessage();
+            
+            if (!$logDtl) {
+                $logDtl[] = [
+                    'apiName'  => 'ssystems', 
+                    'apiUrl'   => 'PHP - cloudDbPrepare', 
+                    'apiToken' => null, 
+                    'apiJson'  => null, 
+                    'apiResponse' => $exceptionMessage
+                ];
+            }
+            
             self::createApiLog($logDtl);
-            $result = ['status' => 'error', 'message' => $ex->getMessage()];
+            
+            $result = ['status' => 'error', 'message' => $exceptionMessage];
         }
         
         return $result;
