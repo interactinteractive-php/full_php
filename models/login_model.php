@@ -1987,6 +1987,7 @@ class Login_Model extends Model {
                     'IS_USE_FOLDER_PERMISSION' => 1,
                     'IS_ACTIVE'                => 1, 
                     'IS_MAIN'                  => 1, 
+                    'CREATED_USER_ID'          => 1, 
                     'CREATED_DATE'             => $currentDate
                 ];
                 
@@ -2038,47 +2039,28 @@ class Login_Model extends Model {
 
                 $mdb->SetCharSet(DB_CHATSET);
                 
-                try {
-                    
-                    $mdb->BeginTrans();
-                    
-                    $mdb->AutoExecute('BASE_PERSON', $basePersonData);
-                    $mdb->AutoExecute('UM_SYSTEM_USER', $umSystemUserData);
-                    $mdb->AutoExecute('UM_USER', $umUserData);
+                $mdb->AutoExecute('BASE_PERSON', $basePersonData);
+                $mdb->AutoExecute('UM_SYSTEM_USER', $umSystemUserData);
+                $mdb->AutoExecute('UM_USER', $umUserData);
 
-                    $connectionUserMap = [
-                        'ID'             => getUID(), 
-                        'SYSTEM_USER_ID' => $systemUserId,
-                        'CONNECTION_ID'  => $connectionId,
-                        'IS_ACTIVE'      => 1, 
-                        'CREATED_DATE'   => $currentDate
-                    ];
+                $connectionUserMap = [
+                    'ID'             => getUID(), 
+                    'SYSTEM_USER_ID' => $systemUserId,
+                    'CONNECTION_ID'  => $connectionId,
+                    'IS_ACTIVE'      => 1, 
+                    'CREATED_DATE'   => $currentDate
+                ];
 
-                    $mdb->AutoExecute('MDM_CONNECTIONS_USER_MAP', $connectionUserMap);
+                $mdb->AutoExecute('MDM_CONNECTIONS_USER_MAP', $connectionUserMap);
 
-                    foreach ($checkAlreadyLicenseKey as $checkAlreadyLicenseKeyRow) {
-                        $mdb->AutoExecute('SYS_LICENSE_USER', $checkAlreadyLicenseKeyRow);
-                    }
-
-                    $mdb->CommitTrans();
-                
-                } catch (Exception $ex) {
-                    
-                    $exceptionMessage = $ex->getMessage();
-                    $this->deleteSessionDatabaseConnection();
-                    
-                    $this->db->RollbackTrans();
-                    
-                    $mdb->RollbackTrans();
-                    $mdb->Close();
-                    
-                    return ['status' => 'error', 'message' => 'master error - ' . $exceptionMessage];
+                foreach ($checkAlreadyLicenseKey as $checkAlreadyLicenseKeyRow) {
+                    $mdb->AutoExecute('SYS_LICENSE_USER', $checkAlreadyLicenseKeyRow);
                 }
-                
-                $mdb->Close();
                 
                 $this->deleteSessionDatabaseConnection();
                 $this->db->CommitTrans();
+                
+                $mdb->Close();
                 
                 $response['message'] = 'Бүртгэл амжилттай боллоо та нэвтрэх товчийг дарж нэвтэрнэ үү.';
                 
