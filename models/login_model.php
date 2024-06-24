@@ -1246,6 +1246,7 @@ class Login_Model extends Model {
                 try {
                     $db->Connect($dbHost, $dbUser, $dbPass, $dbSID);
                 } catch (Exception $e) {
+                    file_put_contents('storage/uploads/testdb.html', 'fail db - '.$e->msg . "\n", FILE_APPEND);
                     if (!is_ajax_request()) {
                         Message::add('d', $e->msg, $redirectUrl ? $redirectUrl : AUTH_URL . 'login');
                     } else {
@@ -1267,6 +1268,10 @@ class Login_Model extends Model {
                 
                 Config::$configArr = [];
                 Config::$allConfigCodeArr = [];
+                
+                file_put_contents('storage/uploads/testdb.html', 'done db'."\n", FILE_APPEND);
+            } else {
+                file_put_contents('storage/uploads/testdb.html', 'fail db'."\n", FILE_APPEND);
             }
         }
         
@@ -2080,6 +2085,17 @@ class Login_Model extends Model {
                 
                 $this->deleteSessionDatabaseConnection();
                 $this->db->CommitTrans();
+                
+                Session::set(SESSION_PREFIX.'isUseMultiDatabase', true);
+                $this->setSessionDatabaseConnection(null, $connectionId);
+
+                $this->load->model('mdlanguage', 'middleware/models/');
+                $this->model->generateLanguageFileModel();
+                
+                $this->deleteSessionDatabaseConnection();
+                
+                $this->load->model('mdmeta', 'middleware/models/');
+                $this->model->serviceReloadConfigModel();
                 
                 $response = ['status' => 'success', 'message' => 'Бүртгэл амжилттай боллоо та нэвтрэх товчийг дарж нэвтэрнэ үү.'];
                 
