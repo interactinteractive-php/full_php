@@ -1948,6 +1948,8 @@ class Login_Model extends Model {
                 Session::set(SESSION_PREFIX.'isUseMultiDatabase', true);
                 $this->setSessionDatabaseConnection(null, $connectionId);
                 
+                $this->db->BeginTrans(); 
+                
                 $basePersonData = [
                     'PERSON_ID'    => $personId, 
                     'FIRST_NAME'   => $customerName,
@@ -2012,10 +2014,11 @@ class Login_Model extends Model {
                     if (!isset($checkAlreadyLicenseKey[$licenseKeyId])) {
                         
                         $sysLicenseUser = [
-                            'ID'             => getUIDAdd($c), 
-                            'LICENSE_KEY_ID' => $licenseKeyId, 
-                            'SYSTEM_USER_ID' => $systemUserId, 
-                            'CREATED_DATE'   => $currentDate
+                            'ID'              => getUIDAdd($c), 
+                            'LICENSE_KEY_ID'  => $licenseKeyId, 
+                            'SYSTEM_USER_ID'  => $systemUserId, 
+                            'CREATED_USER_ID' => 1, 
+                            'CREATED_DATE'    => $currentDate
                         ];
                         $this->db->AutoExecute('SYS_LICENSE_USER', $sysLicenseUser);
                         
@@ -2035,27 +2038,48 @@ class Login_Model extends Model {
 
                 $mdb->SetCharSet(DB_CHATSET);
                 
-                $mdb->AutoExecute('BASE_PERSON', $basePersonData);
-                $mdb->AutoExecute('UM_SYSTEM_USER', $umSystemUserData);
-                $mdb->AutoExecute('UM_USER', $umUserData);
+                try {
+                    
+                    $mdb->BeginTrans();
+                    
+                    $mdb->AutoExecute('BASE_PERSON', $basePersonData);
+                    $mdb->AutoExecute('UM_SYSTEM_USER', $umSystemUserData);
+                    $mdb->AutoExecute('UM_USER', $umUserData);
+
+                    $connectionUserMap = [
+                        'ID'             => getUID(), 
+                        'SYSTEM_USER_ID' => $systemUserId,
+                        'CONNECTION_ID'  => $connectionId,
+                        'IS_ACTIVE'      => 1, 
+                        'CREATED_DATE'   => $currentDate
+                    ];
+
+                    $mdb->AutoExecute('MDM_CONNECTIONS_USER_MAP', $connectionUserMap);
+
+                    foreach ($checkAlreadyLicenseKey as $checkAlreadyLicenseKeyRow) {
+                        $mdb->AutoExecute('SYS_LICENSE_USER', $checkAlreadyLicenseKeyRow);
+                    }
+
+                    $mdb->CommitTrans();
                 
-                $connectionUserMap = [
-                    'ID'             => getUID(), 
-                    'SYSTEM_USER_ID' => $systemUserId,
-                    'CONNECTION_ID'  => $connectionId,
-                    'IS_ACTIVE'      => 1, 
-                    'CREATED_DATE'   => $currentDate
-                ];
-                
-                $mdb->AutoExecute('MDM_CONNECTIONS_USER_MAP', $connectionUserMap);
-                
-                foreach ($checkAlreadyLicenseKey as $checkAlreadyLicenseKeyRow) {
-                    $mdb->AutoExecute('SYS_LICENSE_USER', $checkAlreadyLicenseKeyRow);
+                } catch (Exception $ex) {
+                    
+                    $exceptionMessage = $ex->getMessage();
+                    $this->deleteSessionDatabaseConnection();
+                    
+                    $this->db->RollbackTrans();
+                    
+                    $mdb->RollbackTrans();
+                    $mdb->Close();
+                    
+                    return ['status' => 'error', 'message' => $exceptionMessage];
                 }
                 
                 $mdb->Close();
                 
                 $this->deleteSessionDatabaseConnection();
+                $this->db->CommitTrans();
+                
                 $response['message'] = 'Бүртгэл амжилттай боллоо та нэвтрэх товчийг дарж нэвтэрнэ үү.';
                 
             } else {
@@ -2063,7 +2087,10 @@ class Login_Model extends Model {
             }
             
         } catch (Exception $ex) {
+            
             $this->deleteSessionDatabaseConnection();
+            $this->db->RollbackTrans();
+            
             $response = ['status' => 'error', 'message' => $ex->getMessage()];
         }
         
