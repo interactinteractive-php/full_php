@@ -1198,9 +1198,9 @@ class Cron_Model extends Model {
                         'toMail'  => $email 
                     ]);
 
-                    /*if ($mailResult['status'] != 'success') {
+                    if ($mailResult['status'] != 'success') {
                         throw new Exception('mail send - ' . $mailResult['message']);
-                    }*/
+                    }
                     
                     $this->db->CommitTrans();
                     
@@ -1230,10 +1230,10 @@ class Cron_Model extends Model {
             
             if (!$logDtl) {
                 $logDtl[] = [
-                    'apiName'  => 'ssystems', 
-                    'apiUrl'   => 'PHP - cloudDbPrepare', 
-                    'apiToken' => null, 
-                    'apiJson'  => null, 
+                    'apiName'     => 'ssystems', 
+                    'apiUrl'      => 'PHP - cloudDbPrepare', 
+                    'apiToken'    => null, 
+                    'apiJson'     => null, 
                     'apiResponse' => $exceptionMessage
                 ];
             }
