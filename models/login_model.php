@@ -2091,7 +2091,7 @@ class Login_Model extends Model {
             $this->deleteSessionDatabaseConnection();
             $this->db->RollbackTrans();
             
-            $response = ['status' => 'error', 'message' => $ex->getMessage()];
+            $response = ['status' => 'error', 'message' => 'customer error - ' . $ex->getMessage()];
         }
         
         return $response;
