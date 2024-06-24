@@ -924,6 +924,8 @@ class Cron_Model extends Model {
     
     public function cloudDbPrepareModel() {
         
+        $logDtl = [];
+        
         try {
             
             $bankBillingData = $this->db->GetAll("
@@ -1156,6 +1158,14 @@ class Cron_Model extends Model {
                                         $result = json_decode($response, true);
 
                                         if (isset($result['status']) && is_string($result['status']) && (stripos($result['status'], 'fail') !== false)) {
+                                            
+                                            $logDtl[] = [
+                                                'apiName'  => 'ssystems', 
+                                                'apiUrl'   => $apiUrl, 
+                                                'apiToken' => $apiAuthType.' '.$apiToken, 
+                                                'apiJson'  => $apiJson
+                                            ];
+                                            
                                             throw new Exception('api - '.$result['status']); 
                                         }
                                         
@@ -1204,6 +1214,8 @@ class Cron_Model extends Model {
         } catch (Exception $ex) {
             
             $this->db->RollbackTrans();
+            
+            self::createApiLog($logDtl);
             $result = ['status' => 'error', 'message' => $ex->getMessage()];
         }
         
@@ -1245,6 +1257,27 @@ class Cron_Model extends Model {
         );
         
         return $row;
+    }
+    
+    public function createApiLog($logDtl) {
+        try {
+            
+            foreach ($logDtl as $l => $logRow) {
+                
+                $logData = [
+                    'ID'               => getUIDAdd($l), 
+                    'WEB_SERVICE_NAME' => $logRow['apiName'], 
+                    'WEB_SERVICE_URL'  => $logRow['apiUrl'], 
+                    'PARAMETER_DE'     => $logRow['apiToken'],
+                    'CREATED_DATE'     => Date::currentDate()
+                ];
+                $this->db->AutoExecute('SYSINT_SERVICE_METHOD_LOG', $logData);
+                $this->db->UpdateClob('SYSINT_SERVICE_METHOD_LOG', 'REQUEST_STRING', issetParam($logRow['apiJson']), 'ID = '.$logData['ID']);
+            }
+            
+        } catch (Exception $ex) { }
+        
+        return true;
     }
 
 }
