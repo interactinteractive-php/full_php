@@ -1162,7 +1162,8 @@ class Cron_Model extends Model {
                                                 'apiName'  => 'ssystems', 
                                                 'apiUrl'   => $apiUrl, 
                                                 'apiToken' => $apiAuthType.' '.$apiToken, 
-                                                'apiJson'  => $apiJson
+                                                'apiJson'  => $apiJson, 
+                                                'apiResponse' => $result['status']
                                             ];
                                             
                                             throw new Exception('api - '.$result['status']); 
@@ -1268,6 +1269,7 @@ class Cron_Model extends Model {
                     'WEB_SERVICE_NAME' => $logRow['apiName'], 
                     'WEB_SERVICE_URL'  => $logRow['apiUrl'], 
                     'PARAMETER_DE'     => $logRow['apiToken'],
+                    'RESPONSE_STRING'  => $logRow['apiResponse'], 
                     'CREATED_DATE'     => Date::currentDate()
                 ];
                 $this->db->AutoExecute('SYSINT_SERVICE_METHOD_LOG', $logData);
