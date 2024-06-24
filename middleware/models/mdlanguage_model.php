@@ -58,6 +58,8 @@ class Mdlanguage_Model extends Model {
             $langSuffix = Lang::getSuffix();
             $activeLanguage = self::getActiveLanguageModel();
             $uid = getUID();
+            
+            file_put_contents('storage/uploads/testdb.html', 'langcode - '.$langSuffix."\n", FILE_APPEND);
         
             foreach ($activeLanguage as $lang) {
 
@@ -112,6 +114,8 @@ class Mdlanguage_Model extends Model {
                 
                 rename($langFile, $langDir.'/main_lang'.$langSuffix.'.ini');
                 rename($langJSFile, $langDir.'/main_lang'.$langSuffix.'.js');
+                
+                file_put_contents('storage/uploads/testdb.html', $langDir.'/main_lang'.$langSuffix.'.ini'."\n", FILE_APPEND);
             } 
 
             return array('status' => 'success', 'message' => Lang::line('msg_save_success'));
