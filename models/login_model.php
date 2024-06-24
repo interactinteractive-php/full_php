@@ -1993,7 +1993,7 @@ class Login_Model extends Model {
                 
                 $this->db->AutoExecute('UM_USER', $umUserData);
                 
-                $this->db->AutoExecute('ORG_DEPARTMENT', ['DEPARTMENT_NAME' => $customerName, 'CLOUD_DEPARTMENT_ID' => $departmentId], 'UPDATE', 'DEPARTMENT_ID = 1');
+                $this->db->AutoExecute('ORG_DEPARTMENT', ['DEPARTMENT_NAME' => $customerName, 'CLOUD_DEPARTMENT_ID' => $departmentId, 'CUSTOMER_ID' => $customerId], 'UPDATE', 'DEPARTMENT_ID = 1');
                 $this->db->AutoExecute('FIN_EXPENSE_CENTER', ['NAME' => $customerName], 'UPDATE', 'ID = 1');
                 
                 $checkAlreadyLicenseKey = [];
