@@ -2081,7 +2081,7 @@ class Login_Model extends Model {
                 $this->deleteSessionDatabaseConnection();
                 $this->db->CommitTrans();
                 
-                $response['message'] = 'Бүртгэл амжилттай боллоо та нэвтрэх товчийг дарж нэвтэрнэ үү.';
+                $response = ['status' => 'success', 'message' => 'Бүртгэл амжилттай боллоо та нэвтрэх товчийг дарж нэвтэрнэ үү.'];
                 
             } else {
                 throw new Exception('Token is wrong!');
