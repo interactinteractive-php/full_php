@@ -1100,6 +1100,7 @@ class Cron_Model extends Model {
                                 'START_DATE'      => $licenseStartDate, 
                                 'END_DATE'        => $licenseEndDate, 
                                 'IS_ACTIVE'       => 1, 
+                                'CREATED_USER_ID' => 1, 
                                 'CREATED_DATE'    => $currentDate
                             ];
                             
