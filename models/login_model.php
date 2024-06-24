@@ -1948,8 +1948,6 @@ class Login_Model extends Model {
                 Session::set(SESSION_PREFIX.'isUseMultiDatabase', true);
                 $this->setSessionDatabaseConnection(null, $connectionId);
                 
-                $this->db->BeginTrans(); 
-                
                 $basePersonData = [
                     'PERSON_ID'    => $personId, 
                     'FIRST_NAME'   => $customerName,
@@ -2057,10 +2055,8 @@ class Login_Model extends Model {
                     $mdb->AutoExecute('SYS_LICENSE_USER', $checkAlreadyLicenseKeyRow);
                 }
                 
-                $this->deleteSessionDatabaseConnection();
-                $this->db->CommitTrans();
-                
                 $mdb->Close();
+                $this->deleteSessionDatabaseConnection();
                 
                 $response['message'] = 'Бүртгэл амжилттай боллоо та нэвтрэх товчийг дарж нэвтэрнэ үү.';
                 
@@ -2071,8 +2067,6 @@ class Login_Model extends Model {
         } catch (Exception $ex) {
             
             $this->deleteSessionDatabaseConnection();
-            $this->db->RollbackTrans();
-            
             $response = ['status' => 'error', 'message' => 'customer error - ' . $ex->getMessage()];
         }
         
