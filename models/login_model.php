@@ -1951,7 +1951,7 @@ class Login_Model extends Model {
                 $basePersonData = [
                     'PERSON_ID'    => $personId, 
                     'FIRST_NAME'   => $customerName,
-                    'LAST_NAME'    => null,
+                    'LAST_NAME'    => 'н',
                     'IS_ACTIVE'    => 1, 
                     'FIRST_EMAIL'  => $customerEmail, 
                     'FIRST_PHONE'  => $customerPhone, 
