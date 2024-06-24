@@ -1203,7 +1203,18 @@ class Cron_Model extends Model {
                     }*/
                     
                     $this->db->CommitTrans();
+                    
+                    $this->load->model('login');
+                
+                    Session::set(SESSION_PREFIX.'isUseMultiDatabase', true);
+                    $this->model->setSessionDatabaseConnection(null, $connectionId);
+
+                    $this->load->model('mdlanguage', 'middleware/models/');
+                    $this->model->generateLanguageFileModel();
                 }
+                
+                $this->load->model('mdmeta', 'middleware/models/');
+                $this->model->serviceReloadConfigModel();
                 
                 $result = ['status' => 'success'];
                 
