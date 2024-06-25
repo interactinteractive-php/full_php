@@ -686,6 +686,16 @@ $(function() {
         wfmstatusRender_<?php echo $this->indicatorId ?>(e, type);
     });
     
+    var mvAutoAction = Core.getURLParameter('mvAutoAction');
+        
+    if (mvAutoAction != null) {
+        mvAutoAction = mvAutoAction.replace('_method', '');
+        var $action = $('div#object-value-list-<?php echo $this->indicatorId; ?>').find('[data-actiontype="'+mvAutoAction+'"]:eq(0)');
+        if ($action.length) {
+            $action.click();
+        }
+    }
+    
 });
 
 }, 200);

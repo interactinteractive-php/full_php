@@ -478,11 +478,21 @@ setTimeout(function() {
                     
                 var listUrl = 'mdobject/dataview/<?php echo $this->metaDataId; ?>?pdfid=' + panelDvFirstId;
                 var mmid = Core.getURLParameter('mmid');
+                var wsClickMenuId = Core.getURLParameter('wsClickMenuId');
+                var mvAutoAction = Core.getURLParameter('mvAutoAction');
                 
                 listUrl += '&pdsid=' + rowId;
                 
                 if (mmid) {
                     listUrl += '&mmid=' + mmid;
+                }
+                
+                if (wsClickMenuId) {
+                    listUrl += '&wsClickMenuId=' + wsClickMenuId;
+                }
+                
+                if (mvAutoAction) {
+                    listUrl += '&mvAutoAction=' + mvAutoAction;
                 }
 
                 window.history.pushState('module', 'Veritech ERP', listUrl);

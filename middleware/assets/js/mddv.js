@@ -4595,10 +4595,21 @@ function bpWatermarkByPdf (selectedRow, callback) {
     var pageSize = typeof selectedRow.pagesize !== 'undefined' && selectedRow.pagesize ? selectedRow.pagesize : '';
     var signaturePosition = typeof selectedRow.signatureposition !== 'undefined' && selectedRow.signatureposition ? selectedRow.signatureposition : '';
     var signaturetext = typeof selectedRow.signaturetext !== 'undefined' && selectedRow.signaturetext ? selectedRow.signaturetext : '';
+    var pageStyle = typeof selectedRow.pagestyle !== 'undefined' && selectedRow.pagestyle ? selectedRow.pagestyle : '';
 
     var $windowHeight =  720;
     var $windowWidth =  491;
     
+    switch (pageStyle) {
+        case 'landspace':
+            $windowWidth =  720;
+            $windowHeight =  491;
+            break;
+        case 'portrait':
+                        
+            break;
+    }
+
     if (selectedRow && selectedRow.hasOwnProperty('signaturetype') && selectedRow['signaturetype'] === 'all') { 
         setDocumentSign(pdfPath, signatureImage, signaturePosition, 'all', 10, 10, contentId, signaturetext, callback);
     } else {
@@ -4616,7 +4627,7 @@ function bpWatermarkByPdf (selectedRow, callback) {
                     if (pdfPath.split('.').pop().toLowerCase() === 'pdf') {
                         var paperSize = 573;
                         var minusSize = 0;
-                        if (typeof pageSize !== 'undefined' && pageSize === 'a5') {
+                        if (pageSize === 'a5') {
                             paperSize = 470;
                             minusSize = 100; 
                         }

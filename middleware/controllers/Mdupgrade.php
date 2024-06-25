@@ -412,7 +412,7 @@ class Mdupgrade extends Controller {
                 
             } elseif ($commandName == 'getpatchlist') {
                 
-                $response = $this->model->getPatchListModel($param['id']);
+                $response = $this->model->getPatchListModel(isset($param['criteria']) ? $param['criteria'] : []);
             }
         }
         
@@ -718,14 +718,24 @@ class Mdupgrade extends Controller {
     }
     
     public static function getCloudInstallUrl() {
-        return 'http://192.168.193.200:81/mdupgrade/bugfixservice';
+        if (Uri::domain() == 'cloud.veritech.mn') {
+            return self::phpImportServiceAddr();
+        } else {
+            return 'http://192.168.193.200:81/mdupgrade/bugfixservice';
+        }
     }
     
     public function getCloudPatchList() {
         Auth::handleLogin();
         
         $url = self::getCloudInstallUrl();
-        $response = (new WebService())->curlRequest($url, ['commandName' => 'getPatchList']);
+        
+        if (Uri::domain() == 'cloud.veritech.mn') {
+            $response = (new WebService())->curlRequest($url, ['commandName' => 'getPatchList', 'criteria' => ['description' => [['operator' => 'like', 'operand' => '%@cloud%']]]]);
+        } else {
+            $response = (new WebService())->curlRequest($url, ['commandName' => 'getPatchList']);
+        }
+        
         convJson($response);
     }
     
@@ -740,6 +750,13 @@ class Mdupgrade extends Controller {
         Auth::handleLogin();
         
         $response = $this->model->installCloudPatchImportModel();
+        convJson($response);
+    }
+    
+    public function installCloudPatchDbImport() {
+        Auth::handleLogin();
+        
+        $response = $this->model->installCloudPatchDbImportModel();
         convJson($response);
     }
     

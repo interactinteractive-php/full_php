@@ -263,6 +263,10 @@
                             array(
                                 'id' => '6',
                                 'name' => 'OTP'
+                            ), 
+                            array(
+                                'id' => '7',
+                                'name' => 'Pdf watermark'
                             ),
                         );
                         echo Form::select(array('name' => 'wfmIsSign', 'text' => 'notext', 'id' => 'wfmIsSign', 'data' => $signChooseData, 'op_value' => 'id', 'op_text' => 'name', 'class' => 'form-control', 'value' => $this->metaWfmStatus['IS_NEED_SIGN'])) 

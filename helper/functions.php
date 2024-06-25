@@ -2416,6 +2416,9 @@ function dd($arr) {
     var_dump($arr);
     die();
 }
+function vd($arr) {
+    var_dump($arr); die;
+}
 
 if (!function_exists('is_countable')) {
     function is_countable($var) {

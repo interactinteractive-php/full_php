@@ -6584,7 +6584,7 @@ class Mdform extends Controller {
         $this->view->uniqId = getUID();
         $this->view->relationList = $this->model->checkList4SidebarDataModel($indicatorId);
         $mvInfo = $this->model->getIndicatorModel($indicatorId);
-        $this->view->title = $mvInfo['NAME'];
+        $this->view->title = issetParam($mvInfo['NAME']);
         $this->view->indicatorId = $indicatorId;
         
         $response = [

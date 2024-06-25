@@ -728,6 +728,27 @@ input.kpi-notfocus-readonly-input::placeholder {
 .kpidv-data-tree-col .jstree-default li:not(.jstree-loading) a.jstree-anchor {
     width: 100%;
 }
+.mv-checklist2-render-parent .sidebar.sidebar-dark {
+    background-color: #a8bba4;
+}
+.mv-checklist2-render-parent .sidebar.sidebar-dark .kpidv-data-tree-col .jstree-default .jstree-custom-folder-icon.jstree-closed>.jstree-ocl, 
+.mv-checklist2-render-parent .sidebar.sidebar-dark .kpidv-data-tree-col .jstree-default .jstree-custom-folder-icon.jstree-open>.jstree-ocl {
+    color: #fad45f;
+}
+.mv-checklist2-render-parent .sidebar.sidebar-dark .kpidv-data-tree-col .mv-tree-filter-icon {
+    color: #dadada;
+    margin-right: 3px;
+}
+.mv-checklist2-render-parent .sidebar.sidebar-dark .kpidv-data-tree-col .nameField {
+    padding-right: 40px;
+    padding-left: 3px;
+}
+.mv-checklist2-render-parent .sidebar.sidebar-dark .kpidv-data-tree-col .p-row-title {
+    color: #000;
+    font-weight: bold;
+    font-size: 13px;
+    padding-left: 0;
+}
 .mv-checklist4-render-relation .indicatorView {
     margin-left: .625rem;
     margin-right: .625rem;    

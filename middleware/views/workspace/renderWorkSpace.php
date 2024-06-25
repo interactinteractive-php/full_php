@@ -57,23 +57,30 @@
             <?php 
             } else { 
             ?>
-                
-            if ($workspaceId_<?php echo $this->metaDataId ?>.find(".workspace-menu").find("a[data-menu-id='<?php echo $this->defaultMenuId; ?>']").length > 0) {
-                if ($workspaceId_<?php echo $this->metaDataId ?>.find(".workspace-menu").find("a[data-menu-id='<?php echo $this->defaultMenuId; ?>']").closest('ul.sub-menu').length) {
-                    $workspaceId_<?php echo $this->metaDataId ?>.find(".workspace-menu").find("a[data-menu-id='<?php echo $this->defaultMenuId; ?>']").closest('ul').parent().children('a').trigger("click");
-                } else {
-                    $workspaceId_<?php echo $this->metaDataId ?>.find(".workspace-menu").find("a[data-menu-id='<?php echo $this->defaultMenuId; ?>']").trigger("click");
-                }
-            } else if ($workspaceId_<?php echo $this->metaDataId ?>.find(".workspace-cart-menu").find("a[data-menu-id='<?php echo $this->defaultMenuId; ?>']").length > 0) {
-                $workspaceId_<?php echo $this->metaDataId ?>.find(".workspace-cart-menu").find("a[data-menu-id='<?php echo $this->defaultMenuId; ?>']").trigger("click");
+            
+            var wsClickMenuId = Core.getURLParameter('wsClickMenuId');
+        
+            if (wsClickMenuId != null) {
+                $workspaceId_<?php echo $this->metaDataId ?>.find('[data-menu-id="'+wsClickMenuId+'"]').click();
             } else {
-                var ticket = false;
-                $workspaceId_<?php echo $this->metaDataId ?>.find('.workspace-menu > li').each(function (index, row) {
-                    if ($(row).hasClass('dropdown-fw-disabled') && !ticket) {
-                        ticket = true;
-                        $(row).find('a:eq(0)').trigger('click');
+        
+                if ($workspaceId_<?php echo $this->metaDataId ?>.find(".workspace-menu").find("a[data-menu-id='<?php echo $this->defaultMenuId; ?>']").length > 0) {
+                    if ($workspaceId_<?php echo $this->metaDataId ?>.find(".workspace-menu").find("a[data-menu-id='<?php echo $this->defaultMenuId; ?>']").closest('ul.sub-menu').length) {
+                        $workspaceId_<?php echo $this->metaDataId ?>.find(".workspace-menu").find("a[data-menu-id='<?php echo $this->defaultMenuId; ?>']").closest('ul').parent().children('a').trigger("click");
+                    } else {
+                        $workspaceId_<?php echo $this->metaDataId ?>.find(".workspace-menu").find("a[data-menu-id='<?php echo $this->defaultMenuId; ?>']").trigger("click");
                     }
-                });
+                } else if ($workspaceId_<?php echo $this->metaDataId ?>.find(".workspace-cart-menu").find("a[data-menu-id='<?php echo $this->defaultMenuId; ?>']").length > 0) {
+                    $workspaceId_<?php echo $this->metaDataId ?>.find(".workspace-cart-menu").find("a[data-menu-id='<?php echo $this->defaultMenuId; ?>']").trigger("click");
+                } else {
+                    var ticket = false;
+                    $workspaceId_<?php echo $this->metaDataId ?>.find('.workspace-menu > li').each(function (index, row) {
+                        if ($(row).hasClass('dropdown-fw-disabled') && !ticket) {
+                            ticket = true;
+                            $(row).find('a:eq(0)').trigger('click');
+                        }
+                    });
+                }
             }
         <?php 
             }

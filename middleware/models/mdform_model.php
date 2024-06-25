@@ -16295,7 +16295,7 @@ class Mdform_Model extends Model {
                         THEN 1
                         WHEN K.ROLE_ID IN (SELECT ROLE_ID FROM UM_USER_ROLE WHERE USER_ID = $idPh1) AND $idPh1 != (SELECT COALESCE((SELECT USER_ID FROM UM_USER_ROLE WHERE USER_ID = $idPh1 AND ROLE_ID = 1), 9) FROM DUAL)
                         THEN 1 
-                        WHEN K.USER_ID IS NULL AND K.ROLE_ID IS NULL
+                        WHEN K.USER_ID IS NULL AND K.ROLE_ID IS NULL 
                         THEN 1 
                         WHEN $idPh1 = (SELECT USER_ID FROM UM_USER_ROLE WHERE USER_ID = $idPh1 AND ROLE_ID = 1) OR $idPh1 = 1
                         THEN 0
@@ -16346,40 +16346,6 @@ class Mdform_Model extends Model {
 
                 $result = rtrim(trim($result), 'AND');
             }
-        
-        } catch (Exception $ex) {
-            $result = $result;
-        }
-        
-        return $result;
-    }
-    
-    public function getUmPermissionKeyPrecheckModel($indicatorId) {
-        
-        $result = null;
-        
-        try {
-
-            $data = $this->db->GetAll("
-            SELECT K.ID FROM UM_PERMISSION_KEY K
-                WHERE 
-                (
-                CASE WHEN :SESSIONUSERID = (SELECT USER_ID FROM UM_USER_ROLE WHERE USER_ID = :SESSIONUSERID AND ROLE_ID = 1)
-                THEN 1
-                WHEN K.ROLE_ID NOT   IN (SELECT ROLE_ID FROM UM_USER_ROLE WHERE USER_ID = :SESSIONUSERID)
-                THEN 0
-                ELSE 1
-                END = 1
-                )
-                AND
-                K.INDICATOR_ID = :FILTERMAINID", 
-                array(
-                    'FILTERMAINID'  => $indicatorId, 
-                    'SESSIONUSERID' => Ue::sessionUserKeyId() 
-                )
-            );            
-            
-            return $data;
         
         } catch (Exception $ex) {
             $result = $result;
@@ -26416,14 +26382,156 @@ class Mdform_Model extends Model {
                                     return isset($setRowsPath) ? [$setRowsPath => $resultData] : $resultData;              
 
                                 } else {
-
+                                    
                                     $getDetailData = self::getMetaVerseDataModel($dataJson['GET_INDICATOR_ID'], [$trg => $equalVal]);
 
                                     if ($detailData = issetParam($getDetailData['data'])) {
                                         return isset($setRowsPath) ? [$setRowsPath => $detailData] : $detailData;                
                                     }
                                 }
-                            } 
+                                
+                            } else {
+                                
+                                $fillMapTableName = $fillMapRow['TABLE_NAME'] ? $fillMapRow['TABLE_NAME'] : $fillMapRow['SRC_TABLE_NAME'];
+                            
+                                if (!$fillMapTableName) {
+                                    $fillMapTableName = '('.($fillMapRow['QUERY_STRING'] ? $fillMapRow['QUERY_STRING'] : $fillMapRow['SRC_QUERY_STRING']).')';
+                                }
+                            }
+                            
+                            $fillMapTableName = self::parseQueryString($fillMapTableName);
+                            $queryNamedParams = DBSql::getQueryNamedParams($fillMapTableName);
+                            
+                            foreach ($queryNamedParams as $queryNamedParam) {
+                                $fillMapTableName = str_ireplace($queryNamedParam, "''", $fillMapTableName);
+                            }
+                            
+                            $rowData = $this->db->GetRow("SELECT * FROM $fillMapTableName WHERE 1 = 1 $where");
+                            
+                            if ($rowData) {
+                                
+                                $trgIndicatorId = (isset($isFillRelation) && $isFillRelation) ? issetVar($_POST['param']['indicatorId']) : $fillMapRow['ID'];
+                                $dataJsonArr    = (isset($rowData['DATA']) && $rowData['DATA']) ? @json_decode($rowData['DATA'], true) : [];
+                                
+                                unset($rowData['DATA']);
+                                
+                                if (isset($isFillRelation)) {
+                                    $tmpIndicatorId = $indicatorId;
+                                    $indicatorId = $trgIndicatorId;
+                                    $trgIndicatorId = $tmpIndicatorId;
+                                    $linkIndicatorId = $indicatorId;
+                                } else {
+                                    $linkIndicatorId = $trgIndicatorId;
+                                }
+                                
+                                $pathRelationConfigs = $this->db->GetAll("
+                                    SELECT 
+                                        LOWER(T0.ALIAS_NAME) AS ALIAS_NAME, 
+                                        T0.COLUMN_NAME, 
+                                        T0.SHOW_TYPE,
+                                        T0.ID,
+                                        T0.PARENT_ID, 
+                                        T1.TRG_INDICATOR_ID, 
+                                        T1.SEMANTIC_TYPE_ID, 
+                                        T1.COLUMN_NAME AS TRG_COLUMN_NAME, 
+                                        T1.SHOW_TYPE AS TRG_SHOW_TYPE,
+                                        T1.ID AS TRG_ID,
+                                        T1.PARENT_ID AS TRG_PARENT_ID 
+                                    FROM (
+                                        SELECT 
+                                            CASE WHEN T1.TRG_ALIAS_NAME IS NULL 
+                                                THEN T0.TRG_ALIAS_NAME 
+                                            ELSE T1.TRG_ALIAS_NAME||'.'||T0.TRG_ALIAS_NAME 
+                                            END AS ALIAS_NAME, 
+                                            T0.ID,
+                                            T0.COLUMN_NAME, 
+                                            T0.SHOW_TYPE,
+                                            T0.PARENT_ID, 
+                                            T0.ORDER_NUMBER, 
+                                            T0.TRG_INDICATOR_ID, 
+                                            T0.SEMANTIC_TYPE_ID 
+                                        FROM KPI_INDICATOR_INDICATOR_MAP T0 
+                                            LEFT JOIN KPI_INDICATOR_INDICATOR_MAP T1 ON T1.ID = T0.PARENT_ID 
+                                        WHERE T0.MAIN_INDICATOR_ID = ".$this->db->Param(0)." 
+                                            AND T0.TRG_ALIAS_NAME IS NOT NULL
+                                    ) T0 
+                                    INNER JOIN (
+                                        SELECT 
+                                            CASE WHEN T1.TRG_ALIAS_NAME IS NULL 
+                                                THEN T0.TRG_ALIAS_NAME 
+                                            ELSE T1.TRG_ALIAS_NAME||'.'||T0.TRG_ALIAS_NAME 
+                                            END AS ALIAS_NAME, 
+                                            T0.ID,
+                                            T0.COLUMN_NAME, 
+                                            T0.SHOW_TYPE,
+                                            T0.PARENT_ID, 
+                                            T0.TRG_INDICATOR_ID, 
+                                            T0.SEMANTIC_TYPE_ID 
+                                        FROM KPI_INDICATOR_INDICATOR_MAP T0 
+                                            LEFT JOIN KPI_INDICATOR_INDICATOR_MAP T1 ON T1.ID = T0.PARENT_ID 
+                                        WHERE T0.MAIN_INDICATOR_ID = ".$this->db->Param(1)." 
+                                            AND T0.TRG_ALIAS_NAME IS NOT NULL 
+                                    ) T1 ON LOWER(T1.ALIAS_NAME) = LOWER(T0.ALIAS_NAME) 
+                                    ORDER BY T0.PARENT_ID DESC, T0.ORDER_NUMBER ASC", 
+                                    array($indicatorId, $trgIndicatorId)    
+                                );
+                                
+                                foreach ($pathRelationConfigs as $p => $pathRelationConfig) {
+                                    
+                                    $srcColumnName = $pathRelationConfig['COLUMN_NAME'];
+                                    $srcShowType = $pathRelationConfig['SHOW_TYPE'];
+                                    $srcParentId = $pathRelationConfig['PARENT_ID'];
+                                    
+                                    $trgColumnName = $pathRelationConfig['TRG_COLUMN_NAME'];
+                                    $trgShowType = $pathRelationConfig['TRG_SHOW_TYPE'];
+                                    $trgParentId = $pathRelationConfig['TRG_PARENT_ID'];
+                                    $mapIndicatorId = $pathRelationConfig['TRG_INDICATOR_ID'];
+                                    $semanticTypeId = $pathRelationConfig['SEMANTIC_TYPE_ID'];
+                                    $savedSubTableRows = [];
+                                    
+                                    if ($srcShowType != 'rows' && $srcParentId == '') {
+                                        
+                                        $fillData[$srcColumnName] = issetParam($rowData[$trgColumnName]);
+                                        
+                                        unset($pathRelationConfigs[$p]);
+                                        
+                                    } elseif ($srcShowType == 'rows') {
+                                        
+                                        if ($trgIndicatorId && $semanticTypeId == '10000002') {
+                                            
+                                            $srcRowId = $rowData['ID'];
+                                            $savedSubTableRows = self::getKpiSubTableRowsModel($linkIndicatorId, $mapIndicatorId, $srcRowId, $trgColumnName);
+                                            
+                                        } elseif ($dataJsonArr) {
+                                            
+                                            $savedSubTableRows = issetParamArray($dataJsonArr[$trgColumnName]);
+                                        }
+                                        
+                                        unset($pathRelationConfigs[$p]);
+                                    }
+                                    
+                                    if ($savedSubTableRows) {
+                                            
+                                        $subRows = array();
+                                        
+                                        foreach ($savedSubTableRows as $s => $savedSubTableRow) {
+                                            
+                                            foreach ($pathRelationConfigs as $pathRelationConfigSub) {
+                                                
+                                                if ($pathRelationConfig['TRG_ID'] == $pathRelationConfigSub['TRG_PARENT_ID'] 
+                                                    && isset($savedSubTableRow[$pathRelationConfigSub['TRG_COLUMN_NAME']])) {
+
+                                                    $subRows[$s][$pathRelationConfigSub['COLUMN_NAME']] = $savedSubTableRow[$pathRelationConfigSub['TRG_COLUMN_NAME']];
+                                                }
+                                            }
+                                        }
+                                        
+                                        if ($subRows) {
+                                            $fillData[$srcColumnName] = $subRows;
+                                        }
+                                    }
+                                }
+                            }
                             
                         } catch (Exception $ex) { }
                         
@@ -30875,13 +30983,13 @@ class Mdform_Model extends Model {
 //                    $k++;
 //                }
 
-                foreach ($treeData as $tree) {
-                    
-                    if (issetParam($tree['ID']) == '1591184045140') {
-                        $result[$k]['state'] = ['opened' => true, 'selected' => false];
-                    }
+                foreach ($treeData as $treeKey => $tree) {
                     
                     $isChildRecordCount = (issetParam($tree['CHILDRECORDCOUNT']) ? true : false);
+                    
+                    if ($isChildRecordCount && !$treeKey && empty($tree['PARENT_ID'])) {
+                        $result[$k]['state'] = ['opened' => true, 'selected' => false];
+                    }                    
                     
                     $result[$k]['id'] = $tree[$idField];                    
                     $result[$k]['rowdata'] = $tree;

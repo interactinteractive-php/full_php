@@ -7854,9 +7854,26 @@ class Mdupgrade_Model extends Model {
         return false;
     }
     
-    public function getPatchListModel() {
+    public function getPatchListModel($criteria = []) {
         try {
-            $data = $this->db->GetAll("SELECT ID, DESCRIPTION FROM META_BUG_FIXING WHERE DESCRIPTION IS NOT NULL ORDER BY CREATED_DATE DESC");
+            $where = null;
+            if ($criteria) {
+                foreach ($criteria as $filterCol => $filterColVals) {
+                    $orCriteria = null;
+                    
+                    foreach ($filterColVals as $filterColVal) {
+                        $operator = $filterColVal['operator'];
+                        $filterVal = $filterColVal['operand'];
+                        $orCriteria .= "LOWER($filterCol) $operator '".Str::lower($filterVal)."' OR ";
+                    }
+                    
+                    $orCriteria = rtrim(trim($orCriteria), ' OR');
+                    $where .= " AND ($orCriteria)";
+                }
+            }
+            
+            $data = $this->db->GetAll("SELECT ID, DESCRIPTION FROM META_BUG_FIXING WHERE DESCRIPTION IS NOT NULL $where ORDER BY CREATED_DATE DESC");
+            
             return ['status' => 'success', 'data' => $data];
         } catch (Exception $ex) {
             return ['status' => 'error', 'message' => $ex->getMessage()];
@@ -8008,8 +8025,99 @@ class Mdupgrade_Model extends Model {
         return $response;
     }
     
-    public function createCustomerBugFixedWithDomain($input) {
+    public function installCloudPatchDbImportModel() {
+        
+        $customerId = Input::numeric('customerId');
+        $connectionInfo = DBUtil::getConnectionByCustomerId($customerId);
+        
+        if (!$connectionInfo) {
+            return ['status' => 'error', 'message' => 'Mdm connection not found!'];
+        }
+        
+        global $db;
+        
+        $dbDriver = DBUtil::toShortName($connectionInfo['DB_TYPE']);
+        $dbHost   = $connectionInfo['HOST_NAME'] . ':' . $connectionInfo['PORT'];
+        $dbUser   = strtolower($connectionInfo['USER_NAME']);
+        $dbPass   = $connectionInfo['USER_PASSWORD'];
+        $dbSID    = $connectionInfo['SID'];
+
+        if ($dbSID) {
+            $connectSID = true;
+        } else {
+            $dbSID = $connectionInfo['SERVICE_NAME'];
+            $connectSID = false;
+        }
+
+        $db = ADONewConnection($dbDriver);
+        $db->debug = DB_DEBUG;
+        $db->connectSID = $connectSID;
+        $db->autoRollback = true;
+        $db->datetime = true;
+
         try {
+            $db->Connect($dbHost, $dbUser, $dbPass, $dbSID);
+        } catch (Exception $e) {
+            return ['status' => 'error', 'message' => $e->msg];
+        }
+        
+        $db->SetCharSet(DB_CHATSET);
+                
+        $this->db = $db;
+        
+        includeLib('Compress/Compression');
+        
+        $fileId      = Input::numeric('fileId');
+        $patchId     = Input::numeric('patchId');
+        $patchName   = Input::post('patchName');
+        
+        $cacheTmpDir = Mdcommon::getCacheDirectory();
+        $cacheDir    = $cacheTmpDir . '/cloud_patch';
+        $cachePath   = $cacheDir . '/' . $fileId . '.txt';
+        
+        $fileContent = file_get_contents($cachePath);
+        $fileContent = Compression::gzinflate($fileContent);
+        
+        $response = self::executeUpgradeScript([$fileContent]);
+                                
+        $status  = issetDefaultVal($response['status'], 'success');
+        $message = issetDefaultVal($response['message'], 'Амжилттай');
+        //$logs    = issetParam($response['logs']);
+
+        $result = ['status' => $status, 'message' => $message];
+        
+        global $db;
+        
+        $db = ADONewConnection(DB_DRIVER);
+        $db->debug = DB_DEBUG;
+        $db->connectSID = defined('DB_SID') ? DB_SID : true;
+        $db->autoRollback = true;
+        $db->datetime = true;
+
+        try {
+            $db->Connect(DB_HOST, DB_USER, DB_PASS, DB_NAME, false, true);
+        } catch (Exception $e) { } 
+
+        $db->SetCharSet(DB_CHATSET);
+        $this->db = $db;
+        
+        self::createCustomerBugFixedWithDomain([
+            'patchResult' => $result, 
+            'domainAttr' => [
+                'domain'     => null, 
+                'customerId' => $customerId, 
+                'patchId'    => $patchId, 
+                'patchName'  => $patchName 
+            ]
+        ]);
+        
+        return $result;
+    }
+    
+    public function createCustomerBugFixedWithDomain($input) {
+        
+        try {
+            
             $data = [
                 'ID'                 => getUID(), 
                 'CREATED_USER_ID'    => Ue::sessionUserKeyId(), 

@@ -18088,6 +18088,162 @@ function changeWfmStatusId(element, wfmStatusId, metaDataId, refStructureId, new
     }, 500);
 }
 
+function beforeWaterMarkChangeWfmStatusId(elem, wfmStatusId, metaDataId, refStructureId, newWfmStatusColor, newWfmStatusName) {
+
+    signPdfWithCoordinate = function signPdfWithCoordinate(coordinate) {
+        $('#callIframeCanvasHardSign').empty().dialog('destroy').remove();
+        
+        if (isObject(refStructureId)) {
+            var row = refStructureId;
+        } else {
+            var rows = getDataViewSelectedRows(metaDataId);
+            var row = rows[0];
+        }
+        
+        var funcArguments = [elem, wfmStatusId, metaDataId, refStructureId, newWfmStatusColor, newWfmStatusName];
+
+        if (typeof row.physicalpath !== 'undefined') {
+            var physicalpath = row.physicalpath;
+            if (physicalpath.split('.').pop().toLowerCase() === 'pdf') {
+                var contentId = null;
+                if (row.hasOwnProperty('contentid')) {
+                    contentId = row.contentid;
+                }
+                var paperSize = 573;
+                if (row.hasOwnProperty('printpapersize') && (row.printpapersize).toLowerCase() === 'a5') {
+                    paperSize = 470;
+                }
+                var fileName = URL_APP + row.physicalpath;
+                var server = URL_APP + 'mddoceditor/fileUpload';
+                var funcName = 'changeWfmStatusId';
+                var pdfPath = fileName.replace(URL_APP, '');
+
+                
+                var pdfPath = row.physicalpath;
+                var signatureImage = row.signatureimage;
+                var contentId = typeof row.contentid !== 'undefined' && row.contentid ? row.contentid : '';
+                var pageSize = typeof row.pagesize !== 'undefined' && row.pagesize ? row.pagesize : '';
+                var signaturePosition = typeof row.signatureposition !== 'undefined' && row.signatureposition ? row.signatureposition : '';
+                var signaturetext = typeof row.signaturetext !== 'undefined' && row.signaturetext ? row.signaturetext : '';
+
+                var paperSize = 573;
+                var minusSize = 0;
+                if (typeof pageSize !== 'undefined' && pageSize === 'a5') {
+                    paperSize = 470;
+                    minusSize = 100; 
+                }
+
+                $.ajax({
+                    type: 'post',
+                    url: 'mdpki/setDocumentSign',
+                    data: {
+                        filePath: pdfPath,
+                        x: Math.floor(1.33333333* coordinate.x),
+                        y: Math.floor(1.33333333 * (paperSize-coordinate.y))-minusSize,
+                        pageNum: coordinate.pageNum,
+                        signatureimage: signatureImage,
+                        signatureposition: signaturePosition,
+                        contentid: contentId,
+                        signaturetext: signaturetext,
+                    },
+                    dataType: 'json',
+                    beforeSend: function() {
+                        Core.blockUI({message: 'Loading...', boxed: true});
+                    },
+                    success: function (data) {
+                        Core.unblockUI();
+                        PNotify.removeAll();
+                        new PNotify({
+                            title: data.status,
+                            text: data.message,
+                            type: data.status,
+                            sticker: false
+                        });
+
+                        if (data.status === 'success') {
+                            setTimeout(function(){ window[funcName].apply(null, funcArguments); }, 2000);
+                        }  
+                    },
+                    error: function (jqXHR, exception) {
+                        Core.unblockUI();
+                        Core.showErrorMessage(jqXHR, exception);
+                    }
+                });
+
+            } else {
+                new PNotify({
+                    title: 'Error',
+                    text: 'PDF файл олдсонгүй.',
+                    type: 'error',
+                    sticker: false
+                });
+            }
+        } else {
+            new PNotify({
+                title: 'Error',
+                text: 'PDF файл олдсонгүй.',
+                type: 'error',
+                sticker: false
+            });
+        }
+    };
+    
+    if (isObject(refStructureId)) {
+        var row = refStructureId;
+    } else {
+        var rows = getDataViewSelectedRows(metaDataId);
+        var row = rows[0];
+    }
+
+    var pdfPath = row.physicalpath;
+    var pageStyle = typeof row.pagestyle !== 'undefined' && row.pagestyle ? row.pagestyle : '';
+    
+    var $windowHeight =  720;
+    var $windowWidth =  491;
+    switch (pageStyle) {
+        case 'landspace':
+            $windowWidth =  720;
+            $windowHeight =  491;
+            break;
+        case 'portrait':
+                        
+            break;
+    }
+    
+    var filename = pdfPath.replace(/^.*[\\\/]/, '');
+    iframe = '<iframe id="frameStampPos" src="mddoc/canvasStampPos?uniqid=HardSignWindow&pdfPath='+pdfPath+'" height="100%" width="100%" frameBorder="0"></iframe>';
+
+    if (!$('#callIframeCanvasHardSign').length) {
+        var div = document.createElement("div");
+        div.id = 'callIframeCanvasHardSign';
+        div.style = 'display: none';
+        document.body.appendChild(div);
+    }
+
+    $('#callIframeCanvasHardSign').empty().append(iframe);
+    $("#callIframeCanvasHardSign").dialog({
+        cache: false,
+        resizable: false,
+        bgiframe: true,
+        autoOpen: false,
+        title: 'Тамганы байршил',
+        width: $windowWidth,
+        height: $windowHeight,
+        modal: false,
+        open: function (event, ui) {
+            $('#callIframeCanvasHardSign').css('overflow', 'hidden'); 
+        },
+        close: function () {
+            $('#callIframeCanvasHardSign').empty().dialog('destroy').remove();
+        },
+        buttons: [{text: 'Сонгох', class: 'btn blue-madison btn-sm', click: function () {
+            var frame = $('#frameStampPos')[0];
+            frame.contentWindow.postMessage({call:'canvasClickSendValue_HardSignWindow', value: {'pdfPath': pdfPath}})}
+        }]
+    });
+    $("#callIframeCanvasHardSign").dialog('open');
+}
+
 function beforeSignProcess(mainMetaDataId, processMetaDataId, metaTypeId, whereFrom, elem, params, dataGrid, wfmStatusParams, drillDownType) {
     
     if (isObject(params) && params.hasOwnProperty('selectedRow')) {

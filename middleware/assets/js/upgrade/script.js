@@ -1445,3 +1445,196 @@ function importPatchToCloudApps(elem) {
         $patchCombo.addClass('error');
     }
 }
+function metaPatchToCloudAppDbs(elem, processMetaDataId, dataViewId) {
+    PNotify.removeAll();
+    var selectedRows = getDataViewSelectedRows(dataViewId);
+    
+    if (selectedRows.length == 0) {
+        new PNotify({ 
+            title: 'Info', 
+            text: 'Мөрөө сонгоно уу!', 
+            type: 'info', 
+            sticker: false, 
+            hide: true, 
+            addclass: 'pnotify-center'
+        });
+        return;
+    }
+    
+    $.ajax({
+        type: 'post',
+        url: 'mdupgrade/getCloudPatchList',
+        beforeSend: function () {
+            Core.blockUI({message: 'Loading...', boxed: true});
+        },
+        success: function (data) {
+            
+            if (data.status == 'success') {
+                
+                var $dialogName = 'dialog-patchtocloudapps';
+                if (!$("#" + $dialogName).length) {
+                    $('<div id="' + $dialogName + '"></div>').appendTo('body');
+                }
+                var $dialog = $('#' + $dialogName), tbl = [], patchList = data.data;
+                
+                tbl.push('<div class="row">');
+                    tbl.push('<div class="col-md-2 text-right pt4 pr-0">');
+                        tbl.push('<label><span class="required">*</span>Patch сонгох<span class="label-colon">:</span></label>');
+                    tbl.push('</div>');
+                    tbl.push('<div class="col-md-7">');
+                        
+                        tbl.push('<select class="form-control select2">');
+                            tbl.push('<option value="">- Сонгох -</option>');
+                            for (var p in patchList) {
+                                tbl.push('<option value="'+patchList[p]['ID']+'">'+patchList[p]['DESCRIPTION']+'</option>');
+                            }
+                        tbl.push('</select>');
+                        
+                    tbl.push('</div>');
+                    tbl.push('<div class="col-md-3">');
+                        tbl.push('<button type="button" class="btn btn-xs btn-primary" onclick="importPatchToCloudAppDbs(this);"><i class="far fa-upload"></i> Оруулах</button>');
+                    tbl.push('</div>');
+                tbl.push('</div>');
+
+                tbl.push('<div class="knowmetasinfile-tbl mt20" style="overflow: auto;">');
+                    tbl.push('<table class="table table-hover">');
+                        tbl.push('<thead>');
+                            tbl.push('<tr>');
+                                tbl.push('<th class="font-weight-bold" style="width: 30px">№</th>');
+                                tbl.push('<th class="font-weight-bold">Харилцагчийн нэр</th>');
+                                tbl.push('<th class="font-weight-bold">Төлөв</th>');
+                            tbl.push('</tr>');
+                        tbl.push('</thead>');
+                        tbl.push('<tbody>');
+
+                        var n = 1;
+
+                        for (var s in selectedRows) {
+
+                            tbl.push('<tr>');
+                                tbl.push('<td>'+n+'.</td>');;
+                                tbl.push('<td data-id="'+selectedRows[s]['customerid']+'">'+selectedRows[s]['customername']+'</td>');
+                                tbl.push('<td data-col="status"></td>');
+                            tbl.push('</tr>');
+
+                            n++;
+                        }
+
+                        tbl.push('</tbody>');
+                    tbl.push('</table>');
+                tbl.push('</div>');
+
+                $dialog.empty().append(tbl.join(''));
+                $dialog.dialog({
+                    cache: false,
+                    resizable: true,
+                    bgiframe: true,
+                    autoOpen: false,
+                    title: 'Patch to Cloud Apps',
+                    width: 800,
+                    height: 'auto',
+                    modal: true,
+                    position: {my: 'top', at: 'top+30'}, 
+                    open: function () {
+                        Core.initSelect2($dialog);
+                    },
+                    close: function () {
+                        $dialog.empty().dialog('destroy').remove();
+                    },
+                    buttons: [{
+                        text: plang.get('close_btn'), class: 'btn btn-sm blue-hoki', click: function () {
+                            $dialog.dialog('close');
+                        }
+                    }]
+                });
+                $dialog.dialog('open');
+                
+            } else {
+                new PNotify({ 
+                    title: data.status, 
+                    text: data.message, 
+                    type: data.status, 
+                    sticker: false, 
+                    hide: true, 
+                    addclass: 'pnotify-center'
+                });
+            }
+            
+            Core.unblockUI();
+        }
+    });
+}
+function importPatchToCloudAppDbs(elem) {
+    PNotify.removeAll();
+    
+    var $parent = $(elem).closest('.ui-dialog-content');
+    var $patchCombo = $parent.find('select');
+    var patchId = $patchCombo.val();
+    
+    if (patchId != '') {
+        $patchCombo.removeClass('error');
+        
+        var $domainRows = $parent.find('table > tbody > tr'), 
+            $selected = $patchCombo.find('option:selected'), 
+            patchName = $selected.text();
+        
+        $.ajax({
+            type: 'post',
+            url: 'mdupgrade/installCloudPatchDownload', 
+            data: {patchId: patchId}, 
+            dataType: 'json', 
+            beforeSend: function () {
+                Core.blockUI({message: 'Loading...', boxed: true});
+            },
+            success: function (data) {
+                
+                Core.unblockUI();
+                
+                if (data.status == 'success') {
+                    var fileId = data.fileId;
+                    
+                    $domainRows.each(function() {
+                        var $thisRow = $(this);
+                        var customerId = $thisRow.find('td[data-id]').attr('data-id');
+                        var $statusCell = $thisRow.find('td[data-col="status"]');
+                        
+                        $.ajax({
+                            type: 'post',
+                            url: 'mdupgrade/installCloudPatchDbImport', 
+                            data: {customerId: customerId, patchId: patchId, fileId: fileId, patchName: patchName}, 
+                            dataType: 'json', 
+                            beforeSend: function () {
+                                $statusCell.html('<i class="icon-spinner4 spinner-sm mr-1"></i>');
+                            },
+                            success: function (dataSub) {
+                                
+                                if (dataSub) {
+                                    if (dataSub.status == 'success') {
+                                        $statusCell.html('<span class="badge bg-success font-size-12">Success</span>');
+                                    } else {
+                                        $statusCell.html('<span class="badge badge-danger font-size-12">'+dataSub.message+'</span>');
+                                    }
+                                } else {
+                                    $statusCell.html('<span class="badge badge-warning font-size-12">Unkhown error!</span>');
+                                }
+                            }
+                        });
+                    });
+                    
+                } else {
+                    new PNotify({ 
+                        title: data.status, 
+                        text: data.message, 
+                        type: data.status, 
+                        sticker: false, 
+                        hide: true, 
+                        addclass: 'pnotify-center'
+                    });
+                }
+            }
+        });
+        
+    } else {
+        $patchCombo.addClass('error');
+    }
+}
