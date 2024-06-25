@@ -957,7 +957,7 @@ class Cron_Model extends Model {
                 
                 $currentDate        = Date::currentDate();
                 $customerGroupId    = 17141037295452;
-                $finInvoiceStatusId = 1712908080417136;
+                $finInvoiceStatusId = 1711607981610470;
                 $apiEnvironmentId   = 1711935661499533;
                 $ntfNotificationId  = 17116810804369;
                 $dbType             = 'postgre';
@@ -1007,6 +1007,18 @@ class Cron_Model extends Model {
                     ];
                     
                     $this->db->AutoExecute('FIN_INVOICE', $finInvoiceChangeStatusData, 'UPDATE', "INVOICE_ID = $invoiceId");
+                    
+                    $wfmLogData = [
+                        'ID'               => getUIDAdd($b), 
+                        'REF_STRUCTURE_ID' => 1711607546700352, 
+                        'RECORD_ID'        => $invoiceId, 
+                        'WFM_STATUS_ID'    => $finInvoiceStatusId, 
+                        'WFM_DESCRIPTION'  => 'Төлбөр баталгаажиж эрх нээгдэв.', 
+                        'CREATED_USER_ID'  => 1, 
+                        'CREATED_DATE'     => $currentDate
+                    ];
+                    
+                    $this->db->AutoExecute('META_WFM_LOG', $wfmLogData);
                     
                     $customerId = getUIDAdd($b + 1);
                     $customerData = [
