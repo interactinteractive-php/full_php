@@ -1217,7 +1217,7 @@ class Cron_Model extends Model {
                     
                     $this->db->CommitTrans();
                     
-                    sleep(40);
+                    sleep(50);
                     
                     $this->load->model('login');
                 
