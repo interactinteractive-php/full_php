@@ -2385,6 +2385,58 @@ function execProcess(mainSelector, elem, processCode, paramsPath) {
 
     return response.responseJSON;
 }
+function bpExecIndicator(mainSelector, elem, processCode, paramsPath, async) {
+    var paramData = {kpiMainIndicatorId: processCode, mvParam: {}};
+    var mvParam = {};
+    var paramsPathArr = paramsPath.split('|');
+    var isAsync = (typeof async != 'undefined' ? async : true);
+
+    for (var i = 0; i < paramsPathArr.length; i++) {
+        var fieldPathArr = paramsPathArr[i].split('@');
+        var fieldPath = (fieldPathArr[0]).trim();
+        var inputPath = (fieldPathArr[1]).trim();
+        var fieldValue = '';
+
+        var $bpElem = getBpElement(mainSelector, elem, fieldPath);
+
+        if ($bpElem) {
+            fieldValue = getBpRowParamNum(mainSelector, elem, fieldPath);
+        } else {
+            var $bpViewElem = getBpRowViewElem(mainSelector, elem, fieldPath);
+            if ($bpViewElem) {
+                fieldValue = getBpRowParamNum(mainSelector, elem, fieldPath);
+            } else {
+                fieldValue = fieldPath;
+            }
+        }
+        
+        mvParam[inputPath] = fieldValue;
+    }
+    
+    paramData.mvParam = mvParam;
+
+    if (isAsync == false) {
+        var response = $.ajax({
+            type: 'post',
+            url: 'mdform/saveKpiDynamicDataByList', 
+            data: paramData,
+            dataType: 'json',
+            async: false
+        });
+
+        return response.responseJSON;
+    } else {
+        $.ajax({
+            type: 'post',
+            url: 'mdform/saveKpiDynamicDataByList', 
+            data: paramData,
+            dataType: 'json',
+            success: function(data) {
+                console.log(data);
+            }
+        });
+    }
+}
 function repeatFunction(mainSelector, groupPath, funcName, elem) {
     
     if (groupPath.indexOf('.') !== -1 && typeof elem !== 'undefined' && elem !== 'open') {
@@ -4683,8 +4735,8 @@ function getLookupRowIndex(mainSelector, elem, lookupField, rowIndex) {
         return;
     }
     
-    var _parent = bpElem.closest(".input-group");
-    var lookupCodeField = _parent.find("input[id*='_displayField']");
+    var $parent = bpElem.closest(".input-group");
+    var lookupCodeField = $parent.find("input[id*='_displayField']");
     var processId = lookupCodeField.attr("data-processid");
     var lookupId = lookupCodeField.attr("data-lookupid");
     var paramRealPath = bpElem.attr("data-path");
@@ -4730,10 +4782,17 @@ function getLookupRowIndex(mainSelector, elem, lookupField, rowIndex) {
     }
     
     dataRowData = Object.keys(dataRowData).length ? JSON.parse(dataRowData) : '';
+    var lookupUrl = 'mdwebservice/getLookupRowIndex';
+    var isMvLookup = false;
+    
+    if (bpElem.attr('name').indexOf('mvParam[') !== -1) {    
+        lookupUrl = 'mdform/getLookupRowIndex';
+        isMvLookup = true;
+    }
     
     $.ajax({
         type: 'post',
-        url: 'mdwebservice/getLookupRowIndex',
+        url: lookupUrl,
         dataType: 'json',
         data : {
             processId : processId, 
@@ -4754,23 +4813,23 @@ function getLookupRowIndex(mainSelector, elem, lookupField, rowIndex) {
                 rowData = data.rowData;
             }
 
-            if (_parent.closest("div.bp-param-cell").length > 0) {
-                var parentCell = _parent.closest("div.bp-param-cell");
-                var parentTable = _parent.closest("div.xs-form");
-            } else if (_parent.closest("div.form-md-line-input").length > 0) {
-                var parentCell = _parent.closest("div.form-md-line-input");
-                var parentTable = _parent.closest("div.xs-form");
+            if ($parent.closest("div.bp-param-cell").length > 0) {
+                var parentCell = $parent.closest("div.bp-param-cell");
+                var parentTable = $parent.closest("div.xs-form");
+            } else if ($parent.closest("div.form-md-line-input").length > 0) {
+                var parentCell = $parent.closest("div.form-md-line-input");
+                var parentTable = $parent.closest("div.xs-form");
             } else {
-                if (_parent.closest("div.meta-autocomplete-wrap").length > 0) {
-                    var parentCell = _parent.closest("div.meta-autocomplete-wrap");
+                if ($parent.closest("div.meta-autocomplete-wrap").length > 0) {
+                    var parentCell = $parent.closest("div.meta-autocomplete-wrap");
                 } else {
-                    var parentCell = _parent.closest("td");
+                    var parentCell = $parent.closest("td");
                 }
 
-                if (_parent.closest(".bprocess-table-dtl").length > 0) {
-                    var parentTable = _parent.closest(".bp-detail-row");
+                if ($parent.closest(".bprocess-table-dtl").length > 0) {
+                    var parentTable = $parent.closest(".bp-detail-row");
                 } else {
-                    var parentTable = _parent.closest("form");
+                    var parentTable = $parent.closest("form");
                 }
             }
 
@@ -4802,26 +4861,36 @@ function getLookupRowIndex(mainSelector, elem, lookupField, rowIndex) {
 
             if (bpElem.prop("tagName") == 'SELECT') {
                 if (data.META_VALUE_ID !== '') {
-                    
                     if (bpElem.hasClass('select2')) {
                         bpElem.select2('val', data.META_VALUE_ID);    
                     } else {
                         bpElem.val(data.META_VALUE_ID);
                     }
-                    
-                } else
+                } else {
                     bpElem.val('');
+                }
+                
+                if (isMvLookup) {
+                    bpSetMetaVerseFieldValue(mainSelector, elem, lookupField, data.META_VALUE_ID, bpElem);
+                }
                 
             } else {
                 
                 if (data.META_VALUE_ID !== '') {
-                    _parent.find("input[id*='_valueField']").attr('data-row-data', JSON.stringify(rowData).replace(/&quot;/g, '\\&quot;'));
-                    _parent.find("input[id*='_valueField']").val(data.META_VALUE_ID);
-                    _parent.find("input[id*='_displayField']").val(data.META_VALUE_CODE).attr('title', data.META_VALUE_CODE);
-                    _parent.find("input[id*='_nameField']").val(data.META_VALUE_NAME).attr('title', data.META_VALUE_NAME);
+                    if (isMvLookup) {
+                        rowData = Object.fromEntries(
+                            Object.entries(rowData).map(([key, val]) => [key.toLowerCase(), val])
+                        );
+                    }
+                    var jsonStr = JSON.stringify(rowData).replace(/&quot;/g, '\\&quot;');
+                    
+                    $parent.find("input[id*='_valueField']").attr('data-row-data', jsonStr);
+                    $parent.find("input[id*='_valueField']").val(data.META_VALUE_ID);
+                    $parent.find("input[id*='_displayField']").val(data.META_VALUE_CODE).attr('title', data.META_VALUE_CODE);
+                    $parent.find("input[id*='_nameField']").val(data.META_VALUE_NAME).attr('title', data.META_VALUE_NAME);
                 } else {
-                    _parent.find("input[id*='_valueField']").val('');
-                    _parent.find("input[id*='_nameField']").val('').attr('title', '');
+                    $parent.find("input[id*='_valueField']").val('');
+                    $parent.find("input[id*='_nameField']").val('').attr('title', '');
                 }
             }
 
@@ -4831,10 +4900,10 @@ function getLookupRowIndex(mainSelector, elem, lookupField, rowIndex) {
              * @author  Ulaankhuu Ts
              */
             var selectedTR = $('.bprocess-table-dtl > .tbody').find('.currentTarget');
-            var fieldPath = _parent.attr('data-section-path');
+            var fieldPath = $parent.attr('data-section-path');
             if (selectedTR.find("td:last-child").find("i.input_html").find("div[data-section-path='" + fieldPath + "']").length > 0) {
-                _parent.find("input").removeClass("spinner2");
-                selectedTR.find("td:last-child").find("i.input_html").find("div[data-section-path='" + fieldPath + "']").empty().append(_parent.html());
+                $parent.find("input").removeClass("spinner2");
+                selectedTR.find("td:last-child").find("i.input_html").find("div[data-section-path='" + fieldPath + "']").empty().append($parent.html());
             }
         },
         error: function () {
@@ -19186,7 +19255,7 @@ function bpPanelSelectedRowRemoveBoldStyle(mainSelector) {
     }
     return;
 }
-function bpSetMetaVerseFieldValue(mainSelector, elem, field, val) {
+function bpSetMetaVerseFieldValue(mainSelector, elem, field, val, $setField) {
     if (mainSelector.hasClass('kpi-ind-tmplt-section')) {
         var $form = mainSelector;
     } else {
@@ -19197,7 +19266,7 @@ function bpSetMetaVerseFieldValue(mainSelector, elem, field, val) {
         if (field.toLowerCase() == 'primaryid') {
             $form.find('input[name="kpiTblId"], input[name="sf[ID]"]').val(val);
         } else {
-            var $field = $form.find('[data-path="'+field+'"]');
+            var $field = (typeof $setField != 'undefined') ? $setField : $form.find('[data-path="'+field+'"]');
             if ($field.length) { 
                 if ($field.hasClass('select2')) {
                     $field.select2('val', val);

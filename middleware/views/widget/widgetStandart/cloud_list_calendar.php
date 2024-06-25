@@ -77,7 +77,9 @@ $sun = date("Y-m-d", strtotime(date("Y-m-d", $monday) . " +6 days"));
                     <?php 
                     if (issetParamArray($this->datasrc)) { ?>
                         <tr style="background-color: #FFF !important; min-height: 52px; height: 52px;">
-                            <td colspan="5">Шаардлага</td>
+                            <td>Шаардлага</td>
+                            <td>Help desk URL</td>
+                            <td colspan="4"></td>
                             <td class="text-right d-none">
                                 <span class="badge bg-blue badge-pill">24</span>
                             </td>
@@ -85,10 +87,10 @@ $sun = date("Y-m-d", strtotime(date("Y-m-d", $monday) . " +6 days"));
                         <?php
                         foreach($this->datasrc as $index => $row) {
                             $rowJson = htmlentities(json_encode($row), ENT_QUOTES, 'UTF-8');
-                            if ($index < 11) {
+                            /* if ($index < 11) { */
                                 ?>
                                 <tr>
-                                    <td class="">
+                                    <td>
                                         <div class="d-flex align-items-center">
                                             <div class="mr-3">
                                                 <a href="javascript:;" class="btn bg-info rounded-round btn-icon btn-sm text-center d-flex p-2">
@@ -100,6 +102,9 @@ $sun = date("Y-m-d", strtotime(date("Y-m-d", $monday) . " +6 days"));
                                                 <div class="text-one-line text-muted font-size-sm text-left text-less" data-tpath="<?php echo $renderAtom->renderAtomPath("position2", $this->positionConfig); ?>" title="<?php echo $renderAtom->renderAtom($row, "position2", $this->positionConfig, 'Default value') ?>"> <?php echo $renderAtom->renderAtom($row, "position2", $this->positionConfig, 'Default value') ?></div>
                                             </div>
                                         </div>
+                                    </td>
+                                    <td class="w-160px text-left">
+                                        <a href="mdhelpdesk/login" target="_blank" class="text-one-line text-default font-weight-semibold letter-icon-title" data-tpath="<?php echo $renderAtom->renderAtomPath("position20", $this->positionConfig); ?>" title="<?php echo $renderAtom->renderAtom($row, "position20", $this->positionConfig, '') ?>"><?php echo $renderAtom->renderAtom($row, "position20", $this->positionConfig, '') ?></a>
                                     </td>
                                     <td class="w-120px text-center">
                                         <h6 class="mb-0 text-one-line" data-tpath="<?php echo $renderAtom->renderAtomPath("position3", $this->positionConfig); ?>" title="<?php echo $renderAtom->renderAtom($row, "position3", $this->positionConfig, '') ?>"><?php echo $renderAtom->renderAtom($row, "position3", $this->positionConfig, '') ?></h6>
@@ -124,7 +129,7 @@ $sun = date("Y-m-d", strtotime(date("Y-m-d", $monday) . " +6 days"));
                                         </div>
                                     </td>
                                 </tr>
-                            <?php }
+                            <?php /*  */
                         }
                     } else { ?>
                         <div class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-1 xl:grid-cols-1 w-full gap-4 " style="gap:0.3rem">

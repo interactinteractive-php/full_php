@@ -406,7 +406,7 @@
                 legalEntityNumber: $legalEntityNumber,
                 typeId: $typeId,
                 timestamp: $timestamp,
-                calledProcessCode: 'static'
+                methodCode: 'static'
             },
             dataType: 'json',
             beforeSend: function () {

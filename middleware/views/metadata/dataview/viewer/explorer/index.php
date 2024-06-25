@@ -3,7 +3,7 @@
         <?php echo $this->detailHeader; ?>
         <div class="<?php echo $this->dataViewClass; if (!$this->isTree && !$this->dataViewHeaderData) { echo ' pl0'; }?> col right-sidebar-content-for-resize <?php echo (isset($this->dataViewCriteriaType) && ($this->dataViewCriteriaType == 'left web' || $this->dataViewCriteriaType == 'left web civil') && issetParam($this->isEmptyCriteria)) ? 'web-tabdataview' : ''; ?>">
             <div class="row <?php echo (isset($this->dataViewCriteriaType) && ($this->dataViewCriteriaType == 'left web' || $this->dataViewCriteriaType == 'left web civil') && issetParam($this->isEmptyCriteria)) ? 'web-margin-left' : '' ?>">    
-                <?php if ((isset($this->hiddenFields) && $this->hiddenFields == '0') && (!isset($this->dataGridOptionData['SHOWTOOLBAR']) || $this->dataGridOptionData['SHOWTOOLBAR'] != '0')) { ?>
+                <?php if ((isset($this->hiddenFields) && ($this->hiddenFields == '0' || $this->hiddenFields == 'false')) && (!isset($this->dataGridOptionData['SHOWTOOLBAR']) || $this->dataGridOptionData['SHOWTOOLBAR'] != '0')) { ?>
                     <div class="col-md-12 remove-type-<?php echo $this->metaDataId; ?> object-height-row3-minus-<?php echo $this->metaDataId ?>" >
                         <div class="table-toolbar">
                             <div class="d-flex dv-button-style-<?php echo $this->buttonBarStyle; ?>">

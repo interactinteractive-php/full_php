@@ -486,6 +486,9 @@ function mvNormalRelationRender(elem, kpiTypeId, mainIndicatorId, opt) {
     
     if (opt.hasOwnProperty('mode')) {
         mode = opt.mode;
+        if (mode == 'read') {
+            mode = 'view';
+        }
         if (mode == 'update' || mode == 'view') {
             if (opt.hasOwnProperty('rows')) {
                 var selectedRows = opt.rows;
@@ -519,6 +522,19 @@ function mvNormalRelationRender(elem, kpiTypeId, mainIndicatorId, opt) {
         
         postData.mapSrcMapId = checkListRowJson.mapId;
         postData.mapSelectedRow = $checkListParent.find('input[data-path="headerParams"]').val();
+    }
+    
+    if ($this.hasAttr('data-statusconfig') && $this.attr('data-statusconfig') != '') {
+
+        var statusConfig = $this.attr('data-statusconfig');
+        var statusConfigObj = JSON.parse(statusConfig);
+        var wfmStatusId = selectedRows[0]['wfmstatusid'];
+
+        statusConfigObj.mainindicatorid = mainIndicatorId;
+        statusConfigObj.currentwfmstatusid = wfmStatusId;
+        statusConfigObj.recordid = selectedRows[0][window['idField_'+mainIndicatorId]];
+        
+        postData.wfmStatusParams = JSON.stringify(statusConfigObj);
     }
     
     $.ajax({
@@ -557,10 +573,14 @@ function mvNormalRelationRender(elem, kpiTypeId, mainIndicatorId, opt) {
                     open: function() {
                         if (mode == 'view') {
                             $dialog.find('.bp-add-one-row').parent().remove();
-                            $dialog.find('.bp-remove-row, button.red, button.bp-btn-save, button.green-meadow, button.bp-file-choose-btn, a[onclick*="bpFileChoosedRemove"], span.filename, a[onclick*="kpiIndicatorRelationRemoveRows"], div.input-group.quick-item-process').remove();
+                            $dialog.find('.bp-remove-row, button.red, button.green-meadow, button.bp-btn-check, button.bp-file-choose-btn, a[onclick*="bpFileChoosedRemove"], span.filename, a[onclick*="kpiIndicatorRelationRemoveRows"], div.input-group.quick-item-process').remove();
                             $dialog.find('input[type="text"], textarea').addClass('kpi-notfocus-readonly-input').attr('readonly', 'readonly');
                             $dialog.find("div[data-s-path]").addClass('select2-container-disabled kpi-notfocus-readonly-input');
                             $dialog.find('button[onclick*="dataViewSelectableGrid"], button[onclick*="chooseKpiIndicatorRowsFromBasket"]').prop('disabled', true);
+                            
+                            if (!postData.hasOwnProperty('wfmStatusParams')) {
+                                $dialog.find('button.bp-btn-save').remove();
+                            }
                             
                             var $radioElements = $dialog.find("input[type='radio']");
                             if ($radioElements.length) {
@@ -5207,7 +5227,7 @@ function mvChangeWfmStatus(elem, mainIndicatorId) {
                 });
                 
                 if (isNormalRelation > 0) {
-                    mvNormalRelationRender($this, dataRow.kpi_type_id, mainIndicatorId, {methodIndicatorId: dataRow.crud_indicator_id, structureIndicatorId: dataRow.structure_indicator_id, mode: 'update'});
+                    mvNormalRelationRender($this, dataRow.kpi_type_id, mainIndicatorId, {methodIndicatorId: dataRow.crud_indicator_id, structureIndicatorId: dataRow.structure_indicator_id, mode: dataRow.type_code});
                 } else {
                     
                     if (dataRow.structure_indicator_id == mainIndicatorId && isFillRelation == 0) {

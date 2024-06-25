@@ -302,14 +302,14 @@
                 }
                 
                 var _outParamSplit = _outParam.split('|');
-                
                 try {
                     for (var i = 0; i < _outParamSplit.length; i++) {
                     
                         var selfParam = _outParamSplit[i];
-                        var _inParams = '';
-                        var $cellSelect = bp_window_<?php echo $this->methodId; ?>.find("select[data-path='" + selfParam + "'], input[type='radio'][data-path='" + selfParam + "']");
                         
+                        var _inParams = '';
+                        var $cellSelect = bp_window_<?php echo $this->methodId; ?>.find("select[data-path='" + selfParam + "'], input[type='radio'][data-path='" + selfParam + "'], input[type='checkbox'][data-path='" + selfParam + "']");
+
                         if ($cellSelect.length === 0) {
                             var $cellInp = bp_window_<?php echo $this->methodId; ?>.find("input[data-path='" + selfParam + "']");
 
@@ -338,6 +338,7 @@
                             }
                             
                             if ($cellSelect.is(':radio')) {
+                                
                                 
                                 var $radioParent = $cellSelect.closest('.radio-list');
                                 var _inParam = $radioParent.attr('data-in-param');
@@ -370,11 +371,14 @@
                                         }
                                     }
                                 }
-                            }
+                            } 
                             
                             if (_inParams !== '') {
                                 
-                                var attrToJson = JSON.parse($cellSelect.attr("data-row-data"));
+                                var attrToJson = [];
+                                if ($cellSelect.attr("data-row-data") && !isLinkedRadio) {
+                                    var attrToJson = JSON.parse($cellSelect.attr("data-row-data"));
+                                }
                                 
                                 $.ajax({
                                     type: 'post',

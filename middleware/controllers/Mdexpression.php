@@ -2945,6 +2945,7 @@ class Mdexpression extends Controller {
         $fullExpression = str_replace('sendToMetaFromDetail(', 'bpSendToMetaFromDetail(' . $mainSelector . ', checkElement, ', $fullExpression);
         $fullExpression = str_replace('docToPdfByDotNet(', 'bpDocToPdfByDotNet(' . $mainSelector . ', checkElement, ', $fullExpression);
         $fullExpression = str_replace('runKpiIndicatorDataMart(', 'bpRunKpiIndicatorDataMart(' . $mainSelector . ', checkElement, ', $fullExpression);
+        $fullExpression = str_replace('execIndicator(', 'bpExecIndicator(' . $mainSelector . ', checkElement, ', $fullExpression);
         $fullExpression = str_replace('findText(', 'bpFindText(', $fullExpression);
         $fullExpression = str_replace('callKpiIndicatorForm(', 'bpCallKpiIndicatorForm(' . $mainSelector . ', checkElement, ', $fullExpression);
         $fullExpression = str_replace('reportTemplatePreview(', 'bpReportTemplatePreview(' . $mainSelector . ', ', $fullExpression);

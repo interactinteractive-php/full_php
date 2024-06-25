@@ -2234,7 +2234,7 @@ class Mdwebservice extends Controller {
                     'data-isclear' => $param['IS_REFRESH'],
                     'value' => $fileName
                 ));                
-                return '<button type="button" onClick="bpWebCamera(this)" class="btn blue btn-sm" data-path="'.$paramRealPath.'" title="Вэб камер"><i class="fa fa-camera"></i></button>' . $webCamPhoto . $hiddenForm;
+                return '<button type="button" onClick="bpWebCamera(this)" class="btn blue btn-sm" title="Вэб камер"><i class="fa fa-camera"></i></button>' . $webCamPhoto . $hiddenForm;
 
             } elseif ($typeCode == 'qrcode') {
                 
@@ -15167,17 +15167,16 @@ class Mdwebservice extends Controller {
                 parse_str($requestParams, $criteriaParams);
 
                 foreach ($criteriaParams as $k => $v) {
-                    $criteria[$k][] = array(
+                    $criteria[$k][] = [
                         'operator' => '=',
                         'operand' => Input::param($v)
-                    );
+                    ];
                 }
             }
             $result = $this->model->getRowIndexDataViewByCriteriaModel($processId, $paramRealPath, $lookupId, $idField, $codeField, $nameField, $rowIndex, $criteria);
 
-            echo json_encode($result);
+            convJson($result);
         }
-        exit;
     }
     
     public function comboSingleDataSetCtrl() {

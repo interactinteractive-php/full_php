@@ -387,13 +387,13 @@ class Mdpki extends Controller {
         try {
             
             $signatureImage = '';
-
-            if (issetParam($selectedRow['signatureimage']) !== '') {
-                $isBase64 = preg_match('/^[a-zA-Z0-9\/\r\n+]*={0,2}$/', $selectedRow['signatureimage']);
+            
+            if (issetParam($postData['signatureimage']) !== '') {
+                $isBase64 = preg_match('/^[a-zA-Z0-9\/\r\n+]*={0,2}$/', $postData['signatureimage']);
                 if (!$isBase64) {
-                    $imgfilePath = $selectedRow['signatureimage'];
+                    $imgfilePath = $postData['signatureimage'];
                 } else {
-                    $signatureImage = $selectedRow['signatureimage'];
+                    $signatureImage = $postData['signatureimage'];
                     $imgfilePath = Mdwebservice::bpUploadGetPath('');
                     $imgfilePath .= getUID() . '.png';
                     @file_put_contents($imgfilePath, base64_decode($signatureImage));
@@ -402,7 +402,7 @@ class Mdpki extends Controller {
             if ($imgfilePath === '') {
                 $imgfilePath = Config::getFromCache('stamp_filepath');
             }
-
+            
             if (!file_exists($imgfilePath)) {
                 throw new Exception(Lang::line('STAMP_IMG_NOT_FOUND'));
             } 
@@ -429,31 +429,50 @@ class Mdpki extends Controller {
                 $imgfilePath = $newFilePath;
             }
             
+            if (Input::post('signaturetext')) {
+                $tmp = $imgfilePath;
+                $imgfilePath = Mdwebservice::bpUploadGetPath('');
+                $imgfilePath .= getUID() . '.png';
+                self::imageAddText($tmp, $imgfilePath, Input::post('signaturetext'));
+            }
+
+
             $pdfFilePath = $postData['filePath'];
             if (strpos($pdfFilePath, UPLOADPATH) === 0) { 
                 $pdfFilePath = $_SERVER['DOCUMENT_ROOT'] . '/' . $postData['filePath'];
             }
+            if (Input::post('pageNum') !== 'all') {
 
-            $param = array(
-                'pdfFilePath' => $pdfFilePath,
-                'stampImagePath' =>   $_SERVER['DOCUMENT_ROOT'] . '/' . $imgfilePath,
-                'pageNumber' => Input::post('pageNum'),
-                'locationX' => Input::post('x'),
-                'locationY' => Input::post('y'),
-            );
+                $param = array(
+                    'pdfFilePath' => $pdfFilePath,
+                    'stampImagePath' =>   $_SERVER['DOCUMENT_ROOT'] . '/' . $imgfilePath,
+                    'pageNumber' => Input::post('pageNum'),
+                    'locationX' => Input::post('x'),
+                    'locationY' => Input::post('y'),
+                );
+                $result = $this->ws->runResponse(GF_SERVICE_ADDRESS, 'PDF_WATERMARK', $param);
 
-            $result = $this->ws->runResponse(GF_SERVICE_ADDRESS, 'PDF_WATERMARK', $param);
+            }else {
+                $param = array(
+                    'pdfFilePath' => $pdfFilePath,
+                    'stampImageB64' =>   base64_encode(file_get_contents($_SERVER['DOCUMENT_ROOT'] . '/' . $imgfilePath)),
+                    'position' => Input::post('signatureposition', 'b_right'),
+                    'locationX' => Input::post('x'),
+                    'locationY' => Input::post('y'),
+                );
+                $result = $this->ws->runResponse(GF_SERVICE_ADDRESS, 'NTR_CONSUL_STAMP_BP', $param);
+            }
 
             if (issetParam($result['result']['stampedpdfb64'])) {
                 $pdf_b64 = base64_decode($result['result']['stampedpdfb64']);
 
-                if (issetParam($selectedRow['contentid']) !== '') { 
+                if (issetParam($postData['contentid']) !== '') { 
                     
                     $filePath = Mdwebservice::bpUploadGetPath('');
                     $filePath .= getUID() . '.pdf';
                     $fileWrite = @file_put_contents($filePath, $pdf_b64);
                     if ($fileWrite) {
-                        $this->model->checkIsSigned($selectedRow['contentid'], $filePath);
+                        $this->model->checkIsSigned($postData['contentid'], $filePath);
                     } else {
                         throw new Exception(Lang::line('CANT_WRITE_STAMPED_FILE'));
                     }
@@ -467,12 +486,12 @@ class Mdpki extends Controller {
                     'message' => Lang::line('msg_stamped_success')
                 );
             } elseif (issetParam($result['result']['stampedpdfpath'])) {
-                if (issetParam($selectedRow['contentid']) === '') { 
+                if (issetParam($postData['contentid']) === '') { 
                     throw new Exception(Lang::line('NOT_FOUND_CONTENT_ID')); 
                 } 
                 else {
                     $filePath = str_replace($_SERVER['DOCUMENT_ROOT'] . '/', '', $result['result']['stampedpdfpath']);
-                    $this->model->checkIsSigned($selectedRow['contentid'], $filePath);
+                    $this->model->checkIsSigned($postData['contentid'], $filePath);
                     $response = array(
                         'filePath'    => $filePath, 
                         'status'    => 'success', 
@@ -490,10 +509,66 @@ class Mdpki extends Controller {
             $response['status'] = 'error';
             $response['message'] = $ex->getMessage();
 
+        }  catch (Exception $ex) {
+
+            (Array) $result = array();
+
+            $response['status'] = 'error';
+            $response['message'] = $ex->getMessage();
+
         }
 
         convJson($response);
         exit;
 
+    }
+    
+    public function imageAddText ($src = 'storage/file_1699845962622998_16227981990065052.png', $dst = 'storage/1719197919423054.png', $text = "2024-06-21 15:00") {
+        try {
+            $info = getimagesize($src);
+            $extension = image_type_to_extension($info[2]);
+            
+            if ($extension === '.png') {
+                $jpg_image = imagecreatefrompng($src);
+            } else {
+                $jpg_image = imagecreatefromjpeg($src);
+            }
+
+            $orig_width = imagesx($jpg_image);
+            $orig_height = imagesy($jpg_image);
+
+            // Allocate A Color For The background
+            $bcolor=imagecolorallocate($jpg_image, 255, 255, 255);
+
+            //Create background
+            imagefilledrectangle($jpg_image,  0, $orig_height+100, $orig_width, $orig_height, $bcolor);
+            $orig_width = imagesx($jpg_image);
+            $orig_height = imagesy($jpg_image);
+            
+            // Create a canvas containing both the image and text
+            $canvas = imagecreatetruecolor($orig_width, $orig_height + 20); // Extra height for text
+            $bcolor = imagecolorallocate($canvas, 255, 255, 255); // Background color
+            imagefilledrectangle($canvas, 0, 0, $orig_width, $orig_height + 20, $bcolor); // Add background color
+            
+            // Save image to the new canvas
+            imagecopyresampled($canvas, $jpg_image, 0, 0, 0, 0, $orig_width, $orig_height, $orig_width, $orig_height);
+            
+            // Add text below the image
+
+            $font_path = $_SERVER['DOCUMENT_ROOT'] . "/assets/custom/css/font/Arial.ttf"; // Change to your own font file
+            $color = imagecolorallocate($canvas, 0, 0, 0); // Text color
+            imagettftext($canvas, 7, 0, 0, $orig_height + 10, $color, $font_path, $text);
+            
+            // Output the final image
+            /* header('Content-type: image/png'); */
+            imagejpeg($canvas, $dst);
+
+            
+            // Clean up memory
+            imagedestroy($jpg_image);
+            imagedestroy($canvas);   
+        }   catch (Exception $ex) {
+
+        }
     }
 }

@@ -5163,6 +5163,7 @@ class Mddoc extends Controller {
 
                     break;
                 case '2':
+                    
                     $configParam = array(
                         'processCode' => Input::post('methodCode', 'NTR_TRUST_BOOK_DV_001'),
                         'typeCode' => 'get_property_list',
@@ -5223,6 +5224,7 @@ class Mddoc extends Controller {
 
                     break;
                 case '3':
+
                     $configParam = array(
                         'processCode' => Input::post('methodCode', 'NTR_TRUST_BOOK_DV_001'),
                         'typeCode' => 'property_info',

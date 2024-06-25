@@ -3200,6 +3200,7 @@ class Mdform extends Controller {
         }
         
         $this->view->renderChart = '';
+        $this->view->indicatorId = Input::post('mIndicatorId') ? Input::post('mIndicatorId') : $this->view->indicatorId;
         
         switch ($this->view->row['KPI_TYPE_ID']) {
             case '1130':
@@ -3290,7 +3291,7 @@ class Mdform extends Controller {
         }        
     }
 
-    public function bpmnRender($isReturnArray, $indicatorId, $indicatorName) {
+    public function bpmnRender($isReturnArray, $indicatorId, $indicatorName = '', $isHtml = 0) {
         $this->view->generateBpmnScript = '';
         $this->view->savedValue = [];
 
@@ -3306,6 +3307,11 @@ class Mdform extends Controller {
         $this->view->indicatorId = $indicatorId;
         $this->view->indicatorName = $indicatorName;
         $this->view->bpPath = "";
+        
+        if ($isHtml) {
+            echo $this->view->renderPrint('indexindicator2', 'middleware/views/bpmn/');
+            exit;
+        }
 
         if ($isReturnArray) {
             return array('html' => $this->view->renderPrint('indexindicator2', 'middleware/views/bpmn/'));
@@ -5231,10 +5237,9 @@ class Mdform extends Controller {
 
         if ($row) {
             $row['attributes'] = $attributes;
-            echo json_encode($row, JSON_UNESCAPED_UNICODE);
+            convJson($row);
         } else {
-            $response = array('META_VALUE_ID' => '', 'META_VALUE_CODE' => '', 'META_VALUE_NAME' => '');
-            echo json_encode($response);
+            convJson(['META_VALUE_ID' => '', 'META_VALUE_CODE' => '', 'META_VALUE_NAME' => '']);
         }
     }
 
@@ -6443,6 +6448,10 @@ class Mdform extends Controller {
                         $_POST['transferSelectedRow'][strtoupper($mapRow['TRG_INDICATOR_PATH'])] = issetParam($selectedRow[strtolower($mapRow['SRC_INDICATOR_PATH'])]);
                     }
                 }
+            } elseif ($srcRecordId) {
+                $_POST['param']['dynamicRecordId'] = $srcRecordId; 
+                $_POST['param']['idField'] = 'IDFIELD';
+                $_POST['param']['actionType'] = 'update';                
             }
         }
         
@@ -6513,6 +6522,11 @@ class Mdform extends Controller {
                         $_POST['param']['mainIndicatorId'] = $this->view->indicatorId;
                         $_POST['fillSelectedRow'] = $this->view->selectedRow;
                     }
+                    
+                    if ($wfmStatusParams = Input::post('wfmStatusParams')) {
+                        $_POST['param']['actionType'] = 'read';
+                        Mdform::$headerHiddenControl[] = Form::textArea(['name' => 'wfmStatusParams', 'class' => 'd-none', 'value' => $wfmStatusParams]);
+                    }
                 } 
 
                 $indicatorContent = self::kpiIndicatorTemplateRender(); 
@@ -6562,6 +6576,72 @@ class Mdform extends Controller {
         ];
         
         return $response;
+    }
+    
+    public function checkList4($indicatorId) {
+        
+        $this->load->model('mdform', 'middleware/models/');
+        $this->view->uniqId = getUID();
+        $this->view->relationList = $this->model->checkList4SidebarDataModel($indicatorId);
+        $mvInfo = $this->model->getIndicatorModel($indicatorId);
+        $this->view->title = $mvInfo['NAME'];
+        $this->view->indicatorId = $indicatorId;
+        
+        $response = [
+            'status' => 'success', 
+            'title' => '', 
+            'html' => $this->view->renderPrint('kpi/indicator/widget/checklist/mv_checklist_04', self::$viewPath)
+        ];
+        
+        return $response;
+    }
+    
+    public function checkList5($indicatorId) {
+        
+        $this->load->model('mdform', 'middleware/models/');
+        $this->view->uniqId = getUID();
+        $this->view->relationList = $this->model->checkList4SidebarDataModel($indicatorId);
+        $mvInfo = $this->model->getIndicatorModel($indicatorId);
+        $this->view->title = $mvInfo['NAME'];
+        $this->view->indicatorId = $indicatorId;
+        
+        $response = [
+            'status' => 'success', 
+            'title' => '', 
+            'html' => $this->view->renderPrint('kpi/indicator/widget/checklist/mv_checklist_05', self::$viewPath)
+        ];
+        
+        return $response;
+    }
+    
+    public function checkList4RelationTab($indicatorId) {
+        
+        $this->load->model('mdform', 'middleware/models/');
+        $this->view->uniqId = getUID();
+        $rowData = Input::post('rowData');
+        
+        if ($rowData['KPI_TYPE_ID'] == 1070) {
+            $indicatorId = 1586250688830;
+        }
+        
+        $this->view->relationList = $this->model->getChildRenderStructureModel($indicatorId, [Mdform::$semanticTypes['normal'], Mdform::$semanticTypes['config']]);
+        $this->view->indicatorId = $indicatorId;
+        
+        if (!empty($this->view->relationList)) {
+            $response = [
+                'status' => 'success', 
+                'title' => '', 
+                'html' => $this->view->renderPrint('kpi/indicator/widget/checklist/mv_checklist_04_relation_tab', self::$viewPath)
+            ];
+        } else {
+            $response = [
+                'status' => 'success', 
+                'title' => '', 
+                'html' => ''
+            ];            
+        }
+        
+        convJson($response);
     }
     
     public function developerWorkspaceSidebar($indicatorId) {
@@ -6860,6 +6940,14 @@ class Mdform extends Controller {
             $this->load->model('appmenu');
         }
         
+        if (Input::postCheck('appMenuCard')) { 
+            convJson(self::checkList4($indicatorId));
+            exit;
+        } elseif ($indicatorId == '17141572624232') { 
+            convJson(self::checkList5($indicatorId));
+            exit;
+        }        
+        
         $licenseRow = $this->model->getMetaVerseLicenseListModel($indicatorId);
         
         if (isset($licenseRow['isActive']) && $licenseRow['isActive'] == '0') {
@@ -7045,6 +7133,30 @@ class Mdform extends Controller {
         convJson($response);
     }
     
+    public function relationParamMapping() {  
+        $this->load->model('mdform', 'middleware/models/');
+        $dv = Input::post('dvId');
+        $rowData = Arr::changeKeyLower(Input::post('rowData'));
+        $response = [];
+        $bp = [];
+        
+        $relationComponentsConfigData = $this->model->getRelationParamMappingConfigModel(Input::post('mapId'));
+
+        if ($relationComponentsConfigData) {
+            foreach ($relationComponentsConfigData as $rk => $rrow) {
+                if ($dv == $rrow['LOOKUP_META_DATA_ID']) {
+                    $response[$rrow['TRG_META_DATA_PATH']] = issetParam($rowData[Str::lower($rrow['SRC_INDICATOR_PATH'])]);
+                }
+                $bp[$rrow['TRG_META_DATA_PATH']] = issetParam($rowData[Str::lower($rrow['SRC_INDICATOR_PATH'])]);
+                //$bp .= $rrow['TRG_META_DATA_PATH'] . '=' . issetParam($rowData[Str::lower($rrow['SRC_INDICATOR_PATH'])]) . '&';
+            }
+        }    
+        convJson([
+            'dv' => json_encode($response, JSON_UNESCAPED_UNICODE),
+            'bp' => json_encode($bp, JSON_UNESCAPED_UNICODE)
+        ]);
+    }
+    
     public function validateRuleExpression() {
         
         loadPhpQuery();
@@ -7118,6 +7230,55 @@ class Mdform extends Controller {
         $renderResult = (new Mdwidget())->atomicBuild('17157492525033', 'render', $getToPosition, []);
         
         return $renderResult;
+    }
+    
+    public function getLookupRowIndex() {
+        
+        if (Input::isEmpty('dataRowData') === false) {
+
+            $dataRowData = Input::post('dataRowData');
+            $lookupId = $dataRowData['META_DATA_ID'];
+            $processId = $dataRowData['PROCESS_META_DATA_ID'];
+                    
+        } else {
+            $q = Input::post('q');
+            $type = Input::post('type');
+            $lookupId = Input::post('lookupId');            
+            $processId = Input::post('processId');
+        }
+        
+        $attributes = $this->model->getKpiComboDataModel(['FILTER_INDICATOR_ID' => $lookupId, 'TRG_TABLE_NAME' => null, 'isData' => false]);
+        $row = ['META_VALUE_ID' => ''];
+        
+        if ($idField = issetParam($attributes['id'])) {
+            
+            $paramRealPath = Input::post('paramRealPath');
+            $rowIndex = Input::post('rowIndex');
+        
+            unset($_POST);
+        
+            $_POST['indicatorId'] = $lookupId;
+            $_POST['page']        = 1;
+            $_POST['rows']        = 1;
+
+            $result = $this->model->indicatorDataGridModel();
+            
+            if (isset($result['rows'][0])) {
+                
+                $codeField = $attributes['code'];
+                $nameField = $attributes['name'];
+                $rowsData = $result['rows'][0];
+                
+                $row = [
+                    'META_VALUE_ID' => ($idField ? $rowsData[$idField] : (isset($rowsData['ID']) ? $rowsData['ID'] : '')),
+                    'META_VALUE_CODE' => (isset($rowsData[$codeField]) ? $rowsData[$codeField] : ''),
+                    'META_VALUE_NAME' => (isset($rowsData[$nameField]) ? $rowsData[$nameField] : ''), 
+                    'rowData' => $rowsData
+                ];
+            }
+        }
+        
+        convJson($row);
     }
     
 }

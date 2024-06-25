@@ -1075,6 +1075,11 @@ $(function() {
                                 } else {                                         
 
                                     viewProcess_<?php echo $this->uniqId; ?>.empty().append(html.join('')).promise().done(function() {
+                                        
+                                        if (viewMode_<?php echo $this->uniqId; ?> == 'view') {
+                                            viewProcess_<?php echo $this->uniqId; ?>.find('[data-actiontype="update"], [data-actiontype="update"], [data-actiontype="delete"]').remove();
+                                        }
+                                        
                                         if (postData.hasOwnProperty('isComment') && postData.isComment == '1') {
 
                                             viewProcessComment_<?php echo $this->uniqId; ?>.empty().append('<div style="font-weight: bold;padding: 10px 0 7px 0;">Сэтгэгдэл</div>');
@@ -1136,8 +1141,16 @@ function saveKpiIndicatorHeaderForm(elem) {
     var $this = $(elem);
     var $form = $this.closest('form');
     var uniqId = $form.find('[data-bp-uniq-id]').attr('data-bp-uniq-id');
+    var actionType = $form.find('input[name="kpiActionType"]').val();
+    var isFormValidate = false;
+    
+    if (actionType == 'read') {
+        isFormValidate = true;
+    } else {
+        isFormValidate = (bpFormValidate($form) && window['kpiIndicatorBeforeSave_' + uniqId]($this));
+    }
 
-    if (bpFormValidate($form) && window['kpiIndicatorBeforeSave_' + uniqId]($this)) {
+    if (isFormValidate) {
         
         var $parent = $this.closest('.mv-checklist-render-parent');
         var listIndicatorId = $parent.find('input[data-path="listIndicatorId"]').val();
@@ -1169,35 +1182,43 @@ function saveKpiIndicatorHeaderForm(elem) {
 
                 if (data.status == 'success') {
                     
-                    var idField = data.hasOwnProperty('idField') ? data.idField : 'ID';
-                    
-                    $form.find('input[name="mvParam['+idField+']"]').val(data.rowId);
-                    $form.find('input[name="sf[ID]"]').val(data.rowId);
-                    
-                    var $headerParams = $parent.find('input[data-path="headerParams"]');
-                    
-                    if ($headerParams.length) {
-                        var dataResult = data.result;
+                    if (actionType != 'read') {
                         
-                        $parent.find('input[data-path="headerRecordId"]').val(data.rowId);
-                        
-                        if (!dataResult.hasOwnProperty(idField)) {
-                            dataResult[idField] = data.rowId;
+                        var idField = data.hasOwnProperty('idField') ? data.idField : 'ID';
+                    
+                        $form.find('input[name="mvParam['+idField+']"]').val(data.rowId);
+                        $form.find('input[name="sf[ID]"]').val(data.rowId);
+
+                        var $headerParams = $parent.find('input[data-path="headerParams"]');
+
+                        if ($headerParams.length && data.hasOwnProperty('result')) {
+                            var dataResult = data.result;
+
+                            $parent.find('input[data-path="headerRecordId"]').val(data.rowId);
+
+                            if (!dataResult.hasOwnProperty(idField)) {
+                                dataResult[idField] = data.rowId;
+                            }
+
+                            $headerParams.val(htmlentities(JSON.stringify(dataResult), 'ENT_QUOTES', 'UTF-8'));
+
+                            if (dataResult.hasOwnProperty('endToEndLogHdrId')) {
+                                $parent.find('input[data-path="endToEndLogHdrId"]').val(dataResult.endToEndLogHdrId);
+                            }
                         }
-                        
-                        $headerParams.val(htmlentities(JSON.stringify(dataResult), 'ENT_QUOTES', 'UTF-8'));
-                        
-                        if (dataResult.hasOwnProperty('endToEndLogHdrId')) {
-                            $parent.find('input[data-path="endToEndLogHdrId"]').val(dataResult.endToEndLogHdrId);
+
+                        $parent.find('.mv-checklist-menu').find('.nav-link.disabled').removeClass('disabled');                    
+
+                        window['kpiIndicatorAfterSave_' + uniqId]($this, data.status, data);
+
+                        if ($parent.find('.mv-checklist-criteria').length) {
+                            runCheckListRelationCriteria($parent, data.rowId, strIndicatorId_<?php echo $this->uniqId; ?>);
                         }
-                    }
-                    
-                    $parent.find('.mv-checklist-menu').find('.nav-link.disabled').removeClass('disabled');                    
-                    
-                    window['kpiIndicatorAfterSave_' + uniqId]($this, data.status, data);
-                    
-                    if ($parent.find('.mv-checklist-criteria').length) {
-                        runCheckListRelationCriteria($parent, data.rowId, strIndicatorId_<?php echo $this->uniqId; ?>);
+                    } else {
+                        var $wfmStatusParams = $form.find('textarea[name="wfmStatusParams"]');
+                        if ($wfmStatusParams.length && $wfmStatusParams.val() != '') {
+                            $wfmStatusParams.closest('.ui-dialog-content').dialog('close');
+                        }
                     }
                     
                     dataViewReload(listIndicatorId);

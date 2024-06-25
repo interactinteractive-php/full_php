@@ -331,10 +331,12 @@ $(function() {
     
     if ($checkListParent.length) {
         var $checkListActive = $checkListParent.find('ul.nav-sidebar a.nav-link.active[data-json]');
-        var checkListRowJson = JSON.parse(html_entity_decode($checkListActive.attr('data-json'), 'ENT_QUOTES'));
-        
-        queryParams.mapSrcMapId = checkListRowJson.mapId;
-        queryParams.mapSelectedRow = $checkListParent.find('input[data-path="headerParams"]').val();
+        if ($checkListActive.attr('data-json')) {
+            var checkListRowJson = JSON.parse(html_entity_decode($checkListActive.attr('data-json'), 'ENT_QUOTES'));
+
+            queryParams.mapSrcMapId = checkListRowJson.mapId;
+            queryParams.mapSelectedRow = $checkListParent.find('input[data-path="headerParams"]').val();
+        }
     }
     
     var $workspaceParent = objectdatagrid_<?php echo $this->indicatorId; ?>.closest('div.ws-area');

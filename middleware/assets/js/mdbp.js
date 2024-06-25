@@ -6326,7 +6326,6 @@ function renderConnectionOnTabMobi(elem, paramData) {
 }
 function bpWebCamera (elem) {
     var $this = $(elem);
-    
     var dialogName = '#dialog-bp-photo-webcam';
     if (!$(dialogName).length) {
         $('<div id="' + dialogName.replace('#', '') + '"></div>').appendTo('body');
@@ -6338,9 +6337,7 @@ function bpWebCamera (elem) {
         data: {},
         dataType: 'json',
         beforeSend: function(){
-            Core.blockUI({
-                animate: true
-            });
+            Core.blockUI({animate: true});
         },
         success: function(data) {
             $(dialogName).empty().append(data.html);
@@ -6361,7 +6358,7 @@ function bpWebCamera (elem) {
                         var base64img = $('form#bpWebcam-form').find('input[name="base64Photo"]').val();
                         var $thisParent = $this.parent();
                         
-                        if($thisParent.find('a').length) {
+                        if ($thisParent.find('a').length) {
                             $thisParent.find('a').remove();
                         }
                         $thisParent.append('<a href="data:image/png;base64,'+base64img+'" class="fancybox-button main ml5" title="Зураг үзэх" data-rel="fancybox-button"><img src="data:image/png;base64,'+base64img+'" width="32" style="1px solid #6e6e6e"></a>');

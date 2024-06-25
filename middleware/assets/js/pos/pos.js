@@ -10980,13 +10980,7 @@ function posTerminalDataViewList() {
       });
     },
     success: function (dataHtml) {
-      $dialog
-        .empty()
-        .append(
-          '<div class="row" id="object-value-list-1568715373855272">' +
-          dataHtml +
-          "</div>"
-        );
+      $dialog.empty().append('<div class="row" id="object-value-list-1568715373855272">' + dataHtml + '</div>');
       $dialog
         .dialog({
           cache: false,

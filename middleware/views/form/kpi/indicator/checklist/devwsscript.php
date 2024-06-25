@@ -19,7 +19,7 @@ $(function() {
         if (devAppType == '1000') {
             _processPostParam += '&isMobile=1';
         }
-        callWebServiceByMeta('17089191176619', true, '', false, {callerType: 'developer_workspace', isMenu: false}, undefined, undefined, undefined, function() { 
+        callWebServiceByMeta('17089191176619', true, '', false, {callerType: 'developer_workspace', isMenu: false, positionTop: 0}, undefined, undefined, undefined, function() { 
             _devNavigationSidebarReload();
         });
     });
@@ -193,6 +193,8 @@ $(function() {
                     /*if (kpiTypeId != '2020') {
                         $devRightSidebar.show();
                     }*/
+                } else {
+                    Core.unblockUI();
                 }
             }
         });                    

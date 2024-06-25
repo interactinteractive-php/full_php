@@ -9544,8 +9544,17 @@ function metaVerseCommandPromptIframe(elem) {
                     return;
                 }
                 var $dialog = $('#' + $dialogName), html = [];
-                
-                html.push('<iframe style="width: 100%; height: '+($(window).height() - 150)+'px; border: 0" src="'+data.url+'"></iframe>');
+                var width = 1000;
+                var minHeight = 500;
+                var title = 'MetaVerse Command Prompt';
+                if ($(elem).data('url')) {
+                    width = 1200;
+                    minHeight = 700;
+                    title = $(elem).data('original-title');
+                    html.push('<iframe style="width: 100%; height: '+($(window).height() - 150)+'px; border: 0" src="'+ $(elem).data('url')+'"></iframe>');
+                } else {
+                    html.push('<iframe style="width: 100%; height: '+($(window).height() - 150)+'px; border: 0" src="'+data.url+'"></iframe>');
+                }
 
                 $dialog.empty().append(html.join(''));
                 $dialog.dialog({
@@ -9554,10 +9563,10 @@ function metaVerseCommandPromptIframe(elem) {
                     resizable: true,
                     bgiframe: true,
                     autoOpen: false,
-                    title: 'MetaVerse Command Prompt', 
-                    width: 1000,
+                    title: title, 
+                    width: width,
                     height: 'auto',
-                    minHeight: 500,
+                    minHeight: minHeight,
                     modal: true,
                     position: {my: 'top', at: 'top+0'},
                     resize: function() {

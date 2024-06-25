@@ -3,9 +3,11 @@ $renderType = $this->methodRow['RENDER_THEME'];
 ?>
 <div class="kpi-form-paper-portrait <?php echo $renderType ?>">
     <div class="kpi-form-paper-portrait-child">    
-        <?php $headerTitleCss = ''; 
-            if ($renderType == 'paper_main_window') { 
-                $headerTitleCss = 'position: fixed;
+        <?php 
+        $headerTitleCss = ''; 
+        if ($renderType == 'paper_main_window') { 
+            $headerTitleCss = '
+                position: fixed;
                 top: 12px;
                 z-index: 99;
                 text-align: center;
@@ -13,7 +15,7 @@ $renderType = $this->methodRow['RENDER_THEME'];
                 text-transform: uppercase;
                 font-size: 16px;
                 font-weight: 600;'; 
-            } 
+        } 
         ?>             
         <div class="mb-1 d-flex justify-content-between <?php echo $renderType == 'paper_main_window' ? 'hidden' : '' ?>">
             <?php                 

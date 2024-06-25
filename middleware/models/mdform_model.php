@@ -8148,7 +8148,7 @@ class Mdform_Model extends Model {
             return $response;
             
         } catch (Exception $ex) {
-            return array('id' => '', 'code' => '', 'name' => '', 'indicatorName' => '', 'data' => array());
+            return ['id' => '', 'code' => '', 'name' => '', 'indicatorName' => '', 'data' => []];
         }
     }
     
@@ -11112,6 +11112,32 @@ class Mdform_Model extends Model {
                                 $arr[$columnName.'_DESC'] = '';
                             }
                             
+                        } elseif ($showType == 'popup') {
+                            
+                            if ($getParam) {
+
+                                if (is_null($rowIndex)) {
+                                    if ($depth == 0) {
+                                        $comboDesc = issetVar(Mdform::$mvPostParams[$columnNamePath.'_DESCNAME']);
+                                    } elseif (isset(Mdform::$mvPostParams[$columnNamePath.'_DESCNAME'][0]) 
+                                        && is_array(Mdform::$mvPostParams[$columnNamePath.'_DESCNAME']) 
+                                        && array_key_exists(0, Mdform::$mvPostParams[$columnNamePath.'_DESCNAME'])) {
+
+                                        $comboDesc = Input::param(Mdform::$mvPostParams[$columnNamePath.'_DESCNAME'][0]);
+                                    } else {
+                                        $comboDesc = issetVar(Mdform::$mvPostParams[$columnNamePath.'_DESCNAME']);
+                                    }
+                                } else {
+                                    $comboDesc = issetVar(Mdform::$mvPostParams[$columnNamePath.'_DESCNAME'][$rowIndex]);
+                                }
+                                
+                                $arr[$columnName] = $getParam;
+                                $arr[$columnName.'_DESC'] = $comboDesc;
+                            } else {
+                                $arr[$columnName] = '';
+                                $arr[$columnName.'_DESC'] = '';
+                            }
+                            
                         } elseif ($showType == 'file') {
                                 
                             $val = '';
@@ -11713,10 +11739,19 @@ class Mdform_Model extends Model {
         try {
             
             $crudIndicatorId = issetVar($postData['kpiCrudIndicatorId']);
-            $endToEndLog = issetVar($postData['endToEndLog']);
             $kpiMainIndicatorId = issetVar($postData['kpiStructureIndicatorId']) ? $postData['kpiStructureIndicatorId'] : issetVar($postData['kpiMainIndicatorId']);
             
-            $configRow        = self::getKpiIndicatorRowModel($kpiMainIndicatorId);
+            $configRow = self::getKpiIndicatorRowModel($kpiMainIndicatorId);
+            $kpiTblId = issetVar($postData['kpiTblId']);
+            
+            if (Input::postCheck('wfmStatusParams') && $crudIndicatorId) {
+                $methodConfigRow = self::getKpiIndicatorRowModel($crudIndicatorId);
+                if ($methodConfigRow['TYPE_CODE'] == 'read') {
+                    return self::mvChangeWfmStatus($configRow, $kpiTblId);
+                }
+            }
+            
+            $endToEndLog = issetVar($postData['endToEndLog']);
             $sessionUserKeyId = Ue::sessionUserKeyId();
             
             $configRow['isIgnoreStandardFields'] = true;
@@ -11738,7 +11773,6 @@ class Mdform_Model extends Model {
             Mdform::$currentKpiTypeId = ($sourceRecordId ? null : $kpiTypeId);
             Mdform::$mvParamsConfig = self::getKpiIndicatorParamsModel($kpiMainIndicatorId);
             
-            $kpiTblId = issetVar($postData['kpiTblId']);
             $fileData = Input::fileData();
             
             if (isset($fileData['mvFile'])) {
@@ -12376,34 +12410,7 @@ class Mdform_Model extends Model {
                         
                         return $response;
                     }                               
-                }          
-
-                /*if ($kpiTypeId === '16641793815766') {
-                    $getTypeIndicatorId = $this->db->GetOne("SELECT RELATED_INDICATOR_ID FROM KPI_TYPE WHERE ID = ".$this->db->Param(0), array($kpiTypeId));
-
-                    $flowData = Mdform::$mvSaveParams;
-                    $flowData['indicatorinfo_id'] = $kpiMainIndicatorId;              
-                    $microFlowResponce = (new Mdexpression())->executeMicroFlowExpression($getTypeIndicatorId, $flowData);            
-                    if ($microFlowResponce != '_microflow_success') {
-                        $this->db->RollbackTrans();
-                        
-                        if (issetParam($microFlowResponce['status']) === 'microflowConfirmation') {
-                            return $microFlowResponce;
-                        }
-                        
-                        if (isset($microFlowResponce['data']) && issetParam($microFlowResponce['data']['type']) === 'message') {
-                            $messageStr = '<ul style="padding-left: 20px;">';
-                            foreach ($microFlowResponce['data']['result'] as $messRow)
-                                $messageStr .= '<li>'.$messRow['message'].'</li>';
-                            $messageStr .= '</ul>';
-                        }
-                        if (isset($messageStr)) {
-                            $microFlowResponce = $messageStr;
-                        }
-                        $response = array('status' => 'error', 'message' => $microFlowResponce);
-                        return $response;
-                    }                           
-                }*/           
+                }                  
             }
 
             if ($kpiTypeId == '2009') {
@@ -13061,7 +13068,11 @@ class Mdform_Model extends Model {
             $_POST['description'] = '';
 
             $response = $this->model->setRowWfmStatusModel();
+        } else {
+            $response = ['status' => 'error', 'message' => 'Missing status parameters!'];
         }
+        
+        return $response;
     }
     
     public function createUpdateSystemConfigValue() {
@@ -13215,10 +13226,12 @@ class Mdform_Model extends Model {
 
             } else {
                 
+                unset($parameters['ID']);
+                
                 if (DB_DRIVER == 'oci8') {
                     
                     $procedure = $this->db->PrepareSP("BEGIN $procedureName; END;");
-
+                    
                     foreach ($parameters as $paramName => $paramVal) {
                         if (stripos($procedureName, ':'.$paramName) !== false) {
                             $this->db->InParameter($procedure, $paramVal, $paramName);
@@ -16265,33 +16278,33 @@ class Mdform_Model extends Model {
         $result = null;
         
         try {
+            
+            $idPh1 = $this->db->Param(0);
+            $idPh2 = $this->db->Param(1);
 
             $data = $this->db->GetAll("
             SELECT 
                 DISTINCT 
                 TO_CHAR(R.CRITERIA) AS INDICATOR_CRITERIA
             FROM UM_PERMISSION_KEY K
-            INNER JOIN REF_SEGMENTATION R ON K.SEGMENTATION_ID = R.ID
+            INNER JOIN REF_SEGMENTATION R ON K.SEGMENTATION_ID = R.ID 
                 WHERE 
                     (
                         CASE 
-                        WHEN K.USER_ID = :sessionUserId AND :sessionUserId != (SELECT COALESCE((SELECT USER_ID FROM UM_USER_ROLE WHERE USER_ID = :sessionUserId AND ROLE_ID = 1),9) FROM DUAL)
+                        WHEN K.USER_ID = $idPh1 AND $idPh1 != (SELECT COALESCE((SELECT USER_ID FROM UM_USER_ROLE WHERE USER_ID = $idPh1 AND ROLE_ID = 1),9) FROM DUAL)
                         THEN 1
-                        WHEN K.ROLE_ID IN (SELECT ROLE_ID FROM UM_USER_ROLE WHERE USER_ID = :sessionUserId) AND :sessionUserId != (SELECT COALESCE((SELECT USER_ID FROM UM_USER_ROLE WHERE USER_ID = :sessionUserId AND ROLE_ID = 1), 9) FROM DUAL)
+                        WHEN K.ROLE_ID IN (SELECT ROLE_ID FROM UM_USER_ROLE WHERE USER_ID = $idPh1) AND $idPh1 != (SELECT COALESCE((SELECT USER_ID FROM UM_USER_ROLE WHERE USER_ID = $idPh1 AND ROLE_ID = 1), 9) FROM DUAL)
                         THEN 1 
                         WHEN K.USER_ID IS NULL AND K.ROLE_ID IS NULL
                         THEN 1 
-                        WHEN :sessionUserId = (SELECT USER_ID FROM UM_USER_ROLE WHERE USER_ID = :sessionUserId AND ROLE_ID = 1) OR :sessionUserId = 1
+                        WHEN $idPh1 = (SELECT USER_ID FROM UM_USER_ROLE WHERE USER_ID = $idPh1 AND ROLE_ID = 1) OR $idPh1 = 1
                         THEN 0
                         ELSE 0
                         END = 1
                     ) 
-                    AND K.INDICATOR_ID = :filterMainId 
+                    AND K.INDICATOR_ID = $idPh2  
                     AND R.CRITERIA IS NOT NULL", 
-                array(
-                    'filterMainId'  => $indicatorId, 
-                    'sessionUserId' => Ue::sessionUserKeyId() 
-                )
+                [Ue::sessionUserKeyId(), $indicatorId]
             );            
             
             // $data = $this->db->GetAll("
@@ -29924,6 +29937,10 @@ class Mdform_Model extends Model {
                 } else {
                     $where = 'AND T1.SEMANTIC_TYPE_ID = '.$this->db->Param(1);
                     $bindParams[] = $typeId;
+                    
+                    if ($typeId == 58) {
+                        Mdform::$isProductCheckPermission = false;
+                    }
                 }
             }
             
@@ -30824,6 +30841,7 @@ class Mdform_Model extends Model {
         $columnsData = self::getKpiIndicatorColumnsModel($indicatorId, $configRow);
         $fieldConfig = self::getKpiIndicatorIdFieldModel($indicatorId, $columnsData);        
         $result = [];
+        $iconParam = issetParam($_REQUEST['icon']) ? '' : 'far fa-square';
         
         $idField     = $fieldConfig['idField'];
         $nameField   = $fieldConfig['nameField'];
@@ -30837,6 +30855,8 @@ class Mdform_Model extends Model {
             }
             $_POST['treeConfigs'] = 'parent='.$fieldConfig['parentField'].'&id='.$idField.'&name='.$nameField;
         }
+        $_POST['criteria'] = Input::param(issetParam($_REQUEST['criteria']));
+        
         $data = $this->indicatorDataGridModel(); 
         
         if (issetParam($data['status']) == 'success' || $parentId != '#') {
@@ -30857,16 +30877,28 @@ class Mdform_Model extends Model {
 
                 foreach ($treeData as $tree) {
                     
+                    if (issetParam($tree['ID']) == '1591184045140') {
+                        $result[$k]['state'] = ['opened' => true, 'selected' => false];
+                    }
+                    
                     $isChildRecordCount = (issetParam($tree['CHILDRECORDCOUNT']) ? true : false);
                     
                     $result[$k]['id'] = $tree[$idField];                    
                     $result[$k]['rowdata'] = $tree;
                     $result[$k]['children'] = $isChildRecordCount;
-                    $icon = '<div class="mr5"><i class="mv-tree-filter-icon far fa-square"></i></div> ';
+                    $icon = '';
+                    if ($iconParam) {
+                        $icon = '<div class="mr5"><i class="mv-tree-filter-icon '.$iconParam.'"></i></div> ';
+                    }
                     
                     $result[$k]['li_attr'] = array('class' => 'list-group-item-action', 'data-colname' => $colName);
                     if ($isChildRecordCount) {
                         $result[$k]['li_attr'] = array('class' => 'jstree-custom-folder-icon list-group-item-action', 'data-colname' => $colName);
+                    } else {
+                        $icon = '<div class="mr5"><i class="mv-tree-filter-icon far fa-file"></i></div> ';
+                    }
+                    if (issetParam($tree['WFM_STATUS_COLOR'])) {
+                        $icon = '<div class="mr5"><i class="mv-tree-filter-icon '.($tree['IS_DONE'] ? 'fas fa-check-square' : 'far fa-square').'"></i></div> ';
                     }
                     $text = '<span data-value-mode="'.$tree[$idField].'"><div class="d-flex">' . $icon . '<div class="nameField"><span class="p-row-title">'.$tree[$nameField].'</span></div></div></span>';
                     
@@ -31321,5 +31353,40 @@ class Mdform_Model extends Model {
             return [];
         }
     }
+    
+    public function checkList4SidebarDataModel($id) {
+
+        $param = array(
+            'systemMetaGroupId' => '1718769775276438',
+            'showQuery' => 0,
+            'ignorePermission' => 1, 
+            'criteria' => array(
+                'filterid' => array(
+                    array(
+                        'operator' => '=',
+                        'operand' => $id
+                    )
+                )
+            )
+        );       
+
+        $data = $this->ws->runSerializeResponse(self::$gfServiceAddress, Mddatamodel::$getDataViewCommand, $param);
+
+        if (isset($data['result']) && isset($data['result'][0])) {
+            unset($data['result']['aggregatecolumns']);
+            unset($data['result']['paging']);
+            
+            return $data['result'];
+        } else {
+            return null;
+        }
+    }        
+    
+    public function getRelationParamMappingConfigModel($indicatorMapId) {
+        $qry = "SELECT * FROM KPI_INDICATOR_INDICATOR_MAP WHERE SRC_INDICATOR_MAP_ID = " . $this->db->Param(0);
+        $data = $this->db->GetAll($qry, [$indicatorMapId]);
+
+        return $data;
+    }    
     
 }

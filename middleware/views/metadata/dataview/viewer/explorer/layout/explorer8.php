@@ -121,10 +121,12 @@
                   </div>
                   <div class="dv-img-container mt10">
                     <div class="dv-img-container-sub">
-                      <img class="dv-directory-img" src="<?php echo $photoField; ?>" data-default-image="<?php echo $this->defaultImage; ?>" onerror="onDataViewImgError(this);"/>
+                        <div style="width: 100px;height: 100px;border-radius: 50%;margin-left: 16px;background-color:<?php eval($name6); ?>">
+                            <img class="dv-directory-img" src="<?php echo $photoField; ?>" data-default-image="<?php echo $this->defaultImage; ?>" onerror="onDataViewImgError(this);"/>
+                        </div>
                     </div>
                   </div>
-                  <div class="second-title">
+                  <div class="second-title mt20">
                     <h4>
                         <?php eval($name1); ?> 
                     </h4>
@@ -137,9 +139,6 @@
                   </div>
                   <div class="third-title mb5">
                       <?php eval($name5); ?> 
-                  </div>
-                  <div class="third-title mb10">
-                      <?php eval($name6); ?> 
                   </div>
                 </div>	
               </li>
