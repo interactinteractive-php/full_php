@@ -2078,11 +2078,7 @@ class Login_Model extends Model {
                 
                 $mdb->Close();
                 
-                $this->deleteSessionDatabaseConnection();
                 $this->db->CommitTrans();
-                
-                Session::set(SESSION_PREFIX.'isUseMultiDatabase', true);
-                $this->setSessionDatabaseConnection(null, $connectionId);
 
                 $this->load->model('mdlanguage', 'middleware/models/');
                 $this->model->generateLanguageFileModel();

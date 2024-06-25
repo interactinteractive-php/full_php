@@ -52,7 +52,7 @@ class DBUtil extends DBSql {
         
         global $db;
         
-        $row = $db->GetRow("SELECT * FROM MDM_CONNECTIONS WHERE ID = " . $db->Param(0), array($dbId));
+        $row = $db->GetRow("SELECT * FROM MDM_CONNECTIONS WHERE ID = " . $db->Param(0), [$dbId]);
         
         return $row;
     }
@@ -61,7 +61,7 @@ class DBUtil extends DBSql {
         
         global $db;
         
-        $row = $db->GetRow("SELECT * FROM MDM_CONNECTIONS WHERE CUSTOMER_ID = " . $db->Param(0), array($dbId));
+        $row = $db->GetRow("SELECT * FROM MDM_CONNECTIONS WHERE CUSTOMER_ID = " . $db->Param(0), [$dbId]);
         
         return $row;
     }
