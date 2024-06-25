@@ -7872,7 +7872,7 @@ class Mdupgrade_Model extends Model {
                 }
             }
             
-            $data = $this->db->GetAll("SELECT ID, DESCRIPTION FROM META_BUG_FIXING WHERE DESCRIPTION IS NOT NULL $where ORDER BY CREATED_DATE DESC");
+            $data = $this->db->GetAll("SELECT ID, DESCRIPTION FROM META_BUG_FIXING WHERE DESCRIPTION IS NOT NULL $where ORDER BY MODIFIED_DATE DESC, CREATED_DATE DESC");
             
             return ['status' => 'success', 'data' => $data];
         } catch (Exception $ex) {
