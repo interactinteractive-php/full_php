@@ -8078,13 +8078,18 @@ class Mdupgrade_Model extends Model {
         $fileContent = file_get_contents($cachePath);
         $fileContent = Compression::gzinflate($fileContent);
         
+        Config::$configArr = [];
+        Config::$allConfigCodeArr = [];
+        
         $response = self::executeUpgradeScript([$fileContent]);
                                 
         $status  = issetDefaultVal($response['status'], 'success');
         $message = issetDefaultVal($response['message'], 'Амжилттай');
-        //$logs    = issetParam($response['logs']);
 
         $result = ['status' => $status, 'message' => $message];
+        
+        Config::$configArr = [];
+        Config::$allConfigCodeArr = [];
         
         global $db;
         
