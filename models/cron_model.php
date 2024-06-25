@@ -967,6 +967,7 @@ class Cron_Model extends Model {
                 $dbUserPass         = '2sfu{r21>EaTF%kU';
                 
                 $idPh               = $this->db->Param(0);
+                $idTwoPh            = $this->db->Param(1);
                 $emailTemplateRow   = self::getCloudPrepareEmailTemplate($idPh, $ntfNotificationId);
                 
                 if (!$emailTemplateRow) {
@@ -1121,12 +1122,13 @@ class Cron_Model extends Model {
                             $this->db->AutoExecute('SYS_LICENSE_KEY', $licenseKeyData);
                         }
                         
-                        $apiEnvironmentData = self::getApiEnvironment($idPh, $apiEnvironmentId); 
+                        $apiEnvironmentData = self::getApiEnvironment($idPh, $idTwoPh, $apiEnvironmentId, 'request'); 
                         
                         if ($apiEnvironmentData) {
                             
                             foreach ($apiEnvironmentData as $apiEnvironmentRow) {
                                 
+                                $apiDbRun    = true;
                                 $apiUrl      = $apiEnvironmentRow['URL'];
                                 $apiAuthType = $apiEnvironmentRow['AUTHORIZATION_TYPE'];
                                 $apiToken    = $apiEnvironmentRow['TOKEN'];
@@ -1243,8 +1245,45 @@ class Cron_Model extends Model {
         } catch (Exception $ex) {
             
             $this->db->RollbackTrans();
-            
             $exceptionMessage = $ex->getMessage();
+            
+            if (isset($apiDbRun)) {
+                $apiEnvironmentData = self::getApiEnvironment($idPh, $idTwoPh, $apiEnvironmentId, 'rollback'); 
+                
+                if ($apiEnvironmentData) {
+                            
+                    foreach ($apiEnvironmentData as $apiEnvironmentRow) {
+
+                        $apiUrl      = $apiEnvironmentRow['URL'];
+                        $apiAuthType = $apiEnvironmentRow['AUTHORIZATION_TYPE'];
+                        $apiToken    = $apiEnvironmentRow['TOKEN'];
+                        $apiJson     = $apiEnvironmentRow['JSON_CONFIG'];
+                        $apiJson     = str_replace('{{DOMAIN}}', $domainName, $apiJson);
+
+                        $curl = curl_init();
+
+                        curl_setopt_array($curl, [
+                            CURLOPT_URL => $apiUrl,
+                            CURLOPT_RETURNTRANSFER => true,
+                            CURLOPT_MAXREDIRS => 10,
+                            CURLOPT_TIMEOUT => 30,
+                            CURLOPT_FOLLOWLOCATION => true,
+                            CURLOPT_SSL_VERIFYHOST => false,
+                            CURLOPT_SSL_VERIFYPEER => false,
+                            CURLOPT_POST => true,
+                            CURLOPT_CUSTOMREQUEST => 'POST',
+                            CURLOPT_POSTFIELDS => $apiJson,
+                            CURLOPT_HTTPHEADER => [
+                                'Content-Type: application/json;charset=UTF-8',
+                                'Authorization: '.$apiAuthType.' '.$apiToken
+                            ] 
+                        ]);
+
+                        $response = curl_exec($curl);
+                        curl_close($curl);
+                    }
+                }
+            }
             
             if (!$logDtl) {
                 $logDtl[] = [
@@ -1264,7 +1303,7 @@ class Cron_Model extends Model {
         return $result;
     }
     
-    public function getApiEnvironment($idPh, $id) {
+    public function getApiEnvironment($idPh, $idTwoPh, $id, $typeName) {
         
         $data = $this->db->GetAll("
             SELECT 
@@ -1279,7 +1318,8 @@ class Cron_Model extends Model {
                 T0.JSON_CONFIG 
             FROM API_DETAIL_INFO T0 
                 INNER JOIN API_ENVIRONMENT T1 ON T1.ID = T0.API_ENVIRONMENT_ID 
-            WHERE T0.API_ENVIRONMENT_ID = $idPh", [$id]
+            WHERE T0.API_ENVIRONMENT_ID = $idPh 
+                AND LOWER(T0.TYPE_NAME) = $idTwoPh", [$id, strtolower($typeName)]
         );
         
         return $data;
