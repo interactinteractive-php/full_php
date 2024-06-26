@@ -4,16 +4,16 @@ $firstModule = $firstModuleCode = '';
 $colorSet = explode(',', $this->colorSet);
 $parentId = $this->parentId;
 
-if (empty($this->parentId)) {
+if (empty($this->parentId)) {    
     foreach ($this->moduleList as $rowParent) {
 
-        $cards[] = '<h2 class="ml-2 pt10 pb0 mb0" style="display: inline-block;width: 100%;text-transform: uppercase;font-family: Arial;font-size: 16px;">'.$rowParent['name'].'</h2>';
-        $cards[] = '<h2 class="ml-2 pt0 pb10" style="font-weight: normal;display: inline-block;width: 100%;font-size: 12px;color:#67748E">'.($rowParent['description'] ? $rowParent['description'] : 'Тайлбар бичсэн бол энд харуулна').'</h2>';
-
         if (issetParam($rowParent['children'])) {
+            
+            $cards[] = '<h2 class="ml-2 pt10 pb0 mb0" style="display: inline-block;width: 100%;text-transform: uppercase;font-family: Arial;font-size: 16px;">'.$rowParent['name'].'</h2>';
+            $cards[] = '<h2 class="ml-2 pt0 pb10" style="font-weight: normal;display: inline-block;width: 100%;font-size: 12px;color:#67748E">'.($rowParent['description'] ? $rowParent['description'] : 'Тайлбар бичсэн бол энд харуулна').'</h2>';            
 
             foreach ($rowParent['children'] as $row) {
-
+                if (empty($row['relatedindicator'])) continue;
                 aCardHtml($cards, $row, $colorSet, $parentId);
             }
         }
@@ -23,12 +23,14 @@ if (empty($this->parentId)) {
     
     if ($this->moduleList) {
         foreach ($this->moduleList as $row) {
+            if (empty($row['relatedindicator'])) continue;
             aCardHtml($cards, $row, $colorSet, $parentId);
         }
     }
 }
 
-function aCardHtml(&$cards, $row, $colorSet, $parentId) {
+function aCardHtml(&$cards, $row, $colorSet, $parentId) {    
+    
     $colorSetIndex = array_rand($colorSet);
 
     $row['menucolor'] = '';
@@ -139,11 +141,11 @@ function aCardHtml(&$cards, $row, $colorSet, $parentId) {
             $cards[] = '</div>';
             $cards[] = '<div class="vr-menu-title">';
                 $cards[] = '<div class="d-flex justify-content-between vr-menu-row'.(issetParam($row['menucode']) ? ' vr-menu-row-mcode' : '').'" style="height: 38px;">';
-                    $cards[] = '<div class="vr-menu-name align-self-end" data-app-name="true" style="'.$appInfoTextStyle.'">' . $row['name'] . '</div>';
+                    $cards[] = '<div class="vr-menu-name" data-app-name="true" style="'.$appInfoTextStyle.'">' . $row['name'] . '</div>';
                     if (issetParam($row['menucode'])) {
                         $cards[] = '<div class="vr-menu-code mt6" style="'.$appInfoTextStyle.'" data-app-code="true">' . issetParam($row['menucode']) . '</div>';
                     }   
-                $cards[] = '<div class="acard-is-child-div align-self-end"><i class="icon-arrow-right8"></i></div>';
+                $cards[] = '<div class="acard-is-child-div"><i class="icon-arrow-right8"></i></div>';
                 $cards[] = '</div>';
             $cards[] = '</div>';
         $cards[] = '</div>';
