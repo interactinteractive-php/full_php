@@ -413,7 +413,14 @@ class Mdpki extends Controller {
 
             $imgsize_arr = getimagesize($imgfilePath);
             if (150 < $imgsize_arr[0]) {
-                $image = imagecreatefromjpeg($imgfilePath);
+                
+                $info = getimagesize($imgfilePath);
+                if (mimeToExt($info['mime']) === 'png') {
+                    $image = imagecreatefrompng($imgfilePath);
+                } else {
+                    $image = imagecreatefromjpeg($imgfilePath);
+                }
+                
                 $newFilePath = Mdwebservice::bpUploadGetPath('');
                 $newFilePath .= getUID() . '.png';
     
@@ -436,12 +443,19 @@ class Mdpki extends Controller {
                 self::imageAddText($tmp, $imgfilePath, Input::post('signaturetext'));
             }
 
-
             $pdfFilePath = $postData['filePath'];
             if (strpos($pdfFilePath, UPLOADPATH) === 0) { 
                 $pdfFilePath = $_SERVER['DOCUMENT_ROOT'] . '/' . $postData['filePath'];
             }
-            if (Input::post('pageNum') !== 'all') {
+
+            if (issetParam($selectedRow['signature']) !== '') {
+                $param = array(
+                    'pdfFilePath' => $pdfFilePath,
+                    'stampImagePath' =>   $_SERVER['DOCUMENT_ROOT'] . '/' . $imgfilePath,
+                    'keyWord' => $selectedRow['signature'],
+                );
+                $result = $this->ws->runResponse(GF_SERVICE_ADDRESS, 'PDF_STAMP_BY_KEYWORD', $param);
+            } elseif (Input::post('pageNum') !== 'all') {
 
                 $param = array(
                     'pdfFilePath' => $pdfFilePath,
@@ -452,7 +466,7 @@ class Mdpki extends Controller {
                 );
                 $result = $this->ws->runResponse(GF_SERVICE_ADDRESS, 'PDF_WATERMARK', $param);
 
-            }else {
+            } else {
                 $param = array(
                     'pdfFilePath' => $pdfFilePath,
                     'stampImageB64' =>   base64_encode(file_get_contents($_SERVER['DOCUMENT_ROOT'] . '/' . $imgfilePath)),
@@ -509,13 +523,6 @@ class Mdpki extends Controller {
             $response['status'] = 'error';
             $response['message'] = $ex->getMessage();
 
-        }  catch (Exception $ex) {
-
-            (Array) $result = array();
-
-            $response['status'] = 'error';
-            $response['message'] = $ex->getMessage();
-
         }
 
         convJson($response);
@@ -523,12 +530,10 @@ class Mdpki extends Controller {
 
     }
     
-    public function imageAddText ($src = 'storage/file_1699845962622998_16227981990065052.png', $dst = 'storage/1719197919423054.png', $text = "2024-06-21 15:00") {
+    public function imageAddText ($src = 'storage/test.png', $dst = 'storage/1719197919423054.png', $text = "2024-06-21 15:00") {
         try {
             $info = getimagesize($src);
-            $extension = image_type_to_extension($info[2]);
-            
-            if ($extension === '.png') {
+            if (mimeToExt($info['mime']) === 'png') {
                 $jpg_image = imagecreatefrompng($src);
             } else {
                 $jpg_image = imagecreatefromjpeg($src);
@@ -563,7 +568,6 @@ class Mdpki extends Controller {
             /* header('Content-type: image/png'); */
             imagejpeg($canvas, $dst);
 
-            
             // Clean up memory
             imagedestroy($jpg_image);
             imagedestroy($canvas);   

@@ -3599,8 +3599,17 @@ function otpChangeWfmStatusId(elem, bpObj, wfmStatusId, metaDataId, refStructure
                                                 args.splice(1, 1);     
                                                 window['changeWfmStatusId'].apply(elem, args);
                                             } else {
-                                                var funcArguments = [bpObj.mainMetaDataId, bpObj.processMetaDataId, bpObj.metaTypeId, bpObj.whereFrom, elem, bpObj.params, bpObj.dataGrid, bpObj.wfmStatusParams, bpObj.drillDownType];
-                                                window['privateTransferProcessAction'].apply(elem, funcArguments);
+                                                
+                                                var rows = getDataViewSelectedRows(bpObj.mainMetaDataId);  
+                                                var row = rows[0];
+
+                                                if (row && row.hasOwnProperty('signatureimage')) {
+                                                    var funcArguments = [bpObj.mainMetaDataId, bpObj.processMetaDataId, bpObj.metaTypeId, bpObj.whereFrom, elem, bpObj.params, bpObj.dataGrid, bpObj.wfmStatusParams, bpObj.drillDownType];
+                                                    bpWatermarkByPdf(row, function () { window['privateTransferProcessAction'].apply(elem, funcArguments) });
+                                                } else {
+                                                    var funcArguments = [bpObj.mainMetaDataId, bpObj.processMetaDataId, bpObj.metaTypeId, bpObj.whereFrom, elem, bpObj.params, bpObj.dataGrid, bpObj.wfmStatusParams, bpObj.drillDownType];
+                                                    window['privateTransferProcessAction'].apply(elem, funcArguments);
+                                                }
                                             }
                                             
                                         } else {
@@ -4596,14 +4605,15 @@ function bpWatermarkByPdf (selectedRow, callback) {
     var signaturePosition = typeof selectedRow.signatureposition !== 'undefined' && selectedRow.signatureposition ? selectedRow.signatureposition : '';
     var signaturetext = typeof selectedRow.signaturetext !== 'undefined' && selectedRow.signaturetext ? selectedRow.signaturetext : '';
     var pageStyle = typeof selectedRow.pagestyle !== 'undefined' && selectedRow.pagestyle ? selectedRow.pagestyle : '';
+    var signature = typeof selectedRow.signature !== 'undefined' && selectedRow.signature ? selectedRow.signature : '';
 
     var $windowHeight =  720;
     var $windowWidth =  491;
     
     switch (pageStyle) {
-        case 'landspace':
-            $windowWidth =  720;
-            $windowHeight =  491;
+        case 'landscape':
+            $windowWidth =  715;
+            $windowHeight =  651;
             break;
         case 'portrait':
                         
@@ -4611,10 +4621,10 @@ function bpWatermarkByPdf (selectedRow, callback) {
     }
 
     if (selectedRow && selectedRow.hasOwnProperty('signaturetype') && selectedRow['signaturetype'] === 'all') { 
-        setDocumentSign(pdfPath, signatureImage, signaturePosition, 'all', 10, 10, contentId, signaturetext, callback);
+        setDocumentSign(pdfPath, signatureImage, signaturePosition, 'all', 10, 10, contentId, signaturetext, selectedRow, callback);
     } else {
-        if (selectedRow && selectedRow.hasOwnProperty('pagenumber') && selectedRow.hasOwnProperty('signaturex')  && selectedRow.hasOwnProperty('signaturey')) { 
-            setDocumentSign(pdfPath, signatureImage, signaturePosition, selectedRow['pagenumber'], selectedRow['signaturex'], selectedRow['signaturey'], contentId, signaturetext, callback);
+        if (selectedRow && selectedRow.hasOwnProperty('pagenumber') && selectedRow.hasOwnProperty('signaturex')  && selectedRow.hasOwnProperty('signaturey') && selectedRow['signaturex'] && selectedRow['signaturey']) { 
+            setDocumentSign(pdfPath, signatureImage, signaturePosition, selectedRow['pagenumber'], selectedRow['signaturex'], selectedRow['signaturey'], contentId, signaturetext, selectedRow, callback);
         } else {
             var $uniqId = getUniqueId('no');
         
@@ -4632,7 +4642,7 @@ function bpWatermarkByPdf (selectedRow, callback) {
                             minusSize = 100; 
                         }
     
-                        setDocumentSign(pdfPath, signatureImage, signaturePosition, coordinate.pageNum, Math.floor(1.33333333* coordinate.x), Math.floor(1.33333333 * (paperSize-coordinate.y))-minusSize, contentId, signaturetext, callback);
+                        setDocumentSign(pdfPath, signatureImage, signaturePosition, coordinate.pageNum, Math.floor(1.33333333* coordinate.x), Math.floor(1.33333333 * (paperSize-coordinate.y))-minusSize, contentId, signaturetext, selectedRow, callback);
                     } else {
                         new PNotify({
                             title: 'Error',
@@ -4652,7 +4662,7 @@ function bpWatermarkByPdf (selectedRow, callback) {
             };
             
             var filename = pdfPath.replace(/^.*[\\\/]/, '');
-            iframe = '<iframe id="frameStampPos" src="mddoc/canvasStampPos?uniqid=HardSignWindow&pdfPath='+pdfPath+'" height="100%" width="100%" frameBorder="0"></iframe>';
+            iframe = '<iframe id="frameStampPos" src="mddoc/canvasStampPos?uniqid=HardSignWindow&pdfPath='+pdfPath+'&pageStyle='+pageStyle+'" height="100%" width="100%" frameBorder="0"></iframe>';
         
             if (!$("#callIframeCanvasHardSign" + $uniqId).length) {
                 var div = document.createElement("div");
@@ -4687,7 +4697,7 @@ function bpWatermarkByPdf (selectedRow, callback) {
     } 
 }
 
-function setDocumentSign (pdfPath, signatureImage, signaturePosition, pageNum, positionX, positionY, contentId, signaturetext, callback) {
+function setDocumentSign (pdfPath, signatureImage, signaturePosition, pageNum, positionX, positionY, contentId, signaturetext, selectedRow, callback) {
     
     $.ajax({
         type: 'post',
@@ -4701,6 +4711,7 @@ function setDocumentSign (pdfPath, signatureImage, signaturePosition, pageNum, p
             signatureposition: signaturePosition,
             contentid: contentId,
             signaturetext: signaturetext,
+            selectedRow: selectedRow,
         },
         dataType: 'json',
         beforeSend: function() {

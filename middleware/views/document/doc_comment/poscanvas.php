@@ -2,10 +2,10 @@
 <select name="pageSelector" id="pageSelector" style="position: absolute; top: 0; left: 0">
   <option value="1">Page 1</option>
 </select>
-<canvas style="position: absolute; top: 20; left: 0; border:1px solid #000000;" id="mask_canvas" width="918/2" height="1188/2">
+<canvas style="position: absolute; top: 20; left: 0; border:1px solid #000000;" id="mask_canvas" width="<?php echo ($this->pageStyle === 'landscape') ? '1218/2' : '918/2' ?>" height="<?php echo ($this->pageStyle === 'landscape') ? '918/2' : '1218/2' ?>">
   &nbsp;
 </canvas>
-<canvas style="position: absolute; top: 20; left: 0; border:1px solid #000000;" id="test_canvas" width="918/2" height="1188/2">
+<canvas style="position: absolute; top: 20; left: 0; border:1px solid #000000;" id="test_canvas" width="<?php echo ($this->pageStyle === 'landscape') ? '1218/2' : '918/2' ?>" height="<?php echo ($this->pageStyle === 'landscape') ? '918/2' : '1218/2' ?>">
   <!-- <p>Your browser does not support <a href="http://www.w3.org/html/wg/html5/">HTML5</a> &lt;canvas&gt; elements!</p> -->
 </canvas>
 <!-- <button style="position: relative;" onclick="sendSelectedPosition()">Сонгох</button> -->
@@ -19,8 +19,8 @@
         "group": "dual_layer",
         "width": 130,
         "height": 60,
-        "top": 484,
-        "left": 168,
+        "top": 284,
+        "left": 268,
         "img": '',
         "bg": 'rgba(200,0,0, 0.5)'
       },
@@ -46,14 +46,22 @@
   };
   var img;
   var img_cache = []; // For holding the image datas
-  var stage_width = 918 / 2;
-  var stage_height = 1188 / 2;
+  
+  <?php if ($this->pageStyle === 'landscape') { ?>
+  var stage_width = 1288 / 2;
+  var stage_height = 918 / 2;
 
+  <?php } else { ?>
+  var stage_width = 918 / 2;
+  var stage_height = 1288 / 2;
+  <?php } ?>
+  
   var selPosX = 0;
   var selPosY = 0;
 
   // Draws all the doll layers to the stage
   function drawLayers(ctx) {
+    console.log(stage_width, stage_height);
     ctx.clearRect(0, 0, stage_width, stage_height); // Clear the stage
     for (var i in dollParts.layers) {
       layer = dollParts.layers[i];
@@ -65,6 +73,7 @@
         ctx.drawImage(img_cache[layer.id], layer.left, layer.top);
       }
     }
+    console.log(ctx);
     // drawStatus(ctx);
   }
 
@@ -144,8 +153,13 @@
 
           var canv = document.getElementById('mask_canvas');
           var context = canv.getContext('2d');
-          canv.height = 1188 / 2;
-          canv.width = 918 / 2;
+          <?php if ($this->pageStyle === 'landscape') { ?>
+            canv.height = 918 / 2;
+            canv.width = 1288 / 2;
+          <?php } else { ?>
+            canv.height = 1288 / 2;
+            canv.width = 918 / 2;
+          <?php } ?>
 
           // Render PDF page into canvas context
           var renderContext = {
@@ -162,44 +176,22 @@
 
 
       }, function(reason) {
-        // PDF loading error
         console.error(reason);
       });
-      // pdf.getPage(pageNumber).then(function(page) {
-      //   var scale = 0.75;
-      //   var viewport = page.getViewport({
-      //     scale: scale
-      //   });
-
-      //   var canv = document.getElementById('mask_canvas');
-      //   var context = canv.getContext('2d');
-      //   canv.height = 1188 / 2;
-      //   canv.width = 918 / 2;
-
-      //   // Render PDF page into canvas context
-      //   var renderContext = {
-      //     canvasContext: context,
-      //     viewport: viewport
-      //   };
-
-      //   rContext = renderContext;
-      //   var renderTask = page.render(renderContext);
-      //   renderTask.promise.then(function() {
-      //     console.log('Page rendered');
-      //   });
-      // });
     });
 
     var canvas = $("#test_canvas");
     canvas = canvas[0];
-    canvas.height = 1188 / 2;
-    canvas.width = 918 / 2;
+    
+    <?php if ($this->pageStyle === 'landscape') { ?>
+        canvas.height = 918 / 2;
+        canvas.width = 1288 / 2;
+    <?php } else { ?>
+      canvas.height = 1288 / 2;
+      canvas.width = 918 / 2;
+    <?php } ?>
+    
     var rContext;
-
-    // var url = 'https://raw.githubusercontent.com/mozilla/pdf.js/ba2edeae/examples/learning/helloworld.pdf';
-    // var url = 'https://raw.githubusercontent.com/mozilla/pdf.js/ba2edeae/master/web/compressed.tracemonkey-pldi-09.pdf';
-    // https://raw.githubusercontent.com/mozilla/pdf.js/blob/master/web/compressed.tracemonkey-pldi-09.pdf
-
     var url = '../<?php echo $this->pdfPath; ?>';
     var pdfjsLib = window['pdfjs-dist/build/pdf'];
     console.log(pdfjsLib.GlobalWorkerOptions);
@@ -222,8 +214,15 @@
 
         var canv = document.getElementById('mask_canvas');
         var context = canv.getContext('2d');
-        canv.height = 1188 / 2;
-        canv.width = 918 / 2;
+        
+        <?php if ($this->pageStyle === 'landscape') { ?>
+            canv.height = 918 / 2;
+            canv.width = 1288 / 2;
+        <?php } else { ?>
+          canv.height = 1288 / 2;
+          canv.width = 918 / 2;
+        <?php } ?>
+        
 
         // Render PDF page into canvas context
         var renderContext = {

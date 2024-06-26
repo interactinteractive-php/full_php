@@ -33,10 +33,58 @@ $renderType = '';
             <p class="mb-0 mt-0 paper_main_window_sys_title_<?php echo Config::getFromCacheDefault('IS_APPMENU_NEWDESIGN', null, 0); ?>" style="font-size: 20px;font-weight: bold;<?php echo $headerTitleCss ?>"><?php echo $this->title ?></p>
         <?php } ?>
         <div class="row mv-checklist-render-parent mv-checklist2-render-parent" id="mv-checklist-render-parent-<?php echo $this->uniqId; ?>">
-            <div class="bp-tabs tabbable-line mv-main-tabs mv-checklist-tab w-100">
+            <div class="hawtast-hereg-container" style="padding: 1.5rem 2.25rem;border:1px solid rgb(237 237 237);border-radius: 0.625rem;margin: 12px;width: 100%;background-color: rgb(244, 244, 244);min-height: 190px;">
+                <div style="color:#99A1B7" class="empty-data-text col-12">Хавтаст хэрэг сонгогдоогүй байна</div>
+                <div class="d-flex" style="gap: 45px">
+                    <div class="hawtast-hereg-data">
+                        <img src="assets/core/global/img/user.png" data-path="icon" style="width: 120px;height: 120px;border-radius: 50%;">
+                    </div>      
+                    <div class="row w-100">
+                        <div class="col-4 hawtast-hereg-data">
+                            <div style="font-weight: bold" data-path="c5"></div>
+                            <div style="color:#99A1B7">Хэрэг хүлээн авсан</div>
+                            <div style="font-weight: bold" data-path="c18" class="mt15"></div>
+                            <div style="color:#99A1B7">Шүүх</div>
+                            <div style="font-weight: bold" data-path="c2" class="mt15"></div>
+                            <div style="color:#99A1B7">Эрүүгийн хэргийн дугаар</div>
+                        </div>
+                        <div class="col-4 hawtast-hereg-data">
+                            <div style="font-weight: bold" data-path="c3"></div>
+                            <div style="color:#99A1B7">Хянан шийдвэрлэх жагсаалт</div>
+                            <div style="font-weight: bold" data-path="c9" class="mt15"></div>
+                            <div style="color:#99A1B7">Үйлчилгээ</div>
+                            <div style="font-weight: bold" data-path="c4" class="mt15"></div>
+                            <div style="color:#99A1B7">Нууцлал</div>
+                        </div>
+                        <div class="col-4 hawtast-hereg-data">
+                            <div class="d-flex justify-content-end">
+                                <span class="badge badge-pill" style="padding: 8px 15px 8px 15px;font-size: 12px;" data-path="wfmstatusname">Status</span>
+                            </div>
+                            <div class="d-flex justify-content-end mt35" style="gap: 15px;">
+                                <div style="border:1px dashed #c3c6ce;border-radius: .475rem;padding-top: .75rem !important;padding-bottom: .75rem !important;padding-left: 6px;padding-right: 6px;">
+                                    <div style="text-align: center;">
+                                        <div style="font-weight: bold; font-size: 18px;" data-path="c7" class=""></div>
+                                        <div style="color:#99A1B7">Хавтаст хэргийн тоо</div>
+                                    </div>
+                                </div>
+                                <div style="border:1px dashed #c3c6ce;border-radius: .475rem;padding-top: .75rem !important;padding-bottom: .75rem !important;padding-left: 6px;padding-right: 6px;">
+                                    <div style="text-align: center;">
+                                        <div style="font-weight: bold; font-size: 18px;" data-path="c8" class=""></div>
+                                        <div style="color:#99A1B7">Хэргийн хуудасны тоо</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="bp-tabs tabbable-line mv-main-tabs mv-checklist-tab w-100 mv-checklist5-tab">
                 <ul class="nav nav-tabs" style="padding-top: 3px !important;padding-bottom: 0px !important;">
                     <li class="nav-item">
-                        <a style="padding-top: 3px;" href="#maintabcustom_1719031535425301_1" class="nav-link active" data-toggle="tab" aria-expanded="false">Процесс</a>
+                        <a style="padding-top: 3px;" href="#maintabcustom_1719031535425301_4" class="nav-link active" data-toggle="tab" aria-expanded="false">Хавтаст хэрэг</a>
+                    </li>
+                    <li class="nav-item">
+                        <a style="padding-top: 3px;" href="#maintabcustom_1719031535425301_1" class="nav-link" data-toggle="tab" aria-expanded="false">Процесс</a>
                     </li>
                     <li class="nav-item">
                         <a style="padding-top: 3px;" href="#maintabcustom_1719031535425301_2" class="nav-link" data-toggle="tab" aria-expanded="false">Тайлан</a>
@@ -46,7 +94,10 @@ $renderType = '';
                     </li>
                 </ul>
                 <div class="tab-content" style="padding-top: 0px;padding-bottom: 0px;">                                         
-                    <div class="tab-pane active" id="maintabcustom_1719031535425301_1" style="padding-bottom: 0 !important;padding-top: 0 !important;padding-right: 0 !important;">                
+                    <div class="tab-pane active" id="maintabcustom_1719031535425301_4" style="padding-bottom: 0 !important;padding-top: 0 !important;padding-right: 0 !important;">                
+                        <div class="pl10 pt10">Loading...</div>
+                    </div>
+                    <div class="tab-pane" id="maintabcustom_1719031535425301_1" style="padding-bottom: 0 !important;padding-top: 0 !important;padding-right: 0 !important;">                
                         <?php if ($renderType == 'paper_main_window') { ?>
                             <div style="position: absolute;right: 15px;top: 15px;display: none"><a title="Хаах" href="javascript:history.go(-1)"><i style="font-size: 15px;color:#737373" class="far fa-times"></i></a></div>        
                         <?php } 
@@ -72,7 +123,7 @@ $renderType = '';
                             </div>
                             <div class="w-100 checklist2-content-section content-wrapper-<?php echo $renderType ?>" style="background-color: #f4f4f4; max-width: 1205px">
                                 <div>
-                                    <div class="content-wrapper pt-2 pl-3 pr-3 pb-0 mv-checklist-render">        
+                                    <div class="content-wrapper pt-2 pl-3 pr-3 pb-0 mv-checklist-render mv-checklist-render-bp">        
                                     </div>                
                                 </div>                
                                 <div class="mv-checklist-render-comment pl-3 pr-3">
@@ -853,6 +904,15 @@ input.kpi-notfocus-readonly-input::placeholder {
     margin-bottom: 0;
     margin-left: 8px;    
 }
+.hawtast-hereg-data {
+    display: none;
+}
+.mv-checklist2-render-parent .mv_tiny_card3_with_list_widget.active > .card {
+    box-shadow: 5px 5px 5px 0px rgba(170, 170, 170, 0.5) !important;
+}
+.mv-checklist2-render-parent .mv_tiny_card3_with_list_widget_main {
+    background-color: #fff;
+}
 </style>
 
 <script type="text/javascript">
@@ -860,7 +920,7 @@ var viewProcessWindow_<?php echo $this->uniqId; ?> = false;
 var viewMode_<?php echo $this->uniqId; ?> = '';
 var $checkList_<?php echo $this->uniqId; ?> = $('#mv-checklist-render-parent-<?php echo $this->uniqId; ?>');
 var $checkListMenu_<?php echo $this->uniqId; ?> = $checkList_<?php echo $this->uniqId; ?>.find('.mv-checklist-menu');
-var viewProcess_<?php echo $this->uniqId; ?> = $checkList_<?php echo $this->uniqId; ?>.find('.mv-checklist-render:visible');
+var viewProcess_<?php echo $this->uniqId; ?> = $checkList_<?php echo $this->uniqId; ?>.find('.mv-checklist-render-bp');
 var viewReportProcess_<?php echo $this->uniqId; ?> = $checkList_<?php echo $this->uniqId; ?>.find('.mv-checklist-render-report');
 var viewTaskProcess_<?php echo $this->uniqId; ?> = $checkList_<?php echo $this->uniqId; ?>.find('.mv-checklist-render-task');
 var indicatorId = $("#indicatorTreeView_17189630742541").data('indicatorid');
@@ -868,6 +928,8 @@ var rIndicatorId = $("#indicatorTreeView_17189630747991").data('indicatorid');
 var taskIndicatorId = $("#indicatorTreeView_17189630753551").data('indicatorid');
 var filterIdCheck4 = '';
 var rowDataTreeSidebar = {};
+var _rowDataMetaDataview = {};
+var _tempRowDataMetaDataview = {};
 
 var wcontw = $('.mv-checklist2-render-parent').width() - 300;
 $('.mv-checklist2-render-parent').find('.checklist2-content-section').css('max-width', wcontw+'px'); 
@@ -875,6 +937,32 @@ $('.mv-checklist2-render-parent').find('.checklist2-content-section').css('max-w
 if ($checkListMenu_<?php echo $this->uniqId; ?>.length) {
     $checkListMenu_<?php echo $this->uniqId; ?>.css('min-height', $(window).height() - 195);
 }   
+
+if ($('#maintabcustom_1719031535425301_4').length) {
+    var $tabPane = $('#maintabcustom_1719031535425301_4');
+    $.ajax({
+        type: 'post',
+        //url: "mdobject/dataValueViewer",
+        url: 'mdobject/dataview/1719369128320017/' + 'false'+ '/json',
+        dataType: "json",
+        data: {
+    //              metaDataId: indicatorId333,
+    //              viewType: "detail",
+          //dataGridDefaultHeight: $(window).height() - 190,
+          //uriParams: relationMappingConfig.dv,
+          ignorePermission: 1
+        },
+        beforeSend: function() {
+            Core.blockUI({message: 'Loading...', boxed: true});
+        },
+        success: function(data) {
+            $tabPane.empty().append('<div class="pl-2 pr-2" id="object-value-list-1719369128320017">' + data.Html + "</div>").promise().done(function() {
+                $tabPane.find('.meta-toolbar').parent().remove();
+                Core.unblockUI();
+            });   
+        }
+    });    
+}
 
 $("#indicatorTreeView_17189630742541").jstree({
     "core": {
@@ -946,11 +1034,38 @@ $("#indicatorTreeView_17189630742541").jstree({
         selectedRow: ''
     };
     filterIdCheck4 = nid;
-
+    
+//    var relationMappingConfig = $.ajax({
+//        type: "post",
+//        url: "mdform/relationParamMapping",
+//        data: {
+//            mapId: indicatorMapId,
+//            rowData: _rowDataMetaDataview,
+//            dvId: indicatorId333,
+//        },
+//        dataType: "json",
+//        async: false,
+//        success: function (data) {
+//          return data;
+//        }
+//    });    
+//    
+//    relationMappingConfig = relationMappingConfig.responseJSON;    
+    
     $.ajax({
         type: 'post',
-        url: 'mdform/renderValueMapStructure',
-        data: postData,
+        url: 'mdform/kpiIndicatorTemplateRender',
+        data: {
+            param: {
+                indicatorId: strIndicatorId, 
+                mainIndicatorId: strIndicatorId, 
+                crudIndicatorId: rowDataTreeSidebar.CRUD_ID,                  
+                isListRelation: 1
+                /*idField: 'SRC_RECORD_ID', 
+                id: rowDataTreeSidebar.ID*/
+            },
+            selectedRow: _rowDataMetaDataview
+        },
         dataType: 'json',
         beforeSend: function() {
             Core.blockUI({message: 'Loading...', boxed: true});
@@ -958,22 +1073,14 @@ $("#indicatorTreeView_17189630742541").jstree({
         success: function(dataHtml) {
             var html = [];
 
-            var sveActionBtn = '';
-
-            if (viewMode_<?php echo $this->uniqId; ?> != 'view') {
-
+            var sveActionBtn = '';            
                 sveActionBtn = '<div style="">';
 
-//                if (typeof is_pfd != 'undefined' && is_pfd) {
-//                    sveActionBtn += '<button type="button" class="btn btn-sm btn-circle btn-success bpMainSaveButton bp-btn-help mr-1" onclick="setHelpContent(this, \''+dataHtml.helpContentId+'\', \''+indicatorId+'\', \'mv_method\');">'+plang.get('set_help_content_btn')+'</button>';
-//                }
-
-                if (dataHtml.hasOwnProperty('helpContentId') && dataHtml.helpContentId !== null && dataHtml.helpContentId !== '') {
-                    sveActionBtn += '<button type="button" class="btn btn-sm btn-circle btn-success bpMainSaveButton bp-btn-help mr-1" onclick="redirectHelpContent(this, \''+dataHtml.helpContentId+'\', \''+indicatorId+'\', \'mv_method\');">'+plang.get('menu_system_guide')+'</button>';
-                }
-                    sveActionBtn += '<button type="button" class="btn btn-sm btn-circle btn-success bpMainSaveButton bp-btn-save" onclick="checkListSaveKpiIndicatorForm(this, \'\', \''+strIndicatorId+'\');"><i class="icon-checkmark-circle2"></i> '+plang.get('save_btn')+'</button>';
-                sveActionBtn += '</div>';
+            if (dataHtml.hasOwnProperty('helpContentId') && dataHtml.helpContentId !== null && dataHtml.helpContentId !== '') {
+                sveActionBtn += '<button type="button" class="btn btn-sm btn-circle btn-success bpMainSaveButton bp-btn-help mr-1" onclick="redirectHelpContent(this, \''+dataHtml.helpContentId+'\', \''+indicatorId+'\', \'mv_method\');">'+plang.get('menu_system_guide')+'</button>';
             }
+                sveActionBtn += '<button type="button" class="btn btn-sm btn-circle btn-success bpMainSaveButton bp-btn-save" onclick="checkListSaveKpiIndicatorForm(this, \'\', \''+strIndicatorId+'\');"><i class="icon-checkmark-circle2"></i> '+plang.get('save_btn')+'</button>';
+            sveActionBtn += '</div>';
             var renderHeader = '<div class="meta-toolbar is-bp-open- d-flex justify-content-between">'+
                 '<div class="main-process-text">\n\
                     <div>'+mvTitle+'</div>\n\
@@ -984,102 +1091,17 @@ $("#indicatorTreeView_17189630742541").jstree({
 
             html.push('<form method="post" enctype="multipart/form-data">');
                 html.push(renderHeader);
-                //html.push(sveActionBtn);
                 html.push(dataHtml.html);
-            html.push('</form>');
+            html.push('</form>');            
 
-            if (viewProcessWindow_<?php echo $this->uniqId; ?>) {
-
-                if (!viewProcess_<?php echo $this->uniqId; ?>.find("#mv_checklist_id_"+indicatorId).length) {
-                    viewProcess_<?php echo $this->uniqId; ?>.append('<div class="mv_checklist_render_all" id="mv_checklist_id_'+indicatorId+'"></div>');
-                }
-                viewProcess_<?php echo $this->uniqId; ?>.find("#mv_checklist_id_"+indicatorId).append(html.join('')).promise().done(function() {
-
-                    if (viewMode_<?php echo $this->uniqId; ?> == 'view') {
-
-                        var $render = viewProcess_<?php echo $this->uniqId; ?>.find("#mv_checklist_id_"+indicatorId);
-
-                        $render.find('.bp-add-one-row').parent().remove();
-                        $render.find('.bp-remove-row, button.red, button.bp-btn-save, button.green-meadow, button.bp-file-choose-btn, a[onclick*="bpFileChoosedRemove"], span.filename, a[onclick*="kpiIndicatorRelationRemoveRows"], div.input-group.quick-item-process').remove();
-                        $render.find('input[type="text"], textarea').addClass('kpi-notfocus-readonly-input').attr('readonly', 'readonly');
-                        $render.find("div[data-s-path]").addClass('select2-container-disabled kpi-notfocus-readonly-input');
-                        $render.find('button[onclick*="dataViewSelectableGrid"], button[onclick*="chooseKpiIndicatorRowsFromBasket"]').prop('disabled', true);
-                        $render.find('[data-action-name="exportexcel"]').removeClass('d-none');
-
-                        var $radioElements = $render.find("input[type='radio']");
-                        if ($radioElements.length) {
-                            $radioElements.attr({'data-isdisabled': 'true', style: 'cursor: not-allowed', 'tabindex': '-1'});
-                            $radioElements.closest('.radio').addClass('disabled');
-                        }
-
-                        var $checkElements = $render.find("input[type='checkbox']");
-                        $checkElements.attr({'data-isdisabled': 'true', style: 'cursor: not-allowed', 'tabindex': '-1'});
-                        $checkElements.closest('.checker').addClass('disabled');
-                    }
-
-                    Core.unblockUI();
-
-                });                            
-
-            } else {                           
-
-                viewProcess_<?php echo $this->uniqId; ?>.empty().append(html.join('')).promise().done(function() {
-
-                    if (viewMode_<?php echo $this->uniqId; ?> == 'view') {
-
-                        var $render = viewProcess_<?php echo $this->uniqId; ?>;
-
-                        $render.find('.bp-add-one-row').parent().remove();
-                        $render.find('.bp-remove-row, button.red, button.bp-btn-save, button.green-meadow, button.bp-file-choose-btn, a[onclick*="bpFileChoosedRemove"], span.filename, a[onclick*="kpiIndicatorRelationRemoveRows"], div.input-group.quick-item-process').remove();
-                        $render.find('input[type="text"], textarea').addClass('kpi-notfocus-readonly-input').attr('readonly', 'readonly');
-                        $render.find("div[data-s-path]").addClass('select2-container-disabled kpi-notfocus-readonly-input');
-                        $render.find('button[onclick*="dataViewSelectableGrid"], button[onclick*="chooseKpiIndicatorRowsFromBasket"]').prop('disabled', true);
-                        $render.find('[data-action-name="exportexcel"]').removeClass('d-none');
-
-                        var $radioElements = $render.find("input[type='radio']");
-                        if ($radioElements.length) {
-                            $radioElements.attr({'data-isdisabled': 'true', style: 'cursor: not-allowed', 'tabindex': '-1'});
-                            $radioElements.closest('.radio').addClass('disabled');
-                        }
-
-                        var $checkElements = $render.find("input[type='checkbox']");
-                        $checkElements.attr({'data-isdisabled': 'true', style: 'cursor: not-allowed', 'tabindex': '-1'});
-                        $checkElements.closest('.checker').addClass('disabled');
-                    }
-
-                    if (viewProcess_<?php echo $this->uniqId; ?>.find(".sectiongidseperatorcontent-container").length) {
-                        viewProcess_<?php echo $this->uniqId; ?>.find(".meta-toolbar").hide();
-                    }
-
-                    if (isComment == '1' && postData.hasOwnProperty('recordId')) {
-
-                        viewProcessComment_<?php echo $this->uniqId; ?>.empty().append('<div style="font-weight: bold;padding: 10px 0 7px 0;">Сэтгэгдэл</div>');
-
-                        $.ajax({
-                            type: 'post',
-                            url: 'mdwebservice/renderEditModeBpCommentTab',
-                            data: {
-                                uniqId: uniqId, 
-                                refStructureId: jsonObj.mainIndicatorId, 
-                                sourceId: postData.recordId, 
-                                listMetaDataId: indicatorId
-                            },
-                            success: function(data) {
-                                viewProcessComment_<?php echo $this->uniqId; ?>.append(data);
-                                Core.unblockUI();
-                            }
-                        });
-                    } else {
-                        Core.unblockUI();
-                    }
-
-                });
-            }                      
+            viewProcess_<?php echo $this->uniqId; ?>.empty().append(html.join('')).promise().done(function() {
+                Core.unblockUI();
+            });                   
         }
-    });    
+    });       
 
 }).bind('loaded.jstree', function (e, data) {
-    $('.kpidv-data-tree-col').find('li').first().find('a').click();
+//    /$('.kpidv-data-tree-col').find('li').first().find('a').click();
 });
 
 $("#indicatorTreeView_17189630747991").jstree({
@@ -2218,111 +2240,6 @@ if ($checkListTabLink.length == 1) {
 }
 $(window).trigger("resize");
 
-$('#mv-checklist-render-parent-<?php echo $this->uniqId; ?>').on('shown.bs.tab', '.mv-checklist4-tab > ul.nav-tabs > li > a', function() {
-    var $tabPane = $($(this).attr('href'));
-    var indicatorId333  = $tabPane.data('id'), 
-        indicatorMapId = $tabPane.data('mapid'),
-        indicatorTypeId = $tabPane.data('type-id');
-    var postData = {
-        //isHideCheckBox: 0, 
-        isIgnoreTitle: 1,
-        isIgnoreFilter: 1,
-        mIndicatorId: filterIdCheck4,
-        drillDownCriteria: 'FILTERID='+filterIdCheck4
-    };
-    
-    var relationMappingConfig = $.ajax({
-        type: "post",
-        url: "mdform/relationParamMapping",
-        data: {
-            mapId: indicatorMapId,
-            rowData: rowDataTreeSidebar,
-            dvId: indicatorId333,
-        },
-        dataType: "json",
-        async: false,
-        success: function (data) {
-          return data;
-        }
-    });    
-    
-    relationMappingConfig = relationMappingConfig.responseJSON;
-    _processAddonParam['addonJsonParam'] = relationMappingConfig.bp
-
-    if (indicatorTypeId == '16641793815766') {
-        $.ajax({
-            type: 'post',
-            url: 'mdform/indicatorList/' + indicatorId333,
-            data: postData, 
-            beforeSend: function() {
-                Core.blockUI({message: 'Loading...', boxed: true});
-            },
-            success: function(dataHtml) {
-                $tabPane.empty().append(dataHtml).promise().done(function() {
-                    Core.unblockUI();
-                });   
-            }
-        });    
-
-    } else if (indicatorTypeId == '200101010000016') {
-        $.ajax({
-            type: 'post',
-            //url: "mdobject/dataValueViewer",
-            url: 'mdobject/dataview/' + indicatorId333 + '/' + 'false'+ '/json',
-            dataType: "json",
-            data: {
-//              metaDataId: indicatorId333,
-//              viewType: "detail",
-              //dataGridDefaultHeight: $(window).height() - 190,
-              uriParams: relationMappingConfig.dv,
-              ignorePermission: 1
-            },
-            beforeSend: function() {
-                Core.blockUI({message: 'Loading...', boxed: true});
-            },
-            success: function(data) {
-                $tabPane.empty().append('<div class="pl-2 pr-2" id="object-value-list-'+indicatorId333+'">' + data.Html + "</div>").promise().done(function() {
-                    $tabPane.find('.meta-toolbar').parent().remove();
-                    Core.unblockUI();
-                });   
-            }
-        });    
-        
-    } else if (indicatorTypeId == '200101010000033') {
-        $.ajax({
-            type: 'post',
-            url: 'mdobject/package/' + indicatorId333,
-            data: {
-                uriParams: relationMappingConfig.dv
-            },
-            beforeSend: function() {
-                Core.blockUI({message: 'Loading...', boxed: true});
-            },
-            success: function(data) {
-                $tabPane.empty().append('<div class="pl-2 pr-2">' + data + "</div>").promise().done(function() {
-                    Core.unblockUI();
-                });   
-            }
-        });    
-        
-    } else {
-        
-        $.ajax({
-            type: 'post',
-            url: 'mdform/indicatorRender/' + indicatorId333,
-            data: postData, 
-            beforeSend: function() {
-                Core.blockUI({message: 'Loading...', boxed: true});
-            },
-            success: function(dataHtml) {
-                $tabPane.empty().append(dataHtml).promise().done(function() {
-                    Core.unblockUI();
-                });   
-            }
-        });          
-    }
-});
-
 <?php
 if ($renderType == 'paper_main_window') {
 ?>
@@ -2334,6 +2251,36 @@ if ($renderType == 'paper_main_window') {
 ?>
 function checklistCloseDialog (elem) {
     $(elem).closest(".ui-dialog-content").dialog('close');
+}
+function checkList5SelectRowDv1719369128320017 (elem) {
+    var rowData = $(elem).data('row-data');
+    _tempRowDataMetaDataview = rowData;
+}
+function checkList5SelectRowDvAcceptBtn1719369128320017 () {
+    if (!Object.keys(_tempRowDataMetaDataview).length) {
+        alert('Мөрөө сонгоно уу!');
+        return;        
+    }
+    _rowDataMetaDataview = _tempRowDataMetaDataview;
+    var row = _rowDataMetaDataview;
+    $getCont = $('.hawtast-hereg-container');
+    $getCont.find('div[data-path="c5"]').text(row.c5 ? row.c5 : '-');
+    $getCont.find('div[data-path="c18"]').text(row.c18 ? row.c18 : '-');
+    $getCont.find('div[data-path="c2"]').text(row.c2 ? row.c2 : '-');
+    $getCont.find('div[data-path="c3"]').text(row.c3 ? row.c3 : '-');
+    $getCont.find('div[data-path="c9"]').text(row.c9 ? row.c9 : '-');
+    $getCont.find('div[data-path="c4"]').text(row.c4 ? row.c4 : '-');
+    $getCont.find('div[data-path="c7"]').text(row.c7 ? row.c7 : '-');
+    $getCont.find('div[data-path="c8"]').text(row.c8 ? row.c8 : '-');
+    $getCont.find('span[data-path="wfmstatusname"]').text(row.wfmstatusname);
+    $getCont.find('span[data-path="wfmstatusname"]').css('background-color', row.wfmstatuscolor);
+    if (row.icon) {
+        $getCont.find('img[data-path="icon"]').attr('src', row.icon);
+    } else {
+        $getCont.find('img[data-path="icon"]').attr('src', 'assets/core/global/img/user.png');        
+    }
+    $('.hawtast-hereg-data').show();
+    $('.empty-data-text').hide();
 }
 function checkList5SaveKpiIndicatorForm(elem) {
     var $this = elem;

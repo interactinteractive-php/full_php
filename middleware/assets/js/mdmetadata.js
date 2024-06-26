@@ -3307,6 +3307,9 @@ function urlRedirectByDataView(elem, processMetaDataId, url, target, dataViewId,
                 callomsconferenceAddForm(paramData, '', undefined, '', 'dataViewReload', dataViewId);
             }
             return;
+        } else if (urlLower == 'mdform/selectcourtcase') {
+            checkList5SelectRowDvAcceptBtn1719369128320017();
+            return;
         } else if (urlLower == 'cmsconferenceweblink' || urlLower == 'cmsconferenceweblink_1') {
             var viewType = (urlLower == 'cmsconferenceweblink_1') ? '2' : '1';
             if (typeof selectedRow === 'undefined') {
@@ -18201,9 +18204,9 @@ function beforeWaterMarkChangeWfmStatusId(elem, wfmStatusId, metaDataId, refStru
     var $windowHeight =  720;
     var $windowWidth =  491;
     switch (pageStyle) {
-        case 'landspace':
-            $windowWidth =  720;
-            $windowHeight =  491;
+        case 'landscape':
+            $windowWidth =  715;
+            $windowHeight =  651;
             break;
         case 'portrait':
                         
@@ -18211,7 +18214,7 @@ function beforeWaterMarkChangeWfmStatusId(elem, wfmStatusId, metaDataId, refStru
     }
     
     var filename = pdfPath.replace(/^.*[\\\/]/, '');
-    iframe = '<iframe id="frameStampPos" src="mddoc/canvasStampPos?uniqid=HardSignWindow&pdfPath='+pdfPath+'" height="100%" width="100%" frameBorder="0"></iframe>';
+    iframe = '<iframe id="frameStampPos" src="mddoc/canvasStampPos?uniqid=HardSignWindow&pdfPath='+pdfPath+'&pageStyle='+pageStyle+'"  height="100%" width="100%" frameBorder="0"></iframe>';
 
     if (!$('#callIframeCanvasHardSign').length) {
         var div = document.createElement("div");

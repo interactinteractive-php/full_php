@@ -3629,6 +3629,7 @@ class Mddoc extends Controller {
         // $this->view->render('doc_comment/detail', self::$viewPath);  
         $this->view->uniqid = Input::get('uniqid');
         $this->view->pdfPath = Input::get('pdfPath');
+        $this->view->pageStyle = Input::get('pageStyle');
         $this->view->render('doc_comment/poscanvas', self::$viewPath);
     }
 

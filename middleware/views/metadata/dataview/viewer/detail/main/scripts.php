@@ -521,6 +521,9 @@
                 onSelect: function(index, row) {
                     $('#currentSelectedRowIndex', '#object-value-list-<?php echo $this->metaDataId; ?>').val(index);
                     dvSelectionCountToFooter_<?php echo $this->metaDataId; ?>();
+                    if (typeof checkList5SelectRowDv1719369128320017 === 'function') {
+                        checkList5SelectRowDv1719369128320017(row);
+                    }
                 },   
                 <?php
                 }
