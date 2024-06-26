@@ -7112,7 +7112,7 @@ class Mdform_Model extends Model {
                         'id' => $columnName . '_valueField',
                         'data-path' => $columnNamePath,
                         'value' => $selectedValue,
-                        'class' => 'popupInit',
+                        'class' => 'popupInit mv-popup-value',
                         'data-row-data' => $lookupRowData
                     ];
                     

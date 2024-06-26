@@ -4784,8 +4784,9 @@ function getLookupRowIndex(mainSelector, elem, lookupField, rowIndex) {
     dataRowData = Object.keys(dataRowData).length ? JSON.parse(dataRowData) : '';
     var lookupUrl = 'mdwebservice/getLookupRowIndex';
     var isMvLookup = false;
+    var controlClass = bpElem.attr('class');
     
-    if (bpElem.attr('name').indexOf('mvParam[') !== -1) {    
+    if (controlClass.indexOf('mv-popup-value') !== -1 || controlClass.indexOf('mv-ind-combo') !== -1) { 
         lookupUrl = 'mdform/getLookupRowIndex';
         isMvLookup = true;
     }
@@ -5761,7 +5762,7 @@ function setLookupPopupValue(element, valId) {
         var $valueField = $parent.find("input[id*='_valueField']");
         var isMvLookup = false;
 
-        if ($valueField.attr('name').indexOf('mvParam[') !== -1) {    
+        if ($valueField.attr('class').indexOf('mv-popup-value') !== -1) { 
             lookupUrl = 'mdform/autoCompleteById';
             isMvLookup = true;
         }

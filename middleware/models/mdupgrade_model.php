@@ -8081,6 +8081,7 @@ class Mdupgrade_Model extends Model {
         Config::$configArr = [];
         Config::$allConfigCodeArr = [];
         
+        self::$isGenerateLanguageFile = true;
         $response = self::executeUpgradeScript([$fileContent]);
                                 
         $status  = issetDefaultVal($response['status'], 'success');
