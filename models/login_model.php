@@ -2091,7 +2091,7 @@ class Login_Model extends Model {
                 $response = ['status' => 'success', 'message' => 'Бүртгэл амжилттай боллоо та нэвтрэх товчийг дарж нэвтэрнэ үү.'];
                 
             } else {
-                throw new Exception('Token is wrong!');
+                throw new Exception('Customer, role data is not found!');
             }
             
         } catch (Exception $ex) {
