@@ -13222,11 +13222,14 @@ table.pf-kpi-table>tbody>tr>td {
 }
 
 table.bprocess-theme1.kpi-dtl-table thead tr th {
-    background: #e1f0ff !important;
+    background: #eee !important;
     height: 34px !important;
     text-transform: none;
-    font-weight: normal;
+    font-weight: bold;
     font-size: 12px !important;
+    color: #99A1B7;
+    border-top: 1px #eee solid !important;
+    border-bottom: 1px #eee solid !important;    
 }
 
 table.bprocess-theme1.kpi-dtl-table tbody tr td,
@@ -28752,7 +28755,6 @@ div.texteditor_clicktoedit_tinymceInit[contenteditable]:focus {
     border-color: #f3f3f3;
 }
 .mv-hdr-label-control-input .form-control {
-    background-color: #f3f3f3;
     height: 32px !important;
     min-height: 32px !important;    
     border-color: #f3f3f3;
@@ -28880,3 +28882,51 @@ input:checked + .bp-toggle-btn-slider:before {
     border-radius: 50%;
 }
 /*end toggle button*/
+.kpi-ind-tmplt-section button.bp-add-one-row, 
+.kpi-ind-tmplt-section button.btn-xs.btn-outline-success, 
+.kpi-ind-tmplt-section button.btn-xs.green-meadow {
+    background-color: #eee !important;
+    color: #252F4A;
+    font-size: 12px;
+    padding: 0px 5px 0px 5px;
+    height: 21px !important;
+    min-height: 21px !important;
+    border-color: #eee !important;
+}
+.kpi-ind-tmplt-section .bp-add-one-row-num {
+    display: none;
+}
+.kpi-ind-tmplt-section .form-control[disabled], 
+.kpi-ind-tmplt-section .form-control[readonly], 
+.kpi-ind-tmplt-section fieldset[disabled] .form-control {
+    background-color: #e1e1e1 !important;
+    color: #8d8d8d !important;
+}
+.kpi-ind-tmplt-section .form-control .select2-choice {
+    background-color: #f3f3f3 !important;
+    height: 32px;
+    padding-top: 3px;
+}
+.kpi-ind-tmplt-section .form-control {
+    border: 1px #f3f3f3 solid;
+    background-color: #f3f3f3 !important;
+    font-weight: bold;    
+}
+.kpi-ind-tmplt-section .select2-container .select2-choice .select2-arrow b {
+    background-color: #f3f3f3 !important;
+}
+.kpi-ind-tmplt-section > .row > .d-flex {
+    padding: 8px;
+}
+.kpi-ind-tmplt-section .sectiongidseperatorcontent legend {
+    padding: 12px !important;
+    padding-left: 34px !important;    
+}
+.kpi-ind-tmplt-section .sectiongidseperator {
+    height: 15px;
+    background-color: rgb(244, 244, 244);
+    width: 100%;
+}
+.kpi-ind-tmplt-section .mv-rows-title:not(.mv-rows-title-label) {
+    display: none;
+}

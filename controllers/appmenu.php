@@ -320,6 +320,10 @@ class Appmenu extends Controller {
 
         } elseif ($count == 1) {
             
+            if (Uri::domain() == Config::getFromCache('cloud_domain_name') && Config::getFromCache('CONFIG_START_LINK') == 'appmenu/indexnew') {
+                return URL . Config::getFromCache('CONFIG_START_LINK');
+            }
+            
             $default_redirect_url = $redirect_url;
             $redirect_url = URL.'appmenu/module/'.$appmenuRow['menuId'].'?mmid='.$appmenuRow['menuId'];
 			
