@@ -963,8 +963,10 @@ class Cron_Model extends Model {
                 $dbType             = 'postgre';
                 $dbPort             = '5432';
                 $dbServiceName      = 'cloud_platform_uat';
-                $dbUserName         = 'cloud_client';
-                $dbUserPass         = '2sfu{r21>EaTF%kU';
+                /*$dbUserName         = 'cloud_client';
+                $dbUserPass         = '2sfu{r21>EaTF%kU';*/
+                $dbUserName         = 'dummy';
+                $dbUserPass         = 'Test123';
                 
                 $idPh               = $this->db->Param(0);
                 $idTwoPh            = $this->db->Param(1);
@@ -1103,6 +1105,7 @@ class Cron_Model extends Model {
                             $licenseStartDate = $packageProductRow['START_DATE'];
                             $licenseEndDate   = $packageProductRow['END_DATE'];
                             $licenseDataCount = 1;
+                            $licenseNumber    = '';
                             
                             $licenseKeyData = [
                                 'LICENSE_KEY_ID'  => getUIDAdd(($b + 4).$p), 
@@ -1111,6 +1114,7 @@ class Cron_Model extends Model {
                                 'CONTRACT_ID'     => $contractId, 
                                 'LICENSE_TYPE_ID' => $licenseTypeId, 
                                 'LICENSE_QTY'     => $licenseQty, 
+                                'LICENSE_NUMBER'  => $licenseNumber, 
                                 'DATA_COUNT'      => $licenseDataCount, 
                                 'START_DATE'      => $licenseStartDate, 
                                 'END_DATE'        => $licenseEndDate, 
