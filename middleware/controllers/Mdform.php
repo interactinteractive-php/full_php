@@ -1766,6 +1766,7 @@ class Mdform extends Controller {
         } else {
             $this->view->relationComponents = $this->model->getKpiIndicatorMapWithoutTypeModel($this->view->indicatorId, '10000000,10000001,10000009');
         }
+        
         $this->view->relationComponents = Arr::groupByArrayOnlyRow($this->view->relationComponents, 'NAME', false);
         $this->view->relationWidgetComponents = Arr::groupByArrayOnlyRow($this->view->relationComponents, 'WIDGET_ID', false);
         $defaultListView = 'kpi/indicator/list';
@@ -2121,7 +2122,7 @@ class Mdform extends Controller {
         $srcRecordId = Input::numeric('sourceRecordId');
         $response = $this->model->runGenerateKpiDataMartByIndicatorId($mainIndicatorId, $srcRecordId);
         
-        //var_dump($response); exit;
+        var_dump($response);
     }
     
     public function generateKpiDetailDataMart($indicatorId, $mainIndicatorId = '') {

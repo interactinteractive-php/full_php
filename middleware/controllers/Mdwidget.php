@@ -4407,6 +4407,7 @@ class Mdwidget extends Controller {
         $width = '1000';
         $title = '';
         $maximize = true;
+
         switch ($this->view->widgetCode) {
             case 'exam_checklist':
                 $htmlPath = 'relation/checklist';

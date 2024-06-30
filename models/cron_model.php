@@ -958,6 +958,7 @@ class Cron_Model extends Model {
                 $currentDate        = Date::currentDate();
                 $customerGroupId    = 17141037295452;
                 $finInvoiceStatusId = 1711607981610470;
+                $finInvoiceStrId    = 1711607546700352;
                 $apiEnvironmentId   = 1711935661499533;
                 $ntfNotificationId  = 17116810804369;
                 $dbType             = 'postgre';
@@ -1013,7 +1014,7 @@ class Cron_Model extends Model {
                     
                     $wfmLogData = [
                         'ID'               => getUIDAdd($b), 
-                        'REF_STRUCTURE_ID' => 1711607546700352, 
+                        'REF_STRUCTURE_ID' => $finInvoiceStrId, 
                         'RECORD_ID'        => $invoiceId, 
                         'WFM_STATUS_ID'    => $finInvoiceStatusId, 
                         'WFM_DESCRIPTION'  => 'Төлбөр баталгаажиж эрх нээгдэв.', 

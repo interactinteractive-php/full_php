@@ -794,6 +794,18 @@
                         </div>
                     </div>                    
                     
+                    <div data-config-column="govpay-amount">
+                        <hr />
+
+                        <div class="form-group row fom-row mb5">
+                            <label class="col-md-3 col-form-label text-right uppercase" for="posGovPayAmt" style="padding-left: 0;"><?php echo $this->lang->line('POS_2121'); ?>:</label>
+                            <div class="pos-payment-amount-col">
+                                <input type="text" name="posGovPayAmt" class="form-control form-control-sm bigdecimalInit posUserAmount posKeyAmount invAmountField" placeholder="<?php echo $this->lang->line('POS_2121'); ?>" id="posGovPayAmt" value="">
+                            </div>
+                            <div class="clearfix w-100"></div>
+                        </div>
+                    </div>                    
+                    
                     <div data-config-column="tax-invoice-amount" class="hidden">
                         <hr />
 
@@ -1542,6 +1554,9 @@ $(function(){
     }
     if (!isConfigPaymentSocialpayreward) {
         $('[data-config-column="socialpayreward-amount"]').css({'display': 'none'});
+    }
+    if (!isConfigPaymentGov) {
+        $('[data-config-column="govpay-amount"]').css({'display': 'none'});
     }
     if (!isConfigPaymentTaxInvoice) {
         $('[data-config-column="tax-invoice-amount"]').css({'display': 'none'});

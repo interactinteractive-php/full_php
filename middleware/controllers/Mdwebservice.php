@@ -9662,7 +9662,7 @@ class Mdwebservice extends Controller {
         return true;
     }
     
-    public static function bpFileUpload(array $input, array $fileAttr, int $prefix = 1) {
+    public static function bpFileUpload($input = [], $fileAttr = [], $prefix = 1) {
         
         if (isset($input['uploadPath']) && $input['uploadPath']) {
             $filePath = $input['uploadPath'];

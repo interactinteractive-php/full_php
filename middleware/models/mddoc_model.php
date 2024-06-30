@@ -25,8 +25,9 @@ class Mddoc_Model extends Model {
         $sessionUserKeyId = Ue::sessionUserKeyId();
         $currentDate = Date::currentDate('Y-m-d H:i:s');
         $contentName = $contentName ? $contentName : 'File '.$contentId.'.'.$fileExtension;
+        $contentCode = Input::post('contentCode');
         
-        $data = array(
+        $data = [
             'CONTENT_ID'      => $contentId, 
             'FILE_NAME'       => $contentName, 
             'PHYSICAL_PATH'   => $fileToSave, 
@@ -36,7 +37,7 @@ class Mddoc_Model extends Model {
             'CREATED_USER_ID' => $sessionUserKeyId, 
             'WFM_STATUS_ID'   => 1463726941931829, 
             'TYPE_ID'         => 3
-        );
+        ];
 
         if (Input::post('wfmStatusId') == 'isnull') {
             unset($data['WFM_STATUS_ID']);
@@ -44,6 +45,10 @@ class Mddoc_Model extends Model {
 
         if (Input::post('typeId') == 'isnull') {
             unset($data['TYPE_ID']);
+        }
+        
+        if ($contentCode) {
+            $data['CONTENT_CODE'] = $contentCode;
         }
         
         if (Input::isEmpty('htmlContent') == false) {

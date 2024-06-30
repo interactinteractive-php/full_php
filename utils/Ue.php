@@ -469,7 +469,7 @@ class Ue extends Model {
                 FROM FIN_FISCAL_PERIOD_USER PU 
                     INNER JOIN FIN_FISCAL_PERIOD FP ON FP.ID = PU.FISCAL_PERIOD_ID 
                 WHERE PU.USER_ID = " . $db->Param(0) . "  
-                ORDER BY PU.CREATED_DATE DESC", array($userKeyId));
+                ORDER BY PU.CREATED_DATE DESC", [$userKeyId]);
 
             if ($userRow) {
 
@@ -498,12 +498,12 @@ class Ue extends Model {
 
                 if ($row) {
 
-                    $data = array(
-                        'ID' => getUID(),
+                    $data = [
+                        'ID'               => getUID(),
                         'FISCAL_PERIOD_ID' => $row['ID'],
-                        'USER_ID' => $userKeyId,
-                        'CREATED_DATE' => Date::currentDate('Y-m-d H:i:s')
-                    );
+                        'USER_ID'          => $userKeyId,
+                        'CREATED_DATE'     => Date::currentDate('Y-m-d H:i:s')
+                    ];
                     $db->AutoExecute('FIN_FISCAL_PERIOD_USER', $data);
 
                     if (empty($userRow['PARENT_ID'])) {

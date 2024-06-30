@@ -1485,6 +1485,7 @@ class Mdpos_Model extends Model {
         $posShoppyAmt           = Number::decimal($paymentData['posShoppyAmt']);
         $posGlmtRewardAmt       = Number::decimal($paymentData['posGlmtRewardAmt']);
         $posSocialpayrewardAmt  = Number::decimal($paymentData['posSocialpayrewardAmt']);
+        $posGovpayAmt           = Number::decimal($paymentData['posGovPayAmt']);
         $prePaymentAmount       = Number::decimal($paymentData['prePaymentAmount']);
         $barterAmt              = Number::decimal($paymentData['posBarterAmt']);
         $leasingAmt             = Number::decimal($paymentData['posLeasingAmt']);
@@ -2825,6 +2826,21 @@ class Mdpos_Model extends Model {
             $nonCashAmount += $posSocialpayrewardAmt;
             
             $paymentDetail .= str_replace(array('{labelName}', '{amount}'), array(Lang::line('POS_0934'), self::posAmount($posSocialpayrewardAmt)), $paymentDtlTemplate);
+        }
+        
+        if ($posGovpayAmt > 0) {
+            
+            $isInvInfo = true;
+            $isPut = false;
+            
+            $paymentDtl[] = array(
+                'paymentTypeId' => 58, 
+                'amount'        => $posGovpayAmt
+            );
+            
+            $nonCashAmount += $posGovpayAmt;
+            
+            $paymentDetail .= str_replace(array('{labelName}', '{amount}'), array(Lang::line('POS_2121'), self::posAmount($posGovpayAmt)), $paymentDtlTemplate);
         }
         
         if ($prePaymentAmount > 0) {

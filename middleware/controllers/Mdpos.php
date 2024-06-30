@@ -436,6 +436,7 @@ class Mdpos extends Controller {
         $this->view->isConfigPaymentShoppy          = Config::getFromCacheDefault('CONFIG_POS_PAYMENT_SHOPPY', null, 0);
         $this->view->isConfigPaymentGlmtreward      = Config::getFromCacheDefault('CONFIG_POS_PAYMENT_GOLOMT_REWARD', null, 0);
         $this->view->isConfigPaymentSocialpayreward = Config::getFromCacheDefault('CONFIG_POS_PAYMENT_SOCIAL_PAY_REWARD', null, 0);
+        $this->view->isConfigPaymentGov             = Config::getFromCacheDefault('POS_GOVERMENT_PAYMENT_TYPE', null, 0);
         $this->view->isConfigPaymentTaxInvoice      = Config::getFromCacheDefault('POS_INVOICE_PAYMENT_TYPE', null, 0);
         $this->view->isConfigPaymentBarter          = Config::getFromCacheDefault('CONFIG_POS_PAYMENT_BARTER', null, 0);
         $this->view->isConfigPaymentLeasing         = Config::getFromCacheDefault('CONFIG_POS_PAYMENT_LEASING', null, 0);

@@ -6452,7 +6452,7 @@ class Mdform_Model extends Model {
             $tnames = [];
             $tt = 1;
             foreach (Mdform::$tabRender as $tabName => $tabContent) {
-                $tnames[] = '<div class=""><a href="#sectiongid'.$tt.'" style="color: #666;">'.$tabName.'</a></div>';
+                $tnames[] = '<div class=""><a href="#sectiongid'.$tt.'" style="color: #666;font-weight: bold;">'.$tabName.'</a></div>';
                 $tt++;
             }                      
             $sideSectionRender = [];

@@ -9,7 +9,7 @@ $relationTabList = $this->relationList;
         $tabId = 1;
         foreach ($relationTabList as $groupName => $groupRow) {
             echo '<li class="nav-item">';
-                echo '<a style="padding-top: 3px;" href="#maintabcustom4_'.$this->uniqId.'_'.$tabId.'" class="nav-link '.($tabId == -1 ? 'active' : '').' mv-checklist-tab-link" data-toggle="tab" aria-expanded="false">';
+                echo '<a style="padding-top: 8px;" href="#maintabcustom4_'.$this->uniqId.'_'.$tabId.'" class="nav-link '.($tabId == -1 ? 'active' : '').' mv-checklist-tab-link" data-toggle="tab" aria-expanded="false">';
                     echo $groupRow['NAME'] ? $groupRow['NAME'] : $groupRow['META_DATA_NAME'];
                 echo '</a>';
             echo '</li>';

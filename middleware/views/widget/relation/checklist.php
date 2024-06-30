@@ -280,7 +280,7 @@ if (issetParamArray($this->relationComponentsConfigData['rows'])) {
                                                                 </script>
                                                             <?php } ?>
                                                             <div class="row">
-                                                                <div class="col-md-12 column-parent <?php echo (issetParam($tmparr['0']['showtype']) === 'star'  || (issetParam($tmparr['0']['filePath']) && sizeOf($tmparr) % 2 === 1 )) ? '' : 'column-grap' ?>">
+                                                                <div class="col-md-12 column-parent <?php echo (issetParam($tmparr['0']['showtype']) === 'star'  || (issetParam($tmparr['0']['filePath']) && sizeOf($tmparr) % 2 === 1 ) || sizeOf($tmparr) === 1) ? '' : 'column-grap' ?>">
                                                                     <?php 
                                                                     
                                                                     if (issetParam($tmparr['0']['showtype']) === 'star') {
@@ -1357,9 +1357,14 @@ if (issetParamArray($this->relationComponentsConfigData['rows'])) {
         /* $('.timer-group<?php echo $this->uniqId ?>').hide(); */
     });
 
-    $('body').on('keydown', '#tab-question-section<?php echo $this->uniqId ?> .description_autoInit', function () {
-        $('#tab-question-section<?php echo $this->uniqId ?> .checklistmenu-item.selected').find('i.icon-checkbox-unchecked2').addClass('icon-checkbox-checked2').removeClass('icon-checkbox-unchecked2');
-        $('#tab-question-section<?php echo $this->uniqId ?> .checklistmenu-item.selected').addClass('done');
+    $('body').on('change', '#tab-question-section<?php echo $this->uniqId ?> .description_autoInit', function () {
+        if ($(this).val()) {
+            $('#tab-question-section<?php echo $this->uniqId ?> .checklistmenu-item.selected').find('i.icon-checkbox-unchecked2').addClass('icon-checkbox-checked2').removeClass('icon-checkbox-unchecked2');
+            $('#tab-question-section<?php echo $this->uniqId ?> .checklistmenu-item.selected').addClass('done');
+        } else {
+            $('#tab-question-section<?php echo $this->uniqId ?> .checklistmenu-item.selected').find('i').removeClass('icon-checkbox-checked2').addClass('icon-checkbox-unchecked2');
+            $('#tab-question-section<?php echo $this->uniqId ?> .checklistmenu-item.selected').removeClass('done');
+        }
     });
 
     function activeAnswer_<?php echo $this->uniqId ?>(element) {
@@ -1368,6 +1373,7 @@ if (issetParamArray($this->relationComponentsConfigData['rows'])) {
             _selector = _this.find('.hide-param');
             
         if (_checkType === '1') {
+
             if (_this.hasClass('active')) {
                 _this.removeClass('active');
                 _this.find('input[data-path="<?php echo $positionSetCorrectPath; ?>"]').val('0');
@@ -1379,23 +1385,43 @@ if (issetParamArray($this->relationComponentsConfigData['rows'])) {
                 _this.find('input[data-path="<?php echo $positionSetCorrectPath; ?>"]').val('1');
                 _this.find('.far').removeClass('icon-checkbox-unchecked2').addClass('icon-checkbox-checked2');
             }
-        } else {
-            _this.closest('.column-parent').find('input[data-path="<?php echo $positionSetCorrectPath; ?>"]').val('0');
-            _this.closest('.column-parent').find('.far').removeClass('icon-radio-checked').addClass('icon-radio-unchecked');
-            _this.closest('.column-parent').find('.active').removeClass('active');
-            _this.closest('.column-parent').find('.file-rounded').removeClass('active');
 
-            _this.find('input[data-path="<?php echo $positionSetCorrectPath; ?>"]').val('1');
-            _this.find('.far').removeClass('icon-radio-unchecked').addClass('icon-radio-checked');
-            _this.find('.far').removeClass('icon-radio-unchecked').addClass('icon-radio-checked');
-            _this.closest('.file-parent').find('.file-rounded').addClass('active');
-            _this.addClass('active');
+            $('#tab-question-section<?php echo $this->uniqId ?> .checklistmenu-item.selected').find('i.icon-checkbox-unchecked2').addClass('icon-checkbox-checked2').removeClass('icon-checkbox-unchecked2');
+            $('#tab-question-section<?php echo $this->uniqId ?> .checklistmenu-item.selected').addClass('done');
+
+        } else {
+            if (_this.hasClass('active')) {
+
+                _this.closest('.column-parent').find('input[data-path="<?php echo $positionSetCorrectPath; ?>"]').val('0');
+                _this.closest('.column-parent').find('.far').removeClass('icon-radio-checked').addClass('icon-radio-unchecked');
+                _this.closest('.column-parent').find('.active').removeClass('active');
+                _this.closest('.column-parent').find('.file-rounded').removeClass('active');
+
+                _this.removeClass('active');
+
+                $('#tab-question-section<?php echo $this->uniqId ?> .checklistmenu-item.selected').find('i').removeClass('icon-checkbox-checked2').addClass('icon-checkbox-unchecked2');
+                $('#tab-question-section<?php echo $this->uniqId ?> .checklistmenu-item.selected').removeClass('done');
+                
+            } else {
+                
+                _this.closest('.column-parent').find('input[data-path="<?php echo $positionSetCorrectPath; ?>"]').val('0');
+                _this.closest('.column-parent').find('.far').removeClass('icon-radio-checked').addClass('icon-radio-unchecked');
+                _this.closest('.column-parent').find('.active').removeClass('active');
+                _this.closest('.column-parent').find('.file-rounded').removeClass('active');
+
+                _this.find('input[data-path="<?php echo $positionSetCorrectPath; ?>"]').val('1');
+                _this.find('.far').removeClass('icon-radio-unchecked').addClass('icon-radio-checked');
+                _this.find('.far').removeClass('icon-radio-unchecked').addClass('icon-radio-checked');
+                _this.closest('.file-parent').find('.file-rounded').addClass('active');
+                _this.addClass('active'); 
+
+                $('#tab-question-section<?php echo $this->uniqId ?> .checklistmenu-item.selected').find('i.icon-checkbox-unchecked2').addClass('icon-checkbox-checked2').removeClass('icon-checkbox-unchecked2');
+                $('#tab-question-section<?php echo $this->uniqId ?> .checklistmenu-item.selected').addClass('done');
+            
+            }
 
         }
 
-        
-        $('#tab-question-section<?php echo $this->uniqId ?> .checklistmenu-item.selected').find('i.icon-checkbox-unchecked2').addClass('icon-checkbox-checked2').removeClass('icon-checkbox-unchecked2');
-        $('#tab-question-section<?php echo $this->uniqId ?> .checklistmenu-item.selected').addClass('done');
     };
 
     function checkMenuFnc<?php echo $this->uniqId ?>(element) {

@@ -1684,6 +1684,7 @@ function toArchiveStatement(elem, defaultName, uniqId, props) {
     if (!$("#" + $dialogName).length) {
         $('<div id="' + $dialogName + '"></div>').appendTo('body');
     }
+    var $dialog = $("#" + $dialogName);
 
     $.ajax({
         type: 'post',
@@ -1691,14 +1692,11 @@ function toArchiveStatement(elem, defaultName, uniqId, props) {
         data: {defaultName: defaultName},
         dataType: 'json',
         beforeSend: function () {
-            Core.blockUI({
-                message: 'Loading...',
-                boxed: true
-            });
+            Core.blockUI({message: 'Loading...', boxed: true});
         },
         success: function (data) {
-            $("#" + $dialogName).empty().append(data.html);
-            $("#" + $dialogName).dialog({
+            $dialog.empty().append(data.html);
+            $dialog.dialog({
                 cache: false,
                 resizable: true,
                 bgiframe: true,
@@ -1708,59 +1706,59 @@ function toArchiveStatement(elem, defaultName, uniqId, props) {
                 height: "auto",
                 modal: true,
                 close: function () {
-                    $("#" + $dialogName).empty().dialog('destroy').remove();
+                    $dialog.empty().dialog('destroy').remove();
                 },
                 buttons: [
                     {text: data.save_btn, class: 'btn green-meadow btn-sm', click: function () {
 
-                            $("#report-archive-form").validate({errorPlacement: function () {}});
+                        $("#report-archive-form").validate({errorPlacement: function () {}});
 
-                            if ($("#report-archive-form").valid()) {
+                        if ($("#report-archive-form").valid()) {
 
-                                var _this = $(elem);
-                                var $parent = _this.closest("div.report-preview");
-                                var $fileIdElem = $parent.find('div[data-file-id]');
-                                var fileId = $fileIdElem.attr('data-file-id');
-                                var statementContent = '';
-                                
-                                if ($fileIdElem.hasAttr('data-count') && Number($fileIdElem.attr('data-count') < 300)) {
-                                    try {
-                                        statementHeaderFreezeDestroy($parent);
-                                        statementContent = encodeURIComponent($parent.find('div.report-preview-print').html());
-                                        statementHeaderFreeze($parent);
-                                    } catch(e) {}
-                                }                                
+                            var _this = $(elem);
+                            var $parent = _this.closest("div.report-preview");
+                            var $fileIdElem = $parent.find('div[data-file-id]');
+                            var fileId = $fileIdElem.attr('data-file-id');
+                            var statementContent = '';
 
-                                $.ajax({
-                                    type: 'post',
-                                    url: 'mddoc/toArchiveSaveStatement',
-                                    data: $("#report-archive-form").serialize() + '&statementContent=' + statementContent + '&' + props + '&fileId=' + fileId,
-                                    dataType: 'json',
-                                    beforeSend: function () {
-                                        Core.blockUI({message: plang.get('msg_saving_block'), boxed: true});
-                                    },
-                                    success: function (data) {
-                                        PNotify.removeAll();
-                                        new PNotify({
-                                            title: data.status,
-                                            text: data.message,
-                                            type: data.status,
-                                            sticker: false
-                                        });
-                                        if (data.status === 'success') {
-                                            $("#" + $dialogName).dialog('close');
-                                        }
-                                        Core.unblockUI();
+                            if ($fileIdElem.hasAttr('data-count') && Number($fileIdElem.attr('data-count') < 300)) {
+                                try {
+                                    statementHeaderFreezeDestroy($parent);
+                                    statementContent = encodeURIComponent($parent.find('div.report-preview-print').html());
+                                    statementHeaderFreeze($parent);
+                                } catch(e) {}
+                            }                                
+
+                            $.ajax({
+                                type: 'post',
+                                url: 'mddoc/toArchiveSaveStatement',
+                                data: $("#report-archive-form").serialize() + '&statementContent=' + statementContent + '&' + props + '&fileId=' + fileId,
+                                dataType: 'json',
+                                beforeSend: function () {
+                                    Core.blockUI({message: plang.get('msg_saving_block'), boxed: true});
+                                },
+                                success: function (data) {
+                                    PNotify.removeAll();
+                                    new PNotify({
+                                        title: data.status,
+                                        text: data.message,
+                                        type: data.status,
+                                        sticker: false
+                                    });
+                                    if (data.status == 'success') {
+                                        $dialog.dialog('close');
                                     }
-                                });
-                            }
-                        }},
+                                    Core.unblockUI();
+                                }
+                            });
+                        }
+                    }},
                     {text: data.close_btn, class: 'btn blue-hoki btn-sm', click: function () {
-                            $("#" + $dialogName).dialog('close');
-                        }}
+                        $dialog.dialog('close');
+                    }}
                 ]
             });
-            $("#" + $dialogName).dialog('open');
+            $dialog.dialog('open');
 
             Core.unblockUI();
         },
@@ -1768,7 +1766,7 @@ function toArchiveStatement(elem, defaultName, uniqId, props) {
             alert('Error');
         }
     }).done(function () {
-        Core.initAjax($("#" + $dialogName));
+        Core.initAjax($dialog);
     });
 }
 function toArchiveReportByWfm(elem, params) {

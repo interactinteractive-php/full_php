@@ -35,33 +35,34 @@
 
 <div class="mv_tiny_card3_with_list_widget_main">
     <?php
-    $c = ['rgb(238, 103, 99)','rgb(54, 185, 233)','rgb(32, 175, 162)','rgb(130, 96, 229)','rgb(255, 198, 0)'];
+    $c = ['rgb(238, 103, 99)','rgb(54, 185, 233)','rgb(32, 175, 162)','rgb(130, 96, 229)'];    
     foreach ($this->recordList as $recordRow) {
+        //$c = [issetParam($recordRow[$this->name7])];        
         $rowJson = htmlentities(json_encode($recordRow), ENT_QUOTES, 'UTF-8');
     ?>
         <a href="javascript:;" style="width: 211px;margin-right: 12px; margin-bottom: 12px;" onclick="checkList5SelectRowDv<?php echo $this->dataViewId; ?>(this);" class="mv_tiny_card3_with_list_widget no-dataview" data-row-data="<?php echo $rowJson; ?>">
-            <div class="card" style="border-width: 1px;box-shadow: none;padding: 0;">
+            <div class="card list-card" style="border-width: 1px;box-shadow: none;padding: 0;">
                 <div class="card-body" style="padding:0">
-                    <div class="card-img-actions mb-2 p-3" style="height: 230px;background: <?php echo $c[array_rand($c)] ?>">
+                    <div class="card-img-actions p-3" style="height: 230px;background: <?php echo $c[array_rand($c)] ?>">
                         <h5 style="font-weight: bold;" class="d-flex align-items-end mb0">
                             <div style="height: 16px;"><?php echo issetParam($recordRow[$this->name1]); ?></div>
                         </h5>
-                        <h5 style="color: #dcdcdc;font-size: 13px;">
+                        <h5 style="font-size: 13px;">
                             <?php echo issetParam($recordRow[$this->name5]); ?> 
                         </h5>                        
                         <div style="height: 80px;text-align: center;">
-                            <img class="directory-img mt8" style="width: 50px;" src="https://dev.veritech.mn/<?php echo issetParam($recordRow[$this->name4]); ?>"/>
+                            <img class="directory-img mt8" style="width: 50px;" src="<?php echo issetParam($recordRow[$this->name4]); ?>"/>
                         </div>                        
                         <div style="width: 100%;height: 1px;background: #ccc"></div>
                         <h5 style="font-weight: bold;" class="d-flex align-items-end mb0 mt15">
                             <div style="height: 40px;"><?php echo issetParam($recordRow[$this->name2]); ?></div>
                         </h5>                        
-                        <h5 style="color: #dcdcdc;font-size: 13px;height: 20px;">
+                        <h5 style="font-size: 13px;height: 20px;">
                             <?php echo issetParam($recordRow[$this->name6]); ?> 
                         </h5>
                     </div>
-                    <div class="p-3" style="">
-                        <div class=""><span style="color:#585858;font-size: 13px;">Хүлээн авсан:</span><span style="color:#A0A0A0;font-size: 13px;margin-left: 5px;"><?php echo Date::formatter(issetParam($recordRow[$this->name3]), 'Y.m.d') ?></span></div>
+                    <div class="p-3" style="background-color: #eaeaeabd;">
+                        <div class=""><span style="color:#585858;font-size: 13px;">Хүлээн авсан:</span><span style="color: #585858;font-size: 13px;margin-left: 5px;"><?php echo Date::formatter(issetParam($recordRow[$this->name3]), 'Y.m.d') ?></span></div>
                     </div>
                 </div>
             </div>
@@ -81,11 +82,18 @@ $('.mv_tiny_card3_with_list_widget').click(function() {
     $this.closest('.mv_tiny_card3_with_list_widget_main').find('.active').removeClass('active');
     $this.addClass('active');
 }); 
-function mvWidgetFileViewCreateCallback() {
-    $('div[data-menu-id="164723019841110"]').remove();
-    $('a[data-menu-id="164723019841110"]').trigger('click');
-}    
-function mvWidgetFileViewDeleteCallback(elem) {
-    mvWidgetFileViewCreateCallback();
-}
+
+$.contextMenu({
+    selector: ".mv_tiny_card3_with_list_widget_main .list-card",
+    callback: function(key, opt) {
+        if (key === 'delete') {
+            opt.$trigger.closest('.mv_tiny_card3_with_list_widget').click();
+            checkList5SelectRowDv1719369128320017(opt.$trigger.closest('.mv_tiny_card3_with_list_widget'));
+            checkList5SelectRowDvAcceptBtn1719369128320017();
+        }
+    },
+    items: {
+        "delete": {name: "Хавтаст хэрэг сонгох"}
+    }
+});
 </script>

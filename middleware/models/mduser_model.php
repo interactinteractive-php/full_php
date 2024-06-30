@@ -1425,4 +1425,89 @@ class Mduser_Model extends Model {
         return $get;
     }
     
+    public function getCloudUserDbConnectionsModel() {
+        
+        if (Config::getFromCache('cloud_domain_name') == Uri::domain() && !Session::unitName()) {
+            try {
+
+                $data = $this->db->GetAll("
+                    SELECT 
+                        T1.ID, 
+                        T1.CUSTOMER_ID, 
+                        T2.CUSTOMER_NAME 
+                    FROM MDM_CONNECTIONS T1 
+                        INNER JOIN CRM_CUSTOMER T2 ON T2.CUSTOMER_ID = T1.CUSTOMER_ID 
+                    WHERE T1.IS_ACTIVE = 1
+                    ORDER BY T2.CUSTOMER_NAME ASC");
+                
+                return $data;
+
+            } catch (Exception $ex) { }
+        }
+        
+        return [
+            ['ID' => '123', 'CUSTOMER_NAME' => 'Buldoors mon'], 
+            ['ID' => '456', 'CUSTOMER_NAME' => 'Goldcompass'], 
+            ['ID' => '789', 'CUSTOMER_NAME' => 'Xanadu'], 
+            ['ID' => '123', 'CUSTOMER_NAME' => 'Buldoors mon'], 
+            ['ID' => '456', 'CUSTOMER_NAME' => 'Goldcompass'], 
+            ['ID' => '789', 'CUSTOMER_NAME' => 'Xanadu'], 
+            ['ID' => '123', 'CUSTOMER_NAME' => 'Buldoors mon'], 
+            ['ID' => '456', 'CUSTOMER_NAME' => 'Goldcompass'], 
+            ['ID' => '789', 'CUSTOMER_NAME' => 'Xanadu'], 
+            ['ID' => '123', 'CUSTOMER_NAME' => 'Buldoors mon'], 
+            ['ID' => '456', 'CUSTOMER_NAME' => 'Goldcompass'], 
+            ['ID' => '789', 'CUSTOMER_NAME' => 'Xanadu']
+        ];
+    }
+    
+    public function connectCloudUserDbModel() {
+        
+        $connectionId = Input::numeric('connectionId');
+        $connectionInfo = DBUtil::getConnectionByDbId($connectionId);
+        
+        if (!$connectionInfo) {
+            return ['status' => 'error', 'message' => 'Connection not found!'];
+        }
+        
+        global $db;
+        
+        $dbDriver = DBUtil::toShortName($connectionInfo['DB_TYPE']);
+        $dbHost   = $connectionInfo['HOST_NAME'] . ':' . $connectionInfo['PORT'];
+        $dbUser   = strtolower($connectionInfo['USER_NAME']);
+        $dbPass   = $connectionInfo['USER_PASSWORD'];
+        $dbSID    = $connectionInfo['SID'];
+
+        if ($dbSID) {
+            $connectSID = true;
+        } else {
+            $dbSID = $connectionInfo['SERVICE_NAME'];
+            $connectSID = false;
+        }
+
+        $db = ADONewConnection($dbDriver);
+        $db->debug = DB_DEBUG;
+        $db->connectSID = $connectSID;
+        $db->autoRollback = true;
+        $db->datetime = true;
+
+        try {
+            $db->Connect($dbHost, $dbUser, $dbPass, $dbSID);
+        } catch (Exception $e) {
+            return ['status' => 'error', 'message' => $e->msg];
+        }
+        
+        $db->SetCharSet(DB_CHATSET);
+        
+        $secondDb = $dbHost . '|$|' . $dbUser . '|$|' . $dbPass . '|$|' . $dbSID . '|$|' . (int)$connectSID;
+        $secondDb = Crypt::encrypt($secondDb, 'db49x');
+
+        Session::set(SESSION_PREFIX . 'sdbun', (DB_DRIVER == 'oci8' ? $dbUser : $connectionInfo['ID']));
+        Session::set(SESSION_PREFIX . 'sdbid', $connectionInfo['ID']);
+        Session::set(SESSION_PREFIX . 'sdbnm', $connectionInfo['DB_NAME']);
+        Session::set(SESSION_PREFIX . 'sdb', $secondDb);
+        
+        return ['status' => 'success', 'url' => Config::getFromCacheDefault('CONFIG_START_LINK', null, 'appmenu')];
+    }
+    
 }

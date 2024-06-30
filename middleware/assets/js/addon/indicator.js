@@ -147,9 +147,9 @@ function manageKpiIndicatorValue(elem, kpiTypeId, indicatorId, isEdit, opt, call
     
     var isMapId = false, isMapHidden = false, isSrcMap = false, isListRelation = false;
     
-    if ($this.hasAttr('data-list-relation') && $this.attr('data-list-relation') == '1') {
+    /*if ($this.hasAttr('data-list-relation') && $this.attr('data-list-relation') == '1') {
         isListRelation = true;
-    }
+    }*/
     
     if ($this.hasAttr('data-mapid') && $this.attr('data-mapid') != '') {
         
@@ -7466,46 +7466,56 @@ function drawTreeIndicator(elem, colName) {
     });
 }
 
-function mvWidgetRelationRender(elem, kpiTypeId, mainIndicatorId, opt, callback, successCallback, srcIndicatorId) {
+function mvWidgetRelationRender(elem, kpiTypeId, mainIndicatorId, opt, callback, successCallback, srcIndicatorId, postData) {
     var $this = $(elem);
-    var postData = {
-        mainIndicatorId: mainIndicatorId, 
-        methodIndicatorId: opt.methodIndicatorId, 
-        structureIndicatorId: opt.structureIndicatorId
-    };
     var mode = '';
+    var widgetCode = '';
+    if (typeof postData === 'undefined') {
+        var postData = {
+            mainIndicatorId: mainIndicatorId, 
+            methodIndicatorId: opt.methodIndicatorId, 
+            structureIndicatorId: opt.structureIndicatorId
+        };
+
+        if (opt.hasOwnProperty('mode')) {
+            mode = opt.mode;
+            if (mode == 'update' || mode == 'view') {
+                if ($this.closest('.objectdatacustomgrid').length && $this.closest('.objectdatacustomgrid').find('.no-dataview').length) {
+                    var selectedRows = $this.closest('.objectdatacustomgrid').find('.no-dataview.active').length ? [JSON.parse($this.closest('.objectdatacustomgrid').find('.no-dataview.active').attr('data-rowdata'))] : [];      
+                } else {                        
+                    if ($this.hasClass('no-dataview') && $this.attr('data-rowdata')) {
+                        isNoDataview = true;
+                        fcSelectedRow = [JSON.parse($this.attr('data-rowdata'))];
+                        var selectedRows = fcSelectedRow;
+                    } else {
+                        var selectedRows = getDataViewSelectedRows(mainIndicatorId);
+                    }
+                }
     
-    if (opt.hasOwnProperty('mode')) {
-        mode = opt.mode;
-        if (mode == 'update' || mode == 'view') {
-            if ($this.closest('.objectdatacustomgrid').length && $this.closest('.objectdatacustomgrid').find('.no-dataview').length) {
-                var selectedRows = $this.closest('.objectdatacustomgrid').find('.no-dataview.active').length ? [JSON.parse($this.closest('.objectdatacustomgrid').find('.no-dataview.active').attr('data-rowdata'))] : [];      
-            } else {                        
-                if ($this.hasClass('no-dataview') && $this.attr('data-rowdata')) {
-                    isNoDataview = true;
-                    fcSelectedRow = [JSON.parse($this.attr('data-rowdata'))];
-                    var selectedRows = fcSelectedRow;
+                if (selectedRows.length) {
+    
+                    var selectedRow = selectedRows[0];
+                    postData.dynamicRecordId = selectedRow[window['idField_'+mainIndicatorId]];
+                    postData.idField = window['idField_'+mainIndicatorId];
+                    postData.selectedRow = selectedRow;
+                    postData.mode = mode;
+                    postData.widgetCode = opt.widgetCode;
+                    widgetCode = opt.widgetCode;
+    
                 } else {
-                    var selectedRows = getDataViewSelectedRows(mainIndicatorId);
+                    alert(plang.get('msg_pls_list_select'));
+                    return;
                 }
             }
-
-            if (selectedRows.length) {
-
-                var selectedRow = selectedRows[0];
-                postData.dynamicRecordId = selectedRow[window['idField_'+mainIndicatorId]];
-                postData.idField = window['idField_'+mainIndicatorId];
-                postData.selectedRow = selectedRow;
-                postData.mode = mode;
-                postData.widgetCode = opt.widgetCode;
-
-            } else {
-                alert(plang.get('msg_pls_list_select'));
-                return;
-            }
+        }
+        
+        if (typeof selectedRow['METHOD_INDICATOR_ID'] !== 'undefined' && selectedRow['METHOD_INDICATOR_ID']) {
+            postData['methodIndicatorId'] = selectedRow.METHOD_INDICATOR_ID;
+            postData['structureIndicatorId'] = selectedRow.STRUCTURE_INDICATOR_ID;
+            postData['widgetCode'] = selectedRow.WIDGET_CODE;
         }
     }
-
+    
     $.ajax({
         type: 'post',
         url: 'mdwidget/mvWidgetRelationRender',
@@ -7595,7 +7605,22 @@ function mvWidgetRelationRender(elem, kpiTypeId, mainIndicatorId, opt, callback,
                                         if (responseData.status == 'success') {
                                             window['kpiIndicatorAfterSave_' + data.uniqId]($this, responseData.status, responseData);
                                             $dialog.dialog('close');
-                                            dataViewReload(mainIndicatorId);
+
+                                            if ($('#objectdatacustomgrid-' + mainIndicatorId).hasClass('objectdatacustomgrid')) {
+                                                var menuId = $('#objectdatacustomgrid-' + mainIndicatorId).closest('[data-menu-id]').attr('data-menu-id');
+                                                $('#objectdatacustomgrid-' + mainIndicatorId).closest('[data-menu-id]').remove();
+                                                $('a[data-menu-id="'+ menuId +'"]').trigger('click');
+                                                                 
+                                                if (typeof selectedRow['METHOD_INDICATOR_ID'] !== 'undefined' && selectedRow['METHOD_INDICATOR_ID']) {               
+                                                    postData['methodIndicatorId'] = opt.methodIndicatorId;
+                                                    postData['structureIndicatorId'] = opt.structureIndicatorId;
+                                                    postData['widgetCode'] = widgetCode;
+                                                    console.log(postData);
+                                                    mvWidgetRelationRender(elem, kpiTypeId, mainIndicatorId, opt, callback, successCallback, srcIndicatorId, postData);
+                                                }
+                                            } else {
+                                                dataViewReload(mainIndicatorId);
+                                            }
                                         } 
 
                                         Core.unblockUI();

@@ -386,7 +386,13 @@ class Mdpki extends Controller {
         
         try {
             
+            /* $postData['signatureimage'] = 'storage/unitel.png';
+            $selectedRow['signaturetext'] = Date::currentDate() . ' test';
+            $postData['filePath'] = 'storage/uploads/test.pdf';
+            $selectedRow['signatureheight'] = '40'; */
+
             $signatureImage = '';
+            $signatureHeight = issetVar($selectedRow['signatureheight']);
             
             if (issetParam($postData['signatureimage']) !== '') {
                 $isBase64 = preg_match('/^[a-zA-Z0-9\/\r\n+]*={0,2}$/', $postData['signatureimage']);
@@ -399,9 +405,6 @@ class Mdpki extends Controller {
                     @file_put_contents($imgfilePath, base64_decode($signatureImage));
                 }
             }
-            if ($imgfilePath === '') {
-                $imgfilePath = Config::getFromCache('stamp_filepath');
-            }
             
             if (!file_exists($imgfilePath)) {
                 throw new Exception(Lang::line('STAMP_IMG_NOT_FOUND'));
@@ -410,37 +413,38 @@ class Mdpki extends Controller {
             if (!file_exists($postData['filePath'])) {
                 throw new Exception(Lang::line('STAMP_FILE_NOT_FOUND'));
             }
+            
+            includeLib('Image/image-magician/php_image_magician');
 
-            $imgsize_arr = getimagesize($imgfilePath);
-            if (150 < $imgsize_arr[0]) {
+            list($getWidth, $getHeight) = getimagesize($imgfilePath);
+            
+            if ($signatureHeight && $getHeight > $signatureHeight) {
                 
-                $info = getimagesize($imgfilePath);
-                if (mimeToExt($info['mime']) === 'png') {
-                    $image = imagecreatefrompng($imgfilePath);
-                } else {
-                    $image = imagecreatefromjpeg($imgfilePath);
-                }
+                $fileExtension = strtolower(substr($imgfilePath, strrpos($imgfilePath, '.') + 1));
+                
+                $image = new imageLib($imgfilePath);
+                $image->resizeImage($signatureHeight, $signatureHeight, 'portrait', true);
                 
                 $newFilePath = Mdwebservice::bpUploadGetPath('');
-                $newFilePath .= getUID() . '.png';
-    
-                // Scale the image
-                $new_width = 150; // New width for the image
-                $new_height = 70; // New height for the image
-                $resized_image = imagescale($image, $new_width, $new_height);
-    
-                // Save the resized image
-                imagejpeg($resized_image, $newFilePath);
-                imagedestroy($image);
-                imagedestroy($resized_image);
+                $newFilePath .= getUID() . '.' . $fileExtension;
+                
+                $image->saveImage($newFilePath, 100);
+
                 $imgfilePath = $newFilePath;
             }
             
-            if (Input::post('signaturetext')) {
-                $tmp = $imgfilePath;
-                $imgfilePath = Mdwebservice::bpUploadGetPath('');
-                $imgfilePath .= getUID() . '.png';
-                self::imageAddText($tmp, $imgfilePath, Input::post('signaturetext'));
+            if ($signaturetext = issetParam($selectedRow['signaturetext'])) {
+                
+                if (!isset($newFilePath)) {
+                    $newFilePath = Mdwebservice::bpUploadGetPath('');
+                    $newFilePath .= getUID() . '.' . $fileExtension;
+                }
+                
+                $image = new imageLib($imgfilePath);
+                $image->addText($signaturetext, 'b', 1, '#333', 5.5, 0, BASEPATH . 'libs/Captcha/Easy/verdana.ttf');
+                $image->saveImage($newFilePath, 100);
+                
+                $imgfilePath = $newFilePath;
             }
 
             $pdfFilePath = $postData['filePath'];
@@ -451,30 +455,41 @@ class Mdpki extends Controller {
             if (issetParam($selectedRow['signature']) !== '') {
                 $param = array(
                     'pdfFilePath' => $pdfFilePath,
-                    'stampImagePath' =>   $_SERVER['DOCUMENT_ROOT'] . '/' . $imgfilePath,
-                    'keyWord' => $selectedRow['signature'],
+                    'stampImagePath' => $_SERVER['DOCUMENT_ROOT'] . '/' . $imgfilePath,
+                    'keyWord' => $selectedRow['signature']
+                    /*'text' => issetParam($selectedRow['signaturetext']),
+                    'newHeight' => issetParam($selectedRow['signatureheight']),*/
                 );
                 $result = $this->ws->runResponse(GF_SERVICE_ADDRESS, 'PDF_STAMP_BY_KEYWORD', $param);
             } elseif (Input::post('pageNum') !== 'all') {
 
                 $param = array(
                     'pdfFilePath' => $pdfFilePath,
-                    'stampImagePath' =>   $_SERVER['DOCUMENT_ROOT'] . '/' . $imgfilePath,
+                    'stampImagePath' => $_SERVER['DOCUMENT_ROOT'] . '/' . $imgfilePath,
                     'pageNumber' => Input::post('pageNum'),
                     'locationX' => Input::post('x'),
                     'locationY' => Input::post('y'),
+                    /*'text' => issetParam($selectedRow['signaturetext']),
+                    'newHeight' => issetParam($selectedRow['signatureheight']),*/
                 );
                 $result = $this->ws->runResponse(GF_SERVICE_ADDRESS, 'PDF_WATERMARK', $param);
 
             } else {
                 $param = array(
                     'pdfFilePath' => $pdfFilePath,
-                    'stampImageB64' =>   base64_encode(file_get_contents($_SERVER['DOCUMENT_ROOT'] . '/' . $imgfilePath)),
+                    'stampImageB64' => base64_encode(file_get_contents($_SERVER['DOCUMENT_ROOT'] . '/' . $imgfilePath)),
                     'position' => Input::post('signatureposition', 'b_right'),
                     'locationX' => Input::post('x'),
                     'locationY' => Input::post('y'),
+                    /*'text' => issetParam($selectedRow['signaturetext']),
+                    'newHeight' => issetParam($selectedRow['signatureheight']),*/
                 );
+
                 $result = $this->ws->runResponse(GF_SERVICE_ADDRESS, 'NTR_CONSUL_STAMP_BP', $param);
+            }
+            
+            if (isset($newFilePath)) {
+                unlink($newFilePath);
             }
 
             if (issetParam($result['result']['stampedpdfb64'])) {
@@ -522,57 +537,10 @@ class Mdpki extends Controller {
 
             $response['status'] = 'error';
             $response['message'] = $ex->getMessage();
-
         }
 
         convJson($response);
         exit;
-
     }
     
-    public function imageAddText ($src = 'storage/test.png', $dst = 'storage/1719197919423054.png', $text = "2024-06-21 15:00") {
-        try {
-            $info = getimagesize($src);
-            if (mimeToExt($info['mime']) === 'png') {
-                $jpg_image = imagecreatefrompng($src);
-            } else {
-                $jpg_image = imagecreatefromjpeg($src);
-            }
-
-            $orig_width = imagesx($jpg_image);
-            $orig_height = imagesy($jpg_image);
-
-            // Allocate A Color For The background
-            $bcolor=imagecolorallocate($jpg_image, 255, 255, 255);
-
-            //Create background
-            imagefilledrectangle($jpg_image,  0, $orig_height+100, $orig_width, $orig_height, $bcolor);
-            $orig_width = imagesx($jpg_image);
-            $orig_height = imagesy($jpg_image);
-            
-            // Create a canvas containing both the image and text
-            $canvas = imagecreatetruecolor($orig_width, $orig_height + 20); // Extra height for text
-            $bcolor = imagecolorallocate($canvas, 255, 255, 255); // Background color
-            imagefilledrectangle($canvas, 0, 0, $orig_width, $orig_height + 20, $bcolor); // Add background color
-            
-            // Save image to the new canvas
-            imagecopyresampled($canvas, $jpg_image, 0, 0, 0, 0, $orig_width, $orig_height, $orig_width, $orig_height);
-            
-            // Add text below the image
-
-            $font_path = $_SERVER['DOCUMENT_ROOT'] . "/assets/custom/css/font/Arial.ttf"; // Change to your own font file
-            $color = imagecolorallocate($canvas, 0, 0, 0); // Text color
-            imagettftext($canvas, 7, 0, 0, $orig_height + 10, $color, $font_path, $text);
-            
-            // Output the final image
-            /* header('Content-type: image/png'); */
-            imagejpeg($canvas, $dst);
-
-            // Clean up memory
-            imagedestroy($jpg_image);
-            imagedestroy($canvas);   
-        }   catch (Exception $ex) {
-
-        }
-    }
 }

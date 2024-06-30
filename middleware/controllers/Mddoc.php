@@ -293,16 +293,24 @@ class Mddoc extends Controller {
     
     public function toArchiveReport() {
         
+        $this->view->isContentCode = Config::getFromCache('PF_REPORT_ARCHIVE_REF_CODE');
         $this->view->defaultName = Input::post('defaultName');
-        $this->view->directoryList = $this->model->getContentDirectory2Model();
         
-        $response = array(
+        if ($this->view->isContentCode) {
+        
+            $param = ['objectId' => $this->view->isContentCode];
+            $result = $this->ws->runResponse(GF_SERVICE_ADDRESS, 'CRM_AUTONUMBER_BP', $param);
+
+            $this->view->contentCode = $this->ws->getValue($result['result']);
+        }
+        
+        $response = [
             'html' => $this->view->renderPrint('toArchiveReport', self::$viewPath),
             'title' => 'Архив',
-            'save_btn' => Lang::line('save_btn'),
-            'close_btn' => Lang::line('close_btn')
-        );
-        echo json_encode($response); exit;
+            'save_btn' => $this->lang->line('save_btn'),
+            'close_btn' => $this->lang->line('close_btn')
+        ];
+        convJson($response);
     }
     
     public function toArchiveSave() {

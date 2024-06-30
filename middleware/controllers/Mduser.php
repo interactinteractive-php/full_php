@@ -762,7 +762,7 @@ class Mduser extends Controller {
         $username = Input::post('username');
         
         $response = self::validatePassword($password, $username);
-        echo json_encode($response, JSON_UNESCAPED_UNICODE); exit;
+        convJson($response);
     }
     
     public static function systemModeActions() {
@@ -807,7 +807,7 @@ class Mduser extends Controller {
             );
         }
         
-        echo json_encode($response);
+        convJson($response);
     }
     
     public function sendOtp() {
@@ -830,7 +830,7 @@ class Mduser extends Controller {
             $response['message'] = $message;
         }
         
-        echo json_encode($response, JSON_UNESCAPED_UNICODE);
+        convJson($response);
     }
     
     public function startupMetaScriptFooter() {
@@ -855,6 +855,16 @@ class Mduser extends Controller {
         } 
         
         return null;
+    }
+    
+    public function getCloudUserDbConnections() {
+        $response = $this->model->getCloudUserDbConnectionsModel();
+        convJson($response);
+    }
+    
+    public function connectCloudUserDb() {
+        $response = $this->model->connectCloudUserDbModel();
+        convJson($response);
     }
     
 }

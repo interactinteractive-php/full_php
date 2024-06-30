@@ -526,6 +526,28 @@ class Restapi extends Controller {
                     }
                     break;
                     
+                    case 'kpiIndicatorGetRelation':
+                    {   
+                        if (!isset($parameters['indicatorId']) || (isset($parameters['indicatorId']) && !$parameters['indicatorId'])) {
+                            $response = ['status' => 'error', 'text' => 'Invalid indicatorId!'];
+                            break;
+                        } 
+                        
+                        if (!isset($parameters['semanticTypeId']) || (isset($parameters['semanticTypeId']) && !$parameters['semanticTypeId'])) {
+                            $response = ['status' => 'error', 'text' => 'Invalid semanticTypeId!'];
+                            break;
+                        } 
+                        
+                        $indicatorId    = Input::param($parameters['indicatorId']);
+                        $semanticTypeId = Input::param($parameters['semanticTypeId']);
+
+                        $this->load->model('mdform', 'middleware/models/');
+                        $relations = $this->model->getChildRenderStructureModel($indicatorId, explode(',', $semanticTypeId));
+
+                        $response = ['status' => 'success', 'result' => $relations];
+                    }
+                    break;
+                    
                     case 'removeFile':
                     {
                         if (isset($parameters['path']) && isset($parameters['path'][0])) {

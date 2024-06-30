@@ -172,8 +172,9 @@ if (issetParamArray($this->relationComponentsConfigData['rows'])) {
 
         function checkTime() {
             if (mainVideo<?php echo $this->uniqId ?>.currentTime >= end) {
-               mainVideo<?php echo $this->uniqId ?>.pause();
-               clearInterval(videoTimeToSaveInterval<?php echo $this->uniqId ?>);
+                mainVideo<?php echo $this->uniqId ?>.pause();
+                if (typeof videoTimeToSaveInterval<?php echo $this->uniqId ?> !=='undefined')
+                    clearInterval(videoTimeToSaveInterval<?php echo $this->uniqId ?>);
             } else {
                setTimeout(checkTime, 100);
             }
@@ -191,7 +192,7 @@ if (issetParamArray($this->relationComponentsConfigData['rows'])) {
             url: "mdcontentui/contentVisitorLog",
             data: { recordId: _this.attr('data-recordid'), duration: mainVideo<?php echo $this->uniqId ?>.currentTime },
             success: function (data) {                   
-                if (!data && Config::getFromCache('IS_CONTENT_VIEW')) {
+                if (!data && getConfigValue('IS_CONTENT_VIEW')) {
                     mainVideo<?php echo $this->uniqId ?>.controls = false;
                 }
             }

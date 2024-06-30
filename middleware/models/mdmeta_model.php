@@ -744,8 +744,14 @@ class Mdmeta_Model extends Model {
                         $menu .= '<i class="fas fa-terminal font-size-16"></i>';
                     $menu .= '</a>';
                     
-                    $menu .= '<a href="http://192.168.192.108:8000/" target="_blank" class="veri-app-engage-btn p-0" data-toggle="tooltip" data-placement="left" --onclick="metaVerseCommandPromptIframe(this);" data-url="http://192.168.192.108:8000/" title="Interactive AI">';
+                    /*$menu .= '<a href="http://192.168.192.108:8000/" target="_blank" class="veri-app-engage-btn p-0" data-toggle="tooltip" data-placement="left" --onclick="metaVerseCommandPromptIframe(this);" data-url="http://192.168.192.108:8000/" title="Interactive AI">';
                         $menu .= '<i class="fas icon-atom2 font-size-16"></i>';
+                    $menu .= '</a>';*/
+                    
+                } elseif ($row['metadataid'] === '1719755527045152' && Config::getFromCache('cloud_domain_name') == Uri::domain()) {
+                    
+                    $menu .= '<a href="javascript:;" class="veri-app-engage-btn p-0" data-toggle="tooltip" data-placement="left" title="Бааз солих" onclick="connectCloudUserDatabase(this);">';
+                        $menu .= '<i class="fas fa-database font-size-16"></i>';
                     $menu .= '</a>';
                     
                 }
