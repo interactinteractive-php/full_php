@@ -9651,7 +9651,7 @@ function connectCloudUserDatabase(elem) {
                 html.push('</div>');
                 
                 html.push('<div class="row mt-3 mb-3">');
-                    html.push('<div class="col-md-12">');
+                    html.push('<div class="col-md-12" id="cloud-user-db-connections">');
                     for (var i in data) {
                         html.push('<a href="javascript:;" class="badge badge-flat badge-pill border-info badge-icon font-size-12 mr-1 mb8" style="color: #00acc1" data-id="'+data[i]['ID']+'"><i class="far fa-database"></i> '+data[i]['CUSTOMER_NAME']+'</a>');
                     }
@@ -9674,6 +9674,25 @@ function connectCloudUserDatabase(elem) {
                     }
                 });
                 $dialog.dialog('open');
+                
+                $dialog.on('keyup', 'input', function(e){
+        
+                    var code = e.keyCode || e.which;
+                    if (code == '9') return;
+
+                    var inputVal = $(this).val().toLowerCase(), 
+                        $table = $dialog.find('#cloud-user-db-connections'), 
+                        $rows = $table.find('[data-id]');
+
+                    var $filteredRows = $rows.filter(function(){
+                        var $rowElem = $(this);
+                        var value = $rowElem.text().toLowerCase();
+                        return value.indexOf(inputVal) === -1;
+                    });
+
+                    $rows.show();
+                    $filteredRows.hide();
+                });
                 
                 $dialog.on('click', '[data-id]', function() {
                     PNotify.removeAll();
