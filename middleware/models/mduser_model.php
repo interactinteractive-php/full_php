@@ -1497,7 +1497,7 @@ class Mduser_Model extends Model {
         $param = [
             'username' => 'admin', 
             'password' => '123',
-            'userId' => '1'
+            'userId' => 1
         ];
         $result = $this->ws->runResponse(GF_SERVICE_ADDRESS, 'login', $param);
         $errorMsg = 'Системд нэвтрэх сервис хэвийн бус ажиллаж байгаа тул та систем хариуцсан ажилтантай холбогдоно уу';
