@@ -1445,20 +1445,7 @@ class Mduser_Model extends Model {
             } catch (Exception $ex) { }
         }
         
-        return [
-            ['ID' => '123', 'CUSTOMER_NAME' => 'Buldoors mon'], 
-            ['ID' => '456', 'CUSTOMER_NAME' => 'Goldcompass'], 
-            ['ID' => '789', 'CUSTOMER_NAME' => 'Xanadu'], 
-            ['ID' => '123', 'CUSTOMER_NAME' => 'Buldoors mon'], 
-            ['ID' => '456', 'CUSTOMER_NAME' => 'Goldcompass'], 
-            ['ID' => '789', 'CUSTOMER_NAME' => 'Xanadu'], 
-            ['ID' => '123', 'CUSTOMER_NAME' => 'Buldoors mon'], 
-            ['ID' => '456', 'CUSTOMER_NAME' => 'Goldcompass'], 
-            ['ID' => '789', 'CUSTOMER_NAME' => 'Xanadu'], 
-            ['ID' => '123', 'CUSTOMER_NAME' => 'Buldoors mon'], 
-            ['ID' => '456', 'CUSTOMER_NAME' => 'Goldcompass'], 
-            ['ID' => '789', 'CUSTOMER_NAME' => 'Xanadu']
-        ];
+        return [];
     }
     
     public function connectCloudUserDbModel() {
