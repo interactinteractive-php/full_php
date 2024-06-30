@@ -9675,7 +9675,7 @@ function connectCloudUserDatabase(elem) {
                 });
                 $dialog.dialog('open');
                 
-                $dialog.on('keyup', 'input', function(e){
+                $dialog.on('keyup', 'input', function(e) {
         
                     var code = e.keyCode || e.which;
                     if (code == '9') return;
@@ -9702,9 +9702,12 @@ function connectCloudUserDatabase(elem) {
                         url: 'mduser/connectCloudUserDb',
                         data: {connectionId: connId}, 
                         dataType: 'json',
+                        beforeSend: function() {
+                            Core.blockUI({message: 'Loading...', boxed: true});
+                        },
                         success: function(dataSub) {
                             if (dataSub.status == 'success') {
-                                window.open(dataSub.url, '_blank');
+                                window.location.href = URL_APP + dataSub.url;
                             } else {
                                 new PNotify({
                                     title: dataSub.status,
@@ -9715,6 +9718,7 @@ function connectCloudUserDatabase(elem) {
                                     addclass: pnotifyPosition
                                 });
                             }
+                            Core.unblockUI();
                         }
                     });
                 });
