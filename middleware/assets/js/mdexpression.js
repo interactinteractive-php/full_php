@@ -16116,6 +16116,10 @@ function saveBtnPositionFixed(mainSelector) {
 function runFunctionOtherProcess(mainSelector, processId, callbackFunction, inputFieldPath) {
     var uniqId = $('body').find('div[id="bp-window-'+ processId +'"]').attr('data-bp-uniq-id');
     try {
+        if (!uniqId) {
+            uniqId = $('body').find('div[data-process-id="'+ processId +'"]').attr('data-bp-uniq-id');;
+        }
+        
         if (typeof inputFieldPath !== 'undefined') {
             window[callbackFunction + '_' + uniqId](inputFieldPath);
         } else {
@@ -16321,10 +16325,18 @@ function bpStatusBtnChangePosition(mainSelector, positionCode) {
 function bpAddonRequired(mainSelector, type) {
     if (type === 'file') {
         var $tab = mainSelector.find('ul.bp-addon-tab > li > a[data-addon-type="'+type+'"]');
+        if ($tab.length < 1) {
+            $tab = mainSelector.find('a[data-addon-type="'+type+'"]');
+        }
+
         $tab.attr({'data-only-required': '1', 'data-required': '2'});
         $tab.prepend('<span class="required">*</span>');
     } else if (type === 'mv_relation') {
         var $tab = mainSelector.find('ul.bp-addon-tab > li > a[data-addon-type="'+type+'"]');
+        if ($tab.length < 1) {
+            $tab = mainSelector.find('a[data-addon-type="'+type+'"]');
+        }
+        
         $tab.attr({'data-only-required': '1', 'data-required': '2'});
         $tab.prepend('<span class="required">*</span>');
     }
@@ -16333,10 +16345,18 @@ function bpAddonRequired(mainSelector, type) {
 function bpAddonNonRequired(mainSelector, type) {
     if (type === 'file') {
         var $tab = mainSelector.find('ul.bp-addon-tab > li > a[data-addon-type="'+type+'"]');
+        if ($tab.length < 1) {
+            $tab = mainSelector.find('a[data-addon-type="'+type+'"]');
+        }
+        
         $tab.attr('data-only-required', '0');
         $tab.find('span.required').remove();
     } else if (type === 'mv_relation') {
         var $tab = mainSelector.find('ul.bp-addon-tab > li > a[data-addon-type="'+type+'"]');
+        if ($tab.length < 1) {
+            $tab = mainSelector.find('a[data-addon-type="'+type+'"]');
+        }
+        
         $tab.attr({'data-only-required': '0', 'data-required': '0'});
         $tab.find('span.required').remove();
     }
@@ -19479,4 +19499,11 @@ function bpGetDataPointInPolygon(mainSelector, elem, dsId, polygonField, coordin
     } else {
         return result.data;
     }
+}
+function bpSetFileExtension(mainSelector, elem, fieldPath, extensions) {
+    var $getField = getBpElement(mainSelector, elem, fieldPath);
+    if ($getField) {
+        $getField.attr('data-valid-extension', extensions);
+    }
+    return;
 }

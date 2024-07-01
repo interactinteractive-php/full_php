@@ -7509,7 +7509,7 @@ function mvWidgetRelationRender(elem, kpiTypeId, mainIndicatorId, opt, callback,
             }
         }
         
-        if (typeof selectedRow['METHOD_INDICATOR_ID'] !== 'undefined' && selectedRow['METHOD_INDICATOR_ID']) {
+        if (typeof selectedRow['METHOD_INDICATOR_ID'] !== 'undefined' && selectedRow['METHOD_INDICATOR_ID'] && typeof selectedRow.WIDGET_CODE !== 'undefined' && selectedRow.WIDGET_CODE) {
             postData['methodIndicatorId'] = selectedRow.METHOD_INDICATOR_ID;
             postData['structureIndicatorId'] = selectedRow.STRUCTURE_INDICATOR_ID;
             postData['widgetCode'] = selectedRow.WIDGET_CODE;

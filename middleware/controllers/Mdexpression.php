@@ -2707,6 +2707,7 @@ class Mdexpression extends Controller {
         $fullExpression = str_replace('setMetaVerseFieldValue(', 'bpSetMetaVerseFieldValue(' . $mainSelector . ', checkElement, ', $fullExpression);
         $fullExpression = str_replace('setHeaderFieldStyle(', 'bpSetHeaderFieldStyle(' . $mainSelector . ', ', $fullExpression);
         $fullExpression = str_replace('setReportTemplateFieldValue(', 'bpSetReportTemplateFieldValue(' . $mainSelector . ', ', $fullExpression);
+        $fullExpression = str_replace('setFileExtension(', 'bpSetFileExtension(' . $mainSelector . ', checkElement, ', $fullExpression);
         
         $fullExpression = str_replace('unsetMask(', 'bpUnSetMask(' . $mainSelector . ', checkElement, ', $fullExpression);
         $fullExpression = str_replace('setMask(', 'bpSetMask(' . $mainSelector . ', checkElement, ', $fullExpression);

@@ -1617,6 +1617,10 @@ function importPatchToCloudAppDbs(elem) {
                                 } else {
                                     $statusCell.html('<span class="badge badge-warning font-size-12">Unkhown error!</span>');
                                 }
+                            }, 
+                            error: function (jqXHR, exception) {
+                                var jsonValue = JSON.parse(jqXHR.responseText);
+                                $statusCell.html('<span class="badge badge-danger font-size-12">'+jsonValue.message+'</span>');
                             }
                         });
                     });
