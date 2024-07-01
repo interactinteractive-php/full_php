@@ -9719,6 +9719,18 @@ function connectCloudUserDatabase(elem) {
                                 });
                             }
                             Core.unblockUI();
+                        }, 
+                        error: function (jqXHR, exception) {
+                            var jsonValue = JSON.parse(jqXHR.responseText);
+                            new PNotify({
+                                title: jsonValue.status,
+                                text: jsonValue.message,
+                                type: jsonValue.status,
+                                sticker: false,
+                                hide: true,
+                                addclass: pnotifyPosition
+                            });
+                            Core.unblockUI();
                         }
                     });
                 });
