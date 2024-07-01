@@ -315,10 +315,12 @@ $dataResult = $this->response['rows'];
 // if (!isset($dataResult[0]['C9_DESC'])) {
 //     die();
 // }
+
 $dataResult = Arr::groupByArrayByNullKey($dataResult, $this->relationViewConfig['position1']); 
 
 if ($dataResult) {
-if (count($this->response['rows']) == count($dataResult['яяяrow']['rows'])) { ?>
+if (count($this->response['rows']) == count($dataResult['яяяrow']['rows'])) { 
+?>
     <a href="javascript:;" onclick="<?php echo str_replace('true,', 'false,', $createClickAction) ?>" data-list-relation="1" data-rowdata="" data-mapid="<?php echo $mapId ?>" data-main-indicatorid="<?php echo $this->indicatorId; ?>" data-crud-indicatorid="<?php echo $createCrudId ?>" class="mv-cardview no-dataview" style="margin-bottom: 30px;background-color: #eaeaea;height: 70px;width: 60px;margin-top: 10px;margin-left: 20px;">
         <div class="card" style="border: none;box-shadow: none;">
             <div class="card-body">
@@ -326,7 +328,8 @@ if (count($this->response['rows']) == count($dataResult['яяяrow']['rows'])) {
             </div>
         </div>
     </a>        
-<?php }
+<?php 
+}
 foreach ($dataResult as $groupName => $groupRow) {
     if ($groupName != 'яяяrow') {
 ?>
@@ -360,7 +363,7 @@ foreach ($dataResult as $groupName => $groupRow) {
         }
     } 
     ?>
-    <a href="javascript:;" onclick="<?php echo $createClickAction ?>" data-list-relation="1" data-rowdata="<?php echo htmlentities(json_encode($groupRow['row'], JSON_UNESCAPED_UNICODE), ENT_QUOTES, 'UTF-8') ?>" data-mapid="<?php echo $mapId ?>" data-main-indicatorid="<?php echo $this->indicatorId; ?>" data-crud-indicatorid="<?php echo $createCrudId ?>" class="mv-cardview no-dataview" style="margin-bottom: 30px;background-color: #eaeaea;height: 70px;width: 60px;margin-top: 10px;margin-left: 20px;">
+    <a href="javascript:;" onclick="<?php echo str_replace('true,', 'false,', $createClickAction); ?>" data-list-relation="1" data-rowdata="" data-mapid="<?php echo $mapId ?>" data-main-indicatorid="<?php echo $this->indicatorId; ?>" data-crud-indicatorid="<?php echo $createCrudId ?>" class="mv-cardview no-dataview" style="margin-bottom: 30px;background-color: #eaeaea;height: 70px;width: 60px;margin-top: 10px;margin-left: 20px;">
         <div class="card" style="border: none;box-shadow: none;">
             <div class="card-body">
                 <i style="font-size: 26px;position: absolute;margin-top: 20px;margin-left: 18px;color:#ccc" class="fa fa-plus"></i>
@@ -371,15 +374,18 @@ foreach ($dataResult as $groupName => $groupRow) {
     }
     echo '</div>';
 } 
-} else { ?>
-    <a href="javascript:;" onclick="<?php echo str_replace('true,', 'false,', $createClickAction) ?>" data-list-relation="1" data-rowdata="" data-mapid="<?php echo $mapId ?>" data-main-indicatorid="<?php echo $this->indicatorId; ?>" data-crud-indicatorid="<?php echo $createCrudId ?>" class="mv-cardview no-dataview" style="margin-bottom: 30px;background-color: #eaeaea;height: 70px;width: 60px;margin-top: 10px;margin-left: 20px;">
+} else { 
+?>
+    <a href="javascript:;" onclick="<?php echo str_replace('true,', 'false,', $createClickAction); ?>" data-list-relation="1" data-rowdata="" data-mapid="<?php echo $mapId ?>" data-main-indicatorid="<?php echo $this->indicatorId; ?>" data-crud-indicatorid="<?php echo $createCrudId ?>" class="mv-cardview no-dataview" style="margin-bottom: 30px;background-color: #eaeaea;height: 70px;width: 60px;margin-top: 10px;margin-left: 20px;">
         <div class="card" style="border: none;box-shadow: none;">
             <div class="card-body">
                 <i style="font-size: 26px;position: absolute;margin-top: 20px;margin-left: 18px;color:#ccc" class="fa fa-plus"></i>
             </div>
         </div>
     </a>        
-<?php } ?>
+<?php 
+} 
+?>
 
 <script type="text/javascript">
 function mvCustomCardMoreView(elem, indicatorId, rowId, title) {

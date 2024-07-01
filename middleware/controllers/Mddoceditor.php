@@ -67,6 +67,12 @@ class Mddoceditor extends Controller {
                 'status' => $status
             )));
         }
+        
+        $token = Input::post('token');
+        
+        if (!$token) {
+            outputJSON('Missing parameter!');
+        }
 
         if ($_FILES['uplTheFile']['error'] > 0) {
             outputJSON('An error ocurred when uploading.');
@@ -82,10 +88,18 @@ class Mddoceditor extends Controller {
             chmod($fileName, 0755);
             unlink($fileName);
         }
+        
+        FileUpload::SetFileName($_FILES['uplTheFile']['name']);
+        FileUpload::SetTempName($_FILES['uplTheFile']['tmp_name']);
+        FileUpload::SetUploadDirectory($dir);
+        FileUpload::SetValidExtensions(explode(',', Config::getFromCache('CONFIG_FILE_EXT')));
+        FileUpload::SetMaximumFileSize(FileUpload::GetConfigFileMaxSize());
+        $uploadResult = FileUpload::UploadFile();
 
-        if (!move_uploaded_file($_FILES['uplTheFile']['tmp_name'], $fileName)) {
+        if (!$uploadResult) {
             outputJSON('Error uploading file - check destination is writeable.');
-        }
+        } 
+        
         outputJSON($_FILES['uplTheFile']['name'], 'success');
     }
     
@@ -98,6 +112,12 @@ class Mddoceditor extends Controller {
                 'status' => $status
             )));
         }
+        
+        $token = Input::post('token');
+        
+        if (!$token) {
+            outputJSON('Missing parameter!');
+        }
 
         if ($_FILES['uplTheFile']['error'] > 0) {
             outputJSON('An error ocurred when uploading.');
@@ -106,16 +126,25 @@ class Mddoceditor extends Controller {
             outputJSON('File uploaded exceeds maximum upload size.');
         }
         
-        $fileName = 'storage/uploads/metavalue/photo_temp/original/'.$_FILES['uplTheFile']['name'];
+        $dir = 'storage/uploads/metavalue/photo_temp/original/';
+        $fileName = $dir.$_FILES['uplTheFile']['name'];
         
         if (file_exists($fileName)) {
             chmod($fileName, 0755);
             unlink($fileName);
         }
+        
+        FileUpload::SetFileName($_FILES['uplTheFile']['name']);
+        FileUpload::SetTempName($_FILES['uplTheFile']['tmp_name']);
+        FileUpload::SetUploadDirectory($dir);
+        FileUpload::SetValidExtensions(explode(',', Config::getFromCache('CONFIG_FILE_EXT')));
+        FileUpload::SetMaximumFileSize(FileUpload::GetConfigFileMaxSize());
+        $uploadResult = FileUpload::UploadFile();
 
-        if (!move_uploaded_file($_FILES['uplTheFile']['tmp_name'], $fileName)) {
+        if (!$uploadResult) {
             outputJSON('Error uploading file - check destination is writeable.');
         }
+        
         outputJSON($_FILES['uplTheFile']['name'], 'success');
     }
 

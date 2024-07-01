@@ -950,6 +950,7 @@ class Mdstatement extends Controller {
             
             ob_start('ob_html_compress'); 
                 $minifyHtmlData = '<div data-file-id="'.$fileId.'" data-count="'.self::$rowsCount.'"></div>'.$htmlData;
+                $htmlData = null;
             ob_end_flush();
             
             return $minifyHtmlData;
@@ -964,7 +965,9 @@ class Mdstatement extends Controller {
                     'childCount' => self::$childCount, 
                     'htmlData'   => '<div data-file-id="'.$fileId.'" data-count="'.self::$rowsCount.'"></div>'.$htmlData
                 ];
-                echo json_encode($response);
+                $htmlData = null;
+                echo json_encode($response, JSON_UNESCAPED_UNICODE);
+                $response = [];
             ob_end_flush();
             
             exit;
@@ -4105,6 +4108,7 @@ class Mdstatement extends Controller {
                 }
                 
                 $contentHtml = (new Mdstatement())->dataModelReportDrillViewer($linkMetaId, $row, $reportHtml);
+                $reportHtml = null;
 
                 $response = [
                     'title' => $title,  
@@ -4113,7 +4117,9 @@ class Mdstatement extends Controller {
                     'close_btn' => Lang::line('close_btn')
                 ];
 
-                echo json_encode($response, JSON_UNESCAPED_UNICODE); exit;
+                echo json_encode($response, JSON_UNESCAPED_UNICODE); 
+                $response = [];
+                exit;
 
             } elseif ($getTypeId == Mdmetadata::$businessProcessMetaTypeId) {
 

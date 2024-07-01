@@ -16305,34 +16305,7 @@ class Mdform_Model extends Model {
                     AND K.INDICATOR_ID = $idPh2  
                     AND R.CRITERIA IS NOT NULL", 
                 [Ue::sessionUserKeyId(), $indicatorId]
-            );            
-            
-            // $data = $this->db->GetAll("
-            //     SELECT 
-            //         DISTINCT 
-            //         INDICATOR_CRITERIA
-            //     FROM UM_PERMISSION_KEY 
-            //     WHERE 
-            //         (
-            //             CASE 
-            //             WHEN USER_ID = :sessionUserId AND :sessionUserId != (SELECT COALESCE((SELECT USER_ID FROM UM_USER_ROLE WHERE USER_ID = :sessionUserId AND ROLE_ID = 1),9) FROM DUAL)
-            //             THEN 1
-            //             WHEN ROLE_ID IN (SELECT ROLE_ID FROM UM_USER_ROLE WHERE USER_ID = :sessionUserId) AND :sessionUserId != (SELECT COALESCE((SELECT USER_ID FROM UM_USER_ROLE WHERE USER_ID = :sessionUserId AND ROLE_ID = 1), 9) FROM DUAL)
-            //             THEN 1 
-            //             WHEN USER_ID IS NULL AND ROLE_ID IS NULL
-            //             THEN 1 
-            //             WHEN :sessionUserId = (SELECT USER_ID FROM UM_USER_ROLE WHERE USER_ID = :sessionUserId AND ROLE_ID = 1) OR :sessionUserId = 1
-            //             THEN 0
-            //             ELSE 0
-            //             END = 1
-            //         ) 
-            //         AND INDICATOR_ID = :filterMainId 
-            //         AND INDICATOR_CRITERIA IS NOT NULL", 
-            //     array(
-            //         'filterMainId'  => $indicatorId, 
-            //         'sessionUserId' => Ue::sessionUserKeyId() 
-            //     )
-            // );
+            );
 
             if ($data) {
 

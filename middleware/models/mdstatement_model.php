@@ -2714,6 +2714,7 @@ class Mdstatement_model extends Model {
             }
 
             file_put_contents($cachePath, $htmlData);
+            $htmlData = null;
         }
         
         return $fileId;

@@ -23,6 +23,12 @@ class Token extends Controller {
                 'status' => $status
             )));
         }
+        
+        $token = Input::post('token');
+        
+        if (!$token) {
+            outputJSON('Missing parameter!');
+        }
 
         if ($_FILES['uplTheFile']['error'] > 0) {
             outputJSON('An error ocurred when uploading.');
@@ -39,7 +45,7 @@ class Token extends Controller {
         $current .= "\n signedFilePath : " . $newFileName . ' time: '. Date::currentDate();
         file_put_contents($file, $current);
 
-        $date              = Date::currentDate('Ym');
+        $date    = Date::currentDate('Ym');
         $newPath = UPLOADPATH . 'signed_file/' . $date . '/';
 
         if (!is_dir($newPath)) {
@@ -51,10 +57,18 @@ class Token extends Controller {
             chmod($filePath, 0755);
             unlink($filePath);
         }
+        
+        FileUpload::SetFileName($_FILES['uplTheFile']['name']);
+        FileUpload::SetTempName($_FILES['uplTheFile']['tmp_name']);
+        FileUpload::SetUploadDirectory($newPath);
+        FileUpload::SetValidExtensions(explode(',', Config::getFromCache('CONFIG_FILE_EXT')));
+        FileUpload::SetMaximumFileSize(FileUpload::GetConfigFileMaxSize());
+        $uploadResult = FileUpload::UploadFile();
 
-        if (!move_uploaded_file($_FILES['uplTheFile']['tmp_name'], $filePath)) {
+        if (!$uploadResult) {
             outputJSON('Error uploading file - check destination is writeable.');
-        }
+        } 
+
         outputJSON($newFileName, 'success');
     }
 
@@ -175,7 +189,7 @@ class Token extends Controller {
                 array( 'services' => array("WS100101_getCitizenIDCardInfo"), 'wsdl' => "https://xyp.gov.mn/citizen-1.3.0/ws?WSDL" )
             );
 
-            if(!empty($service_structure)) {
+            if (!empty($service_structure)) {
                 $scope = base64_encode(json_encode($service_structure));
             
                 if (is_array($_SESSION['danOauthState'])){
@@ -229,35 +243,4 @@ class Token extends Controller {
         }
     }
 
-    public function create_table($table_name = 'service_reqs') {
-
-        $data = $this->db->GetRow("SELECT * FROM $table_name");
-        var_dump($data);
-        $parseStr = json_decode($data['data'], true);
-        
-        /* s */
-
-        self::table_columns($parseStr, $table_name);
-        die;
-
-    }
-
-    public function table_columns($parseStr = array(), $table_name, $index = 1) {
-
-        $columnsArr = array();
-        foreach ($parseStr as $key => $row) {
-            if (is_array($row)) {
-                $index = $index + 1;
-                $table_name = $table_name . '_' . $key;
-                self::table_columns($row, $table_name, $index);
-            } else {
-                array_push($columnsArr, $key);
-            }
-        }
-
-        echo '--------- index = ' . $index . ' ----- ' . $table_name . '<br>' ;
-        var_dump($columnsArr);
-        echo '<br>--------- index = ' . $index. '<br>' ;
-
-    }
 }
