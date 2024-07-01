@@ -319,7 +319,7 @@ $dataResult = $this->response['rows'];
 $dataResult = Arr::groupByArrayByNullKey($dataResult, $this->relationViewConfig['position1']); 
 
 if ($dataResult) {
-if (count($this->response['rows']) == count($dataResult['яяяrow']['rows'])) { 
+if (isset($dataResult['яяяrow']) && count($this->response['rows']) == count($dataResult['яяяrow']['rows'])) { 
 ?>
     <a href="javascript:;" onclick="<?php echo str_replace('true,', 'false,', $createClickAction) ?>" data-list-relation="1" data-rowdata="" data-mapid="<?php echo $mapId ?>" data-main-indicatorid="<?php echo $this->indicatorId; ?>" data-crud-indicatorid="<?php echo $createCrudId ?>" class="mv-cardview no-dataview" style="margin-bottom: 30px;background-color: #eaeaea;height: 70px;width: 60px;margin-top: 10px;margin-left: 20px;">
         <div class="card" style="border: none;box-shadow: none;">
@@ -343,6 +343,14 @@ foreach ($dataResult as $groupName => $groupRow) {
     foreach ($groupRow['rows'] as $row) {
         $rowJson = htmlentities(json_encode($row), ENT_QUOTES, 'UTF-8');
         if (issetParam($row[$this->relationViewConfig['position4']])) {
+            
+            $fileIcon = 'assets/custom/addon/img/appmenu.png';
+            $filePath = $row[$this->relationViewConfig['position4']];
+            $fileExtension = strtolower(substr($filePath, strrpos($filePath, '.') + 1));
+            
+            if ($fileExtension == 'pdf') {
+                $fileIcon = 'assets/core/global/img/document/big/pdf2.png';
+            }
     ?>
     <a href="javascript:;" class="mv-cardview" title="<?php echo issetParam($row[$this->relationViewConfig['position2']]); ?>">
         <div class="no-dataview" data-crud-indicatorid="<?php echo $deleteCrudId ?>" data-rowdata="<?php echo $rowJson; ?>" style="position: absolute;z-index: 10;margin-left: 80px;display: none" onclick="<?php echo $deleteClickAction ?>">
@@ -350,8 +358,8 @@ foreach ($dataResult as $groupName => $groupRow) {
         </div>
         <div class="card" style="border: none;box-shadow: none;">
             <div class="card-body">
-                <div class="card-img-actions mb-2 mt-2" onclick="bpFilePreview(this);" data-fileurl="<?php echo $row[$this->relationViewConfig['position4']] ?>" data-filename="<?php echo issetParam($row[$this->relationViewConfig['position2']]) ?>" data-extension="<?php echo $row[$this->relationViewConfig['position3']] ?>">
-                    <img class="directory-img ml20" style="height: 70px;" src="assets/core/global/img/document/big/pdf2.png"/>
+                <div class="card-img-actions mb-2 mt-2" onclick="bpFilePreview(this);" data-fileurl="<?php echo $row[$this->relationViewConfig['position4']]; ?>" data-filename="<?php echo issetParam($row[$this->relationViewConfig['position2']]) ?>" data-extension="<?php echo $row[$this->relationViewConfig['position3']] ?>">
+                    <img class="directory-img ml20" style="height: 70px;" src="<?php echo $fileIcon; ?>"/>
                 </div>
                 <h5>
                     <?php echo issetParam($row[$this->relationViewConfig['position2']]); ?>
