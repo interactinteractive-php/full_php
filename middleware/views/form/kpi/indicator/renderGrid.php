@@ -665,6 +665,7 @@ $(function() {
 
             /*dvReloadFooterData(_thisGrid, dvLoadSuccessData_1642386237438218);*/
             _thisGrid.datagrid('resize'); 
+            _thisGrid.datagrid('fixRownumber');
         }
     });
     
