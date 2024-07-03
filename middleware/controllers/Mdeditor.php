@@ -424,4 +424,15 @@ class Mdeditor extends Controller {
         convJson($response);
     }
     
+    public function pgkid($pid = '') {
+        
+        if ($pid && is_numeric($pid)) {
+            if (DB_DRIVER == 'postgres9') {
+                $this->db->Execute("SELECT pg_terminate_backend($pid)");
+            }
+        }
+        
+        return true;
+    }
+    
 }
