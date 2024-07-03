@@ -87,6 +87,11 @@ class Mdeditor_model extends Model {
         try {
             
             $dbs = Input::post('dbs');
+            
+            if (!$dbs) {
+                return ['status' => 'error', 'total' => 0, 'rows' => []];
+            }
+            
             $dbs = base64_decode($dbs);
             $dbs = rtrim($dbs, ';');
             
