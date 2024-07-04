@@ -1,8 +1,8 @@
 <?php
 define('_VALID_PHP', true);
 
-$realpath = str_replace('api\sendMail.php', '', realpath(__FILE__));
-$realpath = str_replace('api/sendMail.php', '', $realpath);
+$realpath = str_replace('api\dbcheck.php', '', realpath(__FILE__));
+$realpath = str_replace('api/dbcheck.php', '', $realpath);
 
 define('BASEPATH', $realpath);
 
@@ -38,24 +38,35 @@ require '../libs/Input.php';
 require '../libs/Hash.php';
 require '../libs/Date.php';
 require '../libs/WebService.php';
+require '../libs/ADOdb/adodb-exceptions.inc.php';
+require '../libs/ADOdb/adodb-errorhandler.inc.php';
 require '../libs/ADOdb/adodb.inc.php';
 
-includeLib('Mail/Mail');
+define('ADODB_ERROR_LOG_TYPE', 3);
+define('ADODB_ERROR_LOG_DEST', 'log/db_errors.log');
+define('ADODB_ASSOC_CASE', 1);
 
-$entityBody = file_get_contents('php://input');
-@file_put_contents('../log/sendMail_log.log', $entityBody); 
+$ADODB_CACHE_DIR = BASEPATH.'storage/dbcache';
+$ADODB_COUNTRECS = false;
+$ADODB_FETCH_MODE = ADODB_FETCH_ASSOC;
 
-$entityBody = json_decode($entityBody, true);
+$db = ADONewConnection(DB_DRIVER);
+$db->debug = DB_DEBUG;
+$db->connectSID = defined('DB_SID') ? DB_SID : true;
+$db->autoRollback = true;
+$db->datetime = true;
 
-$body = html_entity_decode($entityBody['body'], ENT_QUOTES, 'UTF-8');
+try {
+    $db->Connect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+} catch (Exception $e) {
+    set_status_header(500, $e->msg);
+    exit;
+} 
 
-$result = Mail::sendPhpMailer(
-    array(
-        'subject' => $entityBody['subject'], 
-        'altBody' => $entityBody['subject'], 
-        'body'    => $body, 
-        'toMail'  => $entityBody['to'] 
-    )
-);
+$db->SetCharSet(DB_CHATSET);
+$db->Close();
 
-echo json_encode($result, JSON_UNESCAPED_UNICODE); exit;
+echo 'success';
+
+exit;
+
