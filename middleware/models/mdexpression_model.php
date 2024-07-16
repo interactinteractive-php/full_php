@@ -16,7 +16,7 @@ class Mdexpression_Model extends Model {
 
                 $row = Mdexpression::$multiPathConfig[$fieldPathLower];
 
-                return array(
+                return [
                     'type' => $row['META_TYPE_CODE'], 
                     'CHOOSE_TYPE' => $row['CHOOSE_TYPE'],
                     'LOOKUP_TYPE' => $row['LOOKUP_TYPE'], 
@@ -26,8 +26,9 @@ class Mdexpression_Model extends Model {
                     'isShow' => $row['IS_SHOW'], 
                     'IS_TRANSLATE' => $row['IS_TRANSLATE'], 
                     'JSON_CONFIG' => $row['JSON_CONFIG'], 
-                    'ABILITY_TOGGLE' => $row['ABILITY_TOGGLE']
-                );
+                    'ABILITY_TOGGLE' => $row['ABILITY_TOGGLE'], 
+                    'PARENT_TYPE_CODE' => $row['PARENT_TYPE_CODE']
+                ];
             }
 
             $row = $this->db->GetRow("
@@ -54,7 +55,7 @@ class Mdexpression_Model extends Model {
                 WHERE PAL.PROCESS_META_DATA_ID = ".$this->db->Param(0)." 
                     AND PAL.IS_INPUT = 1  
                     AND LOWER(PAL.PARAM_REAL_PATH) = ".$this->db->Param(1), 
-                array($processId, $fieldPathLower)
+                [$processId, $fieldPathLower]
             );
 
         } else {
@@ -73,7 +74,7 @@ class Mdexpression_Model extends Model {
                 FROM META_GROUP_CONFIG 
                 WHERE MAIN_META_DATA_ID = ".$this->db->Param(0)." 
                     AND LOWER(FIELD_PATH) = ".$this->db->Param(1), 
-                array($processId, $fieldPathLower) 
+                [$processId, $fieldPathLower] 
             ); 
         }
 
@@ -85,7 +86,7 @@ class Mdexpression_Model extends Model {
                 $row['JSON_CONFIG'] = null;
             }
             
-            return array(
+            return [
                 'type' => strtolower($row['META_TYPE_CODE']), 
                 'CHOOSE_TYPE' => $row['CHOOSE_TYPE'],
                 'LOOKUP_TYPE' => $row['LOOKUP_TYPE'], 
@@ -96,10 +97,10 @@ class Mdexpression_Model extends Model {
                 'IS_TRANSLATE' => $row['IS_TRANSLATE'], 
                 'JSON_CONFIG' => $row['JSON_CONFIG'], 
                 'ABILITY_TOGGLE' => $row['ABILITY_TOGGLE']
-            );
+            ];
         }
         
-        return array(
+        return [
             'type' => 'string', 
             'CHOOSE_TYPE' => '', 
             'LOOKUP_TYPE' => '', 
@@ -110,13 +111,13 @@ class Mdexpression_Model extends Model {
             'IS_TRANSLATE' => '', 
             'JSON_CONFIG' => '', 
             'ABILITY_TOGGLE' => ''
-        );
+        ];
     }
 
     public function setMultiPathConfigModel($processId) {
         
         $processIdPh = $this->db->Param(0);
-        $bindVars = array($this->db->addQ($processId));
+        $bindVars = [$this->db->addQ($processId)];
             
         if (Mdexpression::$isFromMetaGroup) {
             
@@ -165,7 +166,7 @@ class Mdexpression_Model extends Model {
                     AND PAL.IS_INPUT = 1", $bindVars); 
         }
         
-        $array = array();
+        $array = [];
 
         if ($data) {
             foreach ($data as $row) {
@@ -185,11 +186,11 @@ class Mdexpression_Model extends Model {
                 if ($row['ABILITY_TOGGLE'] == 'disable' || $row['ABILITY_TOGGLE'] == 'enable') {
                     
                     if (strpos($paramRealPath, '.') === false) {
-                        Mdexpression::$enableDisable[$row['ABILITY_TOGGLE']]['header'][] = array('fullPath' => $paramRealPath);
+                        Mdexpression::$enableDisable[$row['ABILITY_TOGGLE']]['header'][] = ['fullPath' => $paramRealPath];
                     } else {
                         $paramRealPathArr = explode('.', $paramRealPath);
                         $groupPath = $paramRealPathArr[0];
-                        Mdexpression::$enableDisable[$row['ABILITY_TOGGLE']]['detail'][] = array('groupPath' => $groupPath, 'fullPath' => $paramRealPath);
+                        Mdexpression::$enableDisable[$row['ABILITY_TOGGLE']]['detail'][] = ['groupPath' => $groupPath, 'fullPath' => $paramRealPath];
                     }
                 }
             }

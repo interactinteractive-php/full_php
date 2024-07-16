@@ -2460,16 +2460,17 @@ class Mdupgrade_Model extends Model {
                                 'kpiindicator' AS META_TYPE_ID, 
                                 CODE AS META_DATA_CODE, 
                                 NULL AS SRC_RECORD_ID 
-                            FROM KPI_INDICATOR
-                            START WITH 
-                                ID IN (
-                                    SELECT 
-                                        INDICATOR_ID 
-                                    FROM META_BUG_FIXING_DTL 
-                                    WHERE META_BUG_FIXING_ID IN ($ids) 
-                                        AND INDICATOR_ID IS NOT NULL
-                                ) 
-                            CONNECT BY NOCYCLE PRIOR PARENT_ID = ID 
+                            FROM KPI_INDICATOR 
+                            WHERE KPI_TYPE_ID NOT IN (16606226258819) 
+                                START WITH 
+                                    ID IN (
+                                        SELECT 
+                                            INDICATOR_ID 
+                                        FROM META_BUG_FIXING_DTL 
+                                        WHERE META_BUG_FIXING_ID IN ($ids) 
+                                            AND INDICATOR_ID IS NOT NULL
+                                    ) 
+                                CONNECT BY NOCYCLE PRIOR PARENT_ID = ID 
 
                             UNION 
 
@@ -2478,7 +2479,8 @@ class Mdupgrade_Model extends Model {
                                 'kpiindicator' AS META_TYPE_ID, 
                                 CODE AS META_DATA_CODE, 
                                 NULL AS SRC_RECORD_ID 
-                            FROM KPI_INDICATOR
+                            FROM KPI_INDICATOR 
+                            WHERE KPI_TYPE_ID NOT IN (16606226258819)  
                                 START WITH ID IN (
                                     SELECT 
                                         CATEGORY_ID 
@@ -2522,15 +2524,33 @@ class Mdupgrade_Model extends Model {
                                 INNER JOIN KPI_TYPE T1 ON T1.ID = T0.KPI_TYPE_ID 
                                 INNER JOIN KPI_INDICATOR T2 ON T2.ID = T1.RELATED_INDICATOR_ID 
                             WHERE T0.ID IN ( 
-                                SELECT 
-                                    INDICATOR_ID 
-                                FROM META_BUG_FIXING_DTL 
-                                WHERE META_BUG_FIXING_ID IN ($ids) 
-                                    AND INDICATOR_ID IS NOT NULL
-                            )   
+                                    SELECT 
+                                        INDICATOR_ID 
+                                    FROM META_BUG_FIXING_DTL 
+                                    WHERE META_BUG_FIXING_ID IN ($ids) 
+                                        AND INDICATOR_ID IS NOT NULL
+                                ) 
+                                AND T2.KPI_TYPE_ID NOT IN (16606226258819) 
                             GROUP BY 
                                 T2.ID, 
                                 T2.CODE 
+                            
+                            UNION    
+                            
+                            SELECT 
+                                DTL.INDICATOR_ID AS META_DATA_ID, 
+                                'kpiindicatorbydata' AS META_TYPE_ID, 
+                                MD.CODE AS META_DATA_CODE, 
+                                null AS SRC_RECORD_ID 
+                            FROM META_BUG_FIXING HDR 
+                                INNER JOIN META_BUG_FIXING_DTL DTL ON DTL.META_BUG_FIXING_ID = HDR.ID 
+                                INNER JOIN KPI_INDICATOR MD ON MD.ID = DTL.INDICATOR_ID 
+                            WHERE HDR.ID IN ($ids) 
+                                AND DTL.INDICATOR_ID IS NOT NULL 
+                                AND MD.KPI_TYPE_ID = 16606226258819 
+                            GROUP BY 
+                                DTL.INDICATOR_ID, 
+                                MD.CODE     
                         ) TMP 
                         INNER JOIN KPI_INDICATOR MD ON MD.ID = TMP.META_DATA_ID 
                         LEFT JOIN UM_USER US ON US.USER_ID = MD.CREATED_USER_ID 
@@ -2766,7 +2786,12 @@ class Mdupgrade_Model extends Model {
 
                             self::$isCreateTable = true;
                             self::$isInsertData = false;
-                            self::$insertDataFilter = 'SRC_RECORD_ID='.$meta['SRC_RECORD_ID'];
+                            
+                            if ($meta['SRC_RECORD_ID']) {
+                                self::$insertDataFilter = 'SRC_RECORD_ID='.$meta['SRC_RECORD_ID'];
+                            } else {
+                                self::$insertDataFilter = '1=1';
+                            }
 
                             $meta['META_TYPE_ID'] = 'kpiindicator';
                         } 
@@ -3522,27 +3547,34 @@ class Mdupgrade_Model extends Model {
         return $script;
     }
     
-    public function generateInsertQuery($tblName, $recordId, $separator, $data = array(), $childs = array()) {
+    public function generateInsertQuery($tblName, $recordId, $separator, $data = [], $childs = []) {
          
         $sql = null;
         
         if (!$data && $recordId) {
             
-            parse_str($recordId, $recordIdArr);
-            $where = '';
-            $bindParams = array();
-            
-            foreach ($recordIdArr as $fieldName => $fieldVal) {
+            if ($recordId == '1=1') {
+                $where = '1=1';
+            } else {
                 
-                if (strpos($fieldVal, ',') !== false) {
-                    $where .= "$fieldName IN ($fieldVal) AND ";
-                } else {
-                    $where .= "$fieldName = ".$this->db->Param($fieldName).' AND ';
-                    $bindParams = array($fieldName => $fieldVal) + $bindParams;
-                }
-            }
+                parse_str($recordId, $recordIdArr);
+                $where = '';
+                $bindParams = [];
+                $b = 0;
 
-            $where = mb_substr($where, 0, -5);
+                foreach ($recordIdArr as $fieldName => $fieldVal) {
+
+                    if (strpos($fieldVal, ',') !== false) {
+                        $where .= "$fieldName IN ($fieldVal) AND ";
+                    } else {
+                        $where .= "$fieldName = ".$this->db->Param($b).' AND ';
+                        $bindParams[$b] = $fieldVal;
+                        $b ++;
+                    }
+                }
+
+                $where = mb_substr($where, 0, -5);
+            }
             
             $this->db->SetFetchMode(ADODB_FETCH_ASSOC);
             

@@ -19053,7 +19053,8 @@ class Mdpos_Model extends Model {
         $result = $this->ws->runSerializeResponse(self::$gfServiceAddress, 'qpay_v2_checkPayment', $params);
 
         if ($result['status'] == 'success') {
-            if ($result['result']['count']) {
+            if (Str::lower(issetParam($result['result']['rows']['0']['payment_status'])) === 'paid') {
+            /* if (issetParamZero($result['result']['paid_amount']) > 0) { */
                 return array('status' => 'success', 'message' => 'Successfully');
             } else {
                 return array('status' => 'error', 'message' => 'Waiting');

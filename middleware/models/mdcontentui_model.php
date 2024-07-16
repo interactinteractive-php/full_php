@@ -1192,7 +1192,7 @@ class Mdcontentui_model extends Model {
             $duration = Input::post('duration');
             $userId = Ue::sessionUserKeyId();
             
-            $isExist = $this->db->GetOne("SELECT DURATION FROM ECM_CONTENT_VISITOR WHERE RECORD_ID = $recordId AND USER_ID = $userId");
+            $isExist = $this->db->GetOne("SELECT COUNT(USER_ID) FROM ECM_CONTENT_VISITOR WHERE RECORD_ID = $recordId AND USER_ID = $userId");
             
             if ($isExist) {
                 

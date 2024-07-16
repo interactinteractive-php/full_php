@@ -179,8 +179,8 @@
                                     </div>    
                                 </div>  
                             </div>
-                            <div class="col-md-4<?php echo $filterConfig != 1 && !$this->IS_NOT_SHOW_EMPLOYEE_IN_DEPR 
-                                    && !$this->IS_NOT_SHOW_CUSTOMER_IN_DEPR && !$this->IS_NOT_SHOW_CAT_IN_DEPR ? ' hidden' : '' ?>">
+                            <div class="col-md-4<?php echo $filterConfig == 1 && $this->IS_NOT_SHOW_EMPLOYEE_IN_DEPR 
+                                    && $this->IS_NOT_SHOW_CUSTOMER_IN_DEPR && $this->IS_NOT_SHOW_CAT_IN_DEPR ? ' hidden' : '' ?>">
                                 <?php if ($filterConfig != 1) { ?>
                                     <div class="form-group row fom-row">
                                         <?php echo Form::label(array('text' => Lang::lineDefault('PL_2030', 'Байршил'), 'for' => 'location', 'class' => 'col-form-label col-md-3 custom-label', 'style' => 'font-size: 12px !important')); ?>

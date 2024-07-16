@@ -828,7 +828,36 @@ class Cron_Model extends Model {
                     $recordId    = $row['ID'];
                     $processId   = $row['META_PROCESS_ID'];
                     $indicatorId = $row['INDICATOR_ID'];
-                    $param       = json_decode(html_entity_decode($row['JSON_CONFIG'], ENT_QUOTES, 'UTF-8'), true);
+                    
+                    $jsonStr = html_entity_decode($row['JSON_CONFIG'], ENT_QUOTES, 'UTF-8');
+        
+                    $jsonStr = str_replace('{"', '{qoot', $jsonStr);
+                    $jsonStr = str_replace('":"', 'qoot:qoot', $jsonStr);
+                    $jsonStr = str_replace('","', 'qoot,qoot', $jsonStr);
+                    $jsonStr = str_replace('"}', 'qoot}', $jsonStr);
+                    $jsonStr = str_replace('":{', 'qoot:{', $jsonStr);
+                    $jsonStr = str_replace('},"', '},qoot', $jsonStr);
+                    $jsonStr = str_replace('":[', 'qoot:[', $jsonStr);
+                    $jsonStr = str_replace('":', 'qoot:', $jsonStr);
+                    $jsonStr = str_replace(',"', ',qoot', $jsonStr);
+
+                    $jsonStr = str_replace('"', '&quot;', $jsonStr);
+                    $jsonStr = str_replace('<', '&lt;', $jsonStr);
+                    $jsonStr = str_replace('>', '&gt;', $jsonStr);
+
+                    $jsonStr = str_replace('{qoot', '{"', $jsonStr);
+                    $jsonStr = str_replace('qoot:qoot', '":"', $jsonStr);
+                    $jsonStr = str_replace('qoot,qoot', '","', $jsonStr);
+                    $jsonStr = str_replace('qoot}', '"}', $jsonStr);
+                    $jsonStr = str_replace('qoot:{', '":{', $jsonStr);
+                    $jsonStr = str_replace('},qoot', '},"', $jsonStr);
+                    $jsonStr = str_replace('qoot:[', '":[', $jsonStr);
+                    $jsonStr = str_replace('&quot;:', '":', $jsonStr);
+                    $jsonStr = str_replace(',&quot;', ',"', $jsonStr);
+                    $jsonStr = str_replace('qoot:', '":', $jsonStr);
+                    $jsonStr = str_replace(',qoot', ',"', $jsonStr);
+        
+                    $param = json_decode($jsonStr, true);
 
                     if ($processId != '') {
                         

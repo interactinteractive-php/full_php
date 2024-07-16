@@ -4696,42 +4696,76 @@ function bpWatermarkByPdf (selectedRow, callback) {
 }
 
 function setDocumentSign (pdfPath, signatureImage, signaturePosition, pageNum, positionX, positionY, contentId, signaturetext, selectedRow, callback) {
-    
-    $.ajax({
-        type: 'post',
-        url: 'mdpki/setDocumentSign',
-        data: {
-            filePath: pdfPath,
-            x: positionX,
-            y: positionY,
-            pageNum: pageNum,
-            signatureimage: signatureImage,
-            signatureposition: signaturePosition,
-            contentid: contentId,
-            signaturetext: signaturetext,
-            selectedRow: selectedRow,
-        },
-        dataType: 'json',
-        beforeSend: function() {
-            Core.blockUI({message: 'Loading...', boxed: true});
-        },
-        success: function (data) {
-            Core.unblockUI();
-            PNotify.removeAll();
-            new PNotify({
-                title: data.status,
-                text: data.message,
-                type: data.status,
-                sticker: false
-            });
-            
-            if (data.status === 'success' && typeof callback === 'function') {
-                callback();
+    if (typeof callback !== 'undefined' && callback == 'response') {
+        var from = selectedRow.hasOwnProperty('from') ? selectedRow['from'] : '';
+        var to = selectedRow.hasOwnProperty('to') ? selectedRow['to'] : '';
+        var message =  to + '/' + from; 
+        var response = $.ajax({
+            type: 'post',
+            url: 'mdpki/setDocumentSign',
+            data: {
+                filePath: pdfPath,
+                x: positionX,
+                y: positionY,
+                pageNum: pageNum,
+                signatureimage: signatureImage,
+                signatureposition: signaturePosition,
+                contentid: contentId,
+                signaturetext: signaturetext,
+                selectedRow: selectedRow,
+            },
+            async: false,
+            dataType: 'json',
+            beforeSend: function() {
+                Core.blockUI({message: (message !== '/' ? message : 'Loading...'), boxed: true});
+            },
+            success: function (data) {
+                Core.unblockUI();
+            },
+            error: function (jqXHR, exception) {
+                Core.unblockUI();
+                Core.showErrorMessage(jqXHR, exception);
             }
-        },
-        error: function (jqXHR, exception) {
-            Core.unblockUI();
-            Core.showErrorMessage(jqXHR, exception);
-        }
-    });
+        });
+        return response.responseJSON;
+    } else {
+        $.ajax({
+            type: 'post',
+            url: 'mdpki/setDocumentSign',
+            data: {
+                filePath: pdfPath,
+                x: positionX,
+                y: positionY,
+                pageNum: pageNum,
+                signatureimage: signatureImage,
+                signatureposition: signaturePosition,
+                contentid: contentId,
+                signaturetext: signaturetext,
+                selectedRow: selectedRow,
+            },
+            async: false,
+            dataType: 'json',
+            beforeSend: function() {
+                Core.blockUI({message: 'Loading...', boxed: true});
+            },
+            success: function (data) {
+                Core.unblockUI();
+                PNotify.removeAll();
+                new PNotify({
+                    title: data.status,
+                    text: data.message,
+                    type: data.status,
+                    sticker: false
+                });
+                
+                if (data.status === 'success' && typeof callback === 'function') {
+                    callback();
+                }
+            },
+            error: function (jqXHR, exception) {
+                Core.unblockUI();
+                Core.showErrorMessage(jqXHR, exception);
+            }
+        });
+    }
 }

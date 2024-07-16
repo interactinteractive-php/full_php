@@ -104,7 +104,8 @@ function CheckIn(dirName, fileName, server) {
     if ("WebSocket" in window) {
 
         var ws = new WebSocket("ws://localhost:58324/socket");
-
+        var signToken = '?token='+getSignToken();
+        server = URL_APP + 'mddoceditor/fileUpload' + signToken; 
         ws.onopen = function () {
             var currentDateTime = GetCurrentDateTime();
             ws.send('{"command":"checkin", "dateTime":"' + currentDateTime + '", details: [{"key": "dir", "value": "' + dirName + '"}, {"key": "filename", "value": "' + fileName + '"}, {"key": "server", "value": "' + server + '"}]}');
@@ -492,6 +493,9 @@ function signPdfAndTextRun(dataForDocumentSign, fileUploadUrl, ecmContentId, cal
     var monpassServerAddress = getConfigValue('MONPASS_SERVER');
     RemoveSignForm();
     
+    var signToken = '?token='+getSignToken();
+    fileUploadUrl += signToken;
+    
     //create form
     var mapForm = document.createElement("form");
     mapForm.target = "Monpass";
@@ -518,7 +522,7 @@ function signPdfAndTextRun(dataForDocumentSign, fileUploadUrl, ecmContentId, cal
     var mapInput = document.createElement("input");
     mapInput.type = "text";
     mapInput.name = "UploadUrl";
-    mapInput.value = dataForDocumentSign.uploadUrl;
+    mapInput.value = dataForDocumentSign.uploadUrl + signToken;
     mapInput.type = "hidden";
     mapForm.appendChild(mapInput);
 
@@ -666,9 +670,11 @@ function signMultiPdf(dataForDocumentSign, inputMultiSignArr, callback) {
     mapForm.appendChild(mapInput);
 
     var mapInput = document.createElement("input");
+    var signToken = '?token='+getSignToken();
+    
     mapInput.type = "text";
     mapInput.name = "UploadUrl";
-    mapInput.value = dataForDocumentSign.uploadUrl;
+    mapInput.value = dataForDocumentSign.uploadUrl + signToken;
     mapInput.type = "hidden";
     mapForm.appendChild(mapInput);
 
@@ -942,3 +948,15 @@ function redirectFunction(element, url) {
         }
     });
 } 
+function getSignToken() {
+    var result = '';
+    $.ajax({
+        type: 'post',
+        url: 'api/signToken',
+        async: false,
+        success: function(data){
+            result = data;
+        }
+    });
+    return result;
+}

@@ -5316,7 +5316,10 @@ function posCalcTotal() {
     qtySum += qty;
   });
 
-  /*if ($giftRows.length) {
+ /*
+  * Next дээр ашиглаж байгаа, сүүлд хаалгуулсан юм байна сая буцаасан
+  */
+  if ($giftRows.length) {
     $giftRows.each(function () {
       var $giftRow = $(this),
         $parentItemRow = $giftRow
@@ -5330,7 +5333,7 @@ function posCalcTotal() {
       sum += giftPrice;
       qtySum += giftQty;
     });
-  }*/
+  }
 
   $("td.pos-amount-total").autoNumeric("set", sum);
   $("td.pos-amount-vat").autoNumeric("set", vatTotal);

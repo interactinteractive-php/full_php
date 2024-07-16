@@ -35,7 +35,11 @@ class Mdpos extends Controller {
     public function index() {        
 
         if (Config::getFromCache('IS_USE_POSAPI_V3')) {
-            Message::add('s', '', AUTH_URL.'mdpos/v3');
+            if (is_ajax_request()) {
+                self::v3(); exit;
+            } else {
+                Message::add('s', '', AUTH_URL.'mdpos/v3');
+            }
         }
         
         $this->view->title = 'POS';
@@ -388,8 +392,14 @@ class Mdpos extends Controller {
         
         if (issetParam($cashierInfo['isclosed']) === '1') {
             Message::add('i', $this->lang->line('isClosedPos'), URL . 'mdpos/message/pos');
-        } elseif ($result == 'status') {
-            Message::add('s', '', URL . 'mdpos');
+        } elseif (issetParam($result['status']) == 'success') {
+            
+            if (is_ajax_request()) {
+                convJson($result);
+            } else {
+                Message::add('s', '', URL . 'mdpos');
+            }
+        
         } else {
             Message::add('i', issetParam($result['message']), URL . 'mdpos/message/'.$storeId.'/'.$posId.'/'.$cashierId);
         }

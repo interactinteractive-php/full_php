@@ -76,6 +76,10 @@ class Mdexpression extends Controller {
 
             return $exp;
         }
+        
+        if (isset($getMetaRow['PARENT_TYPE_CODE']) && ($getMetaRow['PARENT_TYPE_CODE'] == 'row' || $getMetaRow['PARENT_TYPE_CODE'] == 'label') && substr_count($replace, '.') == 1) {
+            $getMetaRow['parentId'] = '';
+        }
 
         if ($getMetaTypeCode == 'number' || $getMetaTypeCode == 'bigdecimal' || $getMetaTypeCode == 'integer') {
 

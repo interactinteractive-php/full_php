@@ -4370,7 +4370,14 @@ class Mdform_Model extends Model {
                                 FROM KPI_INDICATOR_INDICATOR_MAP 
                                 WHERE MAIN_INDICATOR_ID = KI.ID 
                                     AND COLUMN_NAME IS NOT NULL 
-                            ) AS COUNT_PARAM 
+                            ) AS COUNT_PARAM , 
+                            (
+                                SELECT 
+                                    LANDING_PAGE_INDICATOR_ID
+                                FROM PLM_PRODUCT 
+                                WHERE SRC_RECORD_ID = KI.ID 
+                                    AND LANDING_PAGE_INDICATOR_ID IS NOT NULL 
+                            ) AS LANDING_PAGE_INDICATOR_ID 
                         FROM KPI_INDICATOR KI 
                             LEFT JOIN META_WIDGET MW ON MW.ID = KI.RELATION_WIDGET_ID 
                             LEFT JOIN META_WIDGET MWW ON MWW.ID = KI.WIDGET_ID 
@@ -7283,6 +7290,52 @@ class Mdform_Model extends Model {
             break;
             
             case 'icon_lookup': 
+            {
+                if ($row['FILTER_INDICATOR_ID']) {
+                    
+                    $row['isData'] = true;
+                    $row['isPopup'] = true;
+                    $row['value'] = $value;
+
+                    $datas = self::getKpiComboDataModel($row); 
+                    
+                    $rows = $datas['data'];
+                    $id = $datas['id'];
+                    $name = $datas['name'];
+                    $html = [];
+                    
+                    foreach ($rows as $val) {
+                        $html[] = '<a href="javascript:;" data-value="'.issetParam($val[$id]).'" class="dropdown-item font-size-13 mv-filter-item-click" style="white-space: normal;line-height: normal;">';
+                            
+                            if (isset($val['ICON_NAME'])) {
+                                $val['ICON_NAME'] = str_replace('fa-', '', $val['ICON_NAME']);
+                                $html[] = '<i class="fas fa-'.$val['ICON_NAME'].'" style="color: '.issetParam($val['COLOR']).';"></i> ';
+                            }
+                            
+                            $html[] = $val[$name];
+                        $html[] = '</a>';
+                    }
+                    
+                    $control = implode('', $html);
+                    
+                } else {
+                    $attrArray = [
+                        'name' => $controlName, 
+                        'data-path' => $columnNamePath, 
+                        'data-col-path' => $code, 
+                        'class' => 'form-control input-sm stringInit', 
+                        'autocomplete' => 'off', 
+                        'placeholder' => $placeholder, 
+                        'value' => $value, 
+                        'data-field-name' => $cellId
+                    ] + $addAttrs;
+
+                    $control = Form::text($attrArray);
+                }
+            }
+            break;
+            
+            case 'card_lookup': 
             {
                 if ($row['FILTER_INDICATOR_ID']) {
                     
@@ -10945,9 +10998,14 @@ class Mdform_Model extends Model {
                                             $fileAttr['type'] = Mdform::$mvPostFileParams['type'][$columnNamePath][$rowIndex][$k];
                                         }
 
-                                        $uploadResult = Mdwebservice::bpFileUpload(array('ID' => $indicatorId, 'META_TYPE_CODE' => 'file'), $fileAttr, $k);
+                                        $uploadResult = Mdwebservice::bpFileUpload(['ID' => $indicatorId, 'META_TYPE_CODE' => 'file'], $fileAttr, $k);
 
                                         if ($uploadResult) {
+                                            
+                                            $arr[$k]['FILE_EXTENSION'] = $uploadResult['extension'];
+                                            $arr[$k]['FILE_SIZE'] = $uploadResult['size'];
+                                            $arr[$k]['FILE_NAME'] = $uploadResult['name'];
+                                    
                                             $val = $uploadResult['path'] . $uploadResult['newname'];
                                             array_push(FileUpload::$uploadedFiles, $val);
                                         }
@@ -11176,9 +11234,14 @@ class Mdform_Model extends Model {
                                     $fileAttr['type'] = Mdform::$mvPostFileParams['type'][$columnNamePath][$rowIndex];
                                 }
 
-                                $uploadResult = Mdwebservice::bpFileUpload(array('ID' => $indicatorId, 'META_TYPE_CODE' => 'file'), $fileAttr);
+                                $uploadResult = Mdwebservice::bpFileUpload(['ID' => $indicatorId, 'META_TYPE_CODE' => 'file'], $fileAttr);
 
                                 if ($uploadResult) {
+                                    
+                                    $arr['FILE_EXTENSION'] = $uploadResult['extension'];
+                                    $arr['FILE_SIZE'] = $uploadResult['size'];
+                                    $arr['FILE_NAME'] = $uploadResult['name'];
+                                        
                                     $val = $uploadResult['path'] . $uploadResult['newname'];
                                     array_push(FileUpload::$uploadedFiles, $val);
                                 }
@@ -11806,7 +11869,7 @@ class Mdform_Model extends Model {
 
                         if ($showType != 'row' && $showType != 'rows' && $showType != 'label') {
                             
-                            if (!array_key_exists($columnNamePath, Mdform::$mvPostParams)) {
+                            if (!array_key_exists($columnNamePath, Mdform::$mvPostParams) && $showType != 'boolean' && $showType != 'check' && $showType != 'toggle') {
                                 continue;
                             }
                             
@@ -11829,9 +11892,18 @@ class Mdform_Model extends Model {
                                     $fileAttr['size'] = Mdform::$mvPostFileParams['size'][$columnNamePath];
                                     $fileAttr['type'] = Mdform::$mvPostFileParams['type'][$columnNamePath];
 
-                                    $uploadResult = Mdwebservice::bpFileUpload(array('ID' => $kpiMainIndicatorId, 'META_TYPE_CODE' => 'file'), $fileAttr);
+                                    $uploadResult = Mdwebservice::bpFileUpload(['ID' => $kpiMainIndicatorId, 'META_TYPE_CODE' => 'file'], $fileAttr);
 
                                     if ($uploadResult) {
+                                        
+                                        Mdform::$mvSaveParams['FILE_EXTENSION'] = $uploadResult['extension'];
+                                        Mdform::$mvSaveParams['FILE_SIZE'] = $uploadResult['size'];
+                                        Mdform::$mvSaveParams['FILE_NAME'] = $uploadResult['name'];
+                                        
+                                        unset(Mdform::$mvPostParams['FILE_EXTENSION']);
+                                        unset(Mdform::$mvPostParams['FILE_SIZE']);
+                                        unset(Mdform::$mvPostParams['FILE_NAME']);
+                                            
                                         $val = $uploadResult['path'] . $uploadResult['newname'];
                                         array_push(FileUpload::$uploadedFiles, $val);
                                     }
@@ -11857,7 +11929,7 @@ class Mdform_Model extends Model {
                                         $fileAttr['size'] = Mdform::$mvPostFileParams['size'][$columnNamePath][$mk];
                                         $fileAttr['type'] = Mdform::$mvPostFileParams['type'][$columnNamePath][$mk];
 
-                                        $uploadResult = Mdwebservice::bpFileUpload(array('ID' => $kpiMainIndicatorId, 'META_TYPE_CODE' => 'file'), $fileAttr, $mk);
+                                        $uploadResult = Mdwebservice::bpFileUpload(['ID' => $kpiMainIndicatorId, 'META_TYPE_CODE' => 'file'], $fileAttr, $mk);
 
                                         if ($uploadResult) {
                                             
@@ -11872,7 +11944,9 @@ class Mdform_Model extends Model {
                                 Mdform::$mvSaveParams[$columnNamePath] = $val;
 
                             } elseif ($showType == 'json') {
+                                
                                 Mdform::$mvSaveParams[$columnNamePath] = Mdform::$mvPostParams[$columnNamePath];
+                                
                             } else {
                                 Mdform::$mvSaveParams[$columnNamePath] = issetVar(Mdform::$mvPostParams[$columnNamePath]);
                             }
@@ -12825,6 +12899,8 @@ class Mdform_Model extends Model {
             ];
             
             if (isset($setWfmStatusArr)) {
+                
+                unset(Mdform::$mvDbParams['header']['data']['ID']);
                 
                 $_POST['newWfmStatusid'] = $setWfmStatusArr['statusId'];
                 $_POST['metaDataId'] = $setWfmStatusArr['metaDataId'];
@@ -15659,42 +15735,44 @@ class Mdform_Model extends Model {
                             }
                         }
                         
-                    } elseif (isset($filterColVals[0]['operator']) && isset($filterColVals[0]['operand'])) { 
+                    } elseif (isset($filterColVals[0]['operator']) || isset($filterColVals[0]['operand'])) { 
                         
-                        $orCriteria = '';
-                        
-                        foreach ($filterColVals as $filterColVal) {
-                            $operator = self::correctOperator($filterColVal['operator']);
-                            
-                            if ($operator) {
-                                
-                                if (Mdform::$isTrgAliasName) {
-                                    foreach ($columns as $column) {
-                                        if (isset($column['TRG_ALIAS_NAME']) && strtoupper($column['TRG_ALIAS_NAME']) == strtoupper($filterColName) && $column['COLUMN_NAME']) {
-                                            $filterColName = $column['COLUMN_NAME'];
+                        if (isset($filterColVals[0]['operator']) && isset($filterColVals[0]['operand'])) {
+                            $orCriteria = '';
+
+                            foreach ($filterColVals as $filterColVal) {
+                                $operator = self::correctOperator($filterColVal['operator']);
+
+                                if ($operator) {
+
+                                    if (Mdform::$isTrgAliasName) {
+                                        foreach ($columns as $column) {
+                                            if (isset($column['TRG_ALIAS_NAME']) && strtoupper($column['TRG_ALIAS_NAME']) == strtoupper($filterColName) && $column['COLUMN_NAME']) {
+                                                $filterColName = $column['COLUMN_NAME'];
+                                            }
                                         }
                                     }
-                                }
-                                
-                                $filterColVal = self::fixFilterColValue($filterColVal['operand']);
-                                
-                                if ($operator == 'in') {
-                                    $orCriteria .= "LOWER($filterColName) IN (".Str::lower($filterColVal).") OR ";
-                                } else {
-                                    if (in_array($filterShowType, Mdform::$numberTypes)) {
-                                        if ($filterColVal != '') {
-                                            $filterColVal = Number::decimal($filterColVal);
-                                            $orCriteria .= "$filterColName $operator ".$filterColVal." OR ";
-                                        }
+
+                                    $filterColVal = self::fixFilterColValue($filterColVal['operand']);
+
+                                    if ($operator == 'in') {
+                                        $orCriteria .= "LOWER($filterColName) IN (".Str::lower($filterColVal).") OR ";
                                     } else {
-                                        $orCriteria .= "LOWER($filterColName) $operator '".Str::lower($filterColVal)."' OR ";
+                                        if (in_array($filterShowType, Mdform::$numberTypes)) {
+                                            if ($filterColVal != '') {
+                                                $filterColVal = Number::decimal($filterColVal);
+                                                $orCriteria .= "$filterColName $operator ".$filterColVal." OR ";
+                                            }
+                                        } else {
+                                            $orCriteria .= "LOWER($filterColName) $operator '".Str::lower($filterColVal)."' OR ";
+                                        }
                                     }
                                 }
                             }
+
+                            $orCriteria = rtrim(trim($orCriteria), ' OR');
+                            $subCondition .= " AND ($orCriteria)";
                         }
-                        
-                        $orCriteria = rtrim(trim($orCriteria), ' OR');
-                        $subCondition .= " AND ($orCriteria)";
                         
                     } elseif (!is_array($filterColVals)) {
                         
@@ -16243,7 +16321,7 @@ class Mdform_Model extends Model {
             if (isset($result['result'])) {
                 $response = ['status' => 'success', 'criteria' => $result['result']];
             } else {
-                $response = ['status' => 'error', 'message' => 'get_filteruser_criteria is null!'];
+                $response = ['status' => 'success', 'criteria' => '0 = 1'];
             }
         } else {
             $response = ['status' => 'error', 'message' => $this->ws->getResponseMessage($result)];
@@ -23830,48 +23908,50 @@ class Mdform_Model extends Model {
     public function kpiSetMultiPathConfigModel($indicatorId) {
         
         $indicatorIdPh = $this->db->Param(0);
-        $bindVars = array($this->db->addQ($indicatorId));
+        $bindVars = [$this->db->addQ($indicatorId)];
             
         $data = $this->db->GetAll("
             SELECT 
-                NVL(TRG_INDICATOR_ID, LOOKUP_META_DATA_ID) AS LOOKUP_META_DATA_ID, 
+                NVL(T0.TRG_INDICATOR_ID, T0.LOOKUP_META_DATA_ID) AS LOOKUP_META_DATA_ID, 
                 
                 CASE 
-                    WHEN SHOW_TYPE = 'combo' OR SHOW_TYPE = 'popup' OR SHOW_TYPE = 'radio' OR SHOW_TYPE = 'text' 
+                    WHEN T0.SHOW_TYPE = 'combo' OR T0.SHOW_TYPE = 'popup' OR T0.SHOW_TYPE = 'radio' OR T0.SHOW_TYPE = 'text' 
                     THEN 'string' 
-                    WHEN SHOW_TYPE = 'decimal' OR SHOW_TYPE = 'percent' OR SHOW_TYPE = 'bigdecimal_null' 
+                    WHEN T0.SHOW_TYPE = 'decimal' OR T0.SHOW_TYPE = 'percent' OR T0.SHOW_TYPE = 'bigdecimal_null' 
                     THEN 'bigdecimal' 
-                    WHEN SHOW_TYPE = 'check' 
+                    WHEN T0.SHOW_TYPE = 'check' 
                     THEN 'boolean' 
-                ELSE SHOW_TYPE END AS META_TYPE_CODE, 
+                ELSE T0.SHOW_TYPE END AS META_TYPE_CODE, 
                 
                 CASE 
-                    WHEN PARENT_ID = $indicatorIdPh 
+                    WHEN T0.PARENT_ID = $indicatorIdPh 
                     THEN NULL  
-                ELSE PARENT_ID END AS PARENT_ID, 
+                ELSE T0.PARENT_ID END AS PARENT_ID, 
 
                 NULL AS SIDEBAR_NAME, 
-                LOWER(COLUMN_NAME_PATH) AS PARAM_REAL_PATH, 
-                COLUMN_NAME_PATH AS PATH, 
-                LABEL_NAME, 
+                LOWER(T0.COLUMN_NAME_PATH) AS PARAM_REAL_PATH, 
+                T0.COLUMN_NAME_PATH AS PATH, 
+                T0.LABEL_NAME, 
                 0 AS IS_TRANSLATE, 
-                IS_RENDER AS IS_SHOW,  
+                T0.IS_RENDER AS IS_SHOW,  
                 'single' AS CHOOSE_TYPE, 
                 CASE 
-                    WHEN SHOW_TYPE = 'combo' 
+                    WHEN T0.SHOW_TYPE = 'combo' 
                     THEN 'combo' 
-                    WHEN SHOW_TYPE = 'popup' 
+                    WHEN T0.SHOW_TYPE = 'popup' 
                     THEN 'popup' 
-                    WHEN SHOW_TYPE = 'radio' 
+                    WHEN T0.SHOW_TYPE = 'radio' 
                     THEN 'radio' 
                 ELSE NULL END AS LOOKUP_TYPE, 
                 NULL AS JSON_CONFIG, 
-                NULL AS ABILITY_TOGGLE 
-            FROM KPI_INDICATOR_INDICATOR_MAP 
-            WHERE MAIN_INDICATOR_ID = $indicatorIdPh 
-                AND ".$this->db->IfNull('IS_INPUT', '0')." = 1", $bindVars); 
+                NULL AS ABILITY_TOGGLE, 
+                T1.SHOW_TYPE AS PARENT_TYPE_CODE 
+            FROM KPI_INDICATOR_INDICATOR_MAP T0 
+                LEFT JOIN KPI_INDICATOR_INDICATOR_MAP T1 ON T1.ID = T0.PARENT_ID 
+            WHERE T0.MAIN_INDICATOR_ID = $indicatorIdPh 
+                AND ".$this->db->IfNull('T0.IS_INPUT', '0')." = 1", $bindVars); 
         
-        $array = array();
+        $array = [];
 
         if ($data) {
             foreach ($data as $row) {

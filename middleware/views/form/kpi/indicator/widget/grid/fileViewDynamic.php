@@ -344,13 +344,9 @@ foreach ($dataResult as $groupName => $groupRow) {
         $rowJson = htmlentities(json_encode($row), ENT_QUOTES, 'UTF-8');
         if (issetParam($row[$this->relationViewConfig['position4']])) {
             
-            $fileIcon = 'assets/custom/addon/img/appmenu.png';
             $filePath = $row[$this->relationViewConfig['position4']];
             $fileExtension = strtolower(substr($filePath, strrpos($filePath, '.') + 1));
-            
-            if ($fileExtension == 'pdf') {
-                $fileIcon = 'assets/core/global/img/document/big/pdf2.png';
-            }
+            $fileIcon = 'assets/core/global/img/filetype/png/'.$fileExtension.'.png';
     ?>
     <a href="javascript:;" class="mv-cardview" title="<?php echo issetParam($row[$this->relationViewConfig['position2']]); ?>">
         <div class="no-dataview" data-crud-indicatorid="<?php echo $deleteCrudId ?>" data-rowdata="<?php echo $rowJson; ?>" style="position: absolute;z-index: 10;margin-left: 80px;display: none" onclick="<?php echo $deleteClickAction ?>">

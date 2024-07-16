@@ -1818,7 +1818,6 @@ class Mdform extends Controller {
                 )) { 
 
                     $widgetWInfo = Mdwidget::mvDataSetAvailableWidgets($this->view->relationWidgetComponents);
-                    
                     $this->load->model('mdform', 'middleware/models/');
 
                     if (issetParam($widgetWInfo)) {
@@ -1834,13 +1833,13 @@ class Mdform extends Controller {
                         }
                     }
 
+                    
                     $this->view->row['gridOption']['theme'] = 'no-border';
                     $this->view->columns = $this->model->renderKpiIndicatorColumnsModel($this->view->indicatorId, $this->view->row['isCheckSystemTable'], array('columnsData' => $this->view->columnsData));
                     $this->load->model('mdform', 'middleware/models/');
                     
                     $this->view->renderGridList = $this->view->renderPrint('kpi/indicator/renderGrid', self::$viewPath);
-                    
-                    $this->view->renderGrid = self::renderWidgetDataSet($this->view->row, $widgetWInfo ? $widgetWInfo : $widgetInfo);
+                    $this->view->renderGrid = self::renderWidgetDataSet($this->view->row, $widgetWInfo ? $widgetWInfo : $widgetInfo, $this->view->relationViewConfig);
             }            
         }
         
@@ -6488,6 +6487,14 @@ class Mdform extends Controller {
         
         if ($widgetCode == 'developer_workspace') { 
             $response = self::developerWorkspace();
+        } elseif (issetParam($this->view->methodRow['LANDING_PAGE_INDICATOR_ID']) !== '') {
+            
+            $response = [
+                'status' => 'success', 
+                'url' => 'mdform/indicatorList/' . $this->view->methodRow['LANDING_PAGE_INDICATOR_ID'] ,
+                'title' => $this->view->methodRow['NAME'],
+            ];
+            
         } else {
             
             if (!$relationList) {
@@ -6547,7 +6554,7 @@ class Mdform extends Controller {
             }
             
             $this->view->checkListRender = $this->view->renderPrint('kpi/indicator/widget/checklist/'.$widgetCode, self::$viewPath);
-
+            
             $response = [
                 'status' => 'success', 
                 'html' => $this->view->renderPrint('kpi/indicator/checklist/index', self::$viewPath),
@@ -6587,10 +6594,13 @@ class Mdform extends Controller {
         $mvInfo = $this->model->getIndicatorModel($indicatorId);
         $this->view->title = issetParam($mvInfo['NAME']);
         $this->view->indicatorId = $indicatorId;
+        $this->view->dataFolderId = Input::post('dataFolderId');
+        $this->view->processFolderId = Input::post('processFolderId');
         
         $response = [
             'status' => 'success', 
             'title' => '', 
+            'relationList' => $this->view->relationList, 
             'html' => $this->view->renderPrint('kpi/indicator/widget/checklist/mv_checklist_04', self::$viewPath)
         ];
         
@@ -6815,9 +6825,41 @@ class Mdform extends Controller {
         return $this->view->renderPrint('kpi/indicator/widget/grid/' . $widgetCode['name'], self::$viewPath);
     }    
     
-    public function renderWidgetDataSet($row = [], $widgetInfo = []) {
+    public function renderWidgetDataSet($row = [], $widgetInfo = [], $renderWidgetDataSet = []) {
         $_POST['indicatorId'] = $this->view->indicatorId;
-        $dataList = $this->model->indicatorDataGridModel();
+        if ($widgetInfo['name'] == 'cloudcard') {
+            $_POST['treeConfigs'] = 'parent=PARENT_ID&id=ID';
+            if (issetParam($renderWidgetDataSet['c5'])) {
+                $_POST['sort'] = $renderWidgetDataSet['c5'];
+                $_POST['order'] = 'asc';
+            }
+        }
+        
+        $dataList = $tmp = $this->model->indicatorDataGridModel();
+        $rows = array();
+        if ($widgetInfo['name'] == 'cloudcard') {
+            $_POST['treeConfigs'] = 'parent=PARENT_ID&id=ID';
+            if ($tmp['rows']) {
+                foreach ($tmp['rows'] as $key => $vrow) {
+                    unset($_POST);
+                    $_POST['indicatorId'] = $this->view->indicatorId;
+                    $_POST['page'] = 1;
+                    $_POST['rows'] = 500;
+                    $_POST['id'] = $vrow['ID'];
+                    $_POST['treeConfigs'] = 'parent=PARENT_ID&id=ID';
+                    if (issetParam($renderWidgetDataSet['c5'])) {
+                        $_POST['sort'] = $renderWidgetDataSet['c5'];
+                        $_POST['order'] = 'asc';
+                    }
+
+                    $dataResult = $this->model->indicatorDataGridModel();
+                    $vrow['CHILDREN'] = $dataResult;
+                    array_push($rows, $vrow);                
+                }
+    
+                $dataList['rows'] = $rows;
+            }
+        }
         
         $this->view->renderGrid = $this->runMvDataSet(
             array(
@@ -6907,7 +6949,7 @@ class Mdform extends Controller {
         $dataGridDefaultHeight = Input::post('dataGridDefaultHeight');
         $calendarParams = Input::post('calendarParams');
         $_POST['isIgnoreRightTools'] = 1;
-
+        
         $item = array();
         
         if (Input::postCheck('selectedRows')) {

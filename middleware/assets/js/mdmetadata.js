@@ -2257,6 +2257,8 @@ function urlRedirectByDataView(elem, processMetaDataId, url, target, dataViewId,
                     alert(plang.get('msg_pls_list_select'));
                     return;
                 }
+                
+                selectedRows = dataViewSelectedRowsResolver(selectedRows);
 
             } else {
                 var selectedRows = getDataViewSelectedRows(dataViewId);
@@ -13280,6 +13282,8 @@ function privateTransferProcessAction(mainMetaDataId, processMetaDataId, metaTyp
                             alert(plang.get('msg_pls_list_select'));
                             return;
                         }
+                        
+                        rows = dataViewSelectedRowsResolver(rows);
 
                     } else {
                         var rows = getDataViewSelectedRowsByElement(dataGrid);
@@ -21846,7 +21850,8 @@ function bpTmpScanner(elem) {
 
         ws.onopen = function() {
             var currentDateTime = GetCurrentDateTime();
-            ws.send('{"command":"get_scan_image", "dateTime":"' + currentDateTime + '", details: [{"key": "filename", "value": "' + uniqueId + '"}, {"key": "server", "value": "' + URL_APP + 'mddoceditor/vrClientScannerUpload' + '"}]}');
+            var signToken = getSignToken();
+            ws.send('{"command":"get_scan_image", "dateTime":"' + currentDateTime + '", details: [{"key": "filename", "value": "' + uniqueId + '"}, {"key": "server", "value": "' + URL_APP + 'mddoceditor/vrClientScannerUpload?token='+signToken+'"}]}');
         };
 
         ws.onmessage = function(evt) {

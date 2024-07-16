@@ -393,7 +393,7 @@ class Mdpki extends Controller {
 
             $signatureImage = '';
             $signatureHeight = issetVar($selectedRow['signatureheight']);
-            
+            $imgfilePath = '';
             if (issetParam($postData['signatureimage']) !== '') {
                 $isBase64 = preg_match('/^[a-zA-Z0-9\/\r\n+]*={0,2}$/', $postData['signatureimage']);
                 if (!$isBase64) {
@@ -408,7 +408,7 @@ class Mdpki extends Controller {
             
             if (!file_exists($imgfilePath)) {
                 throw new Exception(Lang::line('STAMP_IMG_NOT_FOUND'));
-            } 
+            }
             
             if (!file_exists($postData['filePath'])) {
                 throw new Exception(Lang::line('STAMP_FILE_NOT_FOUND'));

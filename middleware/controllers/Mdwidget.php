@@ -138,6 +138,7 @@ class Mdwidget extends Controller {
     }
     
     public static function mvDataSetAvailableWidgets($widgetCode) {
+
         $mapId = '';
         if (is_array($widgetCode)) {            
             if (isset($widgetCode['mv_card_with_list_widget'])) {
@@ -153,6 +154,9 @@ class Mdwidget extends Controller {
             } elseif (isset($widgetCode['161769400565213'])) {
                 $mapId = $widgetCode['161769400565213']['MAP_ID'];          
                 $widgetCode = '161769400565213';      
+            } elseif (isset($widgetCode['cloudcard'])) {
+                $mapId = $widgetCode['cloudcard']['MAP_ID'];          
+                $widgetCode = 'cloudcard';      
             } else {
                 $widgetCode = '';
             }
@@ -174,6 +178,12 @@ class Mdwidget extends Controller {
                 'topAddRow' => true, 
                 'topAddOneRow' => true,
                 'name' => 'fileViewDynamic',
+                'mapId' => $mapId
+            ),           
+            'cloudcard' => array(
+                'topAddRow' => true, 
+                'topAddOneRow' => true,
+                'name' => 'cloudcard',
                 'mapId' => $mapId
             ),            
             'mv_card_with_list_widget' => array(
@@ -5097,4 +5107,65 @@ class Mdwidget extends Controller {
         convJson($response); exit;
     }
 
+    public function cardHtml() {
+        $this->view->relationViewConfig = $this->view->renderWidgetDataSet = json_decode(html_entity_decode(Input::post('relationViewConfig'), ENT_QUOTES, 'UTF-8'), true);
+        $this->view->indicatorId = Input::post('indicatorId');
+        $this->view->uid = Input::post('uid');
+        $this->view->parentId = null;
+        $this->load->model('mdform', 'middleware/models/');
+
+        $_POST['page'] = 1;
+        $_POST['rows'] = 500;
+        $_POST['treeConfigs'] = 'parent=PARENT_ID&id=ID';
+        if (issetParam($this->view->renderWidgetDataSet['c5'])) {
+            $_POST['sort'] = $this->view->renderWidgetDataSet['c5'];
+            $_POST['order'] = 'asc';
+        }
+
+        if (Input::post('parentId')) {
+            $this->view->parentId = $_POST['id'] = Input::post('parentId');
+        }
+        
+        $tmp = $this->model->indicatorDataGridModel();
+        
+        $dataList = $rows = array();
+        $dataList['rows'] = array();
+        $_POST['treeConfigs'] = 'parent=PARENT_ID&id=ID';
+        if (!$this->view->parentId) {
+            $tmp = $tmp['rows'];
+        }
+        if (issetParamArray($tmp)) {
+            foreach ($tmp as $key => $vrow) {
+                $_POST['indicatorId'] = $this->view->indicatorId;
+                $_POST['page'] = 1;
+                $_POST['rows'] = 500;
+                $_POST['id'] = $vrow['ID'];
+                $_POST['treeConfigs'] = 'parent=PARENT_ID&id=ID';
+                if (issetParam($this->view->renderWidgetDataSet['c5'])) {
+                    $_POST['sort'] = $this->view->renderWidgetDataSet['c5'];
+                    $_POST['order'] = 'asc';
+                }
+                
+                $dataResult = $this->model->indicatorDataGridModel();
+                if ($this->view->parentId) {
+                    $vrow['CHILDREN'] = issetParamArray($dataResult['rows']);
+                } else {
+                    $vrow['CHILDREN'] = issetParamArray($dataResult);
+                }
+                array_push($rows, $vrow);                
+            }
+
+            $dataList['rows'] = $rows;
+        }
+        
+        $this->view->response = $dataList;
+
+        
+        convJson([
+            'html' => $this->view->renderPrint('/grid/cloudcard_sub', 'middleware/views/form/kpi/indicator/widget'),
+            'moduleList' => $this->view->response['rows'],
+            'relationViewConfig' => $this->view->relationViewConfig,
+            'parentid' => '', //issetParam($this->view->response['rows']['0']['PARENT_ID']),
+        ]);
+    }
 }

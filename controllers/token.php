@@ -24,10 +24,23 @@ class Token extends Controller {
             )));
         }
         
-        $token = Input::post('token');
-        
+        $token = Input::get('token');
         if (!$token) {
             outputJSON('Missing parameter!');
+        }
+        
+        $token = Hash::decryption($token);
+        if (!$token) {
+            outputJSON('Missing parameter!');
+        }
+        
+        $tokenArr = explode('^~^', $token);
+        $tokenDate = $tokenArr[0];
+        $tokenUserId = $tokenArr[1];
+        $tokenUID = $tokenArr[2];
+
+        if ($tokenDate && $tokenUserId && $tokenUID && (strtotime(Date::currentDate('Y-m-d H:i:s')) - strtotime($tokenDate)) > 300) {
+            outputJSON('Token expired!');
         }
 
         if ($_FILES['uplTheFile']['error'] > 0) {
