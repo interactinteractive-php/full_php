@@ -1045,7 +1045,7 @@ class Cron_Model extends Model {
                     $this->db->AutoExecute('FIN_INVOICE', $finInvoiceChangeStatusData, 'UPDATE', "INVOICE_ID = $invoiceId");
                     
                     $wfmLogData = [
-                        'ID'               => getUIDAdd($b), 
+                        'ID'               => getUIDAdd($b + 1), 
                         'REF_STRUCTURE_ID' => $finInvoiceStrId, 
                         'RECORD_ID'        => $invoiceId, 
                         'WFM_STATUS_ID'    => $finInvoiceStatusId, 
@@ -1056,7 +1056,7 @@ class Cron_Model extends Model {
                     
                     $this->db->AutoExecute('META_WFM_LOG', $wfmLogData);
                     
-                    $customerId = getUIDAdd($b + 1);
+                    $customerId = getUIDAdd($b + 2);
                     $customerData = [
                         'CUSTOMER_ID'       => $customerId, 
                         'CUSTOMER_CODE'     => $bookNumber, 
@@ -1073,7 +1073,7 @@ class Cron_Model extends Model {
                     
                     $this->db->AutoExecute('CRM_CUSTOMER', $customerData);
                     
-                    $departmentId = getUIDAdd($b + 2);
+                    $departmentId = getUIDAdd($b + 3);
                     $departmentData = [
                         'DEPARTMENT_ID'   => $departmentId, 
                         'DEPARTMENT_CODE' => $bookNumber, 
@@ -1086,7 +1086,7 @@ class Cron_Model extends Model {
                     
                     $this->db->AutoExecute('ORG_DEPARTMENT', $departmentData);
                     
-                    $connectionId = getUIDAdd($b + 3);
+                    $connectionId = getUIDAdd($b + 4);
                     $connectionData = [
                         'ID'            => $connectionId, 
                         'DB_TYPE'       => $dbType, 
@@ -1142,7 +1142,7 @@ class Cron_Model extends Model {
                             $licenseNumber    = '';
                             
                             $licenseKeyData = [
-                                'LICENSE_KEY_ID'  => getUIDAdd(($b + 4).$p), 
+                                'LICENSE_KEY_ID'  => getUIDAdd(($b + 5).$p), 
                                 'PRODUCT_ID'      => $productId, 
                                 'CUSTOMER_ID'     => $customerId, 
                                 'CONTRACT_ID'     => $contractId, 
