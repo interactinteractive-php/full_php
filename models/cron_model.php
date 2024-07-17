@@ -967,7 +967,8 @@ class Cron_Model extends Model {
                     LL.COMPANY_NAME, 
                     LL.EMAIL1 AS EMAIL, 
                     LL.PHONE_NUMBER1 AS PHONE_NUMBER, 
-                    LL.LEAD_ID 
+                    LL.LEAD_ID, 
+                    LL.STATE_REG_NUMBER 
                 FROM CM_BANK_BILLING T1 
                     INNER JOIN FIN_INVOICE TT ON REGEXP_LIKE (T1.DESCRIPTION, TT.BOOK_NUMBER) 
                     INNER JOIN CRM_LEAD LL ON TT.LEAD_ID = LL.LEAD_ID 
@@ -990,6 +991,7 @@ class Cron_Model extends Model {
                 $finInvoiceStrId    = 1711607546700352;
                 $apiEnvironmentId   = 1711935661499533;
                 $ntfNotificationId  = 17116810804369;
+                $posProductId       = 1684417867195752;
                 $dbType             = 'postgre';
                 $dbPort             = '5432';
                 $dbServiceName      = 'cloud_platform_uat';
@@ -1018,6 +1020,7 @@ class Cron_Model extends Model {
                     $phoneNumber = $bankBillingRow['PHONE_NUMBER'];
                     $email       = $bankBillingRow['EMAIL'];
                     $crmLeadId   = $bankBillingRow['LEAD_ID'];
+                    $crmRegNum   = $bankBillingRow['STATE_REG_NUMBER'];
                     $domainName  = cyrillicToLatin($companyName);
                     $domainName  = trim(Str::remove_doublewhitespace(Str::remove_whitespace_feed(Str::remove_whitespace($domainName))));
                     $domainName  = strtolower($domainName);
@@ -1060,6 +1063,7 @@ class Cron_Model extends Model {
                         'CUSTOMER_NAME'     => $companyName, 
                         'PHONE_NUMBER'      => $phoneNumber, 
                         'EMAIL'             => $email, 
+                        'STATE_REG_NUMBER'  => $crmRegNum, 
                         'DOMAIN_NAME'       => $domainName,
                         'DESCRIPTION'       => $description, 
                         'CUSTOMER_GROUP_ID' => $customerGroupId, 
@@ -1154,6 +1158,10 @@ class Cron_Model extends Model {
                             ];
                             
                             $this->db->AutoExecute('SYS_LICENSE_KEY', $licenseKeyData);
+                            
+                            if ($productId == $posProductId) {
+                                $this->ws->runSerializeResponse(GF_SERVICE_ADDRESS, 'posApiRequest_001', ['customerId' => $customerId]);
+                            }
                         }
                         
                         $apiEnvironmentData = self::getApiEnvironment($idPh, $idTwoPh, $apiEnvironmentId, 'request'); 

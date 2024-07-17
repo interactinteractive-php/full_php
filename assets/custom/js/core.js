@@ -3551,6 +3551,14 @@ $(function() {
             return;
         }
         
+        if (webUrl != '' && webUrl.indexOf('mdform/indicatorProduct/') !== -1) {
+            var indicatorId = webUrl.replace('mdform/indicatorProduct/', '');
+            if (indicatorId != '') {
+                mvProductRenderInit(elem, 'javascript:;', indicatorId);
+            }
+            return;
+        }
+        
         if ($this.hasAttr('data-kpi-indicator')) {
             isKpiIndicator = true;
             postData.isKpiIndicator = 1;
