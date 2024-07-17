@@ -55,13 +55,14 @@ class Mdlanguage_Model extends Model {
                 
             $this->ws->runSerializeResponse(GF_SERVICE_ADDRESS, 'reload_language');
             
+            $langPath = Lang::getPath();
             $langSuffix = Lang::getSuffix();
             $activeLanguage = self::getActiveLanguageModel();
             $uid = getUID();
         
             foreach ($activeLanguage as $lang) {
 
-                $langDir = 'lang/'.$lang['SHORT_CODE'];
+                $langDir = $langPath.'lang/'.$lang['SHORT_CODE'];
 
                 $path = realpath($langDir);
                 

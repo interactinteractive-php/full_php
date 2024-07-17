@@ -45,6 +45,7 @@ class Lang extends Controller {
             return true;
         }
         
+        $langPath = Lang::getPath();
         $langSuffix = Lang::getSuffix();
         
         $langPhpFile = $langFile.'_lang.php';
@@ -55,6 +56,8 @@ class Lang extends Controller {
         } else {
             $basePath = BASEPATH;
         }
+        
+        $basePath = $basePath.$langPath;
         
         if (file_exists($basePath.'lang/'.$langCode.'/'.$langIniFile)) {
             
@@ -204,6 +207,17 @@ class Lang extends Controller {
         return null;
     }
     
+    public static function getPath() 
+    {
+        $langPath = Config::getFromCache('PF_LANG_PATH');
+        
+        if ($langPath) {
+            return rtrim($langPath, '/') . '/';
+        }
+            
+        return null;
+    }
+    
     public static function getLanguageName() 
     {
         if (Session::isCheck(SESSION_PREFIX.'langcode')) {
@@ -258,13 +272,14 @@ class Lang extends Controller {
     
     public static function loadjs($langfile = 'main', $languageCode = null) {
         
+        $langPath = Lang::getPath();
         $langSuffix = Lang::getSuffix();
         $langfile = str_replace('.js', '', $langfile).'_lang'.$langSuffix.'.js';
 
         $langCode = is_null($languageCode) ? Lang::getCode() : $languageCode;
 
-        if (file_exists(BASEPATH.'lang/'.$langCode.'/'.$langfile)) {
-            return 'lang/'.$langCode.'/'.$langfile;
+        if (file_exists(BASEPATH.$langPath.'lang/'.$langCode.'/'.$langfile)) {
+            return $langPath.'lang/'.$langCode.'/'.$langfile;
         } else {
             return;
         }
