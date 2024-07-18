@@ -103,6 +103,9 @@ class Hash
         
         $key = 'PjEc~Q^D;4:*5v&D';
         $data = str_replace(' ', '+', $data);
+        $data = str_replace('%3D', '=', $data);
+        $data = str_replace('%2F', '/', $data);
+        $data = str_replace('%3A', ':', $data);
         $parts = explode(':', $data);
         
         if (isset($parts[1])) {

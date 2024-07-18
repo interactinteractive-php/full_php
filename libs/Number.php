@@ -80,7 +80,7 @@ class Number {
         return 0; 
     }
 
-    public static function numberFormat($number, $decimal)
+    public static function numberFormat($number, $decimal = 2)
     { 
         if (is_numeric($number)) {
             $number = number_format($number, $decimal, '.', '');
