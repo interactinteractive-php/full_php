@@ -5334,7 +5334,11 @@ class Mdupgrade_Model extends Model {
                 $this->model->generateLanguageFileModel();
             }
 
-            if ($metaCount == $metaLockedCount) {
+            if (isset($isScriptRun) && $isScriptRun && $metaCount == 0 && $metaLockedCount == 0) {
+                
+                $response = ['status' => 'success', 'message' => 'Амжилттай', 'logs' => $logs];
+                
+            } elseif ($metaCount == $metaLockedCount) {
 
                 if ($metaCount == 1) {
                     $response = ['status' => 'error', 'message' => rtrim($lockedMetaMessage, ', ') . ' кодтой уг үзүүлэлт түгжээтэй байгаа учир шинэчлэх боломжгүй байна!', 'logs' => $logs];
@@ -5355,6 +5359,8 @@ class Mdupgrade_Model extends Model {
         } else {
             $response = ['status' => 'success', 'metaDataId' => $metaDataId];
         }
+        
+        $logs = null;
 
         return $response;
     }
