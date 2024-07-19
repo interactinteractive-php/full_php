@@ -85,7 +85,7 @@ class SessionSetHandler extends Controller {
 
                     Session::destroy();
 
-                    $response = '{"status": "error", "message": "'. Lang::line('sessionKilled') .'", "rows": [], "total": 0, "sessionCase": 1}';
+                    $response = '{"status": "error", "message": "'. Lang::line('sessionKilled') .'", "rows": [], "total": 0, "sessionCase": 2}';
                     echo $response; exit;
                 }
             }
