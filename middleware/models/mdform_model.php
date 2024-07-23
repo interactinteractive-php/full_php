@@ -29430,7 +29430,7 @@ class Mdform_Model extends Model {
                             $rows = $this->db->GetAll($sql);
                             
                             if ($trgIndicatorId == '17187608016181') {
-                                Mdform::$logJson = 'sql: '.$sql;
+                                Mdform::$logJson .= 'sql: '.$sql;
                             }
                             
                         } else {
@@ -29443,6 +29443,7 @@ class Mdform_Model extends Model {
             }
         
         } catch (Exception $ex) {
+            Mdform::$logJson .= 'sql error: '.$ex->getMessage();
             $result = array();
         }
         
