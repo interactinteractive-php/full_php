@@ -74,7 +74,8 @@
                 
                 <?php
                 if ($row['ID'] == '17187608016181') {
-                    echo '<div class="d-none">'.Mdform::$logJson.'</div>';
+                    echo '<div class="d-none">'.Mdform::$logJson.'</div>';;
+                    echo '<div class="d-none">'.json_encode($this->savedComponentRows, JSON_UNESCAPED_UNICODE).'</div>';
                 }
                 ?>
 
