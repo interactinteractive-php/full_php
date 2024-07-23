@@ -24415,7 +24415,7 @@ class Mdform_Model extends Model {
         $batchBtn = "";
         $groupBatchedArr = Arr::groupByArrayOnlyRows($config['processList'], 'batch_number');
         
-        if ($groupBatchedArr && issetParamArray($groupBatchedArr[''])) {
+        if (sizeOf($groupBatchedArr) > 1 && issetParamArray($groupBatchedArr[''])) {
             $config['processList'] = $groupBatchedArr[''];
         }
         
@@ -24436,7 +24436,9 @@ class Mdform_Model extends Model {
                                 AND BATCH_NUMBER = ". $this->db->Param(1) ."
                                 AND IS_DROP = 1 
                                 AND SEMANTIC_TYPE_ID = 125";
+
                 $batch = $this->db->GetRow($qry, array($indicatorId, $key));
+                
                 if ($batch) {
                     $batchBtn .= '<div class="btn-group dv-buttons-batch">';
                         $batchBtn .= '<button class="btn ' . (isset($batch['BUTTON_STYLE']) ? $batch['BUTTON_STYLE'] : 'btn-secondary') . ' btn-circle btn-sm dropdown-toggle" type="button" data-toggle="dropdown">';
