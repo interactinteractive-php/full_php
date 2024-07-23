@@ -67,7 +67,7 @@ class Mdlanguage_Model extends Model {
                 $path = realpath($langDir);
                 
                 if ($path == false && !is_dir($path)) {
-                    mkdir($langDir, 0777);
+                    mkdir($langDir, 0777, true);
                 }
                 
                 $langFile = $langDir.'/main_lang_'.$uid.'.ini';
