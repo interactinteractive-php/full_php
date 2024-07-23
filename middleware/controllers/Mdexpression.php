@@ -2668,6 +2668,7 @@ class Mdexpression extends Controller {
         $fullExpression = str_replace('setKpiRowColRequired(', 'bpSetKpiRowColRequired(' . $mainSelector . ', checkElement, ', $fullExpression);
         $fullExpression = str_replace('setKpiRowColNonRequired(', 'bpSetKpiRowColNonRequired(' . $mainSelector . ', checkElement, ', $fullExpression);
         $fullExpression = str_replace('kpiWizardGotoStep(', 'bpKpiWizardGotoStep(' . $mainSelector . ', ', $fullExpression);
+        $fullExpression = str_replace('wizardGotoStep(', 'bpKpiWizardGotoStep(' . $mainSelector . ', ', $fullExpression);
         $fullExpression = str_replace('setTabOrder(', 'bpSetTabOrder(' . $mainSelector . ', checkElement, ', $fullExpression);
         $fullExpression = str_replace('setDetailBySameValue(', 'bpSetDetailBySameValue(' . $mainSelector . ', checkElement, ', $fullExpression);
         $fullExpression = str_replace('setListToNewline(', 'bpSetListToNewline(' . $mainSelector . ', checkElement, ', $fullExpression);
@@ -3718,6 +3719,40 @@ class Mdexpression extends Controller {
                     $fncName = $fncName . '_' . $processId;
 
                     $fullExpression = str_replace($bankIpTerminalTransfers[0][$ek], "bpBankIpTerminalTransfer($mainSelector, checkElement, " . $argumentsArr[0] . ", " . $argumentsArr[1] . ", " . $argumentsArr[2] . ", '$fncName');", $fullExpression);
+                }
+            }
+        }
+        
+        if (strpos($fullExpression, 'callMvChecklistMenuMeta(') !== false) {
+            preg_match_all('/callMvChecklistMenuMeta\((.*?)\)/i', $fullExpression, $callProcess);
+
+            if (count($callProcess[0]) > 0) {
+                foreach ($callProcess[1] as $ek => $ev) {
+
+                    $evArr = explode(',', $ev);
+                    $processCode = trim(str_replace("'", '', $evArr[0]));
+                    $processCodeLower = strtolower($processCode);
+                    $getProcessId = $this->model->getMetaIdByCodeModel($processCodeLower);
+                    $processIdBySelect = $getProcessId ? "'" . $getProcessId . "'" : $processCode;
+
+                    $fullExpression = str_replace($callProcess[0][$ek], 'bpCallMvChecklistMenuMeta(' . $mainSelector . ', \'' . Mdwebservice::$processCode . '\', ' . $processIdBySelect . ')', $fullExpression);
+                }
+            }
+        }
+        
+        if (strpos($fullExpression, 'callMvChecklistMenuIndicator(') !== false) {
+            preg_match_all('/callMvChecklistMenuIndicator\((.*?)\)/i', $fullExpression, $callProcess);
+
+            if (count($callProcess[0]) > 0) {
+                foreach ($callProcess[1] as $ek => $ev) {
+
+                    $evArr = explode(',', $ev);
+                    $processCode = trim(str_replace("'", '', $evArr[0]));
+                    $processCodeLower = strtolower($processCode);
+                    $getProcessId = $this->model->getKpiIndicatorIdByCodeModel($processCodeLower);
+                    $processIdBySelect = $getProcessId ? "'" . $getProcessId . "'" : $processCode;
+
+                    $fullExpression = str_replace($callProcess[0][$ek], 'bpCallMvChecklistMenuIndicator(' . $mainSelector . ', \'' . Mdwebservice::$processCode . '\', ' . $processIdBySelect . ')', $fullExpression);
                 }
             }
         }

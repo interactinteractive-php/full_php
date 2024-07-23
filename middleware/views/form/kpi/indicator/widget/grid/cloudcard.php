@@ -63,13 +63,18 @@
         itemCardGroupInit<?php echo $uid ?>('');
     });
     
-    function mvProductAppmenuCardRender<?php echo $uid ?>(indicatorId, dataFolderId, processFolderId) {
+    function mvProductAppmenuCardRender<?php echo $uid ?>(element, indicatorId, dataFolderId, processFolderId, filterId) {
         $.ajax({
             type: 'post',
             url: 'mdform/mvProductRender',
             data: {
+                parentId: $(element).data('parentid'),
                 indicatorId: indicatorId,
                 dataFolderId: dataFolderId,
+                filterColumn: '<?php echo $this->filterColumn ?>',
+                mainIndicatorId: '<?php echo $this->filterIndicatorId ?>',
+                filterIndicatorId: filterId,
+                filterColumnValue: indicatorId,
                 processFolderId: processFolderId,
                 appMenuCard: 1
             }, 
@@ -229,7 +234,7 @@
         max-height: 33px !important;
     }    
     .appmenu-newdesign-1 .appmenu-table-cell-right {
-        /*background-color: #fff;*/
+        background-color: #fff !important;
     }
     .back-item-btn {
         background: #FFFFFF;

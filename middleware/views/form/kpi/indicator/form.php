@@ -109,7 +109,7 @@ if (Input::postCheck('endSessionLogStatusCombo')) {
     ?>
     
     <div class="bp-tabs tabbable-line mv-main-tabs">
-        <ul class="nav nav-tabs">
+        <ul class="nav nav-tabs bp-addon-tab">
             
             <li class="nav-item">
                 <a href="#maintab_<?php echo $this->uniqId; ?>" class="nav-link active" data-toggle="tab" aria-expanded="false">
@@ -220,6 +220,13 @@ if (Mdform::$addRowsTemplate) {
 }
 ?>
 <script type="text/javascript">
+<?php
+if (Mdform::$isWizardStep) {
+?>
+initKpiWizardForm_<?php echo $this->uniqId; ?>();
+<?php
+}
+?>   
 var $kpiTmp_<?php echo $this->uniqId; ?> = $('#kpi-<?php echo $this->uniqId; ?>');
 var bp_window_<?php echo $this->uniqId; ?> = $kpiTmp_<?php echo $this->uniqId; ?>;
 var isEditMode_<?php echo $this->uniqId; ?> = <?php echo ((Mdform::$firstTplId) ? 'true' : 'false'); ?>;
@@ -942,27 +949,27 @@ $(function() {
     <?php
     if (Mdform::$isRowsReplacePath) {
     ?>
-    $kpiTmp_<?php echo $this->uniqId; ?>.on('customEventHtmlClickToEdit', '.kpi-dtl-table[data-replace-path]:not([data-replace-path=""]) > .tbody > .bp-detail-row .texteditor_clicktoeditInit[contenteditable="true"]', function(){
-        var groupPath = $(this).closest('table[data-replace-path]').attr('data-table-path');
-        rowsDtlPathReplacer_<?php echo $this->uniqId; ?>(groupPath);
-    }); 
-    $kpiTmp_<?php echo $this->uniqId; ?>.on('focusout', '.kpi-dtl-table[data-replace-path]:not([data-replace-path=""]) > .tbody > .bp-detail-row .texteditor_clicktoeditInit[contenteditable="true"]', function(){
-        var groupPath = $(this).closest('table[data-replace-path]').attr('data-table-path');
-        rowsDtlPathReplacer_<?php echo $this->uniqId; ?>(groupPath);
-    }); 
-    $kpiTmp_<?php echo $this->uniqId; ?>.on('change', 'input:not(.popupInit, .bigdecimalInit), select, textarea', function() {
-        eventDelay(function() {
+        $kpiTmp_<?php echo $this->uniqId; ?>.on('customEventHtmlClickToEdit', '.kpi-dtl-table[data-replace-path]:not([data-replace-path=""]) > .tbody > .bp-detail-row .texteditor_clicktoeditInit[contenteditable="true"]', function(){
+            var groupPath = $(this).closest('table[data-replace-path]').attr('data-table-path');
+            rowsDtlPathReplacer_<?php echo $this->uniqId; ?>(groupPath);
+        }); 
+        $kpiTmp_<?php echo $this->uniqId; ?>.on('focusout', '.kpi-dtl-table[data-replace-path]:not([data-replace-path=""]) > .tbody > .bp-detail-row .texteditor_clicktoeditInit[contenteditable="true"]', function(){
+            var groupPath = $(this).closest('table[data-replace-path]').attr('data-table-path');
+            rowsDtlPathReplacer_<?php echo $this->uniqId; ?>(groupPath);
+        }); 
+        $kpiTmp_<?php echo $this->uniqId; ?>.on('change', 'input:not(.popupInit, .bigdecimalInit), select, textarea', function() {
+            eventDelay(function() {
+                rowsDtlPathReplacer_<?php echo $this->uniqId; ?>();
+            }, 100);
+        });
+        $kpiTmp_<?php echo $this->uniqId; ?>.on('change', 'input.popupInit', function() {
+            eventDelay(function() {
+                rowsDtlPathReplacer_<?php echo $this->uniqId; ?>();
+            }, 600);
+        });
+        $kpiTmp_<?php echo $this->uniqId; ?>.on('change', 'input.bigdecimalInit', function() {
             rowsDtlPathReplacer_<?php echo $this->uniqId; ?>();
-        }, 100);
-    });
-    $kpiTmp_<?php echo $this->uniqId; ?>.on('change', 'input.popupInit', function() {
-        eventDelay(function() {
-            rowsDtlPathReplacer_<?php echo $this->uniqId; ?>();
-        }, 600);
-    });
-    $kpiTmp_<?php echo $this->uniqId; ?>.on('change', 'input.bigdecimalInit', function() {
-        rowsDtlPathReplacer_<?php echo $this->uniqId; ?>();
-    });
+        });
     <?php
     }
     ?>
@@ -982,7 +989,7 @@ $(function() {
     }       
 });
 
-function rowsDtlPathReplacer_<?php echo $this->uniqId; ?>(groupPath) {
+function rowsDtlPathReplacer_(getData, groupPath) {
     <?php
     if (Mdform::$isRowsReplacePath) {
     ?>
@@ -1102,6 +1109,127 @@ function rowsDtlPathReplacer_<?php echo $this->uniqId; ?>(groupPath) {
     }
     ?>
 }
+
+function rowsDtlPathReplacerMetaverse(getData, groupPath) {
+    if (typeof groupPath != 'undefined') {
+        var $dtlTbl = $kpiTmp_<?php echo $this->uniqId; ?>.find('table[data-replace-path][data-table-path="'+groupPath+'"]:not([data-replace-path=""])');
+    } else {
+        var $dtlTbl = $kpiTmp_<?php echo $this->uniqId; ?>.find('table[data-replace-path]');
+    }
+    
+    if ($dtlTbl.length) {
+        
+        var $header = $kpiTmp_<?php echo $this->uniqId; ?>.find('.kpi-hdr-table').find('[data-path]'), headerData = {};
+        var $detail = $kpiTmp_<?php echo $this->uniqId; ?>.find('.kpi-dtl-table'), dtlData = {};
+
+        if (getData) {
+            for (var c in getData) {
+                headerData[c.toUpperCase()] = getData[c];
+            }
+        } else {
+            $header.each(function() {
+                var $headerElem = $(this), headerVal = $headerElem.val();
+                if (headerVal != '' && headerVal != null) {
+                    if ($headerElem.hasClass('select2')) {
+                        headerVal = $("option:selected", $headerElem).text();
+                    } 
+                    headerData[$headerElem.attr('data-col-path')] = headerVal;
+                }
+            });
+        }
+
+        $detail.each(function() {
+            var $selftr = $(this);
+            var $dtltr = $selftr.find('> tbody > tr');
+            dtlData[$selftr.attr('data-table-path')] = [];
+            
+            if ($dtltr.length) {
+                $dtltr.each(function() {
+                    var $headerTemp = $(this).find('[data-path]'), headerDataTemp = {};
+                    
+                    $headerTemp.each(function() {
+                        var $headerElem = $(this), headerVal = $headerElem.val();
+                        if (headerVal != '' && headerVal != null) {
+                            if ($headerElem.hasClass('select2')) {
+                                headerVal = $("option:selected", $headerElem).text();
+                            } 
+                            if ($headerElem.attr('data-col-path')) {
+                                headerDataTemp[$headerElem.attr('data-col-path')] = headerVal;
+                            }
+                        }
+                    });
+                    dtlData[$selftr.attr('data-table-path')].push(headerDataTemp);
+                });
+            }
+        });
+        
+        $dtlTbl.each(function() {
+            var $tbl = $(this), $tblRows = $tbl.find('> tbody > tr');
+            
+            if ($tblRows.length) {
+                var replacePath = $tbl.attr('data-replace-path'), replacePathArr = replacePath.split('path');
+                var startTag = '$', endTag = '$';
+                
+                $tblRows.each(function() {
+                    var $row = $(this), $htmlClickToEdit = $row.find('.texteditor_clicktoeditInit');
+                    if ($htmlClickToEdit.length) {
+                        
+                        $htmlClickToEdit.each(function() {
+                            
+                            var $control = $(this), controlHtml = $control.html();
+                            
+                            if (controlHtml != '' && controlHtml != null) {
+                                
+                                for (var c in headerData) {
+                                    var cVal = headerData[c];
+                                    var searchMask = startTag + c + endTag;
+                                    
+                                    if (controlHtml.indexOf('data-replace-tag="'+c+'"') !== -1) {
+                                        var $html = $('<div />', {html: controlHtml});
+                                        $html.find('[data-replace-tag="'+c+'"]').html(cVal);
+                                        controlHtml = $html.html();
+                                    }
+                                    
+                                    controlHtml = str_ireplace(searchMask, '<span data-replace-tag="'+c+'" class="mv_html_clicktoedit_tag" style="">' + cVal + '</span>', controlHtml);
+                                }
+                                
+                                for (var c in dtlData) {
+                                    var cVal = dtlData[c];                                    
+                                    
+                                    if (controlHtml.indexOf('id="'+c+'"') !== -1 && Object.keys(cVal).length) {
+                                        var $html = $('<div />', {html: controlHtml});
+                                        $html.find('#'+c+' > tbody > tr:eq(0) > td').show();
+                                        var $getTableTr = $html.find('#'+c+' > tbody > tr:eq(0)').html();
+                                        var $getTableTrTemp = $getTableTr;
+                                        $html.find('#'+c+' > tbody > tr:eq(0) > td').hide();
+                                        var $getTableTrTemp2 = $html.find('#'+c+' > tbody > tr:eq(0)').html();
+                                        var $getTableTrHtml = '';
+                                        $html.find('#'+c+' > tbody').empty();
+                                        
+                                        for (var l = 0; l < cVal.length; l++) {
+                                            $getTableTr = $getTableTrTemp;
+                                            for (var cc in cVal[l]) {
+                                                var searchMask = startTag + c + '.' + cc + endTag;
+                                                $getTableTr = str_ireplace(searchMask, '<span data-replace-tag="'+c+'" class="mv_html_clicktoedit_tag" style="">' + cVal[l][cc] + '</span>', $getTableTr);
+                                            }
+                                            $getTableTrHtml += '<tr>'+$getTableTr+'</tr>';
+                                        }
+                                        
+                                        $html.find('#'+c+' > tbody').append('<tr>'+$getTableTrTemp2+'</tr>'+$getTableTrHtml);
+                                        controlHtml = $html.html();
+                                    }
+                                }
+                                
+                                $control.html(controlHtml);
+                                $control.next('textarea').val(controlHtml);
+                            }
+                        });
+                    }
+                });
+            }
+        });
+    }
+}
         
 function dtlAggregateFunction_<?php echo $this->uniqId; ?>() {
         
@@ -1191,4 +1319,61 @@ function bpFullScriptsWithoutEvent_<?php echo $this->uniqId; ?>(elem, groupPath,
     
     <?php echo issetParam($this->fullExp['withoutEvent']); ?> 
 }
+<?php
+if (Mdform::$isWizardStep) {
+?>       
+function initKpiWizardForm_<?php echo $this->uniqId; ?>() {
+    $('#wizard-<?php echo $this->uniqId; ?>').steps({
+        headerTag: 'h3',
+        bodyTag: 'section',
+        transitionEffect: 'fade',
+        autoFocus: true, 
+        enableAllSteps: true, 
+        enableFinishButton: false, 
+        enableKeyNavigation: false,
+        titleTemplate: '<span class="number">#index#</span> #title#', 
+        labels: {
+            previous: '<i class="icon-arrow-left13 mr-2"></i> ' + plang.get('prev'),
+            next: plang.get('next') + ' <i class="icon-arrow-right14 ml-2 wizard-type-next-btn"></i>',
+            finish: plang.get('finish_btn') + ' <i class="icon-arrow-right14 ml-2"></i>'
+        }, 
+        onInit: function (event, currentIndex) { 
+            var $this = $(this);
+            $this.attr('data-step', currentIndex);
+            $this.find('> .steps').hide();
+            $this.find('> .actions').addClass('text-center');
+            $this.find('> .actions > ul > li:first-child').hide();
+        },
+        onStepChanging: function (event, currentIndex, newIndex) {
+            var $this = $(this);
+            
+            if (newIndex > 0) {
+                $this.find('> .actions > ul > li:first-child').show();
+            } else {
+                $this.find('> .actions > ul > li:first-child').hide();
+            }
+            
+            if (currentIndex < newIndex) {
+                var $form = $this.closest('form');
+                bpFormValidate($form);
+                var $stepForm = $this.find('.body:eq(' + currentIndex + ')');
+
+                if ($stepForm.find('.error').length) {
+                    return false;
+                }
+
+                var $stepForm = $this.find('.body:eq(' + newIndex + ')');
+                $stepForm.find('.error').removeClass('error');
+            }
+            
+            return true;
+        },
+        onStepChanged: function (event, currentIndex, priorIndex) { 
+            $(this).attr('data-step', currentIndex);
+        }
+    });
+}
+<?php
+}
+?>
 </script>

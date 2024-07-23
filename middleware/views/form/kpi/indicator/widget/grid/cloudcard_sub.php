@@ -18,7 +18,7 @@
 
                 foreach (issetParamArray($rowParent['CHILDREN']) as $row) {
                     // if (empty($row['relatedindicator'])) continue;
-                    aCardHtml($cards, $row, $colorSet, $parentId, $this->uid, $this->relationViewConfig);
+                    aCardHtml($cards, $row, $colorSet, $parentId, $this->uid, $this->relationViewConfig, $this->indicatorId);
                 }
             }
         }            
@@ -27,12 +27,12 @@
         if ($moduleList) {
             foreach ($moduleList as $row) {
                 // if (empty($row['relatedindicator'])) continue;
-                aCardHtml($cards, $row, $colorSet, $parentId, $this->uid, $this->relationViewConfig);
+                aCardHtml($cards, $row, $colorSet, $parentId, $this->uid, $this->relationViewConfig, $this->indicatorId);
             }
         }
     }
 
-    function aCardHtml(&$cards, $row, $colorSet, $parentId, $uid, $relationViewConfig) {    
+    function aCardHtml(&$cards, $row, $colorSet, $parentId, $uid, $relationViewConfig, $mainIndicatorId) {    
         
         $colorSetIndex = array_rand($colorSet);
 
@@ -70,15 +70,16 @@
 
 
         $indicatorId = $row['ID'];
+        $parentId = checkDefaultVal($row['PARENT_ID'], $parentId);
         $linkHref = 'javascript:;';
         $linkOnClick = 'itemCardGroupInit'. $uid .'(\''.$indicatorId.'\', this);';    
-        
+        $rowJson = htmlentities(json_encode($row), ENT_QUOTES, 'UTF-8');
         if (!issetParam($row['children']) && !issetParam($row['CHILDRECORDCOUNT'])) {
             $linkHref = 'javascript:;';
-            $linkOnClick = 'mvProductAppmenuCardRender'. $uid .'(\''.$indicatorId.'\', \''. issetParam($row['DATA_FOLDER_ID']) .'\', \''. issetParam($row['PROCESS_FOLDER_ID']) .'\');';            
+            $linkOnClick = 'mvProductAppmenuCardRender'. $uid .'(this, \''.$indicatorId.'\', \''. issetParam($row['DATA_FOLDER_ID']) .'\', \''. issetParam($row['PROCESS_FOLDER_ID']) .'\', \''. $mainIndicatorId .'\');';            
         }
 
-        $cards[] = '<a href="' . $linkHref . '" data-parentid="' . $parentId . '" target="' . $linkTarget . '" style="'.$cartbgColor.$bgImageStyle.'" onclick="' . $linkOnClick . '" data-code="" data-modulename="' . $row[$relationViewConfig['c2']] . '" class="vr-menu-tile mixa ' . $class . '" data-metadataid="' . $row['META_DATA_ID'] . '" data-pfgotometa="1">';
+        $cards[] = '<a href="' . $linkHref . '" data-parentid="' . $parentId . '" data-rowdata="' . $rowJson . '" target="' . $linkTarget . '" style="'.$cartbgColor.$bgImageStyle.'" onclick="' . $linkOnClick . '" data-code="" data-modulename="' . $row[$relationViewConfig['c2']] . '" class="vr-menu-tile mixa ' . $class . '" data-metadataid="' . $row['META_DATA_ID'] . '" data-pfgotometa="1">';
 
             $cards[] = '<div class="d-flex align-items-center">';
                 $cards[] = '<div class="vr-menu-cell">';

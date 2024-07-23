@@ -47,6 +47,7 @@ class Mdform extends Controller {
     public static $subUniqId = '';
     public static $kpiFullExpressions = '';
     public static $kpiRenderType = '';
+    public static $logJson = '';
     public static $addonId = 0;
     public static $kpiControlIndex = 0;
     public static $isShowName = 0;
@@ -69,6 +70,7 @@ class Mdform extends Controller {
     public static $isProductCheckPermission = false;
     public static $tabSectionRender = false;
     public static $tabSectionRenderSidebar = false;
+    public static $isWizardStep = false;
     public static $processParamData = [];
     public static $kpiDmDtlData = [];
     public static $kpiDmMart = [];
@@ -1350,10 +1352,6 @@ class Mdform extends Controller {
                         $this->view->form = str_replace('<!--rows_'.$inlineFields['rowsPath'].'-->', $replaceControl.'<!--rows_'.$inlineFields['rowsPath'].'-->', $this->view->form);
                     }
                 }
-                
-                /*if (!Mdform::$tabRender && !Mdform::$topTabRender) {
-                }
-                $this->view->form = str_replace(['<!--divClassRowStart-->', '<!--divClassRowEnd-->'], ['<div class="row mv-header-params">', '</div>'], $this->view->form);*/
                         
                 $response = [
                     'status'        => 'success', 
@@ -1652,6 +1650,8 @@ class Mdform extends Controller {
         $this->load->model('mdform', 'middleware/models/');
         
         $this->view->indicatorId = '';
+        $this->view->filterColumn = Input::post('filterColumn');
+        $this->view->filterIndicatorId = Input::post('filterIndicatorId');
         
         if (strpos($indicatorId, 'workSpaceParam') !== false) {
 
@@ -1840,7 +1840,18 @@ class Mdform extends Controller {
                     
                     $this->view->renderGridList = $this->view->renderPrint('kpi/indicator/renderGrid', self::$viewPath);
                     $this->view->renderGrid = self::renderWidgetDataSet($this->view->row, $widgetWInfo ? $widgetWInfo : $widgetInfo, $this->view->relationViewConfig);
-            }            
+            }
+            if (Input::post('ignoreCheckIndicator') !== '1') {
+                $checkData = $this->ws->runResponse(GF_SERVICE_ADDRESS, 'getMVCardList_004', array('filterid' => $this->view->indicatorId));
+                if (issetParam($checkData['result']['isusecardstep']) === '1' && issetParam($checkData['result']['lookupindicatorid']) !== '') {
+                    $_POST['filterIndicatorId'] = $this->view->indicatorId;
+                    $_POST['filterColumn'] = checkDefaultVal($checkData['result']['filterColumn'], 'TRG_RECORD_ID');
+    
+                    self::indicatorList($checkData['result']['lookupindicatorid']);
+                    exit();
+                }
+            }
+
         }
         
         if ($this->view->isAjax == false) {
@@ -5751,7 +5762,7 @@ class Mdform extends Controller {
             'html' => $this->view->renderPrint('kpi/indicator/recordmap/recordmap2', self::$viewPath)
         );
         
-        echo json_encode($response, JSON_UNESCAPED_UNICODE);        
+        convJson($response);  
     }    
 
     public function renderRelationKpiReload() {
@@ -6590,7 +6601,21 @@ class Mdform extends Controller {
         
         $this->load->model('mdform', 'middleware/models/');
         $this->view->uniqId = getUID();
-        $this->view->relationList = $this->model->checkList4SidebarDataModel($indicatorId);
+        $html = 'kpi/indicator/widget/checklist/mv_checklist_04';
+
+        if (Input::post('filterColumn') && Input::post('filterColumnValue')) {
+            $this->view->filterIndicatorId = Input::post('filterIndicatorId');
+            $this->view->filterValue = '#'; Input::post('parentId');
+            $this->view->filterParentId = Input::post('parentId');
+            $this->view->filterId = Input::post('filterColumnValue');
+            $this->view->filterColumn = 'ID';
+            $this->view->filterDataIndicatorId = Input::post('mainIndicatorId');
+            $this->view->filterDataColumn = 'TRG_RECORD_ID';
+
+            $this->view->relationList = $this->model->checkList4SidebarDataByIndicatorModel($indicatorId);
+        } else {
+            $this->view->relationList = $this->model->checkList4SidebarDataModel($indicatorId);
+        }
         $mvInfo = $this->model->getIndicatorModel($indicatorId);
         $this->view->title = issetParam($mvInfo['NAME']);
         $this->view->indicatorId = $indicatorId;
@@ -6601,7 +6626,7 @@ class Mdform extends Controller {
             'status' => 'success', 
             'title' => '', 
             'relationList' => $this->view->relationList, 
-            'html' => $this->view->renderPrint('kpi/indicator/widget/checklist/mv_checklist_04', self::$viewPath)
+            'html' => $this->view->renderPrint($html, self::$viewPath)
         ];
         
         return $response;
@@ -6802,7 +6827,7 @@ class Mdform extends Controller {
         $indicatorId = Input::numeric('indicatorId');
         $getIndicatorDescription = $this->model->getIndicatorWithDescriptionModel($indicatorId);
         
-        echo json_encode($getIndicatorDescription, JSON_UNESCAPED_UNICODE);
+        convJson($getIndicatorDescription);
     }    
     
     public function mvRunAllCheckQuery() {
@@ -7322,6 +7347,11 @@ class Mdform extends Controller {
         }
         
         convJson($row);
+    }
+    
+    public function mvControlRender() {
+        $response = $this->model->mvControlRenderModel();
+        echo $response;
     }
     
 }

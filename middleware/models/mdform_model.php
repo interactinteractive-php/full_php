@@ -21,6 +21,7 @@ class Mdform_Model extends Model {
     private static $functionList = [];
     private static $isObjectType = false;
     private static $isGraphType = false;
+    private static $isGetRemoveMode = false;
     private static $formType = 'grid';
     private static $indicatorTableName = null;
     private static $calcMartId = null;
@@ -4826,7 +4827,7 @@ class Mdform_Model extends Model {
         $idPh1 = $this->db->Param(0);
         $bindVars = array($this->db->addQ($indicatorId));
         $where = '';
-        $selectColumnNamePath = 'UPPER(M.COLUMN_NAME) AS COLUMN_NAME, M.COLUMN_NAME_PATH, ';
+        $selectColumnNamePath = 'UPPER(NVL(M.COLUMN_NAME, M.TRG_ALIAS_NAME)) AS COLUMN_NAME, NVL(M.COLUMN_NAME_PATH, M.TRG_ALIAS_NAME) AS COLUMN_NAME_PATH, ';
         
         if ($columns = issetParam($_POST['param']['columns'])) {
             $where = " AND M.COLUMN_NAME IN ($columns)";
@@ -4856,6 +4857,10 @@ class Mdform_Model extends Model {
         if (Mdform::$currentKpiTypeId == 1044 || Mdform::$currentKpiTypeId == 1080) {
             $selectColumnNamePath = 'UPPER(M.TRG_ALIAS_NAME) AS COLUMN_NAME, M.TRG_ALIAS_NAME AS COLUMN_NAME_PATH, ';
             $where = ' AND M.TRG_ALIAS_NAME IS NOT NULL AND M.COLUMN_NAME IS NULL ';
+        }
+        
+        if ($getConfigPath = Input::post('getConfigPath')) {
+            $where .= " AND M.COLUMN_NAME_PATH = '$getConfigPath' ";
         }
         
         $cache = phpFastCache();
@@ -5562,7 +5567,18 @@ class Mdform_Model extends Model {
 
                         if ($showType != 'row' && $showType != 'rows' && $showType != 'label') {
                             
-                            $data[$getColumnName] = issetParam($rowData[$columnName]);
+                            $getValue = issetParam($rowData[$columnName]);
+                            
+                            if (self::$isGetRemoveMode) {
+                                
+                                if ($showType == 'file' && $getValue) {
+                                    array_push(FileUpload::$uploadedFiles, $getValue);
+                                }
+                                
+                                continue;
+                            }
+                            
+                            $data[$getColumnName] = $getValue;
                             
                             if (($showType == 'combo' || $showType == 'popup') && isset($rowData[$columnName.'_DESC'])) {
                                 $data[$getColumnName.'_DESC'] = $rowData[$columnName.'_DESC'];
@@ -5751,6 +5767,7 @@ class Mdform_Model extends Model {
             $params = Mdform::$mvParamsConfig['detail'][$parentColumnNamePath];
             $tableName = issetParam(Mdform::$mvParamsConfig['detail'][$parentColumnNamePath.'_tablename']);
             $queryString = issetParam(Mdform::$mvParamsConfig['detail'][$parentColumnNamePath.'_querystr']);
+            $pkColumnName = issetParam(Mdform::$mvParamsConfig['detail'][$parentColumnNamePath.'_pfpk']);
             
             if (!$tableName && $queryString) {
                 $queryString = self::parseQueryString($queryString);
@@ -5869,10 +5886,31 @@ class Mdform_Model extends Model {
                         $columnNamePath = $param['COLUMN_NAME_PATH'];
 
                         if ($showType != 'row' && $showType != 'rows') {
-                            $data[$k][$getColumnName] = issetParam($rowData[$columnName]);
+                            
+                            $getValue = issetParam($rowData[$columnName]);
+                            
+                            if (self::$isGetRemoveMode) {
+                                
+                                if ($showType == 'file' && $getValue) {
+                                    array_push(FileUpload::$uploadedFiles, $getValue);
+                                }
+                                
+                                continue;
+                            }
+                            
+                            $data[$k][$getColumnName] = $getValue;
                         } else {
                             $data[$k][$getColumnName] = self::getPushMetaVerseDetailParams($indicatorId, $showType, $columnNamePath, $rowData, $depth + 1, $k);
                         }
+                    }
+                    
+                    if (self::$isGetRemoveMode) {
+                        
+                        Mdform::$mvDbParams['detailRemove'][] = [
+                            'tableName'    => $tableName, 
+                            'pkColumnName' => $pkColumnName, 
+                            'pkId'         => $rowData[$pkColumnName]
+                        ];
                     }
                 }
                 
@@ -5896,10 +5934,31 @@ class Mdform_Model extends Model {
                     $columnNamePath = $param['COLUMN_NAME_PATH'];
                     
                     if ($showType != 'row' && $showType != 'rows') {
-                        $data[$getColumnName] = issetParam($rowDatas[$columnName]);
+                        
+                        $getValue = issetParam($rowDatas[$columnName]);
+                        
+                        if (self::$isGetRemoveMode) {
+                                
+                            if ($showType == 'file' && $getValue) {
+                                array_push(FileUpload::$uploadedFiles, $getValue);
+                            }
+
+                            continue;
+                        }
+                            
+                        $data[$getColumnName] = $getValue;
                     } else {
                         $data[$getColumnName] = self::getPushMetaVerseDetailParams($indicatorId, $showType, $columnNamePath, $rowDatas, $depth + 1);
                     }
+                }
+                
+                if (self::$isGetRemoveMode) {
+                        
+                    Mdform::$mvDbParams['detailRemove'][] = [
+                        'tableName'    => $tableName, 
+                        'pkColumnName' => $pkColumnName, 
+                        'pkId'         => $rowDatas[$pkColumnName]
+                    ];
                 }
             }
         }
@@ -6400,6 +6459,8 @@ class Mdform_Model extends Model {
                     $render[] = '</div>';
                 $render[] = '</div>';
             }
+            
+            Mdform::$tabRender = [];
         }
         
         if (Mdform::$topTabRender) {
@@ -6453,6 +6514,7 @@ class Mdform_Model extends Model {
             }
             
             Mdform::$topTabRenderShow = $topTab;
+            Mdform::$topTabRender = [];
         }
         
         if (Mdform::$tabRender && Mdform::$tabSectionRenderSidebar) {
@@ -6475,6 +6537,28 @@ class Mdform_Model extends Model {
             $sideSectionRender[] = '</div>';
             
             return implode('', $sideSectionRender);
+        }
+        
+        if (Mdform::$wizardStepControls) {
+            
+            ksort(Mdform::$wizardStepControls);
+            
+            $render[] = '<div id="wizard-'.Mdform::$subUniqId.'" class="col-md-12">';
+            
+            foreach (Mdform::$wizardStepControls as $step => $stepControls) {
+                $render[] = '<h3>'.$step.'</h3>';
+                
+                $render[] = '<section class="row">';
+                foreach ($stepControls as $stepControl) {
+                    $render[] = $stepControl['control'];
+                }
+                $render[] = '</section>';
+            }
+            
+            $render[] = '</div>';
+            
+            Mdform::$wizardStepControls = [];
+            Mdform::$isWizardStep = true;
         }
         
         return implode('', $render);
@@ -7348,19 +7432,36 @@ class Mdform_Model extends Model {
                     $rows = $datas['data'];
                     $id = $datas['id'];
                     $name = $datas['name'];
-                    $html = [];
+                    $html = ['<ul class="bp-icon-selection" data-metagroupid="'.$row['FILTER_INDICATOR_ID'].'" data-choose-type="single" style="display: inline-block;">'];
                     
                     foreach ($rows as $val) {
-                        $html[] = '<a href="javascript:;" data-value="'.issetParam($val[$id]).'" class="dropdown-item font-size-13 mv-filter-item-click" style="white-space: normal;line-height: normal;">';
-                            
-                            if (isset($val['ICON_NAME'])) {
-                                $val['ICON_NAME'] = str_replace('fa-', '', $val['ICON_NAME']);
-                                $html[] = '<i class="fas fa-'.$val['ICON_NAME'].'" style="color: '.issetParam($val['COLOR']).';"></i> ';
-                            }
-                            
-                            $html[] = $val[$name];
-                        $html[] = '</a>';
+                        
+                        $valueId = issetParam($val[$id]);
+                        $liClass = '';
+                        
+                        if ($value != '' && $value == $valueId) {
+                            $liClass = ' class="active"';
+                        } 
+                        
+                        $html[] = '<li data-id="'.$valueId.'" title="'.$val[$name].'"'.$liClass.'>
+                            <div class="item-icon-selection" style="width: 170px; height: 92px; border-radius:12px; display: flex; padding:1.2rem">
+                                <p style="font-size: 14px;font-weight: 700!important;color: #737373;text-align: left;margin-top: 12px;height: 52px;display: -webkit-box;-webkit-box-orient: vertical;-webkit-line-clamp: 3;overflow: hidden;line-height: 16px;">'.$val[$name].'</p>
+                            </div>
+                        </li>';
                     }
+                    
+                    $attrArray = [
+                        'name' => $controlName, 
+                        'data-path' => $columnNamePath, 
+                        'data-col-path' => $code, 
+                        'class' => 'card_lookupInit', 
+                        'value' => $value, 
+                        'data-field-name' => $cellId
+                    ] + $addAttrs;
+
+                    $html[] = Form::hidden($attrArray);
+                    
+                    $html[] = '</ul>';
                     
                     $control = implode('', $html);
                     
@@ -7813,9 +7914,9 @@ class Mdform_Model extends Model {
                         '.Str::cleanOut($value).'
                     </div>
                     '.Form::textArea($attrArray).'
-                    <span class="input-group-append">
-                        <button type="button" class="btn grey-cascade" onclick="bpFieldTextEditorClickToEdit(this);">
-                            <i class="icon-design"></i>
+                    <span class="input-group-append mv-html-clicktoedit-class">
+                        <button type="button" class="btn grey-cascade" style="height: 22px !important;" onclick="bpFieldTextEditorClickToEdit(this);">
+                            <i class="icon-menu" style="color: #333;"></i>
                         </button>
                     </span> 
                 </div>';
@@ -8126,6 +8227,18 @@ class Mdform_Model extends Model {
                         if ($trgAliasName != '') {
                             $filterVal = isset($drillDownCriterias[$trgAliasName]) ? "'".$drillDownCriterias[$trgAliasName]."'" : "''";
                             $tableName = str_ireplace(':'.$trgAliasName, $filterVal, $tableName);
+                        }
+                    }
+                }
+                
+                if ($lookupFilterData = Input::post('lookupFilterData')) {
+                    foreach ($lookupFilterData as $lookupFilterRow) {
+                        $inputPath = $lookupFilterRow['inputPath'];
+                        $inputPathVal = $lookupFilterRow['value'];
+                        if (stripos($tableName, ':'.$inputPath) !== false) {
+                            $tableName = str_ireplace(':'.$inputPath, $inputPathVal, $tableName);
+                        } else {
+                            $where .= " AND $inputPath = '".$inputPathVal."'"; 
                         }
                     }
                 }
@@ -8446,10 +8559,10 @@ class Mdform_Model extends Model {
                     
                     if (!$isShowSectionName && $wizardStep = issetParam($arrRow['WIZARD_STEP'])) {
                         
-                        Mdform::$wizardStepControls[] = [
-                            'wizardStep' => $wizardStep, 
-                            'control'    => $renderControl, 
-                            'tabName'    => $arrRow['TAB_NAME']
+                        Mdform::$wizardStepControls[$wizardStep][] = [
+                            'step'    => $wizardStep, 
+                            'control' => $renderControl, 
+                            'tabName' => $arrRow['TAB_NAME']
                         ];
                         
                         continue;
@@ -9875,7 +9988,7 @@ class Mdform_Model extends Model {
                 if (strlen($table) <= 30) {
                     
                     $table = strtolower($table);
-                    $checkTable = $this->db->GetOne("
+                    $checkTable = $db->GetOne("
                         SELECT 
                             TABLE_NAME 
                         FROM INFORMATION_SCHEMA.TABLES 
@@ -11844,7 +11957,7 @@ class Mdform_Model extends Model {
             
             $newId = getUIDAdd(self::$uniqIdIndex);
             $saveData = $dbField = $clobField = $dbIndex = $subTables = [];
-            $kpiTranslationRow = '';
+            $kpiTranslationRow = $changeWfmLogDescription = '';
             
             $sfId = issetVar($postData['sf']['ID']);
             
@@ -12024,6 +12137,15 @@ class Mdform_Model extends Model {
                             $isUnique = $headerParam['IS_UNIQUE']; 
                             $isPkColumnName = ($pkColumnName == $columnName);
                             $getValue = isset(Mdform::$mvSaveParams[$columnNamePath]) ? Input::param(Mdform::$mvSaveParams[$columnNamePath]) : null;
+                            
+                            if ($columnName == 'NEWWFMDESCRIPTIONPROCESS') {
+                                
+                                unset(Mdform::$mvSaveParams[$columnNamePath]);
+                                unset($headerParams[$headerColumnName]);
+                                
+                                $changeWfmLogDescription = $getValue;
+                                continue;
+                            }
                             
                             if ($isPkColumnName) {
                                 
@@ -12884,7 +13006,7 @@ class Mdform_Model extends Model {
             self::runGenerateKpiRelationDataMartByIndicatorId($kpiMainIndicatorId);
             
             if (Input::postCheck('wfmStatusParams') && !Input::numeric('isRunAutoSave')) {
-                self::mvChangeWfmStatus($configRow, $rowId);
+                self::mvChangeWfmStatus($configRow, $rowId, $changeWfmLogDescription);
             }
             
             $response = [
@@ -12905,7 +13027,7 @@ class Mdform_Model extends Model {
                 $_POST['newWfmStatusid'] = $setWfmStatusArr['statusId'];
                 $_POST['metaDataId'] = $setWfmStatusArr['metaDataId'];
                 $_POST['dataRow'] = array_merge(Mdform::$mvDbParams['header']['data'], ['id' => $setWfmStatusArr['id']]);
-                $_POST['description'] = '';
+                $_POST['description'] = $changeWfmLogDescription;
                 $_POST['isIndicator'] = 1;
                 
                 $this->load->model('mdobject', 'middleware/models/');
@@ -13108,7 +13230,7 @@ class Mdform_Model extends Model {
         }
     }
     
-    public function mvChangeWfmStatus($configRow, $rowId) {
+    public function mvChangeWfmStatus($configRow, $rowId, $changeWfmLogDescription = '') {
         
         $wfmStatusParams = @json_decode($_POST['wfmStatusParams'], true);
         
@@ -13141,7 +13263,7 @@ class Mdform_Model extends Model {
                 $_POST['isIndicator'] = 1;
             }
             
-            $_POST['description'] = '';
+            $_POST['description'] = $changeWfmLogDescription;
 
             $response = $this->model->setRowWfmStatusModel();
         } else {
@@ -14317,7 +14439,7 @@ class Mdform_Model extends Model {
                 $selectColumn = '';
                 
                 if (issetParam($configRow['isFilter'])) {
-                    $where = ' AND (KIIM.IS_FILTER = 1 OR KIIM.IS_USE_GROUP = 1) ';
+                    $where = ' AND (KIIM.IS_FILTER = 1 OR KIIM.IS_USE_GROUP = 1) AND (KIIM.IS_USE_HIDDEN_FILTER = 0 OR KIIM.IS_USE_HIDDEN_FILTER IS NULL) ';
                 } elseif (issetParam($configRow['isGridRender']) == '1') {
                     $where = ' AND KIIM.COLUMN_NAME IS NOT NULL AND (KIIM.IS_HIDE_LIST = 0 OR KIIM.IS_HIDE_LIST IS NULL) ';
                 } elseif (issetParam($configRow['isImportManage']) == '1') {
@@ -14566,6 +14688,38 @@ class Mdform_Model extends Model {
         $data = array_merge_recursive($nameFields, $data, $addonFields);
         
         return $data;
+    }
+    
+    public function getKpiIndicatorHiddenFiltersModel($indicatorId) {
+        
+        try {
+            
+            $cache = phpFastCache();
+            $cacheName = 'kpi_'.$indicatorId.'_hiddenfilters';
+            $data = $cache->get($cacheName);
+
+            if ($data == null) {
+                $data = $this->db->GetAll("
+                    SELECT 
+                        COLUMN_NAME, 
+                        TRG_ALIAS_NAME, 
+                        SHOW_TYPE, 
+                        DEFAULT_VALUE 
+                    FROM KPI_INDICATOR_INDICATOR_MAP 
+                    WHERE MAIN_INDICATOR_ID = ".$this->db->Param(0)." 
+                        AND IS_USE_HIDDEN_FILTER = 1 
+                        AND DEFAULT_VALUE IS NOT NULL", 
+                    $indicatorId
+                );
+
+                $cache->set($cacheName, $data, Mdwebservice::$expressionCacheTime);
+            }
+            
+            return $data;
+        
+        } catch (Exception $ex) {
+            return [];
+        }
     }
     
     public function renderKpiIndicatorColumnsModel($indicatorId, $isCheckSystemTable, $opts) {
@@ -15230,6 +15384,7 @@ class Mdform_Model extends Model {
             
             $columns = self::getKpiIndicatorColumnsModel($indicatorId, $row);
             $relatedColumnsQuery = self::generateQueryRelatedColumnsModel($indicatorId, $row, $columns);
+            $hiddenFilters = self::getKpiIndicatorHiddenFiltersModel($indicatorId);
             
             if ($relatedColumnsQuery) {
                 
@@ -15691,6 +15846,17 @@ class Mdform_Model extends Model {
                 }
             }
             
+            if ($hiddenFilters) {
+                foreach ($hiddenFilters as $hiddenFilter) {
+                    
+                    $hiddenFilterColumnName = $hiddenFilter['COLUMN_NAME'];
+                    $hiddenFilterTrgAliasName = $hiddenFilter['TRG_ALIAS_NAME'];
+                    $hiddenFilterDefaultValue = $hiddenFilter['DEFAULT_VALUE'];
+                    
+                    $filterData[($hiddenFilterTrgAliasName ? $hiddenFilterTrgAliasName : $hiddenFilterColumnName)] = Mdmetadata::setDefaultValue($hiddenFilterDefaultValue);
+                }
+            }
+            
             if ($filterData) {
                 
                 foreach ($filterData as $filterColName => $filterColVals) {
@@ -15778,7 +15944,7 @@ class Mdform_Model extends Model {
                         
                         if (stripos($tableName, ':'.$filterColName) !== false) {
                             $tableName = str_ireplace(':'.$filterColName, ($filterColVals != '' ? "'".self::fixFilterColValue($filterColVals)."'" : 'NULL'), $tableName);
-                        } elseif ($filterColVals != '') {
+                        } elseif ($filterColVals != '' && isset($columns[$filterColName])) {
                             $subCondition .= " AND LOWER($filterColName) = '%".self::fixFilterColValue(Str::lower($filterColVals))."%'";
                         }
                         
@@ -16497,8 +16663,50 @@ class Mdform_Model extends Model {
             $dataDeleteMode = Config::getFromCache('PF_MV_DATA_DELETE_MODE');
             
             if ($isSystemTable || $dataDeleteMode == '1' || ($dataDeleteMode == '2' && issetParam($row['IS_DATA_DELETE_PERMANENTLY']))) {
-                
-                $result = $this->db->Execute("DELETE FROM $tableName WHERE $idField IN ($ids)");
+                    
+                $ids = explode(',', $ids);
+                self::$isGetRemoveMode = true;
+
+                foreach ($ids as $deleteRecordId) {
+
+                    self::getMetaVerseDataModel($indicatorId, [$idField => $deleteRecordId]);
+
+                    Mdform::$mvDbParams['detailRemove'][] = [
+                        'tableName'    => $tableName, 
+                        'pkColumnName' => $idField, 
+                        'pkId'         => $deleteRecordId
+                    ];
+                }
+
+                if (isset(Mdform::$mvDbParams['detailRemove'])) {
+
+                    $deleteIdPh = $this->db->Param(0);
+
+                    $this->db->BeginTrans(); 
+
+                    foreach (Mdform::$mvDbParams['detailRemove'] as $detailRemove) {
+
+                        try {
+
+                            $this->db->Execute('DELETE FROM '.$detailRemove['tableName'].' WHERE '.$detailRemove['pkColumnName'].' = '.$deleteIdPh, [$detailRemove['pkId']]); 
+
+                        } catch (Exception $ex) {
+
+                            $message = $ex->getMessage();
+                            $this->db->RollbackTrans();
+
+                            return array('status' => 'error', 'message' => $message);
+                        }
+                    }
+
+                    $this->db->CommitTrans();
+                    Mdwebservice::deleteUploadedFiles(FileUpload::$uploadedFiles);
+                    
+                    $result = true;
+                    
+                } else {
+                    $result = false;
+                }
                 
             } else {
                     
@@ -16520,6 +16728,9 @@ class Mdform_Model extends Model {
                 self::runGenerateKpiDataMartByIndicatorId($indicatorId, $ids);
                 
                 return ['status' => 'success', 'indicatorId' => $indicatorId, 'message' => $this->lang->line('msg_delete_success')];
+                
+            } else {
+                return ['status' => 'error', 'message' => 'Амжилтгүй!'];
             }
             
         } catch (Exception $ex) {
@@ -24103,6 +24314,7 @@ class Mdform_Model extends Model {
                     M.LABEL_NAME, 
                     M.IS_USE_BASKET, 
                     M.DESCRIPTION, 
+                    M.BATCH_NUMBER, 
                     (
                         SELECT 
                             COUNT(1) 
@@ -24200,7 +24412,393 @@ class Mdform_Model extends Model {
         
         $buttons = $contextMenu = $indicatorIds = [];
         $indicatorId = $config['indicatorId'];
+        $batchBtn = "";
+        $groupBatchedArr = Arr::groupByArrayOnlyRows($config['processList'], 'batch_number');
         
+        if ($groupBatchedArr && issetParamArray($groupBatchedArr[''])) {
+            $config['processList'] = $groupBatchedArr[''];
+        }
+        
+        if ($groupBatchedArr) {
+            foreach ($groupBatchedArr as $key => $processList) {
+                $qry = "SELECT 
+                            ID,
+                            SRC_INDICATOR_ID,
+                            SEMANTIC_TYPE_ID,
+                            BATCH_NAME,
+                            BATCH_NUMBER,
+                            IS_DROP,
+                            IS_SHOW_POPUP,
+                            ICON_NAME,
+                            BUTTON_STYLE
+                            FROM KPI_INDICATOR_INDICATOR_MAP
+                            WHERE SRC_INDICATOR_ID = ". $this->db->Param(0) ."
+                                AND BATCH_NUMBER = ". $this->db->Param(1) ."
+                                AND IS_DROP = 1 
+                                AND SEMANTIC_TYPE_ID = 125";
+                $batch = $this->db->GetRow($qry, array($indicatorId, $key));
+                if ($batch) {
+                    $batchBtn .= '<div class="btn-group dv-buttons-batch">';
+                        $batchBtn .= '<button class="btn ' . (isset($batch['BUTTON_STYLE']) ? $batch['BUTTON_STYLE'] : 'btn-secondary') . ' btn-circle btn-sm dropdown-toggle" type="button" data-toggle="dropdown">';
+                        $batchBtn .= (($batch['ICON_NAME'] != '') ? '<i class="far ' . $batch['ICON_NAME'] . '"></i> ' : '<i class="icon-plus3 font-size-12"></i> ') . Lang::line($batch['BATCH_NAME']);
+                        $batchBtn .= '</button>';
+                        $batchBtn .= '<ul class="dropdown-menu" role="menu">';
+    
+                        
+                        foreach ($processList as $process) {
+                            
+                            $srcIndicatorId = $process['structure_indicator_id'];
+                            $crudIndicatorId = issetParam($process['crud_indicator_id']);
+                            $isFillRelation = issetParam($process['is_fill_relation']);
+                            $isNormalRelation = issetParam($process['is_normal_relation']);
+                            $typeCode = $process['type_code'];
+                            $kpiTypeId = $process['kpi_type_id'];
+                            $buttonName = $className = $onClick = $description = $opt = '';
+                            $isDfillRelation = issetParam($process['is_dfill_relation']);
+                            $isCfillRelation = issetParam($process['is_cfill_relation']);                                                
+                            $actionmode = '';
+    
+                            if ($srcIndicatorId == $indicatorId) {
+    
+                                if ($typeCode == 'create') {
+    
+                                    $labelName = $process['label_name'] == 'Нэмэх' ? Lang::line('add_btn') : Lang::line($process['label_name']);
+                                    $className = 'btn btn-success btn-circle btn-sm';
+                                    $buttonName = '<i class="far fa-plus"></i> '.$labelName;
+    
+                                    if ($isFillRelation) {
+                                        $opt = ', {fillSelectedRow: true, mode: \'create\'}';
+                                    } 
+    
+                                    if ($isNormalRelation) {
+                                        $onClick = "mvNormalRelationRender(this, '$kpiTypeId', '".$indicatorId."', {methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId});";
+                                        $actionmode = "{methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId}";
+                                    } else {
+                                        $actionmode = str_replace(', {', '{', $opt);
+                                        $onClick = "manageKpiIndicatorValue(this, '$kpiTypeId', '".$indicatorId."', false$opt);";
+                                    }
+    
+                                } elseif ($typeCode == 'update') {
+    
+                                    $labelName = $process['label_name'] == 'Засах' ? Lang::line('edit_btn') : Lang::line($process['label_name']);
+                                    $isUpdate = true;
+    
+                                    if ($isFillRelation) {
+                                        $opt = ', {fillSelectedRow: true, mode: \'update\'}';
+                                    } 
+    
+                                    $className = 'btn btn-warning btn-circle btn-sm';
+                                    $buttonName = '<i class="far fa-edit"></i> '.$labelName;
+    
+                                    if ($isNormalRelation) {
+                                        $onClick = "mvNormalRelationRender(this, '$kpiTypeId', '".$indicatorId."', {methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId, mode: 'update'});";
+                                        $actionmode = "{methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId, mode: 'update'}";
+                                    } else {
+                                        if (issetParam($process['widget_code']) !== '') {
+                                            $actionmode = "{methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId, mode: 'update', widgetCode: '". $process['widget_code'] ."'}";
+                                            $onClick = "mvWidgetRelationRender(this, '$kpiTypeId', '".$indicatorId."', {methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId, mode: 'update', widgetCode: '". $process['widget_code'] ."'});";
+                                        } else {
+                                            $actionmode = str_replace(', {', '{', $opt);
+                                            $onClick = "manageKpiIndicatorValue(this, '$kpiTypeId', '".$indicatorId."', true$opt);";
+                                        }
+                                    }
+    
+                                    $contextMenu[] = [
+                                        'crudIndicatorId' => $crudIndicatorId, 
+                                        'labelName' => $labelName,
+                                        'onClick' => $onClick,
+                                        'actionName' => 'edit',
+                                        'iconName' => 'edit', 
+                                        'data-actiontype' => $typeCode, 
+                                        'data-main-indicatorid' => $indicatorId, 
+                                        'data-structure-indicatorid' => $indicatorId, 
+                                        'data-crud-indicatorid' => $crudIndicatorId,
+                                        'data-mapid' => issetParam($process['map_id'])
+                                    ];
+    
+                                } elseif ($typeCode == 'read') {
+    
+                                    $isUpdate = true;
+                                    $className = 'btn purple btn-circle btn-sm';
+                                    $buttonName = '<i class="fas fa-eye"></i> '.Lang::line('view_btn');
+    
+                                    if ($isNormalRelation) {
+                                        $actionmode = "{methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId, mode: 'view'}";
+                                        $onClick = "mvNormalRelationRender(this, '$kpiTypeId', '".$indicatorId."', {methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId, mode: 'view'});";
+                                    } else {
+                                        $actionmode = "{mode: 'view'}";
+                                        $onClick = "manageKpiIndicatorValue(this, '$kpiTypeId', '".$indicatorId."', true, {mode: 'view'});";
+                                    }
+    
+                                    $contextMenu[] = [
+                                        'crudIndicatorId' => $crudIndicatorId, 
+                                        'labelName' => Lang::line('view_btn'),
+                                        'onClick' => $onClick,
+                                        'actionName' => 'view',
+                                        'iconName' => 'eye', 
+                                        'data-actiontype' => $typeCode, 
+                                        'data-main-indicatorid' => $indicatorId, 
+                                        'data-structure-indicatorid' => $indicatorId, 
+                                        'data-crud-indicatorid' => $crudIndicatorId,
+                                        'data-mapid' => issetParam($process['map_id'])
+                                    ];
+    
+                                } elseif ($typeCode == 'delete') {
+    
+                                    $isDelete = true;
+                                    $className = 'btn btn-danger btn-circle btn-sm';
+                                    $buttonName = '<i class="far fa-trash"></i> '.Lang::line('delete_btn');
+                                    $onClick = "removeKpiIndicatorValue(this, '".$indicatorId."');";
+    
+                                    $contextMenu[] = [
+                                        'crudIndicatorId' => $crudIndicatorId, 
+                                        'labelName' => Lang::line('delete_btn'),
+                                        'onClick' => $onClick,
+                                        'actionName' => 'delete',
+                                        'iconName' => 'trash', 
+                                        'data-actiontype' => $typeCode, 
+                                        'data-main-indicatorid' => $indicatorId, 
+                                        'data-structure-indicatorid' => $indicatorId, 
+                                        'data-crud-indicatorid' => $crudIndicatorId,
+                                        'data-mapid' => issetParam($process['map_id'])
+                                    ];
+    
+                                } elseif ($typeCode == 'config') {
+    
+                                    $isDelete = true;
+                                    $className = 'btn blue-steel btn-circle btn-sm';
+                                    $buttonName = '<i class="far fa-tools"></i> '.Lang::line('Config');
+                                    $onClick = "mapKpiIndicatorValue(this, '$kpiTypeId', '".$indicatorId."', 'config');";
+    
+                                    $contextMenu[] = [
+                                        'crudIndicatorId' => $crudIndicatorId, 
+                                        'labelName' => Lang::line('Config'),
+                                        'onClick' => $onClick,
+                                        'actionName' => 'config',
+                                        'iconName' => 'tools', 
+                                        'data-actiontype' => $typeCode, 
+                                        'data-main-indicatorid' => $indicatorId, 
+                                        'data-structure-indicatorid' => $indicatorId, 
+                                        'data-crud-indicatorid' => $crudIndicatorId,
+                                        'data-mapid' => issetParam($process['map_id'])
+                                    ];
+    
+                                } elseif ($typeCode == '360') {
+    
+                                    $isDelete = true;
+                                    $className = 'btn blue-steel btn-circle btn-sm';
+                                    $buttonName = '<i class="far fa-tools"></i> '.Lang::line('360');
+                                    $onClick = "mapKpiIndicatorValue(this, '$kpiTypeId', '".$indicatorId."', '360');";
+    
+                                    $contextMenu[] = [
+                                        'crudIndicatorId' => $crudIndicatorId, 
+                                        'labelName' => Lang::line('360'),
+                                        'onClick' => $onClick,
+                                        'actionName' => '360',
+                                        'iconName' => 'tools', 
+                                        'data-actiontype' => $typeCode, 
+                                        'data-main-indicatorid' => $indicatorId, 
+                                        'data-structure-indicatorid' => $indicatorId, 
+                                        'data-crud-indicatorid' => $crudIndicatorId,
+                                        'data-mapid' => issetParam($process['map_id'])
+                                    ];
+    
+                                } elseif ($typeCode == 'excel') {
+    
+                                    $className = 'btn green btn-circle btn-sm';
+                                    $buttonName = '<i class="far fa-file-excel"></i> '.Lang::line('pf_excel_import');
+                                    $onClick = "excelImportKpiIndicatorValue(this, '".$indicatorId."');";
+    
+                                } elseif ($typeCode == 'excel_export_one_line') {
+    
+                                    $className = 'btn green btn-circle btn-sm';
+                                    $buttonName = '<i class="far fa-file-excel"></i> Эксель нэг мөрөөр татах';
+                                    $onClick = "exportExcelOneLineKpiIndicatorValue(this, '".$indicatorId."');";
+    
+                                } elseif ($typeCode == 'export') {
+    
+                                    $isDelete = true;
+                                    $className = 'btn green btn-circle btn-sm';
+                                    $buttonName = '<i class="far fa-download"></i> '.Lang::line('excel_export_btn');
+                                    $onClick = "exportKpiIndicatorValue(this, '".$indicatorId."');";
+    
+                                } elseif ($kpiTypeId == '1191') {
+    
+                                    $className = 'btn blue-steel btn-circle btn-sm';
+                                    $buttonName = '<i class="far fa-play"></i> ' . Lang::line($process['label_name'] ? $process['label_name'] : $process['name']);
+                                    $onClick = "manageKpiIndicatorValue(this, '$kpiTypeId', '$crudIndicatorId', false, {transferSelectedRow: true});";
+    
+                                } elseif ($kpiTypeId == '1080') {
+    
+                                    $className = 'btn blue-steel btn-circle btn-sm';
+                                    $buttonName = '<i class="far fa-play"></i> ' . Lang::line($process['label_name'] ? $process['label_name'] : $process['name']);
+                                    $onClick = "callWebServiceKpiIndicatorValue(this, '$crudIndicatorId');";
+                                    
+                                } elseif ($typeCode == 'import') {
+    
+                                    $className = 'btn green btn-circle btn-sm';
+                                    $buttonName = '<i class="far fa-file-import"></i> '.Lang::line('Импорт');
+                                    $onClick = "dataImportKpiIndicatorValue(this, '".$indicatorId."');";
+                                } 
+    
+                            } else {
+    
+                                $description = Lang::line(issetParam($process['description']));
+                                $processName = Lang::line(issetParam($process['label_name']));
+    
+                                if ($typeCode == 'create') {
+    
+                                    $className = 'btn btn-success btn-circle btn-sm';
+                                    $buttonName = '<i class="far fa-plus"></i> '.$processName;
+    
+                                    if ($isFillRelation) {
+                                        $opt = ', {fillSelectedRow: true, mode: \'create\'}';
+                                    } elseif ($isDfillRelation) {
+                                        $opt = ', {fillDynamicSelectedRow: true, mode: \'create\'}';
+                                    } elseif ($isCfillRelation) {
+                                        $opt = ', {consolidateFillSelectedRow: true, mode: \'create\'}';
+                                    }
+    
+                                    if ($isNormalRelation) {
+                                        if (issetParam($process['widget_code']) !== '') {
+                                            $actionmode = "{methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId, mode: 'update', widgetCode: '". $process['widget_code'] ."'}";
+                                            $onClick = "mvWidgetRelationRender(this, '$kpiTypeId', '".$indicatorId."', {methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId, mode: 'update', widgetCode: '". $process['widget_code'] ."'});";
+                                        } else {
+                                            $actionmode = "{methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId}";
+                                            $onClick = "mvNormalRelationRender(this, '$kpiTypeId', '".$indicatorId."', {methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId});";
+                                        }
+                                    } else {
+                                        $actionmode = str_replace(', {', '{', $opt);
+                                        $onClick = "manageKpiIndicatorValue(this, '$kpiTypeId', '$srcIndicatorId', false$opt);";
+                                    }
+    
+                                } elseif ($typeCode == 'update') {
+    
+                                    $className = 'btn btn-warning btn-circle btn-sm';
+                                    $buttonName = '<i class="far fa-edit"></i> '.$processName;
+    
+                                    if ($isFillRelation) {
+                                        $opt = ', {fillSelectedRow: true, mode: \'update\'}';
+                                    } elseif ($isDfillRelation) {
+                                        $opt = ', {fillDynamicSelectedRow: true, mode: \'update\'}';
+                                    }
+    
+                                    if ($isNormalRelation) {
+                                        $actionmode = "{methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId, mode: 'update', isFillRelation: '$isFillRelation'}";
+                                        $onClick = "mvNormalRelationRender(this, '$kpiTypeId', '".$indicatorId."', {methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId, mode: 'update', isFillRelation: '$isFillRelation'});";
+                                    } else {
+                                        if (issetParam($process['widget_code']) !== '') {
+                                            $actionmode = "{methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId, mode: 'update', widgetCode: '". $process['widget_code'] ."'}";
+                                            $onClick = "mvWidgetRelationRender(this, '$kpiTypeId', '".$indicatorId."', {methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId, mode: 'update', widgetCode: '". $process['widget_code'] ."'});";
+                                        } else {
+                                            $actionmode = str_replace(', {', '{', $opt);
+                                            $onClick = "manageKpiIndicatorValue(this, '$kpiTypeId', '$srcIndicatorId', true$opt);";
+                                        }
+                                    }
+                                    
+                                    $contextMenu[] = [
+                                        'crudIndicatorId' => $crudIndicatorId, 
+                                        'labelName' => $processName,
+                                        'onClick' => $onClick,
+                                        'actionName' => 'edit',
+                                        'iconName' => 'edit', 
+                                        'data-actiontype' => $typeCode, 
+                                        'data-main-indicatorid' => $indicatorId, 
+                                        'data-structure-indicatorid' => $srcIndicatorId, 
+                                        'data-crud-indicatorid' => $crudIndicatorId,
+                                        'data-mapid' => issetParam($process['map_id'])
+                                    ];
+    
+                                } elseif ($typeCode == 'read') {
+    
+                                    $className = 'btn purple btn-circle btn-sm';
+                                    $buttonName = '<i class="far fa-eye"></i> '.$processName;
+    
+                                    if ($isFillRelation) {
+                                        $opt = ', {fillSelectedRow: true, mode: \'view\'}';
+                                    } elseif ($isDfillRelation) {
+                                        $opt = ', {fillDynamicSelectedRow: true, mode: \'view\'}';
+                                    } else {
+                                        $opt = ', {mode: \'view\'}';
+                                    }
+    
+                                    if ($isNormalRelation) {
+                                        $actionmode = "{methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId, mode: 'view'}";
+                                        $onClick = "mvNormalRelationRender(this, '$kpiTypeId', '".$indicatorId."', {methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId, mode: 'view'});";
+                                    } else {
+                                        if (issetParam($process['widget_code']) !== '') {
+                                            $actionmode = "{methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId, mode: 'update', widgetCode: '". $process['widget_code'] ."'}";
+                                            $onClick = "mvWidgetRelationRender(this, '$kpiTypeId', '".$indicatorId."', {methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId, mode: 'update', widgetCode: '". $process['widget_code'] ."'});";
+                                        } else {
+                                            $actionmode = str_replace(', {', '{', $opt);
+                                            $onClick = "manageKpiIndicatorValue(this, '$kpiTypeId', '$srcIndicatorId', true$opt);";
+                                        }
+                                    }
+    
+                                } elseif ($typeCode == 'delete') {
+    
+                                    $className = 'btn btn-danger btn-circle btn-sm';
+                                    $buttonName = '<i class="far fa-trash"></i> '.$processName;
+                                    $onClick = "removeKpiIndicatorValue(this, '$srcIndicatorId');";
+    
+                                } elseif ($typeCode == 'excel') {
+    
+                                    $className = 'btn green btn-circle btn-sm';
+                                    $buttonName = '<i class="far fa-file-excel"></i> '.$processName;
+                                    $onClick = "excelImportKpiIndicatorValue(this, '$srcIndicatorId');";
+    
+                                } elseif ($process['code'] == 'sendmail') {
+    
+                                    $className = 'btn green btn-circle btn-sm';
+                                    $buttonName = $processName;
+                                    $onClick = "mvDataViewSendMailBySelectionRowsInit(this, '$crudIndicatorId', '$indicatorId', '');";
+                                    
+                                } elseif ($typeCode == 'import') {
+    
+                                    $className = 'btn green btn-circle btn-sm';
+                                    $buttonName = '<i class="far fa-file-import"></i> '.Lang::line('Импорт');
+                                    $onClick = "dataImportKpiIndicatorValue(this, '$srcIndicatorId', '$indicatorId');";
+                                } 
+                            }
+    
+                            $batchBtn .= '<li>';
+                            $batchBtn .= html_tag('a', [ 
+                                    'href' => 'javascript:;', 
+                                    'data-qtip-title' => $description, 
+                                    'data-qtip-pos' => 'top', 
+                                    'onclick' => $onClick, 
+                                    'data-actiontype' => $typeCode, 
+                                    'data-main-indicatorid' => $indicatorId, 
+                                    'data-structure-indicatorid' => $indicatorId, 
+                                    'data-crud-indicatorid' => $crudIndicatorId,
+                                    'data-mapid' => issetParam($process['map_id'])
+                                ], 
+                                $buttonName, true
+                            );
+                            $batchBtn .= '</li>';
+                            $indicatorIds[$crudIndicatorId] = [ 
+                                'href' => 'javascript:;', 
+                                'class' => $className, 
+                                'data-qtip-title' => $description, 
+                                'data-qtip-pos' => 'top', 
+                                'onclick' => $onClick, 
+                                'data-actiontype' => $typeCode, 
+                                'data-actiontypeid' => $kpiTypeId, 
+                                'data-actionmode' => $actionmode, 
+                                'data-main-indicatorid' => $indicatorId, 
+                                'data-structure-indicatorid' => $indicatorId, 
+                                'data-crud-indicatorid' => $crudIndicatorId,
+                                'data-mapid' => issetParam($process['map_id'])
+                            ];
+                        }
+                        
+                        $batchBtn .= '</ul>';
+                    $batchBtn .= '</div>';
+                    $buttons[] = $batchBtn;
+                }
+            }
+        }
+
         if ($config['isDataMart']) {
                                             
             $buttons[] = html_tag('a', [
@@ -28829,6 +29427,10 @@ class Mdform_Model extends Model {
 
                             $rows = $this->db->GetAll($sql);
                             
+                            if ($trgIndicatorId == '17187608016181') {
+                                Mdform::$logJson = 'sql: '.$sql;
+                            }
+                            
                         } else {
                             $rows = array();
                         }
@@ -31040,7 +31642,7 @@ class Mdform_Model extends Model {
                     
                     $isChildRecordCount = (issetParam($tree['CHILDRECORDCOUNT']) ? true : false);
                     
-                    if ($isChildRecordCount && !$treeKey && empty($tree['PARENT_ID'])) {
+                    if ($isChildRecordCount && !$treeKey && empty($tree['PARENT_ID']) && Input::param($_REQUEST['ignoreOpened']) !== '1') {
                         $result[$k]['state'] = ['opened' => true, 'selected' => false];
                     }                    
                     
@@ -31529,10 +32131,10 @@ class Mdform_Model extends Model {
                     )
                 )
             )
-        );       
+        );   
+        
 
         $data = $this->ws->runSerializeResponse(self::$gfServiceAddress, Mddatamodel::$getDataViewCommand, $param);
-
         if (isset($data['result']) && isset($data['result'][0])) {
             unset($data['result']['aggregatecolumns']);
             unset($data['result']['paging']);
@@ -31541,6 +32143,20 @@ class Mdform_Model extends Model {
         } else {
             return null;
         }
+
+    }    
+
+    public function checkList4SidebarDataByIndicatorModel($id) {
+
+        $_POST['indicatorId'] = Input::post('filterIndicatorId');
+        $_POST['page']        = 1;
+        $_POST['rows']        = 500;
+        $_POST['whereClause'] = Input::post('filterColumn')  . ' = ' . Input::post('filterColumnValue');
+        $_POST['isIgnoreCompanyDepartmentId'] = true;
+
+        $data = $this->indicatorDataGridModel();
+        return issetParamArray($data['rows']);
+
     }        
     
     public function getRelationParamMappingConfigModel($indicatorMapId) {
@@ -31549,5 +32165,16 @@ class Mdform_Model extends Model {
 
         return $data;
     }    
+    
+    public function mvControlRenderModel() {
+        $indicatorId = Input::numeric('indicatorId');
+        $data = self::getKpiIndicatorTemplateModel($indicatorId);
+        
+        if (isset($data[1])) {
+            return self::kpiIndicatorControl($data[1]);
+        }
+        
+        return '';
+    }
     
 }

@@ -71,6 +71,12 @@
                     </div>
 
                 </div>
+                
+                <?php
+                if ($row['ID'] == '17187608016181') {
+                    echo '<div class="d-none">'.Mdform::$logJson.'</div>';
+                }
+                ?>
 
                 <table class="table table-sm table-hover mv-record-map-tbl" style="border-top: 1px #ddd solid;">
                     <tbody>

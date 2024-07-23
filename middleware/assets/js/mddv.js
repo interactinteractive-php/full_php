@@ -4240,6 +4240,8 @@ $(function () {
             }
         }
         
+        $thisBpIconUl.removeClass('error');
+        
         var $leftwebCriteria = $this.closest('.leftweb-criteria');
         
         if ($leftwebCriteria.length) {

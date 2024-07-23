@@ -49,7 +49,7 @@ $renderType = '';
             <div class="tab-content" style="padding-top: 0px;padding-bottom: 0px;">                                         
                 <div class="tab-pane active" id="maintabcustom_<?php echo $this->uniqId ?>_0" style="padding-bottom: 0 !important;padding-top: 0 !important;padding-right: 0 !important;">
         <?php } ?>
-                    <div class="row mv-checklist-render-parent mv-checklist4-render-parent mv-checklist2-render-parent" id="mv-checklist-render-parent-<?php echo $this->uniqId; ?>">
+                    <div class="row mv-checklist-render-parent<?php echo issetParam($this->filterDataIndicatorId) ?> mv-checklist4-render-parent mv-checklist2-render-parent" id="mv-checklist-render-parent-<?php echo $this->uniqId; ?>">
                         <?php if ($renderType == 'paper_main_window') { ?>
                             <div style="position: absolute;right: 15px;top: 15px;display: none"><a title="Хаах" href="javascript:history.go(-1)"><i style="font-size: 15px;color:#737373" class="far fa-times"></i></a></div>        
                         <?php } 
@@ -67,7 +67,7 @@ $renderType = '';
 
                                     <div class="card">
                                         <div class="card-body mv-checklist-menu kpidv-data-tree-col kpidv-data-tree-col1">
-                                            <div id="indicatorTreeView_17187610152661" data-indicatorid="17187610152661" class="tree-demo mt-1" style="overflow-x: hidden;">
+                                            <div id="indicatorTreeView_17187610152661" data-indicatorid="<?php echo checkDefaultVal($this->filterIndicatorId, '17187610152661') ?>" class="tree-demo mt-1" style="overflow-x: hidden;">
                                             </div>
                                         </div>
                                     </div>
@@ -86,7 +86,7 @@ $renderType = '';
         <?php if (issetParam($this->dataFolderId) || issetParam($this->processFolderId)) { ?>
                 </div>
                 <div class="tab-pane" id="maintabcustom_<?php echo $this->uniqId ?>_1" style="padding-bottom: 0 !important;padding-top: 0 !important;padding-right: 0 !important;">                
-                    <div class="row mv-checklist-render-parent mv-checklist4-render-parent mv-checklist2-render-parent" id="mv-checklist-render-parent2-<?php echo $this->uniqId; ?>">
+                    <div class="row mv-checklist-render-parent<?php echo issetParam($this->filterDataIndicatorId) ?> mv-checklist4-render-parent mv-checklist2-render-parent" id="mv-checklist-render-parent2-<?php echo $this->uniqId; ?>">
                         <?php if ($renderType == 'paper_main_window') { ?>
                             <div style="position: absolute;right: 15px;top: 15px;display: none"><a title="Хаах" href="javascript:history.go(-1)"><i style="font-size: 15px;color:#737373" class="far fa-times"></i></a></div>        
                         <?php } 
@@ -875,6 +875,7 @@ $('.mv-checklist4-render-parent').find('.checklist2-content-section').css('max-w
 
 $("#indicatorTreeView_17187610152661").jstree({
     "core": {
+        'multiple' : false,
         "themes": {
             "responsive": true,
             "icons": false
@@ -889,14 +890,17 @@ $("#indicatorTreeView_17187610152661").jstree({
                     'parent': node.id, 
                     'indicatorId' : indicatorId, 
                     'colName' : 'PARENT_ID', 
-                    icon: 'far fa-file',
-                    criteria: {
-                        FILTERID:[
-                            {
-                                operator: '=',
-                                operand: '<?php echo $this->indicatorId; ?>'
-                            }
-                        ]
+                    'icon': 'far fa-file',
+                    'ignoreOpened': '<?php echo ($this->filterDataIndicatorId !== '') ? '1' : '0' ?>',
+                    'criteria': {
+                        <?php if (issetParam($this->filterValue) !== '#') { ?>
+                            <?php echo checkDefaultVal($this->filterColumn, 'FILTERID') ?>:[
+                                {
+                                    operator: '=',
+                                    operand: '<?php echo checkDefaultVal($this->filterValue, $this->indicatorId); ?>'
+                                }
+                            ]
+                        <?php }  ?>
                     }
                 };
             }
@@ -911,21 +915,23 @@ $("#indicatorTreeView_17187610152661").jstree({
         'case_insensitive': true,
         'show_only_matches' : true
     },        
-    "plugins": ["types", "cookies", "search"]
+    "plugins": ["types", "cookies", "search"/* , "checkbox" */]
 }).bind("select_node.jstree", function (e, data) {
     var nid = data.node.id === 'null' || data.node.id === 'all' ? '' : data.node.id;
     rowDataTreeSidebar = data.node.original ? data.node.original.rowdata : {};
     $('.kpidv-data-tree-col1').find('li').removeClass('active');
     $('.kpidv-data-tree-col1').find('li#'+nid).addClass('active');
     var mvTitle = $('.kpidv-data-tree-col1').find('li#'+nid+'>.jstree-anchor').find('.p-row-title').text();
-//    if ($treeFilterLi.hasClass('active')) {
-//        $treeFilterLi.removeClass('active');
-//        $treeFilterLi.find('.mv-tree-filter-icon').removeClass('fas fa-check-square').addClass('far fa-square');
-//    } else {
-//        $treeFilterLi.addClass('active');
-//        $treeFilterLi.find('.mv-tree-filter-icon').removeClass('far fa-square').addClass('fas fa-check-square');
-//    }        
-//    filterKpiIndicatorValueGrid($treeFilterLi);
+    
+    /* 
+    if ($treeFilterLi.hasClass('active')) {
+        $treeFilterLi.removeClass('active');
+        $treeFilterLi.find('.mv-tree-filter-icon').removeClass('fas fa-check-square').addClass('far fa-square');
+    } else {
+        $treeFilterLi.addClass('active');
+        $treeFilterLi.find('.mv-tree-filter-icon').removeClass('far fa-square').addClass('fas fa-check-square');
+    }        
+    filterKpiIndicatorValueGrid($treeFilterLi); */
 
     var strIndicatorId = 17187615200661;
     /**
@@ -933,73 +939,106 @@ $("#indicatorTreeView_17187610152661").jstree({
      * Render bp
      */
     
-//    var metaDataId = 16413780044111;
-//    var jsonObj = {};
-//    $.ajax({
-//        type: 'post',
-//        url: 'mdwebservice/callMethodByMeta',
-//        data: {
-//            metaDataId: metaDataId,
-//            isDialog: false, 
-//            isHeaderName: true, 
-//            isBackBtnIgnore: 1, 
-//            isIgnoreSetRowId: 1, 
-//            kpiIndicatorMapConfig: jsonObj, 
-//            fillDataParams: "id=" + strIndicatorId + "&defaultGetPf=1",
-//            callerType: 'dv', 
-//            openParams: '{"callerType":"dv","afterSaveNoAction":true}'
-//        },
-//        dataType: 'json',
-//        beforeSend: function() {
-//            Core.blockUI({message: 'Loading...', boxed: true});
-//        },
-//        success: function(data) {
-//            if (viewProcessWindow_<?php echo $this->uniqId; ?>) {
-//                if (!viewProcess_<?php echo $this->uniqId; ?>.find("#mv_checklist_id_"+metaDataId).length) {
-//                    viewProcess_<?php echo $this->uniqId; ?>.append('<div class="mv_checklist_render_all" id="mv_checklist_id_'+metaDataId+'"></div>');
-//                }
-//                viewProcess_<?php echo $this->uniqId; ?>.find("#mv_checklist_id_"+metaDataId).append(data.Html).promise().done(function () {
-//                    viewProcess_<?php echo $this->uniqId; ?>.find("#mv_checklist_id_"+metaDataId).find('.bp-btn-back, .bpTestCaseSaveButton').remove();
-//                    viewProcess_<?php echo $this->uniqId; ?>.find("#mv_checklist_id_"+metaDataId).find('.meta-toolbar').addClass('not-sticky');
-//                    viewProcess_<?php echo $this->uniqId; ?>.find("#mv_checklist_id_"+metaDataId).addClass('bp-render-checklist');
-//
-//                    var $saveAddBtn = viewProcess_<?php echo $this->uniqId; ?>.find("#mv_checklist_id_"+metaDataId).find('.bp-btn-saveadd:visible');
-//                    if ($saveAddBtn.length) {
-//                        $saveAddBtn.text(plang.get('save_btn'));
-//                        viewProcess_<?php echo $this->uniqId; ?>.find('.bp-btn-save').remove();
-//                    }
-//
-//                    Core.initBPAjax(viewProcess_<?php echo $this->uniqId; ?>.find("#mv_checklist_id_"+metaDataId));
-//                    Core.unblockUI();
-//                });                            
-//
-//            } else {                        
-//
-//                viewProcess_<?php echo $this->uniqId; ?>.empty().append(data.Html).promise().done(function () {
-//                    viewProcess_<?php echo $this->uniqId; ?>.find('.bp-btn-back, .bpTestCaseSaveButton').remove();
-//                    viewProcess_<?php echo $this->uniqId; ?>.find('.meta-toolbar').addClass('not-sticky');
-//                    viewProcess_<?php echo $this->uniqId; ?>.addClass('bp-render-checklist');
-//
-//                    var $saveAddBtn = viewProcess_<?php echo $this->uniqId; ?>.find('.bp-btn-saveadd:visible');
-//                    if ($saveAddBtn.length) {
-//                        $saveAddBtn.text(plang.get('save_btn'));
-//                        viewProcess_<?php echo $this->uniqId; ?>.find('.bp-btn-save').remove();
-//                    }
-//
-//                    Core.initBPAjax(viewProcess_<?php echo $this->uniqId; ?>);
-//                    Core.unblockUI();
-//                });
-//            }
-//        },
-//        error: function() { alert('Error'); Core.unblockUI(); }
-//    });    
-//    return;
+    /* 
+    var metaDataId = 16413780044111;
+    var jsonObj = {};
+    $.ajax({
+        type: 'post',
+        url: 'mdwebservice/callMethodByMeta',
+        data: {
+            metaDataId: metaDataId,
+            isDialog: false, 
+            isHeaderName: true, 
+            isBackBtnIgnore: 1, 
+            isIgnoreSetRowId: 1, 
+            kpiIndicatorMapConfig: jsonObj, 
+            fillDataParams: "id=" + strIndicatorId + "&defaultGetPf=1",
+            callerType: 'dv', 
+            openParams: '{"callerType":"dv","afterSaveNoAction":true}'
+        },
+        dataType: 'json',
+        beforeSend: function() {
+            Core.blockUI({message: 'Loading...', boxed: true});
+        },
+        success: function(data) {
+            if (viewProcessWindow_<?php echo $this->uniqId; ?>) {
+                if (!viewProcess_<?php echo $this->uniqId; ?>.find("#mv_checklist_id_"+metaDataId).length) {
+                    viewProcess_<?php echo $this->uniqId; ?>.append('<div class="mv_checklist_render_all" id="mv_checklist_id_'+metaDataId+'"></div>');
+                }
+                viewProcess_<?php echo $this->uniqId; ?>.find("#mv_checklist_id_"+metaDataId).append(data.Html).promise().done(function () {
+                    viewProcess_<?php echo $this->uniqId; ?>.find("#mv_checklist_id_"+metaDataId).find('.bp-btn-back, .bpTestCaseSaveButton').remove();
+                    viewProcess_<?php echo $this->uniqId; ?>.find("#mv_checklist_id_"+metaDataId).find('.meta-toolbar').addClass('not-sticky');
+                    viewProcess_<?php echo $this->uniqId; ?>.find("#mv_checklist_id_"+metaDataId).addClass('bp-render-checklist');
+
+                    var $saveAddBtn = viewProcess_<?php echo $this->uniqId; ?>.find("#mv_checklist_id_"+metaDataId).find('.bp-btn-saveadd:visible');
+                    if ($saveAddBtn.length) {
+                        $saveAddBtn.text(plang.get('save_btn'));
+                        viewProcess_<?php echo $this->uniqId; ?>.find('.bp-btn-save').remove();
+                    }
+
+                    Core.initBPAjax(viewProcess_<?php echo $this->uniqId; ?>.find("#mv_checklist_id_"+metaDataId));
+                    Core.unblockUI();
+                });                            
+
+            } else {                        
+
+                viewProcess_<?php echo $this->uniqId; ?>.empty().append(data.Html).promise().done(function () {
+                    viewProcess_<?php echo $this->uniqId; ?>.find('.bp-btn-back, .bpTestCaseSaveButton').remove();
+                    viewProcess_<?php echo $this->uniqId; ?>.find('.meta-toolbar').addClass('not-sticky');
+                    viewProcess_<?php echo $this->uniqId; ?>.addClass('bp-render-checklist');
+
+                    var $saveAddBtn = viewProcess_<?php echo $this->uniqId; ?>.find('.bp-btn-saveadd:visible');
+                    if ($saveAddBtn.length) {
+                        $saveAddBtn.text(plang.get('save_btn'));
+                        viewProcess_<?php echo $this->uniqId; ?>.find('.bp-btn-save').remove();
+                    }
+
+                    Core.initBPAjax(viewProcess_<?php echo $this->uniqId; ?>);
+                    Core.unblockUI();
+                });
+            }
+        },
+        error: function() { alert('Error'); Core.unblockUI(); }
+    });    
+    return; 
+    */
 
     /**
      * 
      * Render metaverse
-     */               
+     */
     
+    <?php if (issetParam($this->filterDataIndicatorId) !== '') { ?>
+        var indicatorId = '<?php echo $this->filterDataIndicatorId ?>';
+        $.ajax({
+            type: 'post',
+            url: 'mdform/indicatorList/' + indicatorId + '/1',
+            data: {
+                'indicatorId': indicatorId, 
+                'ignoreCheckIndicator': '1', 
+                'isIgnoreFilter': '1', 
+                'isJson': '1', 
+                'viewType': 'list',
+                'drillDownCriteria': (nid !== '_') ? '<?php echo issetParam($this->filterDataColumn) ?>=' + nid : '',
+            },
+            dataType: 'json',
+            beforeSend: function () {
+                Core.blockUI({message: 'Loading...', boxed: true});
+            },
+            success: function(data) {
+                if (data.html != '') {
+                    viewProcess_<?php echo $this->uniqId; ?>.empty().append(data.html).promise().done(function() {
+                        Core.initNumberInput(viewProcess_<?php echo $this->uniqId; ?>);
+                        Core.initLongInput(viewProcess_<?php echo $this->uniqId; ?>);
+                        Core.initDateInput(viewProcess_<?php echo $this->uniqId; ?>);
+                        Core.initSelect2(viewProcess_<?php echo $this->uniqId; ?>);
+                        Core.unblockUI();
+                    });
+                }
+            }
+        });
+    <?php } else { ?>
+
     var isComment = false;
     var postData = {
         mainIndicatorId: '', 
@@ -1030,9 +1069,9 @@ $("#indicatorTreeView_17187610152661").jstree({
 
                 sveActionBtn = '<div style="">';
 
-//                if (typeof is_pfd != 'undefined' && is_pfd) {
-//                    sveActionBtn += '<button type="button" class="btn btn-sm btn-circle btn-success bpMainSaveButton bp-btn-help mr-1" onclick="setHelpContent(this, \''+dataHtml.helpContentId+'\', \''+indicatorId+'\', \'mv_method\');">'+plang.get('set_help_content_btn')+'</button>';
-//                }
+                /* if (typeof is_pfd != 'undefined' && is_pfd) {
+                    sveActionBtn += '<button type="button" class="btn btn-sm btn-circle btn-success bpMainSaveButton bp-btn-help mr-1" onclick="setHelpContent(this, \''+dataHtml.helpContentId+'\', \''+indicatorId+'\', \'mv_method\');">'+plang.get('set_help_content_btn')+'</button>';
+                } */
 
                 if (dataHtml.hasOwnProperty('helpContentId') && dataHtml.helpContentId !== null && dataHtml.helpContentId !== '') {
                     sveActionBtn += '<button type="button" class="btn btn-sm btn-circle btn-success bpMainSaveButton bp-btn-help mr-1" onclick="redirectHelpContent(this, \''+dataHtml.helpContentId+'\', \''+indicatorId+'\', \'mv_method\');">'+plang.get('menu_system_guide')+'</button>';
@@ -1050,7 +1089,7 @@ $("#indicatorTreeView_17187610152661").jstree({
 
             html.push('<form method="post" enctype="multipart/form-data">');
                 html.push(renderHeader);
-                //html.push(sveActionBtn);
+                /* html.push(sveActionBtn); */
                 html.push(dataHtml.html);
             html.push('</form>');
 
@@ -1160,10 +1199,24 @@ $("#indicatorTreeView_17187610152661").jstree({
             });            
         }
     });    
+    <?php } ?>
 
 }).bind('loaded.jstree', function (e, data) {
-    $('.kpidv-data-tree-col1').find('li#1591184045140').click();
-    $('.kpidv-data-tree-col1').find('li').first().find('a').click();
+    <?php if (issetParam($this->filterParentId) !== '') { ?>
+        $("#indicatorTreeView_17187610152661").jstree("open_node", $("#<?php echo $this->filterParentId; ?>_anchor"));
+        setTimeout(() => {
+            $('.kpidv-data-tree-col1').find('li#<?php echo $this->filterId; ?>').click();
+            $('.kpidv-data-tree-col1').find('li#<?php echo $this->filterId; ?>').first().find('a').click();
+        }, 1000);
+        $('#indicatorTreeView_17187610152661').jstree('create_node', '#', {
+            'id': '_',
+            'children' : false,
+            'text': "<span data-value-mode=\"1721216201498528\"><div class=\"d-flex\"><div class=\"mr5\"><i class=\"mv-tree-filter-icon far fa-file\"></i></div> <div class=\"nameField\"><span class=\"p-row-title\">"+ plang.get('all') +"</span></div></div></span>"
+        }, 'first');
+    <?php } else { ?>
+        $('.kpidv-data-tree-col1').find('li#1591184045140').click();
+        $('.kpidv-data-tree-col1').find('li').first().find('a').click();
+    <?php } ?>
 });
 
 $("#indicatorTreeView_17201641614333").jstree({

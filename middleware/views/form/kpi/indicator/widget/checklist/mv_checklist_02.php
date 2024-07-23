@@ -80,7 +80,7 @@ $renderType = $this->methodRow['RENDER_THEME'];
                     ?>
                     <div class="tab-pane active" id="structabcustom_<?php echo $this->uniqId; ?>">
                         <div class="mv-checklist-main-render" style="background-color: rgb(244, 244, 244); width: 100%; padding: 10px 10px;">
-                            <form method="post" enctype="multipart/form-data">
+                            <form method="post" enctype="multipart/form-data" id="wsForm">
                                 <div class="meta-toolbar meta-toolbar-checklist is-bp-open-" style="padding-left: 26px;">
                                     <div class="main-process-text">
                                         <div class=""><?php echo $this->title; ?></div>                                        

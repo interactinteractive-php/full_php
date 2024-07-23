@@ -1521,7 +1521,7 @@ function bpSetDetailBySameValue(mainSelector, elem, paths, val) {
     }
     return;
 }
-function bpFillGroupByDv(mainSelector, elem, dataViewCode, groupPath, inputParams, mappingParams, fillType) {
+function bpFillGroupByDv(mainSelector, elem, dataViewCode, groupPath, inputParams, mappingParams, fillType, callback) {
     
     var $getTable = mainSelector.find("[data-table-path='"+groupPath+"']:eq(0)");
     
@@ -1688,6 +1688,10 @@ function bpFillGroupByDv(mainSelector, elem, dataViewCode, groupPath, inputParam
 
                 if (isSubDtl == false) {
                     bpDetailFreeze($parent);
+                }
+                
+                if (typeof callback === 'function') {
+                    callback();
                 }
 
                 Core.unblockUI();
@@ -2799,7 +2803,11 @@ function setLookupCriteria(mainSelector, elem, lookupField, params) {
 function bpSetLookupCriteria(mainSelector, elem, lookupField, params) {
     var $bpElem = getBpElement(mainSelector, elem, lookupField);
     if ($bpElem) {
-        $bpElem.attr('data-criteria-param', params);
+        if ($bpElem.hasClass('card_lookupInit')) {
+            mvControlRender(mainSelector, elem, $bpElem, params);
+        } else {
+            $bpElem.attr('data-criteria-param', params);
+        }
     }
     return;
 }
@@ -11324,7 +11332,7 @@ function bpStyleDuplicateRows(mainSelector, elem, groupPath, fieldPath, styles) 
     }
     return result;
 }
-function bpCountDuplicateRows(mainSelector, elem, groupPath, fieldPath) {
+function bpCountDuplicateRows(mainSelector, elem, groupPath, fieldPath, checkValue) {
     
     var $table = mainSelector.find('[data-table-path="'+groupPath+'"]'), count = 0;
     
@@ -11335,21 +11343,37 @@ function bpCountDuplicateRows(mainSelector, elem, groupPath, fieldPath) {
         function getVisibleRowValue($row, fieldPath) {
             return $row.find('[data-path="'+fieldPath+'"]').val();
         }
-
-        $table.find('> .tbody > .bp-detail-row').each(function(index, row){
-            var $row = $(row), 
-                $firstValue = getVisibleRowValue($row, fieldPath);
+        
+        if (typeof checkValue != 'undefined' && checkValue != '') {
             
-            if ($firstValue != '') {
-                $row.nextAll('.bp-detail-row').each(function(index, next){
-                    var $next = $(next), 
-                        $nextValue = getVisibleRowValue($next, fieldPath);
-                    if ($nextValue != '' && $firstValue == $nextValue) {
+            var $rows = $table.find('> .tbody > .bp-detail-row'), len = $rows.length;
+            if (len) {
+                var i = 0;
+                for (i; i < len; i++) { 
+                    var $row = $($rows[i]);
+                    var getValue = $row.find('[data-path="'+fieldPath+'"]').val();
+                    if (checkValue == getValue) {
                         count++;
                     }
-                });
+                }
             }
-        });
+            
+        } else {
+            $table.find('> .tbody > .bp-detail-row').each(function(index, row){
+                var $row = $(row), 
+                    $firstValue = getVisibleRowValue($row, fieldPath);
+
+                if ($firstValue != '') {
+                    $row.nextAll('.bp-detail-row').each(function(index, next){
+                        var $next = $(next), 
+                            $nextValue = getVisibleRowValue($next, fieldPath);
+                        if ($nextValue != '' && $firstValue == $nextValue) {
+                            count++;
+                        }
+                    });
+                }
+            });
+        }
     }
     return count;
 }
@@ -17777,28 +17801,35 @@ function bpGetBase64FromFile(mainSelector, elem, fieldPath, isWithExtension) {
     var $bpElem = getBpElement(mainSelector, elem, fieldPath);
     var fieldValue = null;
     
-    if ($bpElem && ($bpElem.hasClass('base64Init') || $bpElem.hasClass('fileInit'))) {
-        var fileUrl = $bpElem.val();
-        if (fileUrl) {
-            var ext = fileUrl.substring(fileUrl.lastIndexOf('.') + 1).toLowerCase();
-            var formData = new FormData();
+    if ($bpElem) {
+        
+        if ($bpElem.hasClass('base64Init') || $bpElem.hasClass('fileInit')) {
             
-            formData.append('file_1', $bpElem.get(0).files[0]); 
-            $.ajax({
-                type: 'post',
-                url: 'api/getBase64FromFile',
-                data: formData,
-                processData: false,
-                contentType: false,
-                async: false,
-                success: function(data) {
-                    if (typeof isWithExtension !== 'undefined' && isWithExtension) {
-                        fieldValue = ext + '♠' + data;
-                    } else {
-                        fieldValue = data;
+            var fileUrl = $bpElem.val();
+            if (fileUrl) {
+                var ext = fileUrl.substring(fileUrl.lastIndexOf('.') + 1).toLowerCase();
+                var formData = new FormData();
+
+                formData.append('file_1', $bpElem.get(0).files[0]); 
+                $.ajax({
+                    type: 'post',
+                    url: 'api/getBase64FromFile',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    async: false,
+                    success: function(data) {
+                        if (typeof isWithExtension !== 'undefined' && isWithExtension) {
+                            fieldValue = ext + '♠' + data;
+                        } else {
+                            fieldValue = data;
+                        }
                     }
-                }
-            });
+                });
+            }
+        
+        } else if ($bpElem.hasClass('web_cameraInit')) {
+            fieldValue = $bpElem.val();
         }
     }
     
@@ -19504,6 +19535,98 @@ function bpSetFileExtension(mainSelector, elem, fieldPath, extensions) {
     var $getField = getBpElement(mainSelector, elem, fieldPath);
     if ($getField) {
         $getField.attr('data-valid-extension', extensions);
+    }
+    return;
+}
+function mvControlRender(mainSelector, elem, bpElem, paramsPath) {
+    var paramData = [];
+    
+    if (typeof paramsPath != 'undefined' && paramsPath != '') {
+        var paramsPathArr = paramsPath.split('|');
+        var paramsLength = paramsPathArr.length;
+
+        for (var i = 0; i < paramsLength; i++) {
+            var fieldPathArr = paramsPathArr[i].split('@');
+            var fieldPath = fieldPathArr[0].trim();
+            var inputPath = fieldPathArr[1].trim();
+            var fieldValue = '';
+
+            var $bpElem = getBpElement(mainSelector, elem, fieldPath);
+
+            if ($bpElem) {
+                if ($bpElem.hasClass('base64Init') || $bpElem.hasClass('fileInit')) {
+                    var fileUrl = $bpElem.val();
+                    if (fileUrl) {
+                        var ext = fileUrl.substring(fileUrl.lastIndexOf('.') + 1).toLowerCase();
+                        var formData = new FormData();
+                        formData.append('file_1', $bpElem.get(0).files[0]); 
+                        $.ajax({
+                            type: 'post',
+                            url: 'api/getBase64FromFile',
+                            data: formData,
+                            processData: false,
+                            contentType: false,
+                            async: false,
+                            success: function(data) {
+                                fieldValue = ext + '♠' + data;
+                            }
+                        });
+                    }
+                } else {
+                    fieldValue = getBpRowParamNum(mainSelector, elem, fieldPath);
+                }
+            } else {
+                fieldValue = fieldPath;
+            }
+
+            paramData.push({
+                fieldPath: fieldPath, 
+                inputPath: inputPath, 
+                value: fieldValue
+            });
+        }
+    }
+    
+    var postData = {
+        indicatorId: mainSelector.attr('data-process-id'), 
+        uniqId: mainSelector.attr('data-bp-uniq-id'), 
+        getConfigPath: bpElem.attr('data-path'), 
+        lookupFilterData: paramData
+    };
+
+    $.ajax({
+        type: 'post',
+        url: 'mdform/mvControlRender', 
+        data: postData, 
+        dataType: 'html',
+        async: false, 
+        success: function(render) {
+            mainSelector.find('[data-cell-path="'+postData.getConfigPath+'"]').empty().append(render);
+        }
+    });
+    return;
+}
+function bpCallMvChecklistMenuMeta(mainSelector, metaCode, metaId) {
+    var $tabPane = mainSelector.closest('.tab-pane.active');
+    
+    if ($tabPane.length) {
+        var $checkListMenu = $tabPane.find('.mv-checklist-menu'), 
+            $checkListMenuLink = $checkListMenu.find('a.nav-link[data-json*=\'"metaDataId":"'+metaId+'"\']:eq(0)');
+        if ($checkListMenuLink.length) {
+            $checkListMenuLink.click();
+        }
+    }
+    return;
+}
+function bpCallMvChecklistMenuIndicator(mainSelector, metaCode, metaId) {
+    var $tabPane = mainSelector.closest('.tab-pane.active');
+    
+    if ($tabPane.length) {
+        var $checkListMenu = $tabPane.find('.mv-checklist-menu'), 
+            $checkListMenuLink = $checkListMenu.find('a.nav-link[data-json*=\'"indicatorId":"'+metaId+'"\']:eq(0)');
+        if ($checkListMenuLink.length) {
+            $checkListMenuLink.click();
+        }
     }
     return;
 }

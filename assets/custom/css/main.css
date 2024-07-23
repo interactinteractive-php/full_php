@@ -17741,6 +17741,9 @@ ul.bp-icon-selection li>.item-icon-selection:before:hover {
 ul.bp-icon-selection li>.item-icon-selection:hover p {
     color: #fff !important;
 }
+ul.bp-icon-selection.error {
+    border: 1px red solid;
+}
 
 .leftweb-accordion-btn .dataview-default-filter-reset-btn {
     background: #FFF;
@@ -28929,4 +28932,13 @@ input:checked + .bp-toggle-btn-slider:before {
 }
 .kpi-ind-tmplt-section .mv-rows-title:not(.mv-rows-title-label) {
     display: none;
+}
+.mv-html-clicktoedit-class {
+    position: absolute;
+    right: 0    
+}
+.mv-html-clicktoedit-class > button {
+    background-color: #00000030 !important;
+    padding: 1px 7px 0px 7px !important;
+    height: 22px !important;
 }

@@ -245,7 +245,6 @@ class Mdworkspace extends Controller {
                     $this->view->layoutLink['ID'],
                     ''
                 );
-                $tmpObject = new Mddashboard();
 
                 foreach ($this->view->layoutParamMap as $k => $row) {
                     array_push($layoutSearchReplace, '{' . $row['LAYOUT_PATH'] . '}');

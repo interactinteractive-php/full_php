@@ -97,7 +97,7 @@ var posStoreId = '<?php echo Session::get(SESSION_PREFIX.'storeId'); ?>',
     posCheckZBpassword = '<?php echo Config::getFromCacheDefault('POS_CHECK_ZB_PASSWORD', null, '') ?>',
     posTypeCode = '<?php echo Session::get(SESSION_PREFIX.'posTypeCode'); ?>',
     isPosSejim = '<?php echo Config::getFromCacheDefault('POS_PAY_LEFT_SIDE_SHOW_LEAD', null, '') ?>',
-    isUserPosV3 = <?php echo Config::getFromCacheDefault('IS_USE_POSAPI_V3', null, '0') ?>,
+    isUserPosV3 = '<?php echo Config::getFromCacheDefault('IS_USE_POSAPI_V3', null, '0') ?>',
     selectedCustomerId = '<?php echo issetParam($this->selectedCustomerId); ?>';
     <?php if (Session::get(SESSION_PREFIX.'isEditBasketPrice') === '1') { ?>
         var posIsEditBasketPrice = true;

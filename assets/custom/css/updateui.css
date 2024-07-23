@@ -364,12 +364,12 @@
 }
 
 .mv-checklist2-render-parent ul.bp-icon-selection li>.item-icon-selection {
-    background-color: #f3f3f3 !important;
+    background-color: #f3f3f3;
     border: 1px solid #f3f3f3 !important;
 }
 
 .mv-checklist2-render-parent ul.bp-icon-selection li.active>.item-icon-selection {
-    background-color: #f3f3f3 !important;
+    background-color: #cbcbcb !important;
     color: #737373 !important;
 }
 

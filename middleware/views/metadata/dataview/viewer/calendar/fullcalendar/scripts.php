@@ -1333,24 +1333,25 @@ function initFullCalendar_<?php echo $this->mid; ?>() {
                     var loopColorCircleHtml = '<span class="badge badge-mark ml5" data-title="'+loopColorCircleTitle+'" style="background-color: '+loopColorCircle+'; border-color: '+loopColorCircle+'"></span>';
                     
                     if (arg.view.type == 'dayGridMonth') {
-                        
-                        var $badgeGroup = $dayCell.find('.span-group-control');
-                        
-                        if ($badgeGroup.length) {
-                            $dayCell = $badgeGroup;
-                        } else {
-                            $dayCell.append('<div class="span-group" data-fca="1" date="'+startDate+'">'+
-                                '<div class="span-group-control"></div>'+
-                                '<span class="input-group-append">'+
-                                    '<button class="btn btn-light" type="button">...</button>'+
-                                '</span>'+
-                            '</div>');
-                            $dayCell = $dayCell.find('.span-group-control');
+                        if ($dayCell) {
+                            var $badgeGroup = $dayCell.find('.span-group-control');
                             
-                            fcLoopAddonFieldsQtip($dayCell.parent().find('.btn'));
+                            if ($badgeGroup.length) {
+                                $dayCell = $badgeGroup;
+                            } else {
+                                $dayCell.append('<div class="span-group" data-fca="1" date="'+startDate+'">'+
+                                    '<div class="span-group-control"></div>'+
+                                    '<span class="input-group-append">'+
+                                        '<button class="btn btn-light" type="button">...</button>'+
+                                    '</span>'+
+                                '</div>');
+                                $dayCell = $dayCell.find('.span-group-control');
+                                
+                                fcLoopAddonFieldsQtip($dayCell.parent().find('.btn'));
+                            }
+                            
+                            $dayCell.append(loopColorCircleHtml);
                         }
-                        
-                        $dayCell.append(loopColorCircleHtml);
                         
                     } else {
                         

@@ -119,6 +119,10 @@ class Mdwidget extends Controller {
                 'topAddRow' => true, 
                 'topAddOneRow' => true
             ),
+            'detail_frame_paper_002' => array(
+                'topAddRow' => true, 
+                'topAddOneRow' => true
+            ),
             'detail_frame_paper_tree' => array(
                 'topAddRow' => true, 
                 'topAddOneRow' => false

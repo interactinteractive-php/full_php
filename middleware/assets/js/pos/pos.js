@@ -6222,8 +6222,7 @@ function posPayment() {
       var paymentData = {
         amount: $(".pos-amount-paid").autoNumeric("get"),
         vat: $(".pos-amount-vat").autoNumeric("get"),
-        isDelivery:
-          Number($isDeliveryRows.length) + Number($isServiceGiftDelivery),
+        isDelivery: Number($isDeliveryRows.length) + Number($isServiceGiftDelivery),
         invoiceId: $("#invoiceId").val(),
         invoiceRow: $("#invoiceJsonStr").val(),
         invoiceBasketTypeId: $("#invoiceBasketTypeId").val(),
@@ -6319,10 +6318,12 @@ function posPayment() {
               .removeClass("display-none");
           });
           $dialog.bind("dialogextendrestore", function () {
-            $dialog
-              .closest(".ui-dialog")
-              .nextAll(".ui-widget-overlay:first")
-              .removeClass("display-none");
+            $dialog.closest(".ui-dialog").nextAll(".ui-widget-overlay:first").removeClass("display-none");
+            $dialog.find(".posUserAmount").autoNumeric("set", "");            
+            $("#posPaidAmount").autoNumeric("set", "");
+            $("#posChangeAmount").autoNumeric("set", "");
+            $("#posBalanceAmount").autoNumeric("set", "");
+            $("#posCashAmount").autoNumeric("set", $(".pos-amount-paid").autoNumeric("get"));
           });
 
           if (isPosSejim != '') {
@@ -6396,12 +6397,7 @@ function posPayment() {
           $('input[name="serviceCustomerId_nameField"]').val(
             $('input[name="empCustomerId_nameField"]').val()
           );
-          $('input[name="serviceCustomerId"]')
-            .attr(
-              "data-row-data",
-              $('input[name="empCustomerId"]').attr("data-row-data")
-            )
-            .trigger("change");
+          $('input[name="serviceCustomerId"]').attr("data-row-data", $('input[name="empCustomerId"]').attr("data-row-data")).trigger("change");
 
           posCardNumberPinCode("", $('input[name="empCustomerId"]').val());
         }
@@ -6411,10 +6407,7 @@ function posPayment() {
           $('input[name="empCustomerId"]').length &&
           $('input[name="empCustomerId"]').val()
         ) {
-          $('select[name="recievableCustomerId"]').attr(
-            "data-criteria",
-            "customerId=" + $('input[name="empCustomerId"]').val()
-          );
+          $('select[name="recievableCustomerId"]').attr("data-criteria", "customerId=" + $('input[name="empCustomerId"]').val());
         }
       });
     } else {
@@ -6522,9 +6515,33 @@ function posCalcChangeAmount() {
   }
 
   var posUserAmount = Number($(".posUserAmount").sum());
-  var posChangeAmount = posUserAmount - posPayAmount;
+  var posChangeAmount = posUserAmount - posPayAmount;       
 
   if (posChangeAmount > 0) {
+    if (Number($("#posAccountTransferAmt").val()) > 0) {
+      PNotify.removeAll();
+      new PNotify({
+        title: "Warning",
+        text: "Төлөх дүнгээс их байна /ДАНСНЫ ШИЛЖҮҮЛЛЭГ/",
+        type: "warning",
+        addclass: "pnotify-center",
+        sticker: false,
+      });
+      return;
+    }      
+
+    if (Number($("#posLeasingAmt").autoNumeric("get")) > 0) {
+      PNotify.removeAll();
+      new PNotify({
+        title: "Warning",
+        text: "Төлөх дүнгээс их байна /ЛИЗИНГ/",
+        type: "warning",
+        addclass: "pnotify-center",
+        sticker: false,
+      });
+      return;
+    }  
+    
     if (Number($("#posBankAmount").val()) > 0) {
       PNotify.removeAll();
       new PNotify({
@@ -8885,12 +8902,19 @@ function posCardNumberPinCode(elem, customerId) {
         PNotify.removeAll();
 
         if (data.status === "success") {
+            $("#invInfoCustomerLastName").val(data.lastname);
+            $("#invInfoCustomerName").val(data.firstname);
+            $("#invInfoCustomerRegNumber").val(data.stateregnumber);            
+            $("#invInfoCustomerName").trigger('change');
+            
           $("#cardMemberShipId").val(data.membershipid);
           $("#cardId").val(data.cardid);
           $("#cardOwnerName").val(data.firstname);
           $("#cardOwnerFirstName").val(data.lastname);
           $("#cardOwnerRegisterNumber").val(data.stateregnumber);
-          $("#cardOwnerBirthday").val(moment(data.dateofbirth).format("YYYY-MM-DD"));
+          if (data.dateofbirth) {
+            $("#cardOwnerBirthday").val(moment(data.dateofbirth).format("YYYY-MM-DD"));
+          }
           $('input[name="cardDiscountType"]').prop("checked", false);
           $("#cardDiscountType").closest(".form-group").show();
           if (typeof $("#posPayAmount").attr("data-oldvalue") !== "undefined") {
@@ -13314,7 +13338,6 @@ function posCashMoneyBill(open) {
   var $posCashAmount = $("#posCashAmount:visible");
 
   if ($posCashAmount.length) {
-    return;
 
     var $dialogName = "dialog-cash-moneybill";
     if (!$("#" + $dialogName).length) {

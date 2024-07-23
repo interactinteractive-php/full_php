@@ -27,7 +27,7 @@ class Mdexpression_Model extends Model {
                     'IS_TRANSLATE' => $row['IS_TRANSLATE'], 
                     'JSON_CONFIG' => $row['JSON_CONFIG'], 
                     'ABILITY_TOGGLE' => $row['ABILITY_TOGGLE'], 
-                    'PARENT_TYPE_CODE' => $row['PARENT_TYPE_CODE']
+                    'PARENT_TYPE_CODE' => isset($row['PARENT_TYPE_CODE']) ? $row['PARENT_TYPE_CODE'] : null
                 ];
             }
 
@@ -213,6 +213,10 @@ class Mdexpression_Model extends Model {
     
     public function getStatementIdByCodeModel($code) {
         return $this->db->GetOne("SELECT META_DATA_ID FROM META_DATA WHERE META_TYPE_ID = 200101010000035 AND LOWER(META_DATA_CODE) = ".$this->db->Param(0), array($code));
+    }
+    
+    public function getMetaIdByCodeModel($code) {
+        return $this->db->GetOne("SELECT META_DATA_ID FROM META_DATA WHERE LOWER(META_DATA_CODE) = ".$this->db->Param(0), array($code));
     }
     
     public function getKpiTempIdByCodeModel($code) {
