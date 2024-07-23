@@ -29360,9 +29360,9 @@ class Mdform_Model extends Model {
 
     public function getSavedRecordMapKpiModel($srcIndicatorId, $srcRecordId, $components) {
         
+        $result = [];
+        
         try {
-            
-            $result = array();
         
             foreach ($components as $component) {
 
@@ -29377,7 +29377,7 @@ class Mdform_Model extends Model {
 
                         $trgIndicatorId = $component['ID'];
 
-                        $fieldConfig = self::getKpiComboDataModel(array('FILTER_INDICATOR_ID' => $trgIndicatorId, 'TRG_TABLE_NAME' => $tableName, 'isData' => false));
+                        $fieldConfig = self::getKpiComboDataModel(['FILTER_INDICATOR_ID' => $trgIndicatorId, 'TRG_TABLE_NAME' => $tableName, 'isData' => false]);
                         
                         $idField = $fieldConfig['id'];
                         $nameField = $fieldConfig['name'];
@@ -29429,12 +29429,8 @@ class Mdform_Model extends Model {
 
                             $rows = $this->db->GetAll($sql);
                             
-                            if ($trgIndicatorId == '17187608016181') {
-                                Mdform::$logJson .= 'sql: '.$sql;
-                            }
-                            
                         } else {
-                            $rows = array();
+                            $rows = [];
                         }
                         
                         $result[$trgIndicatorId] = $rows;
@@ -29442,10 +29438,7 @@ class Mdform_Model extends Model {
                 }
             }
         
-        } catch (Exception $ex) {
-            Mdform::$logJson .= 'sql error: '.$ex->getMessage();
-            $result = array();
-        }
+        } catch (Exception $ex) { }
         
         return $result;
     }    
