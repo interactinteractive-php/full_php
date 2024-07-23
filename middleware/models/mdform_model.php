@@ -24415,390 +24415,390 @@ class Mdform_Model extends Model {
         $batchBtn = "";
         $groupBatchedArr = Arr::groupByArrayOnlyRows($config['processList'], 'batch_number');
         
-        if (sizeOf($groupBatchedArr) > 1 && issetParamArray($groupBatchedArr[''])) {
+        if (count($groupBatchedArr) > 1 && issetParamArray($groupBatchedArr[''])) {
             $config['processList'] = $groupBatchedArr[''];
-        }
-        
-        if ($groupBatchedArr) {
-            foreach ($groupBatchedArr as $key => $processList) {
-                $qry = "SELECT 
-                            ID,
-                            SRC_INDICATOR_ID,
-                            SEMANTIC_TYPE_ID,
-                            BATCH_NAME,
-                            BATCH_NUMBER,
-                            IS_DROP,
-                            IS_SHOW_POPUP,
-                            ICON_NAME,
-                            BUTTON_STYLE
-                            FROM KPI_INDICATOR_INDICATOR_MAP
-                            WHERE SRC_INDICATOR_ID = ". $this->db->Param(0) ."
-                                AND BATCH_NUMBER = ". $this->db->Param(1) ."
-                                AND IS_DROP = 1 
-                                AND SEMANTIC_TYPE_ID = 125";
+            
+            if ($groupBatchedArr) {
+                foreach ($groupBatchedArr as $key => $processList) {
+                    $qry = "SELECT 
+                                ID,
+                                SRC_INDICATOR_ID,
+                                SEMANTIC_TYPE_ID,
+                                BATCH_NAME,
+                                BATCH_NUMBER,
+                                IS_DROP,
+                                IS_SHOW_POPUP,
+                                ICON_NAME,
+                                BUTTON_STYLE
+                                FROM KPI_INDICATOR_INDICATOR_MAP
+                                WHERE SRC_INDICATOR_ID = ". $this->db->Param(0) ."
+                                    AND BATCH_NUMBER = ". $this->db->Param(1) ."
+                                    AND IS_DROP = 1 
+                                    AND SEMANTIC_TYPE_ID = 125";
 
-                $batch = $this->db->GetRow($qry, array($indicatorId, $key));
-                
-                if ($batch) {
-                    $batchBtn .= '<div class="btn-group dv-buttons-batch">';
-                        $batchBtn .= '<button class="btn ' . (isset($batch['BUTTON_STYLE']) ? $batch['BUTTON_STYLE'] : 'btn-secondary') . ' btn-circle btn-sm dropdown-toggle" type="button" data-toggle="dropdown">';
-                        $batchBtn .= (($batch['ICON_NAME'] != '') ? '<i class="far ' . $batch['ICON_NAME'] . '"></i> ' : '<i class="icon-plus3 font-size-12"></i> ') . Lang::line($batch['BATCH_NAME']);
-                        $batchBtn .= '</button>';
-                        $batchBtn .= '<ul class="dropdown-menu" role="menu">';
-    
-                        
-                        foreach ($processList as $process) {
-                            
-                            $srcIndicatorId = $process['structure_indicator_id'];
-                            $crudIndicatorId = issetParam($process['crud_indicator_id']);
-                            $isFillRelation = issetParam($process['is_fill_relation']);
-                            $isNormalRelation = issetParam($process['is_normal_relation']);
-                            $typeCode = $process['type_code'];
-                            $kpiTypeId = $process['kpi_type_id'];
-                            $buttonName = $className = $onClick = $description = $opt = '';
-                            $isDfillRelation = issetParam($process['is_dfill_relation']);
-                            $isCfillRelation = issetParam($process['is_cfill_relation']);                                                
-                            $actionmode = '';
-    
-                            if ($srcIndicatorId == $indicatorId) {
-    
-                                if ($typeCode == 'create') {
-    
-                                    $labelName = $process['label_name'] == 'Нэмэх' ? Lang::line('add_btn') : Lang::line($process['label_name']);
-                                    $className = 'btn btn-success btn-circle btn-sm';
-                                    $buttonName = '<i class="far fa-plus"></i> '.$labelName;
-    
-                                    if ($isFillRelation) {
-                                        $opt = ', {fillSelectedRow: true, mode: \'create\'}';
-                                    } 
-    
-                                    if ($isNormalRelation) {
-                                        $onClick = "mvNormalRelationRender(this, '$kpiTypeId', '".$indicatorId."', {methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId});";
-                                        $actionmode = "{methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId}";
-                                    } else {
-                                        $actionmode = str_replace(', {', '{', $opt);
-                                        $onClick = "manageKpiIndicatorValue(this, '$kpiTypeId', '".$indicatorId."', false$opt);";
-                                    }
-    
-                                } elseif ($typeCode == 'update') {
-    
-                                    $labelName = $process['label_name'] == 'Засах' ? Lang::line('edit_btn') : Lang::line($process['label_name']);
-                                    $isUpdate = true;
-    
-                                    if ($isFillRelation) {
-                                        $opt = ', {fillSelectedRow: true, mode: \'update\'}';
-                                    } 
-    
-                                    $className = 'btn btn-warning btn-circle btn-sm';
-                                    $buttonName = '<i class="far fa-edit"></i> '.$labelName;
-    
-                                    if ($isNormalRelation) {
-                                        $onClick = "mvNormalRelationRender(this, '$kpiTypeId', '".$indicatorId."', {methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId, mode: 'update'});";
-                                        $actionmode = "{methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId, mode: 'update'}";
-                                    } else {
-                                        if (issetParam($process['widget_code']) !== '') {
-                                            $actionmode = "{methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId, mode: 'update', widgetCode: '". $process['widget_code'] ."'}";
-                                            $onClick = "mvWidgetRelationRender(this, '$kpiTypeId', '".$indicatorId."', {methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId, mode: 'update', widgetCode: '". $process['widget_code'] ."'});";
-                                        } else {
-                                            $actionmode = str_replace(', {', '{', $opt);
-                                            $onClick = "manageKpiIndicatorValue(this, '$kpiTypeId', '".$indicatorId."', true$opt);";
-                                        }
-                                    }
-    
-                                    $contextMenu[] = [
-                                        'crudIndicatorId' => $crudIndicatorId, 
-                                        'labelName' => $labelName,
-                                        'onClick' => $onClick,
-                                        'actionName' => 'edit',
-                                        'iconName' => 'edit', 
-                                        'data-actiontype' => $typeCode, 
-                                        'data-main-indicatorid' => $indicatorId, 
-                                        'data-structure-indicatorid' => $indicatorId, 
-                                        'data-crud-indicatorid' => $crudIndicatorId,
-                                        'data-mapid' => issetParam($process['map_id'])
-                                    ];
-    
-                                } elseif ($typeCode == 'read') {
-    
-                                    $isUpdate = true;
-                                    $className = 'btn purple btn-circle btn-sm';
-                                    $buttonName = '<i class="fas fa-eye"></i> '.Lang::line('view_btn');
-    
-                                    if ($isNormalRelation) {
-                                        $actionmode = "{methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId, mode: 'view'}";
-                                        $onClick = "mvNormalRelationRender(this, '$kpiTypeId', '".$indicatorId."', {methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId, mode: 'view'});";
-                                    } else {
-                                        $actionmode = "{mode: 'view'}";
-                                        $onClick = "manageKpiIndicatorValue(this, '$kpiTypeId', '".$indicatorId."', true, {mode: 'view'});";
-                                    }
-    
-                                    $contextMenu[] = [
-                                        'crudIndicatorId' => $crudIndicatorId, 
-                                        'labelName' => Lang::line('view_btn'),
-                                        'onClick' => $onClick,
-                                        'actionName' => 'view',
-                                        'iconName' => 'eye', 
-                                        'data-actiontype' => $typeCode, 
-                                        'data-main-indicatorid' => $indicatorId, 
-                                        'data-structure-indicatorid' => $indicatorId, 
-                                        'data-crud-indicatorid' => $crudIndicatorId,
-                                        'data-mapid' => issetParam($process['map_id'])
-                                    ];
-    
-                                } elseif ($typeCode == 'delete') {
-    
-                                    $isDelete = true;
-                                    $className = 'btn btn-danger btn-circle btn-sm';
-                                    $buttonName = '<i class="far fa-trash"></i> '.Lang::line('delete_btn');
-                                    $onClick = "removeKpiIndicatorValue(this, '".$indicatorId."');";
-    
-                                    $contextMenu[] = [
-                                        'crudIndicatorId' => $crudIndicatorId, 
-                                        'labelName' => Lang::line('delete_btn'),
-                                        'onClick' => $onClick,
-                                        'actionName' => 'delete',
-                                        'iconName' => 'trash', 
-                                        'data-actiontype' => $typeCode, 
-                                        'data-main-indicatorid' => $indicatorId, 
-                                        'data-structure-indicatorid' => $indicatorId, 
-                                        'data-crud-indicatorid' => $crudIndicatorId,
-                                        'data-mapid' => issetParam($process['map_id'])
-                                    ];
-    
-                                } elseif ($typeCode == 'config') {
-    
-                                    $isDelete = true;
-                                    $className = 'btn blue-steel btn-circle btn-sm';
-                                    $buttonName = '<i class="far fa-tools"></i> '.Lang::line('Config');
-                                    $onClick = "mapKpiIndicatorValue(this, '$kpiTypeId', '".$indicatorId."', 'config');";
-    
-                                    $contextMenu[] = [
-                                        'crudIndicatorId' => $crudIndicatorId, 
-                                        'labelName' => Lang::line('Config'),
-                                        'onClick' => $onClick,
-                                        'actionName' => 'config',
-                                        'iconName' => 'tools', 
-                                        'data-actiontype' => $typeCode, 
-                                        'data-main-indicatorid' => $indicatorId, 
-                                        'data-structure-indicatorid' => $indicatorId, 
-                                        'data-crud-indicatorid' => $crudIndicatorId,
-                                        'data-mapid' => issetParam($process['map_id'])
-                                    ];
-    
-                                } elseif ($typeCode == '360') {
-    
-                                    $isDelete = true;
-                                    $className = 'btn blue-steel btn-circle btn-sm';
-                                    $buttonName = '<i class="far fa-tools"></i> '.Lang::line('360');
-                                    $onClick = "mapKpiIndicatorValue(this, '$kpiTypeId', '".$indicatorId."', '360');";
-    
-                                    $contextMenu[] = [
-                                        'crudIndicatorId' => $crudIndicatorId, 
-                                        'labelName' => Lang::line('360'),
-                                        'onClick' => $onClick,
-                                        'actionName' => '360',
-                                        'iconName' => 'tools', 
-                                        'data-actiontype' => $typeCode, 
-                                        'data-main-indicatorid' => $indicatorId, 
-                                        'data-structure-indicatorid' => $indicatorId, 
-                                        'data-crud-indicatorid' => $crudIndicatorId,
-                                        'data-mapid' => issetParam($process['map_id'])
-                                    ];
-    
-                                } elseif ($typeCode == 'excel') {
-    
-                                    $className = 'btn green btn-circle btn-sm';
-                                    $buttonName = '<i class="far fa-file-excel"></i> '.Lang::line('pf_excel_import');
-                                    $onClick = "excelImportKpiIndicatorValue(this, '".$indicatorId."');";
-    
-                                } elseif ($typeCode == 'excel_export_one_line') {
-    
-                                    $className = 'btn green btn-circle btn-sm';
-                                    $buttonName = '<i class="far fa-file-excel"></i> Эксель нэг мөрөөр татах';
-                                    $onClick = "exportExcelOneLineKpiIndicatorValue(this, '".$indicatorId."');";
-    
-                                } elseif ($typeCode == 'export') {
-    
-                                    $isDelete = true;
-                                    $className = 'btn green btn-circle btn-sm';
-                                    $buttonName = '<i class="far fa-download"></i> '.Lang::line('excel_export_btn');
-                                    $onClick = "exportKpiIndicatorValue(this, '".$indicatorId."');";
-    
-                                } elseif ($kpiTypeId == '1191') {
-    
-                                    $className = 'btn blue-steel btn-circle btn-sm';
-                                    $buttonName = '<i class="far fa-play"></i> ' . Lang::line($process['label_name'] ? $process['label_name'] : $process['name']);
-                                    $onClick = "manageKpiIndicatorValue(this, '$kpiTypeId', '$crudIndicatorId', false, {transferSelectedRow: true});";
-    
-                                } elseif ($kpiTypeId == '1080') {
-    
-                                    $className = 'btn blue-steel btn-circle btn-sm';
-                                    $buttonName = '<i class="far fa-play"></i> ' . Lang::line($process['label_name'] ? $process['label_name'] : $process['name']);
-                                    $onClick = "callWebServiceKpiIndicatorValue(this, '$crudIndicatorId');";
-                                    
-                                } elseif ($typeCode == 'import') {
-    
-                                    $className = 'btn green btn-circle btn-sm';
-                                    $buttonName = '<i class="far fa-file-import"></i> '.Lang::line('Импорт');
-                                    $onClick = "dataImportKpiIndicatorValue(this, '".$indicatorId."');";
-                                } 
-    
-                            } else {
-    
-                                $description = Lang::line(issetParam($process['description']));
-                                $processName = Lang::line(issetParam($process['label_name']));
-    
-                                if ($typeCode == 'create') {
-    
-                                    $className = 'btn btn-success btn-circle btn-sm';
-                                    $buttonName = '<i class="far fa-plus"></i> '.$processName;
-    
-                                    if ($isFillRelation) {
-                                        $opt = ', {fillSelectedRow: true, mode: \'create\'}';
-                                    } elseif ($isDfillRelation) {
-                                        $opt = ', {fillDynamicSelectedRow: true, mode: \'create\'}';
-                                    } elseif ($isCfillRelation) {
-                                        $opt = ', {consolidateFillSelectedRow: true, mode: \'create\'}';
-                                    }
-    
-                                    if ($isNormalRelation) {
-                                        if (issetParam($process['widget_code']) !== '') {
-                                            $actionmode = "{methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId, mode: 'update', widgetCode: '". $process['widget_code'] ."'}";
-                                            $onClick = "mvWidgetRelationRender(this, '$kpiTypeId', '".$indicatorId."', {methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId, mode: 'update', widgetCode: '". $process['widget_code'] ."'});";
-                                        } else {
-                                            $actionmode = "{methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId}";
+                    $batch = $this->db->GetRow($qry, array($indicatorId, $key));
+
+                    if ($batch) {
+                        $batchBtn .= '<div class="btn-group dv-buttons-batch">';
+                            $batchBtn .= '<button class="btn ' . (isset($batch['BUTTON_STYLE']) ? $batch['BUTTON_STYLE'] : 'btn-secondary') . ' btn-circle btn-sm dropdown-toggle" type="button" data-toggle="dropdown">';
+                            $batchBtn .= (($batch['ICON_NAME'] != '') ? '<i class="far ' . $batch['ICON_NAME'] . '"></i> ' : '<i class="icon-plus3 font-size-12"></i> ') . Lang::line($batch['BATCH_NAME']);
+                            $batchBtn .= '</button>';
+                            $batchBtn .= '<ul class="dropdown-menu" role="menu">';
+
+
+                            foreach ($processList as $process) {
+
+                                $srcIndicatorId = $process['structure_indicator_id'];
+                                $crudIndicatorId = issetParam($process['crud_indicator_id']);
+                                $isFillRelation = issetParam($process['is_fill_relation']);
+                                $isNormalRelation = issetParam($process['is_normal_relation']);
+                                $typeCode = $process['type_code'];
+                                $kpiTypeId = $process['kpi_type_id'];
+                                $buttonName = $className = $onClick = $description = $opt = '';
+                                $isDfillRelation = issetParam($process['is_dfill_relation']);
+                                $isCfillRelation = issetParam($process['is_cfill_relation']);                                                
+                                $actionmode = '';
+
+                                if ($srcIndicatorId == $indicatorId) {
+
+                                    if ($typeCode == 'create') {
+
+                                        $labelName = $process['label_name'] == 'Нэмэх' ? Lang::line('add_btn') : Lang::line($process['label_name']);
+                                        $className = 'btn btn-success btn-circle btn-sm';
+                                        $buttonName = '<i class="far fa-plus"></i> '.$labelName;
+
+                                        if ($isFillRelation) {
+                                            $opt = ', {fillSelectedRow: true, mode: \'create\'}';
+                                        } 
+
+                                        if ($isNormalRelation) {
                                             $onClick = "mvNormalRelationRender(this, '$kpiTypeId', '".$indicatorId."', {methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId});";
-                                        }
-                                    } else {
-                                        $actionmode = str_replace(', {', '{', $opt);
-                                        $onClick = "manageKpiIndicatorValue(this, '$kpiTypeId', '$srcIndicatorId', false$opt);";
-                                    }
-    
-                                } elseif ($typeCode == 'update') {
-    
-                                    $className = 'btn btn-warning btn-circle btn-sm';
-                                    $buttonName = '<i class="far fa-edit"></i> '.$processName;
-    
-                                    if ($isFillRelation) {
-                                        $opt = ', {fillSelectedRow: true, mode: \'update\'}';
-                                    } elseif ($isDfillRelation) {
-                                        $opt = ', {fillDynamicSelectedRow: true, mode: \'update\'}';
-                                    }
-    
-                                    if ($isNormalRelation) {
-                                        $actionmode = "{methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId, mode: 'update', isFillRelation: '$isFillRelation'}";
-                                        $onClick = "mvNormalRelationRender(this, '$kpiTypeId', '".$indicatorId."', {methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId, mode: 'update', isFillRelation: '$isFillRelation'});";
-                                    } else {
-                                        if (issetParam($process['widget_code']) !== '') {
-                                            $actionmode = "{methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId, mode: 'update', widgetCode: '". $process['widget_code'] ."'}";
-                                            $onClick = "mvWidgetRelationRender(this, '$kpiTypeId', '".$indicatorId."', {methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId, mode: 'update', widgetCode: '". $process['widget_code'] ."'});";
+                                            $actionmode = "{methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId}";
                                         } else {
                                             $actionmode = str_replace(', {', '{', $opt);
-                                            $onClick = "manageKpiIndicatorValue(this, '$kpiTypeId', '$srcIndicatorId', true$opt);";
+                                            $onClick = "manageKpiIndicatorValue(this, '$kpiTypeId', '".$indicatorId."', false$opt);";
                                         }
-                                    }
-                                    
-                                    $contextMenu[] = [
-                                        'crudIndicatorId' => $crudIndicatorId, 
-                                        'labelName' => $processName,
-                                        'onClick' => $onClick,
-                                        'actionName' => 'edit',
-                                        'iconName' => 'edit', 
+
+                                    } elseif ($typeCode == 'update') {
+
+                                        $labelName = $process['label_name'] == 'Засах' ? Lang::line('edit_btn') : Lang::line($process['label_name']);
+                                        $isUpdate = true;
+
+                                        if ($isFillRelation) {
+                                            $opt = ', {fillSelectedRow: true, mode: \'update\'}';
+                                        } 
+
+                                        $className = 'btn btn-warning btn-circle btn-sm';
+                                        $buttonName = '<i class="far fa-edit"></i> '.$labelName;
+
+                                        if ($isNormalRelation) {
+                                            $onClick = "mvNormalRelationRender(this, '$kpiTypeId', '".$indicatorId."', {methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId, mode: 'update'});";
+                                            $actionmode = "{methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId, mode: 'update'}";
+                                        } else {
+                                            if (issetParam($process['widget_code']) !== '') {
+                                                $actionmode = "{methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId, mode: 'update', widgetCode: '". $process['widget_code'] ."'}";
+                                                $onClick = "mvWidgetRelationRender(this, '$kpiTypeId', '".$indicatorId."', {methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId, mode: 'update', widgetCode: '". $process['widget_code'] ."'});";
+                                            } else {
+                                                $actionmode = str_replace(', {', '{', $opt);
+                                                $onClick = "manageKpiIndicatorValue(this, '$kpiTypeId', '".$indicatorId."', true$opt);";
+                                            }
+                                        }
+
+                                        $contextMenu[] = [
+                                            'crudIndicatorId' => $crudIndicatorId, 
+                                            'labelName' => $labelName,
+                                            'onClick' => $onClick,
+                                            'actionName' => 'edit',
+                                            'iconName' => 'edit', 
+                                            'data-actiontype' => $typeCode, 
+                                            'data-main-indicatorid' => $indicatorId, 
+                                            'data-structure-indicatorid' => $indicatorId, 
+                                            'data-crud-indicatorid' => $crudIndicatorId,
+                                            'data-mapid' => issetParam($process['map_id'])
+                                        ];
+
+                                    } elseif ($typeCode == 'read') {
+
+                                        $isUpdate = true;
+                                        $className = 'btn purple btn-circle btn-sm';
+                                        $buttonName = '<i class="fas fa-eye"></i> '.Lang::line('view_btn');
+
+                                        if ($isNormalRelation) {
+                                            $actionmode = "{methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId, mode: 'view'}";
+                                            $onClick = "mvNormalRelationRender(this, '$kpiTypeId', '".$indicatorId."', {methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId, mode: 'view'});";
+                                        } else {
+                                            $actionmode = "{mode: 'view'}";
+                                            $onClick = "manageKpiIndicatorValue(this, '$kpiTypeId', '".$indicatorId."', true, {mode: 'view'});";
+                                        }
+
+                                        $contextMenu[] = [
+                                            'crudIndicatorId' => $crudIndicatorId, 
+                                            'labelName' => Lang::line('view_btn'),
+                                            'onClick' => $onClick,
+                                            'actionName' => 'view',
+                                            'iconName' => 'eye', 
+                                            'data-actiontype' => $typeCode, 
+                                            'data-main-indicatorid' => $indicatorId, 
+                                            'data-structure-indicatorid' => $indicatorId, 
+                                            'data-crud-indicatorid' => $crudIndicatorId,
+                                            'data-mapid' => issetParam($process['map_id'])
+                                        ];
+
+                                    } elseif ($typeCode == 'delete') {
+
+                                        $isDelete = true;
+                                        $className = 'btn btn-danger btn-circle btn-sm';
+                                        $buttonName = '<i class="far fa-trash"></i> '.Lang::line('delete_btn');
+                                        $onClick = "removeKpiIndicatorValue(this, '".$indicatorId."');";
+
+                                        $contextMenu[] = [
+                                            'crudIndicatorId' => $crudIndicatorId, 
+                                            'labelName' => Lang::line('delete_btn'),
+                                            'onClick' => $onClick,
+                                            'actionName' => 'delete',
+                                            'iconName' => 'trash', 
+                                            'data-actiontype' => $typeCode, 
+                                            'data-main-indicatorid' => $indicatorId, 
+                                            'data-structure-indicatorid' => $indicatorId, 
+                                            'data-crud-indicatorid' => $crudIndicatorId,
+                                            'data-mapid' => issetParam($process['map_id'])
+                                        ];
+
+                                    } elseif ($typeCode == 'config') {
+
+                                        $isDelete = true;
+                                        $className = 'btn blue-steel btn-circle btn-sm';
+                                        $buttonName = '<i class="far fa-tools"></i> '.Lang::line('Config');
+                                        $onClick = "mapKpiIndicatorValue(this, '$kpiTypeId', '".$indicatorId."', 'config');";
+
+                                        $contextMenu[] = [
+                                            'crudIndicatorId' => $crudIndicatorId, 
+                                            'labelName' => Lang::line('Config'),
+                                            'onClick' => $onClick,
+                                            'actionName' => 'config',
+                                            'iconName' => 'tools', 
+                                            'data-actiontype' => $typeCode, 
+                                            'data-main-indicatorid' => $indicatorId, 
+                                            'data-structure-indicatorid' => $indicatorId, 
+                                            'data-crud-indicatorid' => $crudIndicatorId,
+                                            'data-mapid' => issetParam($process['map_id'])
+                                        ];
+
+                                    } elseif ($typeCode == '360') {
+
+                                        $isDelete = true;
+                                        $className = 'btn blue-steel btn-circle btn-sm';
+                                        $buttonName = '<i class="far fa-tools"></i> '.Lang::line('360');
+                                        $onClick = "mapKpiIndicatorValue(this, '$kpiTypeId', '".$indicatorId."', '360');";
+
+                                        $contextMenu[] = [
+                                            'crudIndicatorId' => $crudIndicatorId, 
+                                            'labelName' => Lang::line('360'),
+                                            'onClick' => $onClick,
+                                            'actionName' => '360',
+                                            'iconName' => 'tools', 
+                                            'data-actiontype' => $typeCode, 
+                                            'data-main-indicatorid' => $indicatorId, 
+                                            'data-structure-indicatorid' => $indicatorId, 
+                                            'data-crud-indicatorid' => $crudIndicatorId,
+                                            'data-mapid' => issetParam($process['map_id'])
+                                        ];
+
+                                    } elseif ($typeCode == 'excel') {
+
+                                        $className = 'btn green btn-circle btn-sm';
+                                        $buttonName = '<i class="far fa-file-excel"></i> '.Lang::line('pf_excel_import');
+                                        $onClick = "excelImportKpiIndicatorValue(this, '".$indicatorId."');";
+
+                                    } elseif ($typeCode == 'excel_export_one_line') {
+
+                                        $className = 'btn green btn-circle btn-sm';
+                                        $buttonName = '<i class="far fa-file-excel"></i> Эксель нэг мөрөөр татах';
+                                        $onClick = "exportExcelOneLineKpiIndicatorValue(this, '".$indicatorId."');";
+
+                                    } elseif ($typeCode == 'export') {
+
+                                        $isDelete = true;
+                                        $className = 'btn green btn-circle btn-sm';
+                                        $buttonName = '<i class="far fa-download"></i> '.Lang::line('excel_export_btn');
+                                        $onClick = "exportKpiIndicatorValue(this, '".$indicatorId."');";
+
+                                    } elseif ($kpiTypeId == '1191') {
+
+                                        $className = 'btn blue-steel btn-circle btn-sm';
+                                        $buttonName = '<i class="far fa-play"></i> ' . Lang::line($process['label_name'] ? $process['label_name'] : $process['name']);
+                                        $onClick = "manageKpiIndicatorValue(this, '$kpiTypeId', '$crudIndicatorId', false, {transferSelectedRow: true});";
+
+                                    } elseif ($kpiTypeId == '1080') {
+
+                                        $className = 'btn blue-steel btn-circle btn-sm';
+                                        $buttonName = '<i class="far fa-play"></i> ' . Lang::line($process['label_name'] ? $process['label_name'] : $process['name']);
+                                        $onClick = "callWebServiceKpiIndicatorValue(this, '$crudIndicatorId');";
+
+                                    } elseif ($typeCode == 'import') {
+
+                                        $className = 'btn green btn-circle btn-sm';
+                                        $buttonName = '<i class="far fa-file-import"></i> '.Lang::line('Импорт');
+                                        $onClick = "dataImportKpiIndicatorValue(this, '".$indicatorId."');";
+                                    } 
+
+                                } else {
+
+                                    $description = Lang::line(issetParam($process['description']));
+                                    $processName = Lang::line(issetParam($process['label_name']));
+
+                                    if ($typeCode == 'create') {
+
+                                        $className = 'btn btn-success btn-circle btn-sm';
+                                        $buttonName = '<i class="far fa-plus"></i> '.$processName;
+
+                                        if ($isFillRelation) {
+                                            $opt = ', {fillSelectedRow: true, mode: \'create\'}';
+                                        } elseif ($isDfillRelation) {
+                                            $opt = ', {fillDynamicSelectedRow: true, mode: \'create\'}';
+                                        } elseif ($isCfillRelation) {
+                                            $opt = ', {consolidateFillSelectedRow: true, mode: \'create\'}';
+                                        }
+
+                                        if ($isNormalRelation) {
+                                            if (issetParam($process['widget_code']) !== '') {
+                                                $actionmode = "{methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId, mode: 'update', widgetCode: '". $process['widget_code'] ."'}";
+                                                $onClick = "mvWidgetRelationRender(this, '$kpiTypeId', '".$indicatorId."', {methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId, mode: 'update', widgetCode: '". $process['widget_code'] ."'});";
+                                            } else {
+                                                $actionmode = "{methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId}";
+                                                $onClick = "mvNormalRelationRender(this, '$kpiTypeId', '".$indicatorId."', {methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId});";
+                                            }
+                                        } else {
+                                            $actionmode = str_replace(', {', '{', $opt);
+                                            $onClick = "manageKpiIndicatorValue(this, '$kpiTypeId', '$srcIndicatorId', false$opt);";
+                                        }
+
+                                    } elseif ($typeCode == 'update') {
+
+                                        $className = 'btn btn-warning btn-circle btn-sm';
+                                        $buttonName = '<i class="far fa-edit"></i> '.$processName;
+
+                                        if ($isFillRelation) {
+                                            $opt = ', {fillSelectedRow: true, mode: \'update\'}';
+                                        } elseif ($isDfillRelation) {
+                                            $opt = ', {fillDynamicSelectedRow: true, mode: \'update\'}';
+                                        }
+
+                                        if ($isNormalRelation) {
+                                            $actionmode = "{methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId, mode: 'update', isFillRelation: '$isFillRelation'}";
+                                            $onClick = "mvNormalRelationRender(this, '$kpiTypeId', '".$indicatorId."', {methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId, mode: 'update', isFillRelation: '$isFillRelation'});";
+                                        } else {
+                                            if (issetParam($process['widget_code']) !== '') {
+                                                $actionmode = "{methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId, mode: 'update', widgetCode: '". $process['widget_code'] ."'}";
+                                                $onClick = "mvWidgetRelationRender(this, '$kpiTypeId', '".$indicatorId."', {methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId, mode: 'update', widgetCode: '". $process['widget_code'] ."'});";
+                                            } else {
+                                                $actionmode = str_replace(', {', '{', $opt);
+                                                $onClick = "manageKpiIndicatorValue(this, '$kpiTypeId', '$srcIndicatorId', true$opt);";
+                                            }
+                                        }
+
+                                        $contextMenu[] = [
+                                            'crudIndicatorId' => $crudIndicatorId, 
+                                            'labelName' => $processName,
+                                            'onClick' => $onClick,
+                                            'actionName' => 'edit',
+                                            'iconName' => 'edit', 
+                                            'data-actiontype' => $typeCode, 
+                                            'data-main-indicatorid' => $indicatorId, 
+                                            'data-structure-indicatorid' => $srcIndicatorId, 
+                                            'data-crud-indicatorid' => $crudIndicatorId,
+                                            'data-mapid' => issetParam($process['map_id'])
+                                        ];
+
+                                    } elseif ($typeCode == 'read') {
+
+                                        $className = 'btn purple btn-circle btn-sm';
+                                        $buttonName = '<i class="far fa-eye"></i> '.$processName;
+
+                                        if ($isFillRelation) {
+                                            $opt = ', {fillSelectedRow: true, mode: \'view\'}';
+                                        } elseif ($isDfillRelation) {
+                                            $opt = ', {fillDynamicSelectedRow: true, mode: \'view\'}';
+                                        } else {
+                                            $opt = ', {mode: \'view\'}';
+                                        }
+
+                                        if ($isNormalRelation) {
+                                            $actionmode = "{methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId, mode: 'view'}";
+                                            $onClick = "mvNormalRelationRender(this, '$kpiTypeId', '".$indicatorId."', {methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId, mode: 'view'});";
+                                        } else {
+                                            if (issetParam($process['widget_code']) !== '') {
+                                                $actionmode = "{methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId, mode: 'update', widgetCode: '". $process['widget_code'] ."'}";
+                                                $onClick = "mvWidgetRelationRender(this, '$kpiTypeId', '".$indicatorId."', {methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId, mode: 'update', widgetCode: '". $process['widget_code'] ."'});";
+                                            } else {
+                                                $actionmode = str_replace(', {', '{', $opt);
+                                                $onClick = "manageKpiIndicatorValue(this, '$kpiTypeId', '$srcIndicatorId', true$opt);";
+                                            }
+                                        }
+
+                                    } elseif ($typeCode == 'delete') {
+
+                                        $className = 'btn btn-danger btn-circle btn-sm';
+                                        $buttonName = '<i class="far fa-trash"></i> '.$processName;
+                                        $onClick = "removeKpiIndicatorValue(this, '$srcIndicatorId');";
+
+                                    } elseif ($typeCode == 'excel') {
+
+                                        $className = 'btn green btn-circle btn-sm';
+                                        $buttonName = '<i class="far fa-file-excel"></i> '.$processName;
+                                        $onClick = "excelImportKpiIndicatorValue(this, '$srcIndicatorId');";
+
+                                    } elseif ($process['code'] == 'sendmail') {
+
+                                        $className = 'btn green btn-circle btn-sm';
+                                        $buttonName = $processName;
+                                        $onClick = "mvDataViewSendMailBySelectionRowsInit(this, '$crudIndicatorId', '$indicatorId', '');";
+
+                                    } elseif ($typeCode == 'import') {
+
+                                        $className = 'btn green btn-circle btn-sm';
+                                        $buttonName = '<i class="far fa-file-import"></i> '.Lang::line('Импорт');
+                                        $onClick = "dataImportKpiIndicatorValue(this, '$srcIndicatorId', '$indicatorId');";
+                                    } 
+                                }
+
+                                $batchBtn .= '<li>';
+                                $batchBtn .= html_tag('a', [ 
+                                        'href' => 'javascript:;', 
+                                        'data-qtip-title' => $description, 
+                                        'data-qtip-pos' => 'top', 
+                                        'onclick' => $onClick, 
                                         'data-actiontype' => $typeCode, 
                                         'data-main-indicatorid' => $indicatorId, 
-                                        'data-structure-indicatorid' => $srcIndicatorId, 
+                                        'data-structure-indicatorid' => $indicatorId, 
                                         'data-crud-indicatorid' => $crudIndicatorId,
                                         'data-mapid' => issetParam($process['map_id'])
-                                    ];
-    
-                                } elseif ($typeCode == 'read') {
-    
-                                    $className = 'btn purple btn-circle btn-sm';
-                                    $buttonName = '<i class="far fa-eye"></i> '.$processName;
-    
-                                    if ($isFillRelation) {
-                                        $opt = ', {fillSelectedRow: true, mode: \'view\'}';
-                                    } elseif ($isDfillRelation) {
-                                        $opt = ', {fillDynamicSelectedRow: true, mode: \'view\'}';
-                                    } else {
-                                        $opt = ', {mode: \'view\'}';
-                                    }
-    
-                                    if ($isNormalRelation) {
-                                        $actionmode = "{methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId, mode: 'view'}";
-                                        $onClick = "mvNormalRelationRender(this, '$kpiTypeId', '".$indicatorId."', {methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId, mode: 'view'});";
-                                    } else {
-                                        if (issetParam($process['widget_code']) !== '') {
-                                            $actionmode = "{methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId, mode: 'update', widgetCode: '". $process['widget_code'] ."'}";
-                                            $onClick = "mvWidgetRelationRender(this, '$kpiTypeId', '".$indicatorId."', {methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId, mode: 'update', widgetCode: '". $process['widget_code'] ."'});";
-                                        } else {
-                                            $actionmode = str_replace(', {', '{', $opt);
-                                            $onClick = "manageKpiIndicatorValue(this, '$kpiTypeId', '$srcIndicatorId', true$opt);";
-                                        }
-                                    }
-    
-                                } elseif ($typeCode == 'delete') {
-    
-                                    $className = 'btn btn-danger btn-circle btn-sm';
-                                    $buttonName = '<i class="far fa-trash"></i> '.$processName;
-                                    $onClick = "removeKpiIndicatorValue(this, '$srcIndicatorId');";
-    
-                                } elseif ($typeCode == 'excel') {
-    
-                                    $className = 'btn green btn-circle btn-sm';
-                                    $buttonName = '<i class="far fa-file-excel"></i> '.$processName;
-                                    $onClick = "excelImportKpiIndicatorValue(this, '$srcIndicatorId');";
-    
-                                } elseif ($process['code'] == 'sendmail') {
-    
-                                    $className = 'btn green btn-circle btn-sm';
-                                    $buttonName = $processName;
-                                    $onClick = "mvDataViewSendMailBySelectionRowsInit(this, '$crudIndicatorId', '$indicatorId', '');";
-                                    
-                                } elseif ($typeCode == 'import') {
-    
-                                    $className = 'btn green btn-circle btn-sm';
-                                    $buttonName = '<i class="far fa-file-import"></i> '.Lang::line('Импорт');
-                                    $onClick = "dataImportKpiIndicatorValue(this, '$srcIndicatorId', '$indicatorId');";
-                                } 
-                            }
-    
-                            $batchBtn .= '<li>';
-                            $batchBtn .= html_tag('a', [ 
+                                    ], 
+                                    $buttonName, true
+                                );
+                                $batchBtn .= '</li>';
+                                $indicatorIds[$crudIndicatorId] = [ 
                                     'href' => 'javascript:;', 
+                                    'class' => $className, 
                                     'data-qtip-title' => $description, 
                                     'data-qtip-pos' => 'top', 
                                     'onclick' => $onClick, 
                                     'data-actiontype' => $typeCode, 
+                                    'data-actiontypeid' => $kpiTypeId, 
+                                    'data-actionmode' => $actionmode, 
                                     'data-main-indicatorid' => $indicatorId, 
                                     'data-structure-indicatorid' => $indicatorId, 
                                     'data-crud-indicatorid' => $crudIndicatorId,
                                     'data-mapid' => issetParam($process['map_id'])
-                                ], 
-                                $buttonName, true
-                            );
-                            $batchBtn .= '</li>';
-                            $indicatorIds[$crudIndicatorId] = [ 
-                                'href' => 'javascript:;', 
-                                'class' => $className, 
-                                'data-qtip-title' => $description, 
-                                'data-qtip-pos' => 'top', 
-                                'onclick' => $onClick, 
-                                'data-actiontype' => $typeCode, 
-                                'data-actiontypeid' => $kpiTypeId, 
-                                'data-actionmode' => $actionmode, 
-                                'data-main-indicatorid' => $indicatorId, 
-                                'data-structure-indicatorid' => $indicatorId, 
-                                'data-crud-indicatorid' => $crudIndicatorId,
-                                'data-mapid' => issetParam($process['map_id'])
-                            ];
-                        }
-                        
-                        $batchBtn .= '</ul>';
-                    $batchBtn .= '</div>';
-                    $buttons[] = $batchBtn;
+                                ];
+                            }
+
+                            $batchBtn .= '</ul>';
+                        $batchBtn .= '</div>';
+                        $buttons[] = $batchBtn;
+                    }
                 }
-            }
+            }   
         }
 
         if ($config['isDataMart']) {
