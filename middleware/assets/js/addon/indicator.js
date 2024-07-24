@@ -147,9 +147,9 @@ function manageKpiIndicatorValue(elem, kpiTypeId, indicatorId, isEdit, opt, call
     
     var isMapId = false, isMapHidden = false, isSrcMap = false, isListRelation = false;
     
-    /*if ($this.hasAttr('data-list-relation') && $this.attr('data-list-relation') == '1') {
+    if ($this.hasAttr('data-list-relation') && $this.attr('data-list-relation') == '1') {
         isListRelation = true;
-    }*/
+    }
     
     if ($this.hasAttr('data-mapid') && $this.attr('data-mapid') != '') {
         
@@ -163,6 +163,7 @@ function manageKpiIndicatorValue(elem, kpiTypeId, indicatorId, isEdit, opt, call
     } else if ($this.closest('.mv-value-map-render-child').length) {
         
         var $active = $this.closest('.mv-value-map-render-parent').find('ul.nav-sidebar > li.nav-item > a.nav-link.active');
+        
         postData.param.mapHiddenParams = $active.attr('data-hidden-params');
         postData.param.mapHiddenSelectedRow = $active.attr('data-selected-row');
         isMapHidden = true;

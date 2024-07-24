@@ -1825,14 +1825,15 @@ class Mdform extends Controller {
                     } elseif (issetParam($widgetInfo)) {
                         $this->view->relationComponentsConfigData = $this->model->getRelationComponentsConfigModel($this->view->relationComponents[$widgetInfo['name']]['MAP_ID']);
                     }
+                    
                     $this->view->relationColumnData = Arr::groupByArrayOnlyRow($this->view->columnsData, 'COLUMN_NAME', false);
+                    $this->view->relationViewConfig = [];
                     
                     if (isset($this->view->relationComponentsConfigData)) {
                         foreach ($this->view->relationComponentsConfigData as $rk => $rrow) {
                             $this->view->relationViewConfig[$rk] = checkDefaultVal($this->view->relationColumnData[$rrow]['COLUMN_NAME'], $rrow);
                         }
                     }
-
                     
                     $this->view->row['gridOption']['theme'] = 'no-border';
                     $this->view->columns = $this->model->renderKpiIndicatorColumnsModel($this->view->indicatorId, $this->view->row['isCheckSystemTable'], array('columnsData' => $this->view->columnsData));
@@ -1841,6 +1842,7 @@ class Mdform extends Controller {
                     $this->view->renderGridList = $this->view->renderPrint('kpi/indicator/renderGrid', self::$viewPath);
                     $this->view->renderGrid = self::renderWidgetDataSet($this->view->row, $widgetWInfo ? $widgetWInfo : $widgetInfo, $this->view->relationViewConfig);
             }
+            
             if (Input::post('ignoreCheckIndicator') !== '1') {
                 $checkData = $this->ws->runResponse(GF_SERVICE_ADDRESS, 'getMVCardList_004', array('filterid' => $this->view->indicatorId));
                 if (issetParam($checkData['result']['isusecardstep']) === '1' && issetParam($checkData['result']['lookupindicatorid']) !== '') {
@@ -1851,7 +1853,6 @@ class Mdform extends Controller {
                     exit();
                 }
             }
-
         }
         
         if ($this->view->isAjax == false) {
@@ -6852,7 +6853,7 @@ class Mdform extends Controller {
     
     public function renderWidgetDataSet($row = [], $widgetInfo = [], $renderWidgetDataSet = []) {
         $_POST['indicatorId'] = $this->view->indicatorId;
-        if ($widgetInfo['name'] == 'cloudcard') {
+        if (issetParam($widgetInfo['name']) == 'cloudcard') {
             $_POST['treeConfigs'] = 'parent=PARENT_ID&id=ID';
             if (issetParam($renderWidgetDataSet['c5'])) {
                 $_POST['sort'] = $renderWidgetDataSet['c5'];

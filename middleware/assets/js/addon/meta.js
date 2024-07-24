@@ -9267,7 +9267,7 @@ function metaImportCopy(folderId) {
     }
 }
 function pfQuickLinkDataView() {
-    var isDev = getConfigValue('is_dev');
+    var isDev = true; /*getConfigValue('is_dev');*/
     
     if (isDev) {
         $.ajax({

@@ -330,6 +330,10 @@ foreach ($dataResult as $groupName => $groupRow) {
     foreach ($groupRow['rows'] as $row) {
         $rowJson = htmlentities(json_encode($row), ENT_QUOTES, 'UTF-8');
         if (issetParam($row['PHYSICAL_PATH'])) {
+            
+            $filePath = $row['PHYSICAL_PATH'];
+            $fileExtension = strtolower(substr($filePath, strrpos($filePath, '.') + 1));
+            $fileIcon = 'assets/core/global/img/filetype/png/'.$fileExtension.'.png';
     ?>
     <a href="javascript:;" class="mv-cardview" title="<?php echo $row['FILE_NAME']; ?>">
         <?php
@@ -344,7 +348,7 @@ foreach ($dataResult as $groupName => $groupRow) {
         <div class="card" style="border: none;box-shadow: none;">
             <div class="card-body">
                 <div class="card-img-actions mb-2 mt-2" onclick="bpFilePreview(this);" data-fileurl="<?php echo $row['PHYSICAL_PATH']; ?>" data-filename="<?php echo $row['FILE_NAME']; ?>" data-extension="<?php echo $row['FILE_EXTENSION']; ?>">
-                    <img class="directory-img ml20" style="height: 70px;" src="assets/core/global/img/document/big/pdf2.png"/>
+                    <img class="directory-img ml20" style="height: 70px;" src="<?php echo $fileIcon; ?>"/>
                 </div>
                 <h5>
                     <?php echo $row['FILE_NAME']; ?>
