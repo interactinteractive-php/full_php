@@ -107,12 +107,7 @@ function dbtRun(elem) {
                     for (var c in getColumns) {
                         setColumns.push({field: c, title: c, width: 130, sortable: true, formatter: function(v, r, i, c) {
                             if (v != '' && v != null) {
-                                v = v.replace(/\<c/g, '< c');
-                                v = v.replace(/\<C/g, '< C');
-                                v = v.replace(/\<t/g, '< t');
-                                v = v.replace(/\<T/g, '< T');
-                                v = v.replace(/\</g, '&lt;');
-                                v = v.replace(/\>/g, '&gt;');
+                                v = v.replace(/<([^ ])/g, '< $1');
                                 return v;
                             } else {
                                 return '';
