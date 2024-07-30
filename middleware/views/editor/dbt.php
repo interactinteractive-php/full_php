@@ -105,7 +105,13 @@ function dbtRun(elem) {
                     var setColumns = [], getColumns = data.columns;
                     
                     for (var c in getColumns) {
-                        setColumns.push({field: c, title: c, width: 130, sortable: true});
+                        setColumns.push({field: c, title: c, width: 130, sortable: true, formatter: function(v, r, i, c) {
+                            if (v != '' && v != null) {
+                                return v.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                            } else {
+                                return '';
+                            }
+                        }});
                     }
                     
                     $dbtDatagrid.datagrid({
