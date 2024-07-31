@@ -6,7 +6,7 @@ $realpath = str_replace('api/dbcheck.php', '', $realpath);
 
 define('BASEPATH', $realpath);
 
-require '../config/config.php';
+require BASEPATH.'config/config.php';
 
 date_default_timezone_set(CONFIG_TIMEZONE);
 ini_set('soap.wsdl_cache_enabled', '1');
