@@ -22,16 +22,6 @@ class Hash
     
     public static function create($algo, $data, $salt = null)
     {
-        if (defined('GF_SERVICE_ADDRESS') && GF_SERVICE_ADDRESS) {
-            
-            WebService::$isDefaultSessionId = true;
-            $result = WebService::runSerializeResponse(GF_SERVICE_ADDRESS, 'getPasswordHash', array('passwordHash' => $data));
-            
-            if (isset($result['status']) && $result['status'] == 'success' && isset($result['result']['result'])) {
-                return $result['result']['result'];
-            }
-        }
-    
         $salt = $salt ? $salt : 'N#L!xQ';
         $context = hash_init($algo, HASH_HMAC, $salt);
         
