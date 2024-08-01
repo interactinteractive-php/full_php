@@ -11,9 +11,10 @@ $renderType = $this->methodRow['RENDER_THEME'];
                 top: 12px;
                 z-index: 99;
                 text-align: center;
-                width: 100%;
+                width: 56%;
                 text-transform: uppercase;
                 font-size: 16px;
+                left: 320px;
                 font-weight: 600;'; 
         } 
         ?>             
@@ -611,7 +612,7 @@ if ($renderType == 'paper_main_window') {
     margin-right: auto;
     max-width: 500px;
 }
-.kpi-form-paper-portrait .mv-main-tabs {
+.kpi-form-paper-portrait .mv-checklist-tab {
     margin-top: 1.1rem;
 }
 .kpi-form-paper-portrait.paper_main_window .mv-main-tabs {
@@ -762,11 +763,15 @@ input.kpi-notfocus-readonly-input::placeholder {
 .ui-dialog .mv-checklist2-render-parent .ws-area .ws-page-content-wrapper .ws-page-content {
     padding: 0px!important;
 }
-.mv-checklist2-render-parent .mv-hdr-label-control-input .form-control {
+.mv-checklist2-render-parent .mv-hdr-label-control-input .form-control:not(.description_autoInit) {
     height: 32px!important;
     min-height: 32px!important;
     border: 1px #f3f3f3 solid;
     /*padding: 7px 10px!important;*/
+}
+.mv-checklist2-render-parent .mv-hdr-label-control-input .form-control.description_autoInit {
+    height: 32px;
+    min-height: 32px;
 }
 .mv-checklist2-render-parent .mv-hdr-label-control-input textarea.form-control {
     border-radius: 6px!important;

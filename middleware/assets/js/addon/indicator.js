@@ -2,11 +2,24 @@ var isKpiIndicatorScript = true;
 var googleMapActiveWindow = null;
 var kpIndicatorChart = {};
 
+function getSelectionRowIndicartor($this) {
+    var isNoDataview = false, fcSelectedRow = [];
+    if ($this.hasClass('no-dataview') && $this.attr('data-rowdata')) {
+        isNoDataview = true;
+        fcSelectedRow = [JSON.parse($this.attr('data-rowdata'))];
+    } else if ($this.closest('.objectdatacustomgrid').length && $this.closest('.objectdatacustomgrid').find('.no-dataview').length) {
+        isNoDataview = true;
+        fcSelectedRow = $this.closest('.objectdatacustomgrid').find('.no-dataview.active').length ? [JSON.parse($this.closest('.objectdatacustomgrid').find('.no-dataview.active').attr('data-rowdata'))] : [];      
+    }
+
+    return {"isNoDataview": isNoDataview, "fcSelectedRow": fcSelectedRow};
+}
+
 function manageKpiIndicatorValue(elem, kpiTypeId, indicatorId, isEdit, opt, callback, successCallback, srcIndicatorId) {
     
     var $this = $(elem), mainIndicatorId = $this.attr('data-main-indicatorid'), 
         saveBtnClass = '', mode = '';
-        
+    
     if (typeof srcIndicatorId !== 'undefined') {
         mainIndicatorId = srcIndicatorId;
     }
@@ -22,17 +35,11 @@ function manageKpiIndicatorValue(elem, kpiTypeId, indicatorId, isEdit, opt, call
         }
     };  
 
-    var isNoDataview = false;
-    var fcSelectedRow = [];
+    var indicatorSelection = getSelectionRowIndicartor($this);
+    var selectedRow;
+    var isNoDataview = indicatorSelection['isNoDataview'];
+    var fcSelectedRow = indicatorSelection['fcSelectedRow'];
     
-    if ($this.hasClass('no-dataview') && $this.attr('data-rowdata')) {
-        isNoDataview = true;
-        fcSelectedRow = [JSON.parse($this.attr('data-rowdata'))];
-    } else if ($this.closest('.objectdatacustomgrid').length && $this.closest('.objectdatacustomgrid').find('.no-dataview').length) {
-        isNoDataview = true;
-        fcSelectedRow = $this.closest('.objectdatacustomgrid').find('.no-dataview.active').length ? [JSON.parse($this.closest('.objectdatacustomgrid').find('.no-dataview.active').attr('data-rowdata'))] : [];      
-    }
-
     if (typeof opt == 'undefined' || (typeof opt != 'undefined' && isObject(opt) && Object.keys(opt).length == 0)) {
         
         if (isEdit) {
@@ -147,7 +154,7 @@ function manageKpiIndicatorValue(elem, kpiTypeId, indicatorId, isEdit, opt, call
     
     var isMapId = false, isMapHidden = false, isSrcMap = false, isListRelation = false;
     
-    if ($this.hasAttr('data-list-relation') && $this.attr('data-list-relation') == '1') {
+    if ($this.hasAttr('data-list-relation') && $this.attr('data-list-relation') == '1' && $this.hasAttr('data-rowdata') && $this.attr('data-rowdata') != '') {
         isListRelation = true;
     }
     
@@ -170,20 +177,72 @@ function manageKpiIndicatorValue(elem, kpiTypeId, indicatorId, isEdit, opt, call
         
     } else if ($this.closest('.mv-checklist-render-parent').length) {
         
-        if (isListRelation == false) {
-            var $checkListParent = $this.closest('.mv-checklist-render-parent');
-            var $checkListActive = $checkListParent.find('ul.nav-sidebar a.nav-link.active[data-json]');
-            var checkListRowJson = JSON.parse(html_entity_decode($checkListActive.attr('data-json'), 'ENT_QUOTES'));
+        var $checkListParent = $this.closest('.mv-checklist-render-parent');
+        var $checkListActive = $checkListParent.find('ul.nav-sidebar a.nav-link.active[data-json]');
+        var checkListRowJson = JSON.parse(html_entity_decode($checkListActive.attr('data-json'), 'ENT_QUOTES'));
 
-            postData.mapSrcMapId = checkListRowJson.mapId;
-            postData.mapSelectedRow = $checkListParent.find('input[data-path="headerParams"]').val();
-            isSrcMap = true;
+        postData.mapSrcMapId = checkListRowJson.mapId;
+        postData.mapSelectedRow = $checkListParent.find('input[data-path="headerParams"]').val();
+        isSrcMap = true;
             
-        } else {
+        if (isListRelation == true) {  
             postData.param.isListRelation = 1;
-        }
+            
+            if (!(postData.param).hasOwnProperty('mainIndicatorId')) {
+                if ($this.hasAttr('data-main-indicatorid') && $this.attr('data-main-indicatorid') != '') {
+                    postData.param.mainIndicatorId = $this.attr('data-main-indicatorid');
+                } else {
+                    postData.param.mainIndicatorId = indicatorId;
+                }
+            }
+            
+            if (!postData.hasOwnProperty('selectedRow')) {
+                postData.selectedRow = JSON.parse(html_entity_decode($this.attr('data-rowdata'), 'ENT_QUOTES'));
+            }
+        } 
     }
-    
+
+    /* if ($this.hasAttr('data-criteria') && $this.hasAttr('data-criteria') && postData.hasOwnProperty('selectedRow')) {
+
+        ticketCriteria = false;
+        var row = postData.selectedRow;
+
+        var evalcriteriaRoot = $this.attr('data-criteria').toString().split(',');
+        var doNotMatchMessage = 'Нөхцөл тохирохгүй байна.';
+        var ticketCriteria = false;
+
+        $.each(evalcriteriaRoot, function(cindex, evalcriteria) {
+            evalcriteria = evalcriteria.toLowerCase();
+
+            $.each(row, function(index, val) {
+                var rowKey = index.toLowerCase();
+                if (evalcriteria.indexOf(rowKey) > -1) {
+                    val = (val === null) ? '' : val;
+                    var regex = new RegExp('\\b' + rowKey + '\\b', 'g');
+                    evalcriteria = evalcriteria.replace(regex, "'" + val.toString().toLowerCase() + "'");
+                }
+            });
+            
+            try {
+                if (eval(evalcriteria)) {
+                    ticketCriteria = true;
+                    return false;
+                }
+            } catch (err) {}
+        });
+
+        if (!ticketCriteria) {
+            PNotify.removeAll();
+            new PNotify({
+                title: 'Warning',
+                text: doNotMatchMessage,
+                type: 'warning',
+                addclass: pnotifyPosition,
+                sticker: false
+            });
+            return;
+        }
+    } */
     /*if ($this.hasAttr('data-statusconfig') && $this.attr('data-statusconfig') != '') {
         var statusConfig = $this.attr('data-statusconfig');
         postData.wfmStatusParams = JSON.parse(statusConfig);
@@ -2457,7 +2516,8 @@ function kpiIndicatorGoogleMapViewLoad(indicatorId, data, map) {
                         strokeOpacity: 0.8,
                         strokeWeight: 2,
                         fillColor: (row.REGION_COLOR ? row.REGION_COLOR : polygonVal.color),
-                        fillOpacity: 0.35
+                        fillOpacity: 0.35,
+                        segmentId: row.SEGMENTATION_ID
                     });    
                     indicatorPolygon.setMap(map);              
                     window['kpiMapLayer_' + indicatorId][row.SEGMENTATION_ID] = indicatorPolygon;                
@@ -2469,6 +2529,7 @@ function kpiIndicatorGoogleMapViewLoad(indicatorId, data, map) {
                     </div>');
 
                     indicatorPolygon.addListener('click', function(event) {
+                        var seid = this.segmentId;
                         $.ajax({
                             type: 'post',
                             url: 'mdobject/generateDataviewFields',
@@ -2484,7 +2545,7 @@ function kpiIndicatorGoogleMapViewLoad(indicatorId, data, map) {
                                     data: {
                                       dataviewId: "1714556994466811",
                                       criteriaData: {
-                                        filterSegmentId: [{ operator: "=", operand: row.SEGMENTATION_ID }],
+                                        filterSegmentId: [{ operator: "=", operand: seid }],
                                       },
                                     },
                                     dataType: "json",
@@ -2503,7 +2564,7 @@ function kpiIndicatorGoogleMapViewLoad(indicatorId, data, map) {
 
                                             tbl.push('</table>');
 
-                                            $('div[data-id="'+row.SEGMENTATION_ID+'"]').find('.edit_polygon_btn').trigger('click');                    
+                                            $('div[data-id="'+seid+'"]').find('.edit_polygon_btn').trigger('click');                    
                                             infowindow.setContent(tbl.join(''));
                                             infowindow.setPosition(event.latLng);
                                             infowindow.open(map);                  
@@ -5349,6 +5410,9 @@ function kpiSetRowIndex($tbody, rowIndex) {
     var len = $el.length, i = 0;
     
     if (typeof rowIndex !== 'undefined') {
+        
+        if (rowIndex < 0) { rowIndex = 0; }
+        
         for (i; i < len; i++) { 
             var $subElement = $($el[i]).find('input, select, textarea');
             var slen = $subElement.length, j = 0;
@@ -6206,6 +6270,10 @@ function createMvStructureFromFile(elem, dataViewId, opts) {
                                                     } else {
                                                         var getCellType = getTypesRow[f];
                                                     }
+                                                    
+                                                    if (typeof getCellType == 'undefined') {
+                                                        continue;
+                                                    }                                                    
                                                     
                                                     var t = getCellType.t, w = getCellType.w;
                                                     
@@ -7873,6 +7941,88 @@ function callMetaVerseIndicator(elem, processMetaDataId, dataViewId, selectedRow
     });*/
 }
 
+function transferIndicatorAction(elem, mainIndicatorId) {
+    var $this = $(elem),
+        rowData = $this.attr('data-rowdata'),
+        rowDataObj = JSON.parse(rowData);
+    
+    var indicatorSelection = getSelectionRowIndicartor($this);
+    var selectedRow;
+    var isNoDataview = indicatorSelection['isNoDataview'];
+    var fcSelectedRow = indicatorSelection['fcSelectedRow'];
+    var selectedRows = isNoDataview ? fcSelectedRow : getDataViewSelectedRows(mainIndicatorId);
+
+    if (selectedRows.length) {
+        selectedRow = selectedRows[0];
+    }
+    
+    if (!selectedRow) {
+        alert(plang.get('msg_pls_list_select'));
+        return;
+    }
+    
+    PNotify.removeAll();
+    $.ajax({
+        type: 'post',
+        url: 'mdform/transferIndicatorAction',
+        data: {
+            mainIndicatorId: mainIndicatorId, 
+            selectedRow: selectedRow,
+            rowData: rowDataObj,
+        }, 
+        dataType: 'json',
+        beforeSend: function () {
+            Core.blockUI({message: 'Loading...', boxed: true});
+        },
+        success: function(data) {
+            if (data.status == 'success') {
+                
+                var dataRow = data.data, isFillRelation = Number(dataRow.is_fill_relation), 
+                    isNormalRelation = Number(dataRow.is_normal_relation);
+                
+                $this.attr({
+                    'data-actiontype': dataRow.type_code, 
+                    'data-main-indicatorid': mainIndicatorId,
+                    'data-structure-indicatorid': dataRow.structure_indicator_id,
+                    'data-crud-indicatorid': dataRow.crud_indicator_id
+                });
+                
+                if (isNormalRelation > 0) {
+                    mvNormalRelationRender($this, dataRow.kpi_type_id, mainIndicatorId, {methodIndicatorId: dataRow.crud_indicator_id, structureIndicatorId: dataRow.structure_indicator_id, mode: dataRow.type_code});
+                } else {
+                    
+                    if (dataRow.structure_indicator_id == mainIndicatorId && isFillRelation == 0) {
+                        manageKpiIndicatorValue($this, dataRow.kpi_type_id, mainIndicatorId, true);
+                    } else {
+                        var opt = {}, 
+                            typeCode = dataRow.type_code, 
+                            isEdit = (typeCode == 'create') ? false : true;
+
+                        if (isFillRelation > 0) {
+                            opt.fillSelectedRow = true;
+                        }
+
+                        manageKpiIndicatorValue($this, dataRow.kpi_type_id, dataRow.structure_indicator_id, isEdit, opt);
+                    }
+                }
+                
+            } else {
+                new PNotify({
+                    title: data.status,
+                    text: data.message,
+                    type: data.status,
+                    sticker: false, 
+                    addclass: pnotifyPosition
+                });
+            }
+
+            Core.unblockUI();
+        },
+        error: function () {
+            Core.unblockUI();
+        }
+    });
+}
 $(function() {
     
     $(document.body).on('click', '.kpi-indicator-filter-collapse-btn', function() {

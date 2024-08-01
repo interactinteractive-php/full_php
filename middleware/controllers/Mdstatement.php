@@ -911,13 +911,18 @@ class Mdstatement extends Controller {
         if (isset($postData['param'])) {
             
             $params = $postData['param'];
-            
             unset($postData['param']);
             
             self::$filterParamsLower = array_change_key_case($postData, CASE_LOWER);
             
+        } elseif (isset($postData['filterData'])) {
+            
+            $params = $postData['filterData'];
+            
+            self::$filterParamsLower = array_change_key_case($params, CASE_LOWER);
+            
         } else {
-            $params = array();
+            $params = [];
         }
         
         $renderStatement = self::renderStatement($statementId, $dataViewId, $params);

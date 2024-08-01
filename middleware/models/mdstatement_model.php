@@ -727,11 +727,11 @@ class Mdstatement_model extends Model {
                 
                 $data = $this->db->GetAll("
                     SELECT 
-                        LOWER(KIIM.COLUMN_NAME) AS FIELD_PATH, 
+                        LOWER(NVL(KIIM.COLUMN_NAME, KIIM.TRG_ALIAS_NAME)) AS FIELD_PATH, 
                         KIIM.SHOW_TYPE AS META_TYPE_CODE, 
-                        null AS LOOKUP_TYPE, 
+                        NULL AS LOOKUP_TYPE, 
                         KIIM.TRG_INDICATOR_ID AS LOOKUP_META_DATA_ID, 
-                        null AS FRACTION_RANGE 
+                        NULL AS FRACTION_RANGE 
                     FROM KPI_INDICATOR_INDICATOR_MAP KIIM 
                         LEFT JOIN KPI_INDICATOR KI ON KIIM.TRG_INDICATOR_ID = KI.ID 
                         LEFT JOIN META_SEMANTIC_TYPE MST ON KIIM.SEMANTIC_TYPE_ID = MST.ID 
@@ -739,10 +739,9 @@ class Mdstatement_model extends Model {
                         AND KIIM.PARENT_ID IS NULL 
                         AND ".$this->db->IfNull('KIIM.IS_INPUT', '0')." = 1 
                         AND KIIM.SHOW_TYPE NOT IN ('row', 'rows') 
-                        AND KIIM.COLUMN_NAME IS NOT NULL 
-                        AND KIIM.COLUMN_NAME <> 'ID' 
+                        AND (KIIM.COLUMN_NAME IS NOT NULL OR (KIIM.IS_FILTER = 1 AND KIIM.TRG_ALIAS_NAME IS NOT NULL)) 
                     ORDER BY KIIM.ORDER_NUMBER ASC", 
-                    array($dataViewId)
+                    [$dataViewId]
                 );
                 
             } else {
@@ -757,7 +756,7 @@ class Mdstatement_model extends Model {
                     WHERE MAIN_META_DATA_ID = ".$this->db->Param(0)." 
                         AND PARENT_ID IS NULL 
                         AND DATA_TYPE <> 'group'", 
-                    array($dataViewId)
+                    [$dataViewId]
                 ); 
             }
 

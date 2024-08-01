@@ -583,7 +583,7 @@ function showGL(mainSelector, glParam, elem) {
 function bpGetOpenParam(mainSelector, code) {
     var openParams = mainSelector.find("input[id='openParams']").val();
     
-    if (openParams !== '') {
+    if (typeof openParams != 'undefined' && openParams !== '') {
         
         openParams = JSON.parse(openParams.replace('&quot;', '"'));
         code = code.toLowerCase();
@@ -18188,7 +18188,8 @@ function bpShowIndicatorTemplate(mainSelector, param) {
     
     if (param == 1) {
         
-        var processUniqId = mainSelector.attr('data-bp-uniq-id'), qryStr = '';
+        var processUniqId = mainSelector.attr('data-bp-uniq-id'), 
+            qryStr = $bpWindow.find("input:not([name*='.']), select:not([name*='.']), textarea:not([name*='.'])").serialize();
         
         if (mainSelector.hasClass('bp-view-process')) {
             var $idViewField = mainSelector.find('span[data-view-path="id"]');
@@ -18200,11 +18201,13 @@ function bpShowIndicatorTemplate(mainSelector, param) {
                 qryStr += '&param[indicatorId]='+$indicatorIdViewField.text();
             }
         }
+        
+        qryStr = qryStr.replace('structureIndicatorId', 'structureIndicatorIdBp');
                 
         $.ajax({
             type: 'post',
             url: 'mdform/kpiIndicatorTemplateRender', 
-            data: $bpWindow.find("input:not([name*='.']), select:not([name*='.']), textarea:not([name*='.'])").serialize()+qryStr+'&uniqId='+processUniqId,
+            data: qryStr+'&uniqId='+processUniqId,
             dataType: 'json',
             async: false, 
             success: function (data) {

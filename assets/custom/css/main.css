@@ -28757,7 +28757,7 @@ div.texteditor_clicktoedit_tinymceInit[contenteditable]:focus {
     background-color: #f3f3f3;
     border-color: #f3f3f3;
 }
-.mv-hdr-label-control-input .form-control {
+.mv-hdr-label-control-input .form-control:not(.description_autoInit) {
     height: 32px !important;
     min-height: 32px !important;    
     border-color: #f3f3f3;
@@ -28935,10 +28935,15 @@ input:checked + .bp-toggle-btn-slider:before {
 }
 .mv-html-clicktoedit-class {
     position: absolute;
-    right: 0    
+    left: -29px;
+    top: 0;
+    display: none;
 }
 .mv-html-clicktoedit-class > button {
-    background-color: #00000030 !important;
+    background-color: #676767 !important;
     padding: 1px 7px 0px 7px !important;
     height: 22px !important;
+}
+.kpi-dtl-table tbody td:focus .mv-html-clicktoedit-class {
+    display: block;
 }

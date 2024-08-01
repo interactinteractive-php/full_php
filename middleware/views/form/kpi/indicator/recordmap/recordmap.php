@@ -12,12 +12,14 @@ if ($this->components) {
     $delete_btn = $this->lang->line('delete_btn');
     $excelExportBtn = '<a href="javascript:;" onclick="mvRecordRelationExcelExport(this);" class="font-size-16 mr-2 d-none" title="'.$this->lang->line('excel_export_btn').'" data-action-name="exportexcel"><i style="color:green" class="far fa-file-excel"></i></a>';
     
+    $mdFormModel = new Mdform_Model();
+    
     foreach ($this->components as $row) {
         
         if ($row['CODE'] != '' && Mdform::$defaultTplSavedId) {
             
-            $columnsData = (new Mdform_Model())->getKpiIndicatorColumnsModel($this->indicatorId, array('isIgnoreStandardFields' => true));
-            $fieldConfig = (new Mdform_Model())->getKpiIndicatorIdFieldModel($this->indicatorId, $columnsData);
+            $columnsData = $mdFormModel->getKpiIndicatorColumnsModel($this->indicatorId, ['isIgnoreStandardFields' => true]);
+            $fieldConfig = $mdFormModel->getKpiIndicatorIdFieldModel($this->indicatorId, $columnsData);
             
             if (isset($fieldConfig['codeField']) 
                 && $fieldConfig['codeField'] != '' 
@@ -80,9 +82,9 @@ if ($this->components) {
         <table class="table table-sm table-hover mv-record-map-tbl" style="border-top: 1px #ddd solid;">
             <tbody>
                 <?php
-                if (isset($this->savedComponentRows[$row['ID']])) {
+                if (isset($this->savedComponentRows[$row['MAP_ID']])) {
                     
-                    $childRows = $this->savedComponentRows[$row['ID']];
+                    $childRows = $this->savedComponentRows[$row['MAP_ID']];
                     
                     foreach ($childRows as $childRow) {
                 ?>
@@ -220,7 +222,7 @@ function kpiIndicatorMainRelationFillRows(elem, indicatorId, rows, idField, code
 
     $.ajax({
       type: "post",
-      url: "mdform/kpiSaveMetaDmRecordMap2",
+      url: "mdform/saveRelationMetaRecordMap",
       data: {
         mainIndicatorId: '<?php echo $this->indicatorId; ?>',
         indicatorId: indicatorId,

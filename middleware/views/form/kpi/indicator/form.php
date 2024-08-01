@@ -108,7 +108,7 @@ if (Input::postCheck('endSessionLogStatusCombo')) {
         ) { 
     ?>
     
-    <div class="bp-tabs tabbable-line mv-main-tabs">
+    <div class="bp-tabs tabbable-line mv-main-tabs col-md-12">
         <ul class="nav nav-tabs bp-addon-tab">
             
             <li class="nav-item">
@@ -1228,6 +1228,22 @@ function rowsDtlPathReplacerMetaverse(getData, groupPath) {
                 });
             }
         });
+        
+        var $tabletr = $kpiTmp_<?php echo $this->uniqId; ?>.find('.kpi-dtl-table > tbody > tr');
+        var htmlStr = [], ii = 0, iii = 1;
+        
+        htmlStr.push('<tbody>');
+        for(var i = 0; i < $tabletr.length; i++) {
+            if (i == iii * 10) {
+                htmlStr.push('</tbody>');
+                htmlStr.push('<tbody>');
+                iii++;
+            }
+            htmlStr.push('<tr>'+$tabletr[i].innerHTML+'</tr>');
+            ii++;
+        }
+        htmlStr.push('</tbody>');
+        $kpiTmp_<?php echo $this->uniqId; ?>.find('.kpi-dtl-table').empty().append(htmlStr.join(''));
     }
 }
         
@@ -1305,6 +1321,10 @@ function kpiIndicatorBeforeSave_<?php echo $this->uniqId; ?>(thisButton) {
     return true;
 }
 function kpiIndicatorAfterSave_<?php echo $this->uniqId; ?>(thisButton, responseStatus, responseData) {
+    
+    if (responseData.hasOwnProperty('isSystemConfigReload') && responseData.isSystemConfigReload == '1') {
+        sysConfigTmpObj = {};
+    }
         
     <?php echo issetParam($this->fullExp['afterSave']); ?> 
 

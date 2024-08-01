@@ -335,6 +335,8 @@
     padding: 15px;
     border-radius: .75rem;
     padding-top: 0;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;       
 }
 
 .mv-checklist2-render-parent .bp-render-checklist .bp-addon-tab {
@@ -422,6 +424,8 @@
     background-color: #fff;
     padding: 10px;
     border-radius: .75rem;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;    
 }
 
 .mv-checklist2-render-parent #saveDepreciation-form {

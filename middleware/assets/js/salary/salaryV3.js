@@ -2519,9 +2519,20 @@ SalaryV3.prototype.filterSalary = function(elem) {
                 
     $.each(filValue, function(){
         var $this = $(this);
+        var getFilterPath = $this.attr('name');
         
         if($this.val() != '') {
-            filterVal[$this.attr('name')] = $this.val();
+            filterVal[$this.attr('name')] = $this.val();            
+            
+            if ($('head').find('style#'+_self.windowId+'-'+getFilterPath).length == 0) {
+
+                $('head').append('<style type="text/css" id="'+_self.windowId+'-'+getFilterPath+'">'+
+                '#calcInfoWindow_' + _self.windowId + ' .datagrid-header td[field="'+getFilterPath+'"] {'+
+                    'background-color: rgb(166, 233, 255);'+
+                '}</style>');      
+            }            
+        } else {
+            $('style#'+_self.windowId+'-'+getFilterPath).remove();
         }
     });    
     
@@ -3455,6 +3466,7 @@ SalaryV3.prototype.multipleFilter = function(elem) {
                      $(this).closest('div.ui-dialog').find('input[name="multipleFilterData"]').each(function(k){
                         var filterCondition = $(this).closest('div.ui-dialog').find('select[name="multipleFilterCondition"]:eq('+k+')').val();
                         var filterVal = {};
+                        var getFilterPath = $fieldName;
                         
                         if($(this).val().trim() != '') {
                             filterVal['condition'] = filterCondition;
@@ -3462,6 +3474,15 @@ SalaryV3.prototype.multipleFilter = function(elem) {
                             filterVal['value'] = $(this).val().trim().replace(/[,]/g, '');
                             _self.multifilterParams.push(filterVal);
                             filterDataJoin = '';
+                                                   
+                            if ($('head').find('style#'+_self.windowId+'-'+getFilterPath).length == 0) {
+                                $('head').append('<style type="text/css" id="'+_self.windowId+'-'+getFilterPath+'">'+
+                                '#calcInfoWindow_' + _self.windowId + ' .datagrid-header td[field="'+getFilterPath+'"] {'+
+                                    'background-color: rgb(166, 233, 255);'+
+                                '}</style>');      
+                            }                               
+                        } else {
+                            $('style#'+_self.windowId+'-'+getFilterPath).remove();
                         }
                         
                         dialogname.find('input[type="checkbox"]').each(function(){
@@ -3471,7 +3492,7 @@ SalaryV3.prototype.multipleFilter = function(elem) {
                                 filterVal2['field'] = $fieldName;
                                 filterVal2['value'] = _thisV.val();
                                 filterDataJoin = '';
-                                _self.multifilterParams.push(filterVal2);
+                                _self.multifilterParams.push(filterVal2);                           
                             }
                         });                        
                      }).promise().done(function () {
@@ -3563,6 +3584,7 @@ SalaryV3.prototype.multipleFilter = function(elem) {
                      $(this).closest('div.ui-dialog').find('input[name="multipleFilterData"]').each(function(k){
                         var filterCondition = $(this).closest('div.ui-dialog').find('select[name="multipleFilterCondition"]:eq('+k+')').val();
                         var filterVal = {};
+                        var getFilterPath = $fieldName;
                         
                         if($(this).val().trim() != '') {
                             filterVal['condition'] = filterCondition;
@@ -3570,7 +3592,16 @@ SalaryV3.prototype.multipleFilter = function(elem) {
                             filterVal['value'] = $(this).val().trim().replace(/[,]/g, '');
                             filterDataJoin = '';
                             _self.multifilterParams.push(filterVal);
-                        }               
+                            
+                            if ($('head').find('style#'+_self.windowId+'-'+getFilterPath).length == 0) {
+                                $('head').append('<style type="text/css" id="'+_self.windowId+'-'+getFilterPath+'">'+
+                                '#calcInfoWindow_' + _self.windowId + ' .datagrid-header td[field="'+getFilterPath+'"] {'+
+                                    'background-color: rgb(166, 233, 255);'+
+                                '}</style>');      
+                            }                                    
+                        } else {
+                            $('style#'+_self.windowId+'-'+getFilterPath).remove();
+                        }
                         
                         dialogname.find('input[type="checkbox"]').each(function(){
                             var _thisV = $(this), filterVal2 = {};

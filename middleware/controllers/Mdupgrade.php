@@ -705,9 +705,9 @@ class Mdupgrade extends Controller {
     
     public function decryptFile() {
         includeLib('Compress/Compression');
-        $fileContent = Compression::gzinflate(file_get_contents('DB_COMPARE_17194950189053.txt'));
+        $fileContent = Compression::gzinflate(file_get_contents('bugfix_2024-07-06.txt'));
         
-        file_put_contents('DB_COMPARE_17194950189053-decryptFile.txt', $fileContent);die;
+        file_put_contents('bugfix_2024-decryptFile.txt', $fileContent);die;
     }
     
     public function encryptFile() {
@@ -718,7 +718,7 @@ class Mdupgrade extends Controller {
     }
     
     public static function getCloudInstallUrl() {
-        if (Uri::domain() == 'cloud.veritech.mn') {
+        if (Config::getFromCache('cloud_domain_name') == Uri::domain()) {
             return self::phpImportServiceAddr();
         } else {
             return 'http://192.168.193.200:81/mdupgrade/bugfixservice';
@@ -730,7 +730,7 @@ class Mdupgrade extends Controller {
         
         $url = self::getCloudInstallUrl();
         
-        if (Uri::domain() == 'cloud.veritech.mn') {
+        if (Config::getFromCache('cloud_domain_name') == Uri::domain()) {
             $response = (new WebService())->curlRequest($url, ['commandName' => 'getPatchList', 'criteria' => ['description' => [['operator' => 'like', 'operand' => '%@cloud%']]]]);
         } else {
             $response = (new WebService())->curlRequest($url, ['commandName' => 'getPatchList']);

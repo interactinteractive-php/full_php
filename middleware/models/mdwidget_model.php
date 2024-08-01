@@ -337,17 +337,17 @@ class Mdwidget_Model extends Model {
                 LEFT JOIN META_WIDGET PW ON MW.PARENT_ID = PW.ID
                 LEFT JOIN META_WFM_STATUS WS ON MW.WFM_STATUS_ID = WS.ID
                 WHERE MW.PARENT_ID IS NOT NULL 
-                AND MW.CODE IN (
-                'cloud_list_linechart',
-                'cloudcard_003',
-                'cloudcard_005',
-                'cloud_list',
-                'cloudcard_004',
-                'cloudtimeline_list',
-                'cloudcard_008',
-                'cloudcard_006',
-                'cloudcard_007'
-            )";
+                    AND MW.CODE IN (
+                        'cloud_list_linechart',
+                        'cloudcard_003',
+                        'cloudcard_005',
+                        'cloud_list',
+                        'cloudcard_004',
+                        'cloudtimeline_list',
+                        'cloudcard_008',
+                        'cloudcard_006',
+                        'cloudcard_007'
+                    )";
         return $this->db->GetAll($qry);
     }
 

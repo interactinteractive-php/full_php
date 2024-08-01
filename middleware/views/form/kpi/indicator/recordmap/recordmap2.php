@@ -181,6 +181,7 @@ function kpiIndicatorMainRelationFillRows(elem, indicatorId, rows, idField, code
     var delete_btn = plang.get('delete_btn');
     var view_btn = plang.get('view_btn');
     var isAddonForm = false;
+    var mapId = elem.closest('.reldetail').attr('data-rowid');
     var indicatorRecordMaps = [];
     
     if (elem.hasAttr('data-config')) {
@@ -212,10 +213,11 @@ function kpiIndicatorMainRelationFillRows(elem, indicatorId, rows, idField, code
 
     $.ajax({
       type: "post",
-      url: "mdform/kpiSaveMetaDmRecordMap2",
+      url: "mdform/saveRelationMetaRecordMap",
       data: {
         mainIndicatorId: '<?php echo $this->indicatorId; ?>',
         indicatorId: indicatorId,
+        mapId: mapId,
         indicatorRecordMaps: indicatorRecordMaps
       },
       dataType: "json",
@@ -297,7 +299,7 @@ function kpiIndicatorMainRelationMetaFillRows(metaDataCode,
 
     $.ajax({
       type: "post",
-      url: "mdform/kpiSaveMetaDmRecordMap2",
+      url: "mdform/saveRelationMetaRecordMap",
       data: {
         mainIndicatorId: '<?php echo $this->indicatorId; ?>',
         indicatorId: lookupMetaDataId,
@@ -305,10 +307,7 @@ function kpiIndicatorMainRelationMetaFillRows(metaDataCode,
       },
       dataType: "json",
       beforeSend: function () {
-        Core.blockUI({
-          message: "Loading...",
-          boxed: true,
-        });
+        Core.blockUI({message: "Loading...", boxed: true});
       },
       success: function (data) {
         if (data.status == "success") {
@@ -842,5 +841,19 @@ function kpiIndicatorRelation2RemoveRows(elem, mapId) {
     });
 
     $dialog.dialog("open");  
+}
+function goToMetaverseInfoFromRelation(id) {
+    $.ajax({
+      type: "post",
+      url: "api/callProcess",
+      data: {
+        processCode: "metaverseIndicatorSearchGet_004",
+        paramData: { filterId: id }
+      },
+      dataType: "json",
+      success: function (data) {
+        window.open("<?php echo rtrim(URL, '/'); ?>"+data.result.url, '_blank');
+      },
+    });        
 }
 </script>

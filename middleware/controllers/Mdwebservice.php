@@ -1070,7 +1070,7 @@ class Mdwebservice extends Controller {
                 if (!$isCriteriaOption) {
                     
                     $formControl .= '<li class="'. (($dataRow[$in][$idColumnName] == $attrArray['value']) ? 'active' : '') .'" data-id="'. $dataRow[$in][$idColumnName].'" title="'. $dataRow[$in][$nameColumnName] .'">
-                                        <div class="item-icon-selection" style="'.issetParam($dataRow[$in]['iconitemstyle']).'">';
+                                        <div class="item-icon-selection" style="width: 170px;height: 92px;border-radius: 12px;padding: 1.2rem 1.0rem;background-color: #f3f3f3;">';
                     
                     if ($param['CHOOSE_TYPE'] !== 'single') {
                         $attrArray['name'] = $controlName . '[]';
@@ -1097,7 +1097,7 @@ class Mdwebservice extends Controller {
                     }                    
                     
                     $formControl .= '<div style="'.(isset($dataRow[$in]['iconiconstyle']) ? $dataRow[$in]['iconiconstyle'] : '').'">' . $iconImg . '</div>
-                                            <p style="'.(isset($dataRow[$in]['icontextstyle']) ? $dataRow[$in]['icontextstyle'] : '').'">'. Str::lower($dataRow[$in][$nameColumnName]) .'</p>
+                                            <p style="'.(isset($dataRow[$in]['icontextstyle']) ? $dataRow[$in]['icontextstyle'] : '').';margin-top:12px;">'. Str::lower($dataRow[$in][$nameColumnName]) .'</p>
                                         </div>
                                     </li>';                
 

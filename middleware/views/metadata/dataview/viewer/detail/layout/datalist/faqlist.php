@@ -346,7 +346,7 @@ function kpiIndicatorMainRelationFillRows(elem, indicatorId, rows, idField, code
 
     $.ajax({
       type: "post",
-      url: "mdform/kpiSaveMetaDmRecordMap2",
+      url: "mdform/saveRelationMetaRecordMap",
       data: {
         mainIndicatorId: srcIndicatorId,
         indicatorId: indicatorId,

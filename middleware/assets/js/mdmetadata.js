@@ -10262,13 +10262,15 @@ function runBusinessProcess(elem, dataViewId, uniqId, isEditMode, runMode, callb
                             }
 
                         } else {
-                            new PNotify({
-                                title: responseData.status,
-                                text: responseData.message,
-                                type: responseData.status,
-                                addclass: pnotifyPosition,
-                                sticker: false
-                            });
+                            setTimeout(function () {
+                                new PNotify({
+                                    title: responseData.status,
+                                    text: responseData.message,
+                                    type: responseData.status,
+                                    addclass: pnotifyPosition,
+                                    sticker: false
+                                });
+                            }, 1);
 
                             if (typeof callback !== 'undefined') {
                                 if (typeof window[callback + '_' + uniqId] !== 'undefined') {

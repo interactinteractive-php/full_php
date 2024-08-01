@@ -147,7 +147,11 @@ $(function() {
                             }
                             setTimeout(function () {
                                 if (data.hasOwnProperty('Html')) {
-                                    viewProcess_<?php echo $this->uniqId; ?>.find("#mv_checklist_id_"+metaDataId).append(data.Html).promise().done(function () {
+                                var renderHeader = '<div class="meta-toolbar is-bp-open-" style="padding-bottom: 0;">'+
+                                    '<div class="main-process-text">\n\
+                                        <div>'+$this.text()+'</div>\n\
+                                    </div></div>';                                    
+                                    viewProcess_<?php echo $this->uniqId; ?>.find("#mv_checklist_id_"+metaDataId).append(renderHeader+data.Html).promise().done(function () {
                                         viewProcess_<?php echo $this->uniqId; ?>.find("#mv_checklist_id_"+metaDataId).find('> .row > .col-md-12:eq(0)').remove();
                                         Core.unblockUI();
                                     });
@@ -160,7 +164,11 @@ $(function() {
                             }, 100);
                         } else {                        
                             if (data.hasOwnProperty('Html')) {
-                                viewProcess_<?php echo $this->uniqId; ?>.empty().append(data.Html).promise().done(function () {
+                                var renderHeader = '<div class="meta-toolbar is-bp-open-" style="padding-bottom: 0;">'+
+                                    '<div class="main-process-text">\n\
+                                        <div>'+$this.text()+'</div>\n\
+                                    </div></div>';                                
+                                viewProcess_<?php echo $this->uniqId; ?>.empty().append(renderHeader+data.Html).promise().done(function () {
                                     viewProcess_<?php echo $this->uniqId; ?>.find('> .row > .col-md-12:eq(0)').remove();
                                     Core.unblockUI();
                                 });
@@ -233,7 +241,11 @@ $(function() {
                                 Core.unblockUI();
                             });                            
                         } else {
-                            viewProcess_<?php echo $this->uniqId; ?>.empty().append(dataHtml).promise().done(function () {
+                            var renderHeader = '<div class="meta-toolbar is-bp-open-" style="padding-bottom: 0;">'+
+                                '<div class="main-process-text">\n\
+                                    <div>'+$this.text()+'</div>\n\
+                                </div></div>';                              
+                            viewProcess_<?php echo $this->uniqId; ?>.empty().append(renderHeader+dataHtml).promise().done(function () {
                                 Core.unblockUI();
                             });
                         }                        
@@ -683,7 +695,7 @@ $(function() {
                         
                         renderHeader += '</div>';
                 
-                        html.push('<form method="post" enctype="multipart/form-data">');
+                        html.push('<form method="post" enctype="multipart/form-data" id="wsForm">');
                             html.push(renderHeader);
                             html.push(dataHtml.html);
                             html.push(sveActionBtn);

@@ -59,6 +59,15 @@
                         </div>
                         <span class="">
                             <?php 
+                              echo Form::button(array(
+                                  'class' => 'btn btn-xs green-meadow mr5',
+                                  'value' => '<i class="icon-share font-size-12"></i>', 
+                                  'onclick' => "goToMetaverseInfoFromRelation('".$row['ID']."')"
+                              ));
+                            ?>
+                        </span>
+                        <span class="">
+                            <?php 
                               $configArr = array('isAddonForm' => $row['IS_ADDON_FORM'], 'metaInfoIndicatorId' => $row['META_INFO_INDICATOR_ID']);
                               echo Form::button(array(
                                   'class' => 'btn btn-xs green-meadow',
@@ -75,10 +84,10 @@
                 <table class="table table-sm table-hover mv-record-map-tbl" style="border-top: 1px #ddd solid;">
                     <tbody>
                         <?php
-                        if (isset($this->savedComponentRows[$row['ID']]) || isset($this->savedComponentRows[$row['LOOKUP_META_DATA_ID']])) {
+                        if (isset($this->savedComponentRows[$row['MAP_ID']]) || isset($this->savedComponentRows[$row['LOOKUP_META_DATA_ID']])) {
 
-                          if (isset($this->savedComponentRows[$row['ID']])) {
-                            $childRows = $this->savedComponentRows[$row['ID']];
+                          if (isset($this->savedComponentRows[$row['MAP_ID']])) {
+                            $childRows = $this->savedComponentRows[$row['MAP_ID']];
                           } else {
                               $childRows = $this->savedComponentRows[$row['LOOKUP_META_DATA_ID']];
                           }
@@ -117,7 +126,7 @@
                                       <?php
                                       }
                                       ?>
-                                      <a href="javascript:;" onclick="kpiIndicatorRelation2RemoveRows(this, '<?php echo $childRow['PF_MAP_ID']; ?>');" class="font-size-14" title="<?php echo $delete_btn; ?>"><i style="color:red" class="far fa-trash"></i></a>
+                                      <a href="javascript:;" onclick="kpiIndicatorRelation2RemoveRows(this, '<?php echo $childRow['PF_MAP_RECORD_ID']; ?>');" class="font-size-14" title="<?php echo $delete_btn; ?>"><i style="color:red" class="far fa-trash"></i></a>
                                   </td>
                               </tr>
 

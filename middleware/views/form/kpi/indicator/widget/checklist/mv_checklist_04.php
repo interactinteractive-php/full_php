@@ -1018,6 +1018,7 @@ $("#indicatorTreeView_17187610152661").jstree({
                 'ignoreCheckIndicator': '1', 
                 'isIgnoreFilter': '1', 
                 'isJson': '1', 
+                'isIgnoreTitle': 1,
                 'viewType': 'list',
                 'drillDownCriteria': (nid !== '_') ? '<?php echo issetParam($this->filterDataColumn) ?>=' + nid : '',
             },
@@ -1027,7 +1028,12 @@ $("#indicatorTreeView_17187610152661").jstree({
             },
             success: function(data) {
                 if (data.html != '') {
-                    viewProcess_<?php echo $this->uniqId; ?>.empty().append(data.html).promise().done(function() {
+                    var renderHeader = '<div class="meta-toolbar is-bp-open-">'+
+                        '<div class="main-process-text">\n\
+                            <div>'+mvTitle+'</div>\n\
+                        </div>'+
+                    '</div>';                    
+                    viewProcess_<?php echo $this->uniqId; ?>.empty().append(renderHeader+data.html).promise().done(function() {
                         Core.initNumberInput(viewProcess_<?php echo $this->uniqId; ?>);
                         Core.initLongInput(viewProcess_<?php echo $this->uniqId; ?>);
                         Core.initDateInput(viewProcess_<?php echo $this->uniqId; ?>);

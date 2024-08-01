@@ -20833,6 +20833,10 @@ function appendItem(itemPostData, renderType, callback) {
           quantity = Number(rowData.endqty);
         }
 
+        if (Number(rowData.invoiceqty) > 1) {
+          quantity = Number(rowData.invoiceqty);
+        }
+
         if (rowData.hasOwnProperty("merchantid")) {
           customerId2 = rowData.merchantid;
         }

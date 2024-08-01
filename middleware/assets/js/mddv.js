@@ -4214,6 +4214,84 @@ function dataViewPivotView(dvId, elem) {
 }
 
 $(function () {
+    
+    $(document.body).on('click', '.bp-icon-selection > li.mv-card-lookup-child-render', function (e) {
+        var $this = $(this), valueId = $this.attr('data-id');
+        
+        if (valueId != '') {
+            var mainSelector = $this.closest('[data-bp-uniq-id]');
+            var $ul = $this.closest('ul.bp-icon-selection');
+            var bpElem = $ul.find('input[type="hidden"]');
+            
+            var postData = {
+                indicatorId: mainSelector.attr('data-process-id'), 
+                uniqId: mainSelector.attr('data-bp-uniq-id'), 
+                getConfigPath: bpElem.attr('data-path'), 
+                id: valueId, 
+                parentId: $this.attr('data-parentid'), 
+                prevValueId: bpElem.val()
+            };
+
+            $.ajax({
+                type: 'post',
+                url: 'mdform/mvControlRender', 
+                data: postData, 
+                dataType: 'html',
+                beforeSend: function() {
+                    Core.blockUI({message: 'Loading...', boxed: true});
+                },
+                success: function(render) {
+                    var $cellElem = mainSelector.find('[data-cell-path="'+postData.getConfigPath+'"]');
+                    var $cellInput = $cellElem.find('.mv-hdr-label-control-input');
+                    
+                    if ($cellInput.length) {
+                        $cellInput.empty().append(render);
+                    }
+                    
+                    Core.unblockUI();
+                }
+            });
+        }
+        
+        e.stopImmediatePropagation();
+        return false;
+    });
+    
+    $(document.body).on('click', '.mv-card-lookup-prev-parent', function () {
+        var $this = $(this);
+        var mainSelector = $this.closest('[data-bp-uniq-id]');
+        var $ul = $this.next('ul.bp-icon-selection');
+        var bpElem = $ul.find('input[type="hidden"]');
+
+        var postData = {
+            indicatorId: mainSelector.attr('data-process-id'), 
+            uniqId: mainSelector.attr('data-bp-uniq-id'), 
+            getConfigPath: bpElem.attr('data-path'), 
+            id: $this.attr('data-parentid'), 
+            prevValueId: bpElem.val()
+        };
+
+        $.ajax({
+            type: 'post',
+            url: 'mdform/mvControlRender', 
+            data: postData, 
+            dataType: 'html',
+            beforeSend: function() {
+                Core.blockUI({message: 'Loading...', boxed: true});
+            },
+            success: function(render) {
+                var $cellElem = mainSelector.find('[data-cell-path="'+postData.getConfigPath+'"]');
+                var $cellInput = $cellElem.find('.mv-hdr-label-control-input');
+
+                if ($cellInput.length) {
+                    $cellInput.empty().append(render);
+                }
+
+                Core.unblockUI();
+            }
+        });
+    });
+    
     $(document.body).on('click', '.bp-icon-selection > li, .bp-icon-selection > div > li', function () {
         var $this = $(this), $thisBpIconUl = $this.closest('ul.bp-icon-selection'), 
             dataId = $this.attr('data-id'), singleDataId = dataId;

@@ -112,10 +112,10 @@
                 <table class="table table-sm table-hover mv-record-map-tbl" style="border-top: 1px #ddd solid;">
                     <tbody>
                         <?php
-                        if (isset($this->savedComponentRows[$row['ID']]) || isset($this->savedComponentRows[$row['LOOKUP_META_DATA_ID']])) {
+                        if (isset($this->savedComponentRows[$row['MAP_ID']]) || isset($this->savedComponentRows[$row['LOOKUP_META_DATA_ID']])) {
 
-                          if (isset($this->savedComponentRows[$row['ID']])) {
-                            $childRows = $this->savedComponentRows[$row['ID']];
+                          if (isset($this->savedComponentRows[$row['MAP_ID']])) {
+                            $childRows = $this->savedComponentRows[$row['MAP_ID']];
                           } else {
                               $childRows = $this->savedComponentRows[$row['LOOKUP_META_DATA_ID']];
                           }

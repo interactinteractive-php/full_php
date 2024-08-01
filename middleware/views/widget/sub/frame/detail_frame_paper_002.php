@@ -45,12 +45,12 @@ $jsonConfig = issetParamArray($this->paramConfig['jsonConfig']);
 }
 .bpdtl-widget-detail_frame_paper_002-body {
     background: white;
-    box-shadow: 0 0.5mm 2mm rgb(0 0 0 / 30%);
-    padding: 40px 60px;
+    /*box-shadow: 0 0.5mm 2mm rgb(0 0 0 / 30%);*/    
 }
 .bpdtl-widget-detail_frame_paper_002-body table.kpi-dtl-table, 
 .bpdtl-widget-detail_frame_paper_002-body table.kpi-dtl-table {
     table-layout: fixed;
+    margin-top: 23px;
 }
 .bpdtl-widget-detail_frame_paper_002-body table.kpi-dtl-table > thead {
     display: none;
@@ -96,6 +96,21 @@ div[data-process-id="<?php echo $this->methodId; ?>"] .bpdtl-widget-detail_frame
 .jstree-numbering-cls {
     padding-right: 10px;
 }
+/*.bpdtl-widget-detail_frame_paper_002-body table.kpi-dtl-table tbody+tbody {
+    border-top: 47px solid #efefef;
+}*/
+<?php 
+$paperSize = explode(' ', Config::getFromCache('PRINT_CONFIG_PAPER')); 
+?>
+.bpdtl-widget-detail_frame_paper_002-body table.kpi-dtl-table tbody {
+    border-top: <?php echo $paperSize[0] ?> solid #efefef;
+    border-right: <?php echo $paperSize[1] ?> solid transparent;
+    border-bottom: <?php echo $paperSize[2] ?> solid transparent;
+    border-left: <?php echo $paperSize[3] ?> solid transparent;
+}
+.bpdtl-widget-detail_frame_paper_002-body table.kpi-dtl-table tbody:first-child {
+    border-top: 0;
+}
 </style>
 
 <?php 
@@ -114,7 +129,7 @@ if ($jsonConfig) {
     var editJsonSavedData = <?php echo isset($groupedData) ? json_encode($groupedData) : json_encode([]) ?>;
     var editJsonData = resolveParentChild_detail_frame_paper_002(editJsonSavedData, '');    
     
-    initJstree_widget_detail_frame_paper_002(editJsonData);    
+    initJstree_widget_detail_frame_paper_002(editJsonData);       
 
     $('#bp-window-<?php echo $this->methodId; ?>').on('click', '.bp-detail-row', function(e) {
         var $this = $(this);
@@ -821,3 +836,20 @@ if ($jsonConfig) {
 <?php
 }
 ?>
+<script type="text/javascript">
+    setTimeout(function () {
+        $('.bpdtl-widget-detail_frame_paper_002-body').find(".bp-overflow-xy-auto").removeAttr("style");
+    }, 500);       
+    
+    $('.bpdtl-widget-detail_frame_paper_002-body').on('focus', '.texteditor_clicktoeditInit', function(e) {
+        $('.bpdtl-widget-detail_frame_paper_002-body').find(".mv-html-clicktoedit-class").css('display', 'none');
+        $(this).parent().find(".mv-html-clicktoedit-class").css('display', 'block');
+    });
+    
+    $('.ui-dialog').on('click', function(e) {     
+        if (e.originalEvent.target.className) {
+            $('.bpdtl-widget-detail_frame_paper_002-body').find(".mv-html-clicktoedit-class").css('display', 'none');
+        }
+    });
+    
+</script>

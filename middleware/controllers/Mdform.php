@@ -47,7 +47,6 @@ class Mdform extends Controller {
     public static $subUniqId = '';
     public static $kpiFullExpressions = '';
     public static $kpiRenderType = '';
-    public static $logJson = '';
     public static $addonId = 0;
     public static $kpiControlIndex = 0;
     public static $isShowName = 0;
@@ -1219,7 +1218,7 @@ class Mdform extends Controller {
                 }
             }
             
-            $data = $this->model->getKpiIndicatorTemplateModel($this->view->indicatorId);
+            $data = $this->model->getKpiIndicatorTemplateModel($this->view->indicatorId, null, false, 1);
             
             if ($data) {
                 
@@ -1817,30 +1816,30 @@ class Mdform extends Controller {
                     || $widgetInfo = Mdwidget::mvDataSetAvailableWidgets($this->view->relationComponents) 
                 )) { 
 
-                    $widgetWInfo = Mdwidget::mvDataSetAvailableWidgets($this->view->relationWidgetComponents);
-                    $this->load->model('mdform', 'middleware/models/');
+                $widgetWInfo = Mdwidget::mvDataSetAvailableWidgets($this->view->relationWidgetComponents);
+                $this->load->model('mdform', 'middleware/models/');
 
-                    if (issetParam($widgetWInfo)) {
-                        $this->view->relationComponentsConfigData = $this->model->getRelationComponentsConfigModel($widgetWInfo['mapId']);                        
-                    } elseif (issetParam($widgetInfo)) {
-                        $this->view->relationComponentsConfigData = $this->model->getRelationComponentsConfigModel($this->view->relationComponents[$widgetInfo['name']]['MAP_ID']);
+                if (issetParam($widgetWInfo)) {
+                    $this->view->relationComponentsConfigData = $this->model->getRelationComponentsConfigModel($widgetWInfo['mapId']);                        
+                } elseif (issetParam($widgetInfo)) {
+                    $this->view->relationComponentsConfigData = $this->model->getRelationComponentsConfigModel($this->view->relationComponents[$widgetInfo['name']]['MAP_ID']);
+                }
+
+                $this->view->relationColumnData = Arr::groupByArrayOnlyRow($this->view->columnsData, 'COLUMN_NAME', false);
+                $this->view->relationViewConfig = [];
+
+                if (isset($this->view->relationComponentsConfigData)) {
+                    foreach ($this->view->relationComponentsConfigData as $rk => $rrow) {
+                        $this->view->relationViewConfig[$rk] = checkDefaultVal($this->view->relationColumnData[$rrow]['COLUMN_NAME'], $rrow);
                     }
-                    
-                    $this->view->relationColumnData = Arr::groupByArrayOnlyRow($this->view->columnsData, 'COLUMN_NAME', false);
-                    $this->view->relationViewConfig = [];
-                    
-                    if (isset($this->view->relationComponentsConfigData)) {
-                        foreach ($this->view->relationComponentsConfigData as $rk => $rrow) {
-                            $this->view->relationViewConfig[$rk] = checkDefaultVal($this->view->relationColumnData[$rrow]['COLUMN_NAME'], $rrow);
-                        }
-                    }
-                    
-                    $this->view->row['gridOption']['theme'] = 'no-border';
-                    $this->view->columns = $this->model->renderKpiIndicatorColumnsModel($this->view->indicatorId, $this->view->row['isCheckSystemTable'], array('columnsData' => $this->view->columnsData));
-                    $this->load->model('mdform', 'middleware/models/');
-                    
-                    $this->view->renderGridList = $this->view->renderPrint('kpi/indicator/renderGrid', self::$viewPath);
-                    $this->view->renderGrid = self::renderWidgetDataSet($this->view->row, $widgetWInfo ? $widgetWInfo : $widgetInfo, $this->view->relationViewConfig);
+                }
+
+                $this->view->row['gridOption']['theme'] = 'no-border';
+                $this->view->columns = $this->model->renderKpiIndicatorColumnsModel($this->view->indicatorId, $this->view->row['isCheckSystemTable'], array('columnsData' => $this->view->columnsData));
+                $this->load->model('mdform', 'middleware/models/');
+
+                $this->view->renderGridList = $this->view->renderPrint('kpi/indicator/renderGrid', self::$viewPath);
+                $this->view->renderGrid = self::renderWidgetDataSet($this->view->row, $widgetWInfo ? $widgetWInfo : $widgetInfo, $this->view->relationViewConfig);
             }
             
             if (Input::post('ignoreCheckIndicator') !== '1') {
@@ -5635,11 +5634,11 @@ class Mdform extends Controller {
         echo json_encode($result, JSON_UNESCAPED_UNICODE);
     }    
 
-    public function kpiSaveMetaDmRecordMap2() {
+    public function saveRelationMetaRecordMap() {
         $this->load->model('mdform', 'middleware/models/');
-        $result = $this->model->kpiSaveMetaDmRecordMap2();
+        $result = $this->model->saveRelationMetaRecordMapModel();
         
-        echo json_encode($result, JSON_UNESCAPED_UNICODE);
+        convJson($result);
     }    
 
     public function renderAddModeIndicatorTab($uniqId, $row) {
@@ -5758,10 +5757,10 @@ class Mdform extends Controller {
         $this->view->fromWebLink = true;
         $this->view->components = $components;
 
-        $response = array(
+        $response = [
             'status' => 'success', 
             'html' => $this->view->renderPrint('kpi/indicator/recordmap/recordmap2', self::$viewPath)
-        );
+        ];
         
         convJson($response);  
     }    
@@ -5814,17 +5813,15 @@ class Mdform extends Controller {
     }    
 
     public function deleteRelationpKpi() {
-        $mapId = Input::post('mapId');
-        $this->model->dbExecuteMetaVerseData("
-            DELETE 
-            FROM META_DM_RECORD_MAP 
-            WHERE ID = ".$mapId
-        );     
-
-        $response = array(
-            'status' => 'success', 
-        );        
-        echo json_encode($response, JSON_UNESCAPED_UNICODE);        
+        $mapId = Input::numeric('mapId');
+        
+        if ($mapId) {
+            $this->model->dbExecuteMetaVerseData("DELETE FROM META_DM_RECORD_MAP WHERE ID = $mapId");     
+            $response = ['status' => 'success'];        
+        } else {
+            $response = ['status' => 'error'];
+        }
+        convJson($response);
     }
 
     public function indicatorBuilder($indicatorId = '') {
@@ -6862,6 +6859,7 @@ class Mdform extends Controller {
         }
         
         $dataList = $tmp = $this->model->indicatorDataGridModel();
+
         $rows = array();
         if ($widgetInfo['name'] == 'cloudcard') {
             $_POST['treeConfigs'] = 'parent=PARENT_ID&id=ID';

@@ -1914,7 +1914,7 @@ class Mdobject_Model extends Model {
                         
                     } else {
                         $cellFormatter = "formatter: function(v, r, i) {
-                            return (v != '' && v != null) ? number_format(v, 0, '.', '') : ''; 
+                            return (v != '' && v != null) ? v : ''; 
                         },";
                     }
                     
@@ -1962,7 +1962,7 @@ class Mdobject_Model extends Model {
                     
                 } elseif ($row['META_TYPE_CODE'] == 'url') {
                     
-                    $cellFormatter = "formatter: function(v, r, i) { return '<a href=\"'+ v + '\" target=\"_blank\">'+ v + '</a>'; },";
+                    $cellFormatter = "formatter: function(v, r, i) { return (v != '' && v != null) ? '<a href=\"'+ v + '\" target=\"_blank\">'+ v +'</a>' : ''; },";
                     
                 } else {
                     

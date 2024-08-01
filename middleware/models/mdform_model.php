@@ -4821,7 +4821,7 @@ class Mdform_Model extends Model {
         return $row;
     }
     
-    public function getKpiIndicatorTemplateModel($indicatorId, $childId = null, $isExport = false) {
+    public function getKpiIndicatorTemplateModel($indicatorId, $childId = null, $isExport = false, $isGroupReverseCheck = 0) {
         
         $langCode = Lang::getCode();
         $idPh1 = $this->db->Param(0);
@@ -4864,7 +4864,7 @@ class Mdform_Model extends Model {
         }
         
         $cache = phpFastCache();
-        $cacheName = 'kpi_'.$indicatorId.'_params_'.md5($langCode.'_'.$where);
+        $cacheName = 'kpi_'.$indicatorId.'_params_'.md5($langCode.'_'.$where.'_'.$isGroupReverseCheck);
         $data = $cache->get($cacheName);
         
         if ($data == null) {
@@ -4969,7 +4969,8 @@ class Mdform_Model extends Model {
                         NULL AS IS_GROUP_PATH, 
                         NULL AS IS_ROWS_LOOKUP, 
                         NULL AS REPLACE_PATH, 
-                        NULL AS INLINE_FIELDS 
+                        NULL AS INLINE_FIELDS, 
+                        NULL AS IS_USE_REVERSE_COLUMN 
                     FROM KPI_INDICATOR KI 
                         LEFT JOIN (
                             SELECT 
@@ -5104,7 +5105,8 @@ class Mdform_Model extends Model {
                                     OR T0.JSON_CONFIG LIKE '%,'||M.COLUMN_NAME||',%' 
                                     OR T0.JSON_CONFIG LIKE '%,'||M.COLUMN_NAME||'\"%'
                                 ) 
-                        ) ELSE NULL END AS INLINE_FIELDS 
+                        ) ELSE NULL END AS INLINE_FIELDS, 
+                        M.IS_USE_REVERSE_COLUMN 
                     FROM KPI_INDICATOR_INDICATOR_MAP M 
                         LEFT JOIN KPI_INDICATOR KI ON M.TRG_INDICATOR_ID = KI.ID 
                         LEFT JOIN META_SEMANTIC_TYPE MST ON M.SEMANTIC_TYPE_ID = MST.ID 
@@ -5235,6 +5237,43 @@ class Mdform_Model extends Model {
                     if ($row['IS_HEADER'] == '1' && !$isCheckSystemTable && $data[$k]['COLUMN_NAME'] == 'ID') {
                         $data[$k]['INPUT_NAME'] = 'META_VALUE_ID';
                         $isHeaderIdColumn = true;
+                    }
+                    
+                    if ($isGroupReverseCheck && $row['PARENT_ID'] && $row['SHOW_TYPE'] == 'row' && $row['IS_USE_REVERSE_COLUMN'] == '1') {
+                        
+                        unset($data[$k]);
+                        
+                        $rowId = $row['ID'];
+                        $parentId = $row['PARENT_ID'];
+                        $groupColumnNamePath = $row['COLUMN_NAME_PATH'];
+                        
+                        $childArr = array_filter($data, function($ar) use($rowId) {
+                            return ($ar['PARENT_ID'] == $rowId);
+                        });
+                        
+                        $parentArr = array_filter($data, function($ar) use($parentId) {
+                            return ($ar['ID'] == $parentId);
+                        });
+                        
+                        $parentArrKey = array_key_first($parentArr);
+                        $parentPath = $parentArr[$parentArrKey]['COLUMN_NAME_PATH'];
+                        
+                        foreach ($childArr as $c => $childArrRow) {
+                            
+                            $data[$c]['PARENT_ID'] = $parentId;
+                            $data[$c]['isReversedColumn'] = 1;
+                            $data[$c]['reversedColumnGetPath'] = preg_replace('/'.preg_quote($parentPath.'.', '/').'/', '', $childArrRow['COLUMN_NAME_PATH'], 1);
+                        }
+                        
+                        $dataCount ++;
+                        
+                        $data[$dataCount] = $data[$c];
+                        $data[$dataCount]['COLUMN_NAME'] = 'rowState';
+                        $data[$dataCount]['COLUMN_NAME_PATH'] = $groupColumnNamePath.'.rowState';
+                        $data[$dataCount]['SHOW_TYPE'] = 'hidden';
+                        $data[$dataCount]['IS_RENDER'] = '0';
+                        $data[$dataCount]['IS_REQUIRED'] = '0';
+                        $data[$dataCount]['DEFAULT_VALUE'] = 'added';
                     }
                 }
                 
@@ -5541,6 +5580,7 @@ class Mdform_Model extends Model {
                 if (isset($rowData) && $rowData) {
                     
                     Mdform::$firstTplId = issetParam($rowData[$pkColumn]);
+                    Mdform::$defaultTplSavedId = Mdform::$firstTplId;
                     
                     $getColumnNameAlias = 'COLUMN_NAME';
             
@@ -6366,19 +6406,28 @@ class Mdform_Model extends Model {
                     }
                 }
                 
-            } elseif (issetParam($_POST['param']['isListRelation']) == '1' && issetParam($postData['param']['mainIndicatorId']) && $crudIndicatorId = issetParam($postData['param']['crudIndicatorId'])) {
-
-                $mapData = self::getListMethodRelationModel(issetVar($postData['param']['mainIndicatorId']), $crudIndicatorId);
+            } elseif (isset($_POST['mapSrcMapId']) && isset($_POST['mapSelectedRow'])) {
                 
-                if ($mapData) {
-                    Mdform::$defaultTplSavedId = 1;
-                    $selectedRow = Arr::changeKeyUpper(Input::post('selectedRow'));
-                    foreach ($mapData as $mapRow) {
-                        Mdform::$kpiDmMart[strtoupper($mapRow['TRG_INDICATOR_PATH'])] = issetParam($selectedRow[strtoupper($mapRow['SRC_INDICATOR_PATH'])]);
+                if (issetParam($_POST['param']['isListRelation']) == '1' && issetParam($postData['param']['mainIndicatorId']) && $crudIndicatorId = issetParam($postData['param']['crudIndicatorId'])) {
+
+                    $mapData = self::getListMethodRelationModel(issetVar($postData['param']['mainIndicatorId']), $crudIndicatorId);
+
+                    if ($mapData) {
+                        
+                        Mdform::$defaultTplSavedId = 1;
+                        $selectedRow = Arr::changeKeyUpper(Input::post('selectedRow'));
+                        
+                        foreach ($mapData as $mapRow) {
+                            $mapRow['TRG_INDICATOR_PATH'] = strtoupper($mapRow['TRG_INDICATOR_PATH']);
+                            
+                            if (strpos($mapRow['TRG_INDICATOR_PATH'], '.') !== false) {
+                                Arr::set(Mdform::$kpiDmMart, $mapRow['TRG_INDICATOR_PATH'], issetParam($selectedRow[strtoupper($mapRow['SRC_INDICATOR_PATH'])]));
+                            } else {
+                                Mdform::$kpiDmMart[$mapRow['TRG_INDICATOR_PATH']] = issetParam($selectedRow[strtoupper($mapRow['SRC_INDICATOR_PATH'])]);
+                            }
+                        }
                     }
                 }
-                
-            } elseif (isset($_POST['mapSrcMapId']) && isset($_POST['mapSelectedRow'])) {
                 
                 $srcMapId = Input::numeric('mapSrcMapId');
                 $methodId = Input::numeric('methodIndicatorId');
@@ -6386,7 +6435,7 @@ class Mdform_Model extends Model {
                 $mapData  = self::getSrcTrgPathModel($srcMapId, $methodId);
 
                 if ($mapData) {
-                    $selectedRow = json_decode(html_entity_decode(Input::post('mapSelectedRow'), ENT_QUOTES, 'UTF-8'), true);
+                    $selectedRow = json_decode(html_entity_decode(Input::postNonTags('mapSelectedRow'), ENT_QUOTES, 'UTF-8'), true);
                     if ($selectedRow) {
                         Mdform::$defaultTplSavedId = 1;
                         $selectedRow = Arr::changeKeyLower($selectedRow);
@@ -6426,10 +6475,10 @@ class Mdform_Model extends Model {
             
                 foreach (Mdform::$tabRender as $tabName => $tabContent) {
                     
-                    $render[] = '<div class="sectiongidseperatorcontent-container"><fieldset class="sectiongidseperatorcontent collapsible row" data-initialized="1">';
+                    $render[] = '<div class="col-md-12"><div class="sectiongidseperatorcontent-container"><fieldset class="sectiongidseperatorcontent collapsible row" data-initialized="1">';
                     $render[] = '<legend id="sectiongid'.$t.'" style="padding-top: 12px !important;">'.$tabName.'</legend>';
                     $render[] = implode('', $tabContent);
-                    $render[] = '</fieldset></div>';
+                    $render[] = '</fieldset></div></div>';
                     $render[] = '<div class="sectiongidseperator"></div>';
 
                     $t ++;
@@ -6673,7 +6722,7 @@ class Mdform_Model extends Model {
         $paramConfigCode   = issetParam($row['CONFIG_CODE']);
         $value             = is_array($templateRow) ? (isset($templateRow[$columnName]) ? $templateRow[$columnName] : '') : '';
         $controlName       = 'mvParam'.Mdform::$addonPathPrefix.'['.$columnNamePath.']'.Mdform::$pathSuffix;
-        $cellId            = '';
+        $cellId            = $columnName;
         $addAttrs          = [];
 
         if (!isset($row['ignoreSavedDataRow']) 
@@ -7421,49 +7470,121 @@ class Mdform_Model extends Model {
             
             case 'card_lookup': 
             {
-                if ($row['FILTER_INDICATOR_ID']) {
+                if ($indicatorId = $row['FILTER_INDICATOR_ID']) {
                     
-                    $row['isData'] = true;
                     $row['isPopup'] = true;
-                    $row['value'] = $value;
+                    
+                    if ($value) {
+                        $row['isData'] = true;
+                        $row['rowId'] = $value;
+                    } else {
+                        $row['isData'] = false;
+                        $row['value'] = $value;
+                    }
 
-                    $datas = self::getKpiComboDataModel($row); 
-                    
-                    $rows = $datas['data'];
-                    $id = $datas['id'];
-                    $name = $datas['name'];
-                    $html = ['<ul class="bp-icon-selection" data-metagroupid="'.$row['FILTER_INDICATOR_ID'].'" data-choose-type="single" style="display: inline-block;">'];
-                    
-                    foreach ($rows as $val) {
+                    $fieldConfig = self::getKpiComboDataModel($row); 
+
+                    $idField = $fieldConfig['id'];
+                    $nameField = $fieldConfig['name'];
+                    $parentField = $fieldConfig['parent'];
                         
-                        $valueId = issetParam($val[$id]);
-                        $liClass = '';
-                        
-                        if ($value != '' && $value == $valueId) {
-                            $liClass = ' class="active"';
-                        } 
-                        
-                        $html[] = '<li data-id="'.$valueId.'" title="'.$val[$name].'"'.$liClass.'>
-                            <div class="item-icon-selection" style="width: 170px; height: 92px; border-radius:12px; display: flex; padding:1.2rem">
-                                <p style="font-size: 14px;font-weight: 700!important;color: #737373;text-align: left;margin-top: 12px;height: 52px;display: -webkit-box;-webkit-box-orient: vertical;-webkit-line-clamp: 3;overflow: hidden;line-height: 16px;">'.$val[$name].'</p>
-                            </div>
-                        </li>';
+                    $_POST['indicatorId'] = $indicatorId;
+                    $_POST['page'] = 1;
+                    $_POST['rows'] = 100;
+            
+                    if ($parentField) {
+                        $_POST['treeConfigs'] = 'parent='.$parentField.'&id='.$idField.'&name='.$nameField;
                     }
                     
-                    $attrArray = [
-                        'name' => $controlName, 
-                        'data-path' => $columnNamePath, 
-                        'data-col-path' => $code, 
-                        'class' => 'card_lookupInit', 
-                        'value' => $value, 
-                        'data-field-name' => $cellId
-                    ] + $addAttrs;
+                    if (isset($fieldConfig['data'][0]) && $parentField) {
+                        $isTreeGetRowData = true;
+                        $_POST['id'] = $fieldConfig['data'][0][$parentField];
+                    }
+                    
+                    unset(self::$indicatorColumns[$indicatorId]);
+                    
+                    $resultRows = $this->indicatorDataGridModel();
+                    
+                    if (isset($resultRows['rows'][0]) || isset($resultRows[0])) {
 
-                    $html[] = Form::hidden($attrArray);
-                    
-                    $html[] = '</ul>';
-                    
-                    $control = implode('', $html);
+                        $rows                = isset($resultRows['rows']) ? $resultRows['rows'] : $resultRows;
+                        $childRecordCountKey = 'CHILDRECORDCOUNT';
+                        $parentId            = Input::numeric('id');
+                        $prevValueId         = Input::numeric('prevValueId');
+                        $isChildRows         = ($parentField && $parentId);
+                        $html                = [];
+                        
+                        if ($isChildRows) {
+                            
+                            $prevParentId = Input::numeric('parentId');
+                            
+                            if (!$prevParentId && isset($isTreeGetRowData)) {
+                                
+                                $row['isPopup'] = true;
+                                $row['isData'] = true;
+                                $row['rowId'] = $fieldConfig['data'][0][$parentField];
+                                
+                                $fieldConfig = self::getKpiComboDataModel($row);
+                                
+                                if (isset($fieldConfig['data'][0])) {
+                                    $prevParentId = $fieldConfig['data'][0][$parentField];
+                                }
+                            }
+                            
+                            $html[] = '<a href="javascript:;" class="d-block mv-card-lookup-prev-parent" data-parentid="'.$prevParentId.'" style="background: #FFFFFF;
+                                            border: 1px solid #E6E6E6;
+                                            box-sizing: border-box;
+                                            border-radius: 10px;
+                                            width: 35px; 
+                                            height: 35px; 
+                                            text-align: center; 
+                                            margin-bottom: 10px; 
+                                            padding-top: 9px;"><i class="icon-arrow-left8" style="color:#000"></i></a>';
+                        }
+                        
+                        $html[] = '<ul class="bp-icon-selection" data-metagroupid="'.$indicatorId.'" data-choose-type="single" style="display: inline-block;">';
+
+                            foreach ($rows as $val) {
+
+                                $valueId = issetParam($val[$idField]);
+                                $valueParentId = $parentField ? issetParam($val[$parentField]) : '';
+                                $liClass = $childRenderBtn = '';
+
+                                if (($value != '' && $value == $valueId) || ($prevValueId != '' && $prevValueId == $valueId)) {
+                                    $liClass = 'active';
+                                } 
+                                
+                                if ($parentField && $val[$childRecordCountKey]) {
+                                    $childRenderBtn = '<span class="d-block" style="margin-top:12px;"><i class="icon-arrow-right8"></i></span>';
+                                    $liClass .= ' mv-card-lookup-child-render';
+                                }
+
+                                $html[] = '<li data-id="'.$valueId.'" data-parentid="'.$valueParentId.'" title="'.$val[$nameField].'" class="'.$liClass.'">
+                                    <div class="item-icon-selection d-flex justify-content-between" style="width: 170px; height: 92px; border-radius:12px; padding: 1.2rem 1.0rem;">
+                                        <p style="font-size: 14px;font-weight: 700!important;color: #737373;text-align: left;margin-top: 12px;height: 52px;display: -webkit-box;-webkit-box-orient: vertical;-webkit-line-clamp: 3;overflow: hidden;line-height: 16px;">'.$val[$nameField].'</p>
+                                        '.$childRenderBtn.'
+                                    </div>
+                                </li>';
+                            }
+
+                            $attrArray = [
+                                'name' => $controlName, 
+                                'data-path' => $columnNamePath, 
+                                'data-col-path' => $code, 
+                                'class' => 'card_lookupInit', 
+                                'value' => ($value ? $value : $prevValueId), 
+                                'data-field-name' => $cellId
+                            ] + $addAttrs;
+
+                            $html[] = Form::hidden($attrArray);
+
+                        $html[] = '</ul>';
+
+                        $control = implode('', $html);
+                        
+                    } else {
+                        $control = '';
+                    }
                     
                 } else {
                     $attrArray = [
@@ -7916,7 +8037,7 @@ class Mdform_Model extends Model {
                     '.Form::textArea($attrArray).'
                     <span class="input-group-append mv-html-clicktoedit-class">
                         <button type="button" class="btn grey-cascade" style="height: 22px !important;" onclick="bpFieldTextEditorClickToEdit(this);">
-                            <i class="icon-menu" style="color: #333;"></i>
+                            <i class="icon-menu" style="color: #fff;"></i>
                         </button>
                     </span> 
                 </div>';
@@ -8081,7 +8202,7 @@ class Mdform_Model extends Model {
                     AND KIIM.COLUMN_NAME IS NOT NULL 
                     AND KIIM.PARENT_ID IS NULL 
                     AND (
-                        KIIM.INPUT_NAME IN ('META_VALUE_ID', 'META_VALUE_CODE', 'META_VALUE_NAME') 
+                        KIIM.INPUT_NAME IN ('META_VALUE_ID', 'META_VALUE_CODE', 'META_VALUE_NAME', 'PARENT_ID') 
                         OR 
                         (KIIM.SORT_ORDER IS NOT NULL AND KIIM.SORT_TYPE IS NOT NULL) 
                     )    
@@ -8092,6 +8213,7 @@ class Mdform_Model extends Model {
             $idField = 'ID';
             $codeField = 'CODE';
             $nameField = 'NAME';
+            $parentField = '';
             $sortField = '';
             $sortColumns = []; 
             
@@ -8112,6 +8234,8 @@ class Mdform_Model extends Model {
                         if ($showType == 'combo' || $showType == 'radio' || $showType == 'popup') {
                             $nameField .= '_DESC';
                         }
+                    } elseif ($config['INPUT_NAME'] == 'PARENT_ID') {
+                        $parentField = $config['COLUMN_NAME'];
                     }
                     
                     if ($config['SORT_ORDER'] != '' && $config['SORT_TYPE'] != '') {
@@ -8136,7 +8260,7 @@ class Mdform_Model extends Model {
             $linkLookupPath = issetParam($row['GROUP_CONFIG_LOOKUP_PATH']);
             $indicatorName  = issetParam($configs[0]['INDICATOR_NAME']);
             
-            $response = ['id' => $idField, 'code' => $codeField, 'name' => $nameField, 'indicatorName' => $indicatorName];
+            $response = ['id' => $idField, 'code' => $codeField, 'name' => $nameField, 'parent' => $parentField, 'indicatorName' => $indicatorName];
             $isQueryString = false;
             
             if (!$tableName && $queryString = issetParam($configs[0]['QUERY_STRING'])) {
@@ -8524,7 +8648,7 @@ class Mdform_Model extends Model {
                         $rowsData = is_array(Mdform::$kpiDmMart) ? issetParamArray(Mdform::$kpiDmMart[$arrRow['COLUMN_NAME_PATH']]) : [];
                         
                         $controlRender[] = $title;
-                        $controlRender[] = '<div style="margin-right: 2.2rem;margin-left: 2.2rem;overflow-x: auto;" data-section-path="'.$arrRow['COLUMN_NAME_PATH'].'">';
+                        $controlRender[] = '<div class="col-md-12" style="padding-right: 2.2rem;padding-left: 2.2rem;" data-section-path="'.$arrRow['COLUMN_NAME_PATH'].'">';
                         
                         if ($isTemplateConfig || $isTemplateRows) {
                             $controlRender[] = self::rowsKpiIndicatorTemplate($indicatorId, $data, $arrRow['ID'], $arrRow, $rowsData);
@@ -8539,7 +8663,7 @@ class Mdform_Model extends Model {
                     } elseif ($arrRow['SHOW_TYPE'] == 'row') {
                         
                         $controlRender[] = $title;
-                        $controlRender[] = '<div style="margin-right: 2.2rem;margin-left: 2.2rem;overflow-x: auto;" data-section-path="'.$arrRow['COLUMN_NAME_PATH'].'">';
+                        $controlRender[] = '<div class="col-md-12" style="padding-right: 2.2rem;padding-left: 2.2rem;" data-section-path="'.$arrRow['COLUMN_NAME_PATH'].'">';
                             $controlRender[] = self::rowKpiIndicator($indicatorId, $data, $arrRow['ID'], $arrRow, (is_array(Mdform::$kpiDmMart) ? issetParamArray(Mdform::$kpiDmMart[$arrRow['COLUMN_NAME_PATH']]) : []));
                         $controlRender[] = '</div>';
                     }
@@ -9376,6 +9500,7 @@ class Mdform_Model extends Model {
                     
                     if ($isSavedDataJson) {
                         
+                        $parentPath = $row['COLUMN_NAME_PATH'];
                         $n = 1;
                         
                         foreach ($rowDatas as $k => $row) {
@@ -9400,13 +9525,8 @@ class Mdform_Model extends Model {
                                     
                                     if ($arrRow['IS_RENDER'] == '1') {
                                         
-                                        if ($arrRow['SHOW_TYPE'] == 'rows' || $arrRow['SHOW_TYPE'] == 'row') {
-
-                                            $childArr = $arrRow['childArr'];
-
-                                            if (!$childArr) {
-                                                continue;
-                                            }
+                                        if (($arrRow['SHOW_TYPE'] == 'rows' || $arrRow['SHOW_TYPE'] == 'row') && !$arrRow['childArr']) {
+                                            continue;
                                         }
                                 
                                         $labelName = $arrRow['labelName'];
@@ -9450,15 +9570,25 @@ class Mdform_Model extends Model {
                                             $render[] = '</div>';
 
                                         } else {
-                                            $render[] = self::kpiIndicatorControl($arrRow, $row);
+                                            
+                                            if (isset($arrRow['isReversedColumn'])) {
+                                                $render[] = self::kpiIndicatorControl($arrRow, [$arrRow['COLUMN_NAME'] => Arr::get($row, $arrRow['reversedColumnGetPath'])]);
+                                            } else {
+                                                $render[] = self::kpiIndicatorControl($arrRow, $row);
+                                            }
                                         }
 
                                         $render[] = '</td>';
                                         
                                     } elseif ($arrRow['SHOW_TYPE'] != 'rows' && $arrRow['SHOW_TYPE'] != 'row') {
-                                
+                                            
                                         $arrRow['SHOW_TYPE'] = 'hidden';
-                                        $hiddenControl[] = self::kpiIndicatorControl($arrRow, $row);
+                                        
+                                        if (isset($arrRow['isReversedColumn'])) {
+                                            $hiddenControl[] = self::kpiIndicatorControl($arrRow, [$arrRow['COLUMN_NAME'] => Arr::get($row, $arrRow['reversedColumnGetPath'])]);
+                                        } else {
+                                            $hiddenControl[] = self::kpiIndicatorControl($arrRow, $row);
+                                        }
                                     }
                                 }
                             
@@ -9496,11 +9626,9 @@ class Mdform_Model extends Model {
                 $render[] = '</table>';
             $render[] = '</div>';
             
-            if ($isIgnoreAddRowTemplate == false) {
+            if (!isset(Mdform::$addRowsTemplate[$rowsColumnNamePath])) {
                 
-                Mdform::$addRowsTemplate[] = '<script type="text/template" data-template="rows" data-rows-path="'.$rowsColumnNamePath.'">';
-                    Mdform::$addRowsTemplate[] = implode('', $renderBody);
-                Mdform::$addRowsTemplate[] = '</script>';
+                Mdform::$addRowsTemplate[$rowsColumnNamePath] = '<script type="text/template" data-template="rows" data-rows-path="'.$rowsColumnNamePath.'">'.implode('', $renderBody).'</script>';
             }
         }
         
@@ -9586,7 +9714,7 @@ class Mdform_Model extends Model {
                 $label = Form::label($labelAttr);
                 
                 if ($arrRow['SHOW_TYPE'] == 'row') {
-
+                    
                     $control = html_tag('button', 
                         [
                             'type' => 'button', 
@@ -9605,20 +9733,26 @@ class Mdform_Model extends Model {
                                         
                     Mdform::$pathSuffix = '[0][]';
                     $arrRow['isIgnoreAddRowTemplate'] = true;
-
-                    $control = html_tag('button', 
-                        [
-                            'type' => 'button', 
-                            'class' => 'btn btn-xs purple-plum', 
-                            'title' => $labelText, 
-                            'onclick' => 'mvRowsPopupRender(this);'
-                        ], 
-                        '<i class="far fa-ellipsis-h"></i>'
-                    );
-
-                    $control .= '<div class="param-tree-container" style="display: none">';
+                    
+                    if (isset($arrRow['IS_USE_REVERSE_COLUMN']) && $arrRow['IS_USE_REVERSE_COLUMN'] == '1') {
+                        
                         $control .= self::rowsKpiIndicator($indicatorId, [], $arrRow['ID'], $arrRow, issetParamArray($rowDatas[$arrRow['COLUMN_NAME']]), $depth + 1, $childArr);
-                    $control .= '</div>';
+                        
+                    } else {
+                        $control = html_tag('button', 
+                            [
+                                'type' => 'button', 
+                                'class' => 'btn btn-xs purple-plum', 
+                                'title' => $labelText, 
+                                'onclick' => 'mvRowsPopupRender(this);'
+                            ], 
+                            '<i class="far fa-ellipsis-h"></i>'
+                        );
+
+                        $control .= '<div class="param-tree-container" style="display: none">';
+                            $control .= self::rowsKpiIndicator($indicatorId, [], $arrRow['ID'], $arrRow, issetParamArray($rowDatas[$arrRow['COLUMN_NAME']]), $depth + 1, $childArr);
+                        $control .= '</div>';
+                    }
                     
                     Mdform::$pathSuffix = null;
 
@@ -11237,7 +11371,8 @@ class Mdform_Model extends Model {
                     if ($showType != 'row' && $showType != 'rows') {
                         
                         if (is_null($rowIndex)) {
-                            if ($depth == 0) {
+                            
+                            if ($depth == 0 || ($depth > 1 && !array_key_exists(0, Mdform::$mvPostParams[$columnNamePath]))) {
                                 $getParam = issetParam(Mdform::$mvPostParams[$columnNamePath]);
                                 
                             } elseif (isset(Mdform::$mvPostParams[$columnNamePath][0]) 
@@ -11245,6 +11380,9 @@ class Mdform_Model extends Model {
                                 && array_key_exists(0, Mdform::$mvPostParams[$columnNamePath])) {
                                 
                                 $getParam = Mdform::$mvPostParams[$columnNamePath][0];
+                                
+                            } elseif ($depth == 0) {
+                                
                             } else {
                                 $getParam = issetParam(Mdform::$mvPostParams[$columnNamePath]);
                             }
@@ -11257,7 +11395,8 @@ class Mdform_Model extends Model {
                             if ($getParam) {
 
                                 if (is_null($rowIndex)) {
-                                    if ($depth == 0) {
+                                    if ($depth == 0 || ($depth > 1 && isset(Mdform::$mvPostParams[$columnNamePath.'_DESC']) && !array_key_exists(0, Mdform::$mvPostParams[$columnNamePath.'_DESC']))) {
+                                        
                                         $comboDesc = issetVar(Mdform::$mvPostParams[$columnNamePath.'_DESC']);
                                     } elseif (isset(Mdform::$mvPostParams[$columnNamePath.'_DESC'][0]) 
                                         && is_array(Mdform::$mvPostParams[$columnNamePath.'_DESC']) 
@@ -11288,7 +11427,7 @@ class Mdform_Model extends Model {
                             if ($getParam) {
 
                                 if (is_null($rowIndex)) {
-                                    if ($depth == 0) {
+                                    if ($depth == 0 || ($depth > 1 && isset(Mdform::$mvPostParams[$columnNamePath.'_DESCNAME']) && !array_key_exists(0, Mdform::$mvPostParams[$columnNamePath.'_DESCNAME']))) {
                                         $comboDesc = issetVar(Mdform::$mvPostParams[$columnNamePath.'_DESCNAME']);
                                     } elseif (isset(Mdform::$mvPostParams[$columnNamePath.'_DESCNAME'][0]) 
                                         && is_array(Mdform::$mvPostParams[$columnNamePath.'_DESCNAME']) 
@@ -11314,12 +11453,12 @@ class Mdform_Model extends Model {
                             $val = '';
 
                             if (is_null($rowIndex)) {
-                                if ($depth == 0) {
-                                    $getFileName = issetParam(Mdform::$mvPostFileParams['name'][$columnNamePath]);
-                                    $getFileTmpName = issetParam(Mdform::$mvPostFileParams['tmp_name'][$columnNamePath]);
-                                } else {
+                                if (is_array(Mdform::$mvPostFileParams['name'][$columnNamePath]) && isset(Mdform::$mvPostFileParams['name'][$columnNamePath][0])) {
                                     $getFileName = issetParam(Mdform::$mvPostFileParams['name'][$columnNamePath][0]);
                                     $getFileTmpName = issetParam(Mdform::$mvPostFileParams['tmp_name'][$columnNamePath][0]);
+                                } else {
+                                    $getFileName = issetParam(Mdform::$mvPostFileParams['name'][$columnNamePath]);
+                                    $getFileTmpName = issetParam(Mdform::$mvPostFileParams['tmp_name'][$columnNamePath]);
                                 }
                             } else {
                                 $getFileName = issetParam(Mdform::$mvPostFileParams['name'][$columnNamePath][$rowIndex]);
@@ -11329,16 +11468,16 @@ class Mdform_Model extends Model {
                             if ($getFileName && is_uploaded_file($getFileTmpName)) {
 
                                 if (is_null($rowIndex)) {
-                                    if ($depth == 0) {
-                                        $fileAttr['name'] = Mdform::$mvPostFileParams['name'][$columnNamePath];
-                                        $fileAttr['tmp_name'] = Mdform::$mvPostFileParams['tmp_name'][$columnNamePath];
-                                        $fileAttr['size'] = Mdform::$mvPostFileParams['size'][$columnNamePath];
-                                        $fileAttr['type'] = Mdform::$mvPostFileParams['type'][$columnNamePath];
-                                    } else {
+                                    if (is_array(Mdform::$mvPostFileParams['name'][$columnNamePath]) && isset(Mdform::$mvPostFileParams['name'][$columnNamePath][0])) {
                                         $fileAttr['name'] = Mdform::$mvPostFileParams['name'][$columnNamePath][0];
                                         $fileAttr['tmp_name'] = Mdform::$mvPostFileParams['tmp_name'][$columnNamePath][0];
                                         $fileAttr['size'] = Mdform::$mvPostFileParams['size'][$columnNamePath][0];
                                         $fileAttr['type'] = Mdform::$mvPostFileParams['type'][$columnNamePath][0];
+                                    } else {
+                                        $fileAttr['name'] = Mdform::$mvPostFileParams['name'][$columnNamePath];
+                                        $fileAttr['tmp_name'] = Mdform::$mvPostFileParams['tmp_name'][$columnNamePath];
+                                        $fileAttr['size'] = Mdform::$mvPostFileParams['size'][$columnNamePath];
+                                        $fileAttr['type'] = Mdform::$mvPostFileParams['type'][$columnNamePath];
                                     }
                                 } else {
                                     $fileAttr['name'] = Mdform::$mvPostFileParams['name'][$columnNamePath][$rowIndex];
@@ -11377,7 +11516,7 @@ class Mdform_Model extends Model {
                 }
                 
                 if (is_null($rowIndex)) {
-                    if ($depth == 0) {
+                    if ($depth == 0 || ($depth > 1 && isset(Mdform::$mvPostParams[$columnNamePath.'.rowState']) && !array_key_exists(0, Mdform::$mvPostParams[$columnNamePath.'.rowState']))) {
                         
                         $arr['rowState'] = issetVar(Mdform::$mvPostParams[$parentColumnNamePath.'.rowState']);
                         
@@ -13301,7 +13440,7 @@ class Mdform_Model extends Model {
             $this->load->model('mdconfig', 'middleware/models/');
             $this->model->clearSystemConfig();
             
-            return ['status' => 'success', 'message' => $this->lang->line('msg_save_success')];
+            return ['status' => 'success', 'message' => $this->lang->line('msg_save_success'), 'isSystemConfigReload' => 1];
             
         } catch (Exception $ex) {
             $this->db->RollbackTrans();
@@ -14010,26 +14149,39 @@ class Mdform_Model extends Model {
         return $response;
     }
 
-    public function kpiSaveMetaDmRecordMap2() {    
+    public function saveRelationMetaRecordMapModel() {    
         $metaDmRecordMaps = Input::postData();
+        
         if ($recordIds = issetParam($metaDmRecordMaps['indicatorRecordMaps'])) {                    
             $sessionUserKeyId = Ue::sessionUserKeyId();
             
-            foreach ($recordIds as $k => $recordId) {        
-                $insertMapRow = array(
+            foreach ($recordIds as $k => $recordId) { 
+                
+                /*$insertMapRow = [
                     'ID'                   => getUIDAdd($k), 
-                    'SRC_REF_STRUCTURE_ID' => '1479204227214',
+                    'SRC_REF_STRUCTURE_ID' => issetParam($metaDmRecordMaps['mapId']) ? $metaDmRecordMaps['mapId'] : '1479204227214',
                     'TRG_REF_STRUCTURE_ID' => $metaDmRecordMaps['indicatorId'], 
                     'SRC_RECORD_ID'        => $metaDmRecordMaps['mainIndicatorId'],
                     'TRG_RECORD_ID'        => $recordId, 
                     'CREATED_DATE'         => Date::currentDate(), 
                     'CREATED_USER_ID'      => $sessionUserKeyId
-                );
+                ];*/
+                
+                $insertMapRow = [
+                    'ID'                   => getUIDAdd($k), 
+                    'SRC_REF_STRUCTURE_ID' => $metaDmRecordMaps['mainIndicatorId'],
+                    'TRG_REF_STRUCTURE_ID' => $metaDmRecordMaps['indicatorId'], 
+                    'SRC_RECORD_ID'        => issetParam($metaDmRecordMaps['mapId']) ? $metaDmRecordMaps['mapId'] : '1479204227214',
+                    'TRG_RECORD_ID'        => $recordId, 
+                    'CREATED_DATE'         => Date::currentDate(), 
+                    'CREATED_USER_ID'      => $sessionUserKeyId
+                ];
+                
                 $this->db->AutoExecute('META_DM_RECORD_MAP', $insertMapRow);
             }
         }
 
-        return array('status' => 'success', 'message' => Lang::line('msg_save_success'));
+        return ['status' => 'success', 'message' => Lang::line('msg_save_success')];
     }    
     
     public function dbCreatedTblKpiTemplate($tblName, $dbField) {
@@ -15314,7 +15466,7 @@ class Mdform_Model extends Model {
         return null;
     }
     
-    public function indicatorDataGridModel() {
+    public function indicatorDataGridModel($indicatorId = null) {
         
         try {
             
@@ -15324,7 +15476,7 @@ class Mdform_Model extends Model {
                 return ['status' => 'ignoreFirstLoad', 'rows' => [], 'total' => 0];
             }
         
-            $indicatorId = Input::numeric('indicatorId');
+            $indicatorId = $indicatorId ? $indicatorId : Input::numeric('indicatorId');
             $row = self::getKpiIndicatorRowModel($indicatorId); 
             
             if (!$row) {
@@ -15356,6 +15508,7 @@ class Mdform_Model extends Model {
             
             $isExportExcel = Input::numeric('isExportExcel');
             $isShowPivot   = Input::numeric('isShowPivot');
+            $isGetSql      = Input::numeric('isGetSql');
             $isGoogleMap   = Input::numeric('isGoogleMap');
             $isComboData   = Input::numeric('isComboData');
             $isShowQuery   = Input::numeric('isShowQuery');
@@ -15414,8 +15567,8 @@ class Mdform_Model extends Model {
                     
                     if ($mapPathData) {
                         
-                        $mapSelectedRow = Arr::changeKeyLower(json_decode(html_entity_decode(Input::post('mapSelectedRow'), ENT_QUOTES, 'UTF-8'), true));
-
+                        $mapSelectedRow = Arr::changeKeyLower(json_decode(html_entity_decode(Input::postNonTags('mapSelectedRow'), ENT_QUOTES, 'UTF-8'), true));
+                        
                         foreach ($mapPathData as $mapPathRow) {
 
                             $mapPathRow['SRC_INDICATOR_PATH'] = strtolower($mapPathRow['SRC_INDICATOR_PATH']);
@@ -15459,7 +15612,7 @@ class Mdform_Model extends Model {
                 
                 if ($mapPathData) {
 
-                    $mapSelectedRow = Arr::changeKeyLower(json_decode(html_entity_decode(Input::post('mapSelectedRow'), ENT_QUOTES, 'UTF-8'), true));
+                    $mapSelectedRow = Arr::changeKeyLower(json_decode(html_entity_decode(Input::postNonTags('mapSelectedRow'), ENT_QUOTES, 'UTF-8'), true));
                     
                     foreach ($mapPathData as $mapPathRow) {
 
@@ -16247,7 +16400,7 @@ class Mdform_Model extends Model {
                 
                 return ['status' => 'success', 'rows' => $rows];
                 
-            } elseif ($isShowPivot) {
+            } elseif ($isShowPivot || $isGetSql) {
                 
                 return ['status' => 'success', 'sql' => $selectList];
             }
@@ -16354,6 +16507,109 @@ class Mdform_Model extends Model {
                     $result['footer'] = [$rowCount];
                 }
                 
+//                $rows = array (
+//                    0 => 
+//                    ARRAY (
+//                      'ID' => '1721790059175703',
+//                      'PARAGRAPH_TEXT' => NULL,
+//                      'DESCRIPTION' => NULL,
+//                      'TYPE_ID' => NULL,
+//                      'COMPANY_DEPARTMENT_ID' => NULL,
+//                      'CREATED_COMMAND_ID' => NULL,
+//                      'MODIFIED_COMMAND_ID' => NULL,
+//                      'CREATED_DATE' => '2024-07-24 10:35:16',
+//                      'CREATED_USER_ID' => '1455328423787',
+//                      'MODIFIED_DATE' => NULL,
+//                      'MODIFIED_USER_ID' => NULL,
+//                      'PARENT_ID' => '1717472842079114',
+//                      'CATEGORY_ID' => '1717472485729648',
+//                      'CODE' => '102',
+//                      'NAME' => 'FRTGYHUJIOP;[',
+//                      'TEMPLATE_ID' => NULL,
+//                      'CHILDRECORDCOUNT' => '0',
+//                    ),
+//                    1 => 
+//                    ARRAY (
+//                      'ID' => '1721790059175704',
+//                      'PARAGRAPH_TEXT' => NULL,
+//                      'DESCRIPTION' => NULL,
+//                      'TYPE_ID' => NULL,
+//                      'COMPANY_DEPARTMENT_ID' => NULL,
+//                      'CREATED_COMMAND_ID' => NULL,
+//                      'MODIFIED_COMMAND_ID' => NULL,
+//                      'CREATED_DATE' => '2024-07-24 10:35:16',
+//                      'CREATED_USER_ID' => '1455328423787',
+//                      'MODIFIED_DATE' => NULL,
+//                      'MODIFIED_USER_ID' => NULL,
+//                      'PARENT_ID' => '1717472842079114',
+//                      'CATEGORY_ID' => '1717472485729648',
+//                      'CODE' => '103',
+//                      'NAME' => 'CHILD DATA1',
+//                      'TEMPLATE_ID' => NULL,
+//                      'CHILDRECORDCOUNT' => '0',
+//                    ),
+//                    2 => 
+//                    ARRAY (
+//                      'ID' => '1717472842079114',
+//                      'PARAGRAPH_TEXT' => NULL,
+//                      'DESCRIPTION' => NULL,
+//                      'TYPE_ID' => NULL,
+//                      'COMPANY_DEPARTMENT_ID' => NULL,
+//                      'CREATED_COMMAND_ID' => NULL,
+//                      'MODIFIED_COMMAND_ID' => NULL,
+//                      'CREATED_DATE' => '2024-06-04 11:45:32',
+//                      'CREATED_USER_ID' => '16433633865731',
+//                      'MODIFIED_DATE' => '2024-06-07 16:03:20',
+//                      'MODIFIED_USER_ID' => '1522946545261',
+//                      'PARENT_ID' => '222',
+//                      'CATEGORY_ID' => '1717472485729648',
+//                      'CODE' => '001',
+//                      'NAME' => 'ШИНЭ АЖИЛТАН АЖИЛД АВАХ',
+//                      'TEMPLATE_ID' => NULL,
+//                      'CHILDRECORDCOUNT' => '1',
+//                    ),
+//                    3 => 
+//                    ARRAY (
+//                      'ID' => '17217900591757043333',
+//                      'PARAGRAPH_TEXT' => NULL,
+//                      'DESCRIPTION' => NULL,
+//                      'TYPE_ID' => NULL,
+//                      'COMPANY_DEPARTMENT_ID' => NULL,
+//                      'CREATED_COMMAND_ID' => NULL,
+//                      'MODIFIED_COMMAND_ID' => NULL,
+//                      'CREATED_DATE' => '2024-07-24 10:35:16',
+//                      'CREATED_USER_ID' => '1455328423787',
+//                      'MODIFIED_DATE' => NULL,
+//                      'MODIFIED_USER_ID' => NULL,
+//                      'PARENT_ID' => '1721790059175704',
+//                      'CATEGORY_ID' => '1717472485729648',
+//                      'CODE' => '103',
+//                      'NAME' => 'CHILD DATA2',
+//                      'TEMPLATE_ID' => NULL,
+//                      'CHILDRECORDCOUNT' => '0',
+//                    ),                    
+//                    4 => 
+//                    ARRAY (
+//                      'ID' => '1721790059175704333333333',
+//                      'PARAGRAPH_TEXT' => NULL,
+//                      'DESCRIPTION' => NULL,
+//                      'TYPE_ID' => NULL,
+//                      'COMPANY_DEPARTMENT_ID' => NULL,
+//                      'CREATED_COMMAND_ID' => NULL,
+//                      'MODIFIED_COMMAND_ID' => NULL,
+//                      'CREATED_DATE' => '2024-07-24 10:35:16',
+//                      'CREATED_USER_ID' => '1455328423787',
+//                      'MODIFIED_DATE' => NULL,
+//                      'MODIFIED_USER_ID' => NULL,
+//                      'PARENT_ID' => '1721790059175704',
+//                      'CATEGORY_ID' => '1717472485729648',
+//                      'CODE' => '103',
+//                      'NAME' => 'CHILD DATA3',
+//                      'TEMPLATE_ID' => NULL,
+//                      'CHILDRECORDCOUNT' => '0',
+//                    ),                    
+//                );
+                
                 if (isset($treeConfigs)) {
                         
                     if (isset($rows[0])) {
@@ -16364,36 +16620,51 @@ class Mdform_Model extends Model {
                             $isIconColorCode = true;
                         }
                         
-                        if (false /*$isSubCondition*/) {
-                            
-                            function buildTree($elements, $parentId = null) {
-                                $branch = [];
-
-                                foreach ($elements as $element) {
-                                    if ($element['parent_id'] == $parentId) {
-                                        $children = buildTree($elements, $element['id']);
-                                        if ($children) {
-                                            $element['children'] = $children;
-                                        }
-                                        $branch[] = $element;
-                                    }
-                                }
-
-                                return $branch;
-                            }
+                        if (false/*$isSubCondition*/) {                                                        
                             
                             if ($isLowerCase) {
                                 $idField     = strtolower($idField);
                                 $parentField = strtolower($parentField);
-                            }
+                            }                            
                             
-                            foreach ($rows as $rowIndex => $rowData) {
-                                $rows[$rowIndex]['state'] = (isset($rowData[$childRecordCountKey]) && $rowData[$childRecordCountKey]) ? 'closed' : 'open';
+                            function buildTree($elements, $parentId = null, $idField, $parentField, $depth = 0) {   
+                                $rowsChild = [];
+                                foreach ($elements as $element) {
+                                    if ($element[$parentField] == $parentId) {
+                                        $children = buildTree($elements, $element[$idField], $idField, $parentField, $depth++);
+                                        if ($children) {
+                                            $element['children'] = $children;
+                                        }
 
-                                if ($isIconColorCode) {
-                                    $rows[$rowIndex]['iconCls'] = $rowData[$iconColorCodeKey];
-                                }   
+                                        if (issetParam($childRecordCountKey)) {
+                                            $element['state'] = (isset($element[$childRecordCountKey]) && $element[$childRecordCountKey]) ? 'closed' : 'open';
+                                        }
+                                        if (issetParam($isIconColorCode)) {
+                                            $element['iconCls'] = $element[$iconColorCodeKey];
+                                        }
+                                        
+//                                        if (isset($element['children'])) {
+                                            $rowsChild[] = $element;
+//                                        } else {
+//                                            $rowsChild = $element;
+//                                        }
+                                    }
+                                }
+                                return $rowsChild;
                             }
+                            //pa(buildTree($rows, null, $idField, $parentField));
+                            
+                            $resultRChild = [];
+                            foreach ($rows as $rrow) {
+                                $gtree = buildTree($rows, $rrow[$idField], $idField, $parentField);
+                                if ($gtree) {
+                                    //pa($gtree);
+                                    $resultRChild[] = $gtree;          
+                                } else {
+                                    $resultRChild[] = $rrow;
+                                }
+                            }
+                            pa($resultRChild);
                             
                         } else {
                             
@@ -16576,19 +16847,19 @@ class Mdform_Model extends Model {
         $data = $this->db->GetAll("
             SELECT 
                 UPPER(t3.COLUMN_NAME) AS SRC_COLUMN_NAME, 
-                T3.LABEL_NAME AS SRC_LABEL_NAME,  
+                T3.LABEL_NAME AS SRC_LABEL_NAME, 
                 T3.SHOW_TYPE AS SRC_SHOW_TYPE, 
                 UPPER(T4.COLUMN_NAME) AS TRG_COLUMN_NAME, 
-                T4.LABEL_NAME AS TRG_LABEL_NAME,  
+                T4.LABEL_NAME AS TRG_LABEL_NAME, 
                 T4.SHOW_TYPE AS TRG_SHOW_TYPE 
             FROM KPI_DATAMODEL_MAP T0 
                 INNER JOIN KPI_DATAMODEL_MAP_KEY T1 ON T1.MAIN_INDICATOR_ID = T0.SRC_INDICATOR_ID 
                     AND T1.TRG_INDICATOR_ID = T0.TRG_INDICATOR_ID 
                 INNER JOIN KPI_DATAMODEL_MAP_KEY_DTL T2 ON T2.DATAMODEL_MAP_KEY_ID = T1.ID 
                 INNER JOIN KPI_INDICATOR_INDICATOR_MAP T3 ON T3.ID = T2.SRC_INDICATOR_MAP_ID 
-                INNER JOIN KPI_INDICATOR_INDICATOR_MAP T4 ON T4.ID = T2.TRG_INDICATOR_MAP_ID  
+                INNER JOIN KPI_INDICATOR_INDICATOR_MAP T4 ON T4.ID = T2.TRG_INDICATOR_MAP_ID 
             WHERE T0.SRC_INDICATOR_ID = ".$this->db->Param(0)." 
-                AND T0.TRG_INDICATOR_ID = ".$this->db->Param(1)."  
+                AND T0.TRG_INDICATOR_ID = ".$this->db->Param(1)." 
                 AND T3.IS_FILTER = 1 
             ORDER BY T3.ORDER_NUMBER ASC", [$srcIndicatorId, $trgIndicatorId]);
         
@@ -16663,19 +16934,58 @@ class Mdform_Model extends Model {
             $dataDeleteMode = Config::getFromCache('PF_MV_DATA_DELETE_MODE');
             
             if ($isSystemTable || $dataDeleteMode == '1' || ($dataDeleteMode == '2' && issetParam($row['IS_DATA_DELETE_PERMANENTLY']))) {
-                    
-                $ids = explode(',', $ids);
+                
                 self::$isGetRemoveMode = true;
+                $fillMapRows = self::getKpiIndicatorMapModel($listIndicatorId, 10000015, $crudIndicatorId);
+                
+                if (isset($fillMapRows[0]['MAP_ID'])) {
+                    
+                    $typeInfoData = self::getIndicatorAdditionalInfoModel(2015, $fillMapRows[0]['MAP_ID']);
+                    
+                    if (isset($typeInfoData['DATA'])) {
+                        
+                        $dataJson = @json_decode($typeInfoData['DATA'], true);
+                        if (isset($dataJson['RELATION_DTL']) && $dataJson['RELATION_DTL']) {
+                            
+                            foreach ($selectedRows as $selectedRow) {
+                                
+                                foreach ($dataJson['RELATION_DTL'] as $relationDtl) {
+                                    
+                                    $srcColumn = $relationDtl['SRC'];
+                                    $trgColumn = $relationDtl['TRG'];
+                                    
+                                    if ($srcColumn && $trgColumn && $deleteRecordId = issetVar($selectedRow[$srcColumn])) {
+                                        
+                                        self::getMetaVerseDataModel($indicatorId, [$trgColumn => $deleteRecordId]);
+                                        
+                                        Mdform::$mvDbParams['detailRemove'][] = [
+                                            'tableName'    => $tableName, 
+                                            'pkColumnName' => $trgColumn, 
+                                            'pkId'         => $deleteRecordId
+                                        ];
+                                        
+                                        $isRelationConfig = true;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                
+                if (!isset($isRelationConfig)) {
+                    
+                    $ids = explode(',', $ids);
 
-                foreach ($ids as $deleteRecordId) {
+                    foreach ($ids as $deleteRecordId) {
 
-                    self::getMetaVerseDataModel($indicatorId, [$idField => $deleteRecordId]);
+                        self::getMetaVerseDataModel($indicatorId, [$idField => $deleteRecordId]);
 
-                    Mdform::$mvDbParams['detailRemove'][] = [
-                        'tableName'    => $tableName, 
-                        'pkColumnName' => $idField, 
-                        'pkId'         => $deleteRecordId
-                    ];
+                        Mdform::$mvDbParams['detailRemove'][] = [
+                            'tableName'    => $tableName, 
+                            'pkColumnName' => $idField, 
+                            'pkId'         => $deleteRecordId
+                        ];
+                    }
                 }
 
                 if (isset(Mdform::$mvDbParams['detailRemove'])) {
@@ -20843,7 +21153,7 @@ class Mdform_Model extends Model {
         if ($parameters) {
             foreach ($parameters as $replaceColumn => $replaceVal) {
                 if (!is_array($replaceVal)) {
-                    $criteria = str_ireplace(':'.$replaceColumn, ($replaceVal == '' ? 'NULL' : $replaceVal), $criteria);
+                    $criteria = str_ireplace(':'.$replaceColumn, ($replaceVal == '' ? 'NULL' : "'".$replaceVal."'"), $criteria);
                 }
             }
         }
@@ -24314,6 +24624,7 @@ class Mdform_Model extends Model {
                     M.LABEL_NAME, 
                     M.IS_USE_BASKET, 
                     M.DESCRIPTION, 
+                    M.CRITERIA, 
                     M.BATCH_NUMBER, 
                     (
                         SELECT 
@@ -24408,16 +24719,388 @@ class Mdform_Model extends Model {
         }
     }
     
+    public function processActionModel($processList, $indicatorId, $buttons, $contextMenu, $indicatorIds, $batchBtn = '') {
+
+        $buttons = $contextMenu = $indicatorIds = [];
+        foreach ($processList as $process) {
+                
+            $srcIndicatorId = $process['structure_indicator_id'];
+            $crudIndicatorId = issetParam($process['crud_indicator_id']);
+            $isFillRelation = issetParam($process['is_fill_relation']);
+            $isNormalRelation = issetParam($process['is_normal_relation']);
+            $typeCode = $process['type_code'];
+            $kpiTypeId = $process['kpi_type_id'];
+            $buttonName = $className = $onClick = $description = $opt = '';
+            $isDfillRelation = issetParam($process['is_dfill_relation']);
+            $isCfillRelation = issetParam($process['is_cfill_relation']);                                                
+            $actionmode = '';
+
+            if ($srcIndicatorId == $indicatorId) {
+
+                if ($typeCode == 'create') {
+
+                    $labelName = $process['label_name'] == 'Нэмэх' ? Lang::line('add_btn') : Lang::line($process['label_name']);
+                    $className = 'btn btn-success btn-circle btn-sm';
+                    $buttonName = '<i class="far fa-plus"></i> '.$labelName;
+
+                    if ($isFillRelation) {
+                        $opt = ', {fillSelectedRow: true, mode: \'create\'}';
+                    } 
+
+                    if ($isNormalRelation) {
+                        $onClick = "mvNormalRelationRender(this, '$kpiTypeId', '".$indicatorId."', {methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId});";
+                        $actionmode = "{methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId}";
+                    } else {
+                        $actionmode = str_replace(', {', '{', $opt);
+                        $onClick = "manageKpiIndicatorValue(this, '$kpiTypeId', '".$indicatorId."', false$opt);";
+                    }
+
+                } elseif ($typeCode == 'update') {
+
+                    $labelName = $process['label_name'] == 'Засах' ? Lang::line('edit_btn') : Lang::line($process['label_name']);
+                    $isUpdate = true;
+
+                    if ($isFillRelation) {
+                        $opt = ', {fillSelectedRow: true, mode: \'update\'}';
+                    } 
+
+                    $className = 'btn btn-warning btn-circle btn-sm';
+                    $buttonName = '<i class="far fa-edit"></i> '.$labelName;
+
+                    if ($isNormalRelation) {
+                        $onClick = "mvNormalRelationRender(this, '$kpiTypeId', '".$indicatorId."', {methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId, mode: 'update'});";
+                        $actionmode = "{methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId, mode: 'update'}";
+                    } else {
+                        if (issetParam($process['widget_code']) !== '') {
+                            $actionmode = "{methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId, mode: 'update', widgetCode: '". $process['widget_code'] ."'}";
+                            $onClick = "mvWidgetRelationRender(this, '$kpiTypeId', '".$indicatorId."', {methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId, mode: 'update', widgetCode: '". $process['widget_code'] ."'});";
+                        } else {
+                            $actionmode = str_replace(', {', '{', $opt);
+                            $onClick = "manageKpiIndicatorValue(this, '$kpiTypeId', '".$indicatorId."', true$opt);";
+                        }
+                    }
+
+                    $contextMenu[] = [
+                        'crudIndicatorId' => $crudIndicatorId, 
+                        'labelName' => $labelName,
+                        'onClick' => $onClick,
+                        'actionName' => 'edit',
+                        'iconName' => 'edit', 
+                        'data-actiontype' => $typeCode, 
+                        'data-main-indicatorid' => $indicatorId, 
+                        'data-structure-indicatorid' => $indicatorId, 
+                        'data-crud-indicatorid' => $crudIndicatorId,
+                        'data-mapid' => issetParam($process['map_id'])
+                    ];
+
+                } elseif ($typeCode == 'read') {
+
+                    $isUpdate = true;
+                    $className = 'btn purple btn-circle btn-sm';
+                    $buttonName = '<i class="fas fa-eye"></i> '.Lang::line('view_btn');
+
+                    if ($isNormalRelation) {
+                        $actionmode = "{methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId, mode: 'view'}";
+                        $onClick = "mvNormalRelationRender(this, '$kpiTypeId', '".$indicatorId."', {methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId, mode: 'view'});";
+                    } else {
+                        $actionmode = "{mode: 'view'}";
+                        $onClick = "manageKpiIndicatorValue(this, '$kpiTypeId', '".$indicatorId."', true, {mode: 'view'});";
+                    }
+
+                    $contextMenu[] = [
+                        'crudIndicatorId' => $crudIndicatorId, 
+                        'labelName' => Lang::line('view_btn'),
+                        'onClick' => $onClick,
+                        'actionName' => 'view',
+                        'iconName' => 'eye', 
+                        'data-actiontype' => $typeCode, 
+                        'data-main-indicatorid' => $indicatorId, 
+                        'data-structure-indicatorid' => $indicatorId, 
+                        'data-crud-indicatorid' => $crudIndicatorId,
+                        'data-mapid' => issetParam($process['map_id'])
+                    ];
+
+                } elseif ($typeCode == 'delete') {
+
+                    $isDelete = true;
+                    $className = 'btn btn-danger btn-circle btn-sm';
+                    $buttonName = '<i class="far fa-trash"></i> '.Lang::line('delete_btn');
+                    $onClick = "removeKpiIndicatorValue(this, '".$indicatorId."');";
+
+                    $contextMenu[] = [
+                        'crudIndicatorId' => $crudIndicatorId, 
+                        'labelName' => Lang::line('delete_btn'),
+                        'onClick' => $onClick,
+                        'actionName' => 'delete',
+                        'iconName' => 'trash', 
+                        'data-actiontype' => $typeCode, 
+                        'data-main-indicatorid' => $indicatorId, 
+                        'data-structure-indicatorid' => $indicatorId, 
+                        'data-crud-indicatorid' => $crudIndicatorId,
+                        'data-mapid' => issetParam($process['map_id'])
+                    ];
+
+                } elseif ($typeCode == 'config') {
+
+                    $isDelete = true;
+                    $className = 'btn blue-steel btn-circle btn-sm';
+                    $buttonName = '<i class="far fa-tools"></i> '.Lang::line('Config');
+                    $onClick = "mapKpiIndicatorValue(this, '$kpiTypeId', '".$indicatorId."', 'config');";
+
+                    $contextMenu[] = [
+                        'crudIndicatorId' => $crudIndicatorId, 
+                        'labelName' => Lang::line('Config'),
+                        'onClick' => $onClick,
+                        'actionName' => 'config',
+                        'iconName' => 'tools', 
+                        'data-actiontype' => $typeCode, 
+                        'data-main-indicatorid' => $indicatorId, 
+                        'data-structure-indicatorid' => $indicatorId, 
+                        'data-crud-indicatorid' => $crudIndicatorId,
+                        'data-mapid' => issetParam($process['map_id'])
+                    ];
+
+                } elseif ($typeCode == '360') {
+
+                    $isDelete = true;
+                    $className = 'btn blue-steel btn-circle btn-sm';
+                    $buttonName = '<i class="far fa-tools"></i> '.Lang::line('360');
+                    $onClick = "mapKpiIndicatorValue(this, '$kpiTypeId', '".$indicatorId."', '360');";
+
+                    $contextMenu[] = [
+                        'crudIndicatorId' => $crudIndicatorId, 
+                        'labelName' => Lang::line('360'),
+                        'onClick' => $onClick,
+                        'actionName' => '360',
+                        'iconName' => 'tools', 
+                        'data-actiontype' => $typeCode, 
+                        'data-main-indicatorid' => $indicatorId, 
+                        'data-structure-indicatorid' => $indicatorId, 
+                        'data-crud-indicatorid' => $crudIndicatorId,
+                        'data-mapid' => issetParam($process['map_id'])
+                    ];
+
+                } elseif ($typeCode == 'excel') {
+
+                    $className = 'btn green btn-circle btn-sm';
+                    $buttonName = '<i class="far fa-file-excel"></i> '.Lang::line('pf_excel_import');
+                    $onClick = "excelImportKpiIndicatorValue(this, '".$indicatorId."');";
+
+                } elseif ($typeCode == 'excel_export_one_line') {
+
+                    $className = 'btn green btn-circle btn-sm';
+                    $buttonName = '<i class="far fa-file-excel"></i> Эксель нэг мөрөөр татах';
+                    $onClick = "exportExcelOneLineKpiIndicatorValue(this, '".$indicatorId."');";
+
+                } elseif ($typeCode == 'export') {
+
+                    $isDelete = true;
+                    $className = 'btn green btn-circle btn-sm';
+                    $buttonName = '<i class="far fa-download"></i> '.Lang::line('excel_export_btn');
+                    $onClick = "exportKpiIndicatorValue(this, '".$indicatorId."');";
+
+                } elseif ($kpiTypeId == '1191') {
+
+                    $className = 'btn blue-steel btn-circle btn-sm';
+                    $buttonName = '<i class="far fa-play"></i> ' . Lang::line($process['label_name'] ? $process['label_name'] : $process['name']);
+                    $onClick = "manageKpiIndicatorValue(this, '$kpiTypeId', '$crudIndicatorId', false, {transferSelectedRow: true});";
+
+                } elseif ($kpiTypeId == '1080') {
+
+                    $className = 'btn blue-steel btn-circle btn-sm';
+                    $buttonName = '<i class="far fa-play"></i> ' . Lang::line($process['label_name'] ? $process['label_name'] : $process['name']);
+                    $onClick = "callWebServiceKpiIndicatorValue(this, '$crudIndicatorId');";
+                    
+                } elseif ($typeCode == 'import') {
+
+                    $className = 'btn green btn-circle btn-sm';
+                    $buttonName = '<i class="far fa-file-import"></i> '.Lang::line('Импорт');
+                    $onClick = "dataImportKpiIndicatorValue(this, '".$indicatorId."');";
+                } 
+
+            } else {
+
+                $description = Lang::line(issetParam($process['description']));
+                $processName = Lang::line(issetParam($process['label_name']));
+
+                if ($typeCode == 'create') {
+
+                    $className = 'btn btn-success btn-circle btn-sm';
+                    $buttonName = '<i class="far fa-plus"></i> '.$processName;
+
+                    if ($isFillRelation) {
+                        $opt = ', {fillSelectedRow: true, mode: \'create\'}';
+                    } elseif ($isDfillRelation) {
+                        $opt = ', {fillDynamicSelectedRow: true, mode: \'create\'}';
+                    } elseif ($isCfillRelation) {
+                        $opt = ', {consolidateFillSelectedRow: true, mode: \'create\'}';
+                    }
+
+                    if ($isNormalRelation) {
+                        if (issetParam($process['widget_code']) !== '') {
+                            $actionmode = "{methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId, mode: 'update', widgetCode: '". $process['widget_code'] ."'}";
+                            $onClick = "mvWidgetRelationRender(this, '$kpiTypeId', '".$indicatorId."', {methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId, mode: 'update', widgetCode: '". $process['widget_code'] ."'});";
+                        } else {
+                            $actionmode = "{methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId}";
+                            $onClick = "mvNormalRelationRender(this, '$kpiTypeId', '".$indicatorId."', {methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId});";
+                        }
+                    } else {
+                        $actionmode = str_replace(', {', '{', $opt);
+                        $onClick = "manageKpiIndicatorValue(this, '$kpiTypeId', '$srcIndicatorId', false$opt);";
+                    }
+
+                } elseif ($typeCode == 'update') {
+
+                    $className = 'btn btn-warning btn-circle btn-sm';
+                    $buttonName = '<i class="far fa-edit"></i> '.$processName;
+
+                    if ($isFillRelation) {
+                        $opt = ', {fillSelectedRow: true, mode: \'update\'}';
+                    } elseif ($isDfillRelation) {
+                        $opt = ', {fillDynamicSelectedRow: true, mode: \'update\'}';
+                    }
+
+                    if ($isNormalRelation) {
+                        $actionmode = "{methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId, mode: 'update', isFillRelation: '$isFillRelation'}";
+                        $onClick = "mvNormalRelationRender(this, '$kpiTypeId', '".$indicatorId."', {methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId, mode: 'update', isFillRelation: '$isFillRelation'});";
+                    } else {
+                        if (issetParam($process['widget_code']) !== '') {
+                            $actionmode = "{methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId, mode: 'update', widgetCode: '". $process['widget_code'] ."'}";
+                            $onClick = "mvWidgetRelationRender(this, '$kpiTypeId', '".$indicatorId."', {methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId, mode: 'update', widgetCode: '". $process['widget_code'] ."'});";
+                        } else {
+                            $actionmode = str_replace(', {', '{', $opt);
+                            $onClick = "manageKpiIndicatorValue(this, '$kpiTypeId', '$srcIndicatorId', true$opt);";
+                        }
+                    }
+                    
+                    $contextMenu[] = [
+                        'crudIndicatorId' => $crudIndicatorId, 
+                        'labelName' => $processName,
+                        'onClick' => $onClick,
+                        'actionName' => 'edit',
+                        'iconName' => 'edit', 
+                        'data-actiontype' => $typeCode, 
+                        'data-main-indicatorid' => $indicatorId, 
+                        'data-structure-indicatorid' => $srcIndicatorId, 
+                        'data-crud-indicatorid' => $crudIndicatorId,
+                        'data-mapid' => issetParam($process['map_id'])
+                    ];
+
+                } elseif ($typeCode == 'read') {
+
+                    $className = 'btn purple btn-circle btn-sm';
+                    $buttonName = '<i class="far fa-eye"></i> '.$processName;
+
+                    if ($isFillRelation) {
+                        $opt = ', {fillSelectedRow: true, mode: \'view\'}';
+                    } elseif ($isDfillRelation) {
+                        $opt = ', {fillDynamicSelectedRow: true, mode: \'view\'}';
+                    } else {
+                        $opt = ', {mode: \'view\'}';
+                    }
+
+                    if ($isNormalRelation) {
+                        $actionmode = "{methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId, mode: 'view'}";
+                        $onClick = "mvNormalRelationRender(this, '$kpiTypeId', '".$indicatorId."', {methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId, mode: 'view'});";
+                    } else {
+                        if (issetParam($process['widget_code']) !== '') {
+                            $actionmode = "{methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId, mode: 'update', widgetCode: '". $process['widget_code'] ."'}";
+                            $onClick = "mvWidgetRelationRender(this, '$kpiTypeId', '".$indicatorId."', {methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId, mode: 'update', widgetCode: '". $process['widget_code'] ."'});";
+                        } else {
+                            $actionmode = str_replace(', {', '{', $opt);
+                            $onClick = "manageKpiIndicatorValue(this, '$kpiTypeId', '$srcIndicatorId', true$opt);";
+                        }
+                    }
+
+                } elseif ($typeCode == 'delete') {
+
+                    $className = 'btn btn-danger btn-circle btn-sm';
+                    $buttonName = '<i class="far fa-trash"></i> '.$processName;
+                    $onClick = "removeKpiIndicatorValue(this, '$srcIndicatorId');";
+
+                } elseif ($typeCode == 'excel') {
+
+                    $className = 'btn green btn-circle btn-sm';
+                    $buttonName = '<i class="far fa-file-excel"></i> '.$processName;
+                    $onClick = "excelImportKpiIndicatorValue(this, '$srcIndicatorId');";
+
+                } elseif ($process['code'] == 'sendmail') {
+
+                    $className = 'btn green btn-circle btn-sm';
+                    $buttonName = $processName;
+                    $onClick = "mvDataViewSendMailBySelectionRowsInit(this, '$crudIndicatorId', '$indicatorId', '');";
+                    
+                } elseif ($typeCode == 'import') {
+
+                    $className = 'btn green btn-circle btn-sm';
+                    $buttonName = '<i class="far fa-file-import"></i> '.Lang::line('Импорт');
+                    $onClick = "dataImportKpiIndicatorValue(this, '$srcIndicatorId', '$indicatorId');";
+                } 
+            }
+
+            if ($batchBtn !== '') {
+                $batchBtn .= '<li>';
+                    $batchBtn .= html_tag('a', [ 
+                            'href' => 'javascript:;', 
+                            'data-qtip-title' => $description, 
+                            'data-qtip-pos' => 'top', 
+                            'onclick' => $onClick, 
+                            'data-actiontype' => $typeCode, 
+                            'data-main-indicatorid' => $indicatorId, 
+                            'data-structure-indicatorid' => $indicatorId, 
+                            'data-crud-indicatorid' => $crudIndicatorId,
+                            'data-mapid' => issetParam($process['map_id']),
+                            'data-criteria' => issetParam($process['criteria'])
+                        ], 
+                        $buttonName, true
+                    );  
+                $batchBtn .= '</li>';
+            }
+
+            $buttons[] = html_tag('a', [ 
+                    'href' => 'javascript:;', 
+                    'class' => $className, 
+                    'data-qtip-title' => $description, 
+                    'data-qtip-pos' => 'top', 
+                    'onclick' => $onClick, 
+                    'data-actiontype' => $typeCode, 
+                    'data-main-indicatorid' => $indicatorId, 
+                    'data-structure-indicatorid' => $indicatorId, 
+                    'data-crud-indicatorid' => $crudIndicatorId,
+                    'data-mapid' => issetParam($process['map_id']),
+                    'data-criteria' => issetParam($process['criteria'])
+                ], 
+                $buttonName, true
+            );
+            
+            $indicatorIds[$crudIndicatorId] = [ 
+                'href' => 'javascript:;', 
+                'class' => $className, 
+                'data-qtip-title' => $description, 
+                'data-qtip-pos' => 'top', 
+                'onclick' => $onClick, 
+                'data-actiontype' => $typeCode, 
+                'data-actiontypeid' => $kpiTypeId, 
+                'data-actionmode' => $actionmode, 
+                'data-main-indicatorid' => $indicatorId, 
+                'data-structure-indicatorid' => $indicatorId, 
+                'data-crud-indicatorid' => $crudIndicatorId,
+                'data-mapid' => issetParam($process['map_id'])
+            ];
+        }
+
+        return array('buttons' => $buttons, 'contextMenu' => $contextMenu, 'indicatorIds' => $indicatorIds, 'batchBtn' => $batchBtn);
+    }
+
     public function indicatorActionsModel($config = []) {
         
         $buttons = $contextMenu = $indicatorIds = [];
         $indicatorId = $config['indicatorId'];
-        $batchBtn = "";
+        
         $groupBatchedArr = Arr::groupByArrayOnlyRows($config['processList'], 'batch_number');
         
         if (count($groupBatchedArr) > 1 && issetParamArray($groupBatchedArr[''])) {
             $config['processList'] = $groupBatchedArr[''];
-            
             if ($groupBatchedArr) {
                 foreach ($groupBatchedArr as $key => $processList) {
                     $qry = "SELECT 
@@ -24433,372 +25116,39 @@ class Mdform_Model extends Model {
                                 FROM KPI_INDICATOR_INDICATOR_MAP
                                 WHERE SRC_INDICATOR_ID = ". $this->db->Param(0) ."
                                     AND BATCH_NUMBER = ". $this->db->Param(1) ."
-                                    AND IS_DROP = 1 
                                     AND SEMANTIC_TYPE_ID = 125";
-
+                    
                     $batch = $this->db->GetRow($qry, array($indicatorId, $key));
-
                     if ($batch) {
-                        $batchBtn .= '<div class="btn-group dv-buttons-batch">';
-                            $batchBtn .= '<button class="btn ' . (isset($batch['BUTTON_STYLE']) ? $batch['BUTTON_STYLE'] : 'btn-secondary') . ' btn-circle btn-sm dropdown-toggle" type="button" data-toggle="dropdown">';
-                            $batchBtn .= (($batch['ICON_NAME'] != '') ? '<i class="far ' . $batch['ICON_NAME'] . '"></i> ' : '<i class="icon-plus3 font-size-12"></i> ') . Lang::line($batch['BATCH_NAME']);
-                            $batchBtn .= '</button>';
-                            $batchBtn .= '<ul class="dropdown-menu" role="menu">';
-
-
-                            foreach ($processList as $process) {
-
-                                $srcIndicatorId = $process['structure_indicator_id'];
-                                $crudIndicatorId = issetParam($process['crud_indicator_id']);
-                                $isFillRelation = issetParam($process['is_fill_relation']);
-                                $isNormalRelation = issetParam($process['is_normal_relation']);
-                                $typeCode = $process['type_code'];
-                                $kpiTypeId = $process['kpi_type_id'];
-                                $buttonName = $className = $onClick = $description = $opt = '';
-                                $isDfillRelation = issetParam($process['is_dfill_relation']);
-                                $isCfillRelation = issetParam($process['is_cfill_relation']);                                                
-                                $actionmode = '';
-
-                                if ($srcIndicatorId == $indicatorId) {
-
-                                    if ($typeCode == 'create') {
-
-                                        $labelName = $process['label_name'] == 'Нэмэх' ? Lang::line('add_btn') : Lang::line($process['label_name']);
-                                        $className = 'btn btn-success btn-circle btn-sm';
-                                        $buttonName = '<i class="far fa-plus"></i> '.$labelName;
-
-                                        if ($isFillRelation) {
-                                            $opt = ', {fillSelectedRow: true, mode: \'create\'}';
-                                        } 
-
-                                        if ($isNormalRelation) {
-                                            $onClick = "mvNormalRelationRender(this, '$kpiTypeId', '".$indicatorId."', {methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId});";
-                                            $actionmode = "{methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId}";
-                                        } else {
-                                            $actionmode = str_replace(', {', '{', $opt);
-                                            $onClick = "manageKpiIndicatorValue(this, '$kpiTypeId', '".$indicatorId."', false$opt);";
-                                        }
-
-                                    } elseif ($typeCode == 'update') {
-
-                                        $labelName = $process['label_name'] == 'Засах' ? Lang::line('edit_btn') : Lang::line($process['label_name']);
-                                        $isUpdate = true;
-
-                                        if ($isFillRelation) {
-                                            $opt = ', {fillSelectedRow: true, mode: \'update\'}';
-                                        } 
-
-                                        $className = 'btn btn-warning btn-circle btn-sm';
-                                        $buttonName = '<i class="far fa-edit"></i> '.$labelName;
-
-                                        if ($isNormalRelation) {
-                                            $onClick = "mvNormalRelationRender(this, '$kpiTypeId', '".$indicatorId."', {methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId, mode: 'update'});";
-                                            $actionmode = "{methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId, mode: 'update'}";
-                                        } else {
-                                            if (issetParam($process['widget_code']) !== '') {
-                                                $actionmode = "{methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId, mode: 'update', widgetCode: '". $process['widget_code'] ."'}";
-                                                $onClick = "mvWidgetRelationRender(this, '$kpiTypeId', '".$indicatorId."', {methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId, mode: 'update', widgetCode: '". $process['widget_code'] ."'});";
-                                            } else {
-                                                $actionmode = str_replace(', {', '{', $opt);
-                                                $onClick = "manageKpiIndicatorValue(this, '$kpiTypeId', '".$indicatorId."', true$opt);";
-                                            }
-                                        }
-
-                                        $contextMenu[] = [
-                                            'crudIndicatorId' => $crudIndicatorId, 
-                                            'labelName' => $labelName,
-                                            'onClick' => $onClick,
-                                            'actionName' => 'edit',
-                                            'iconName' => 'edit', 
-                                            'data-actiontype' => $typeCode, 
-                                            'data-main-indicatorid' => $indicatorId, 
-                                            'data-structure-indicatorid' => $indicatorId, 
-                                            'data-crud-indicatorid' => $crudIndicatorId,
-                                            'data-mapid' => issetParam($process['map_id'])
-                                        ];
-
-                                    } elseif ($typeCode == 'read') {
-
-                                        $isUpdate = true;
-                                        $className = 'btn purple btn-circle btn-sm';
-                                        $buttonName = '<i class="fas fa-eye"></i> '.Lang::line('view_btn');
-
-                                        if ($isNormalRelation) {
-                                            $actionmode = "{methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId, mode: 'view'}";
-                                            $onClick = "mvNormalRelationRender(this, '$kpiTypeId', '".$indicatorId."', {methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId, mode: 'view'});";
-                                        } else {
-                                            $actionmode = "{mode: 'view'}";
-                                            $onClick = "manageKpiIndicatorValue(this, '$kpiTypeId', '".$indicatorId."', true, {mode: 'view'});";
-                                        }
-
-                                        $contextMenu[] = [
-                                            'crudIndicatorId' => $crudIndicatorId, 
-                                            'labelName' => Lang::line('view_btn'),
-                                            'onClick' => $onClick,
-                                            'actionName' => 'view',
-                                            'iconName' => 'eye', 
-                                            'data-actiontype' => $typeCode, 
-                                            'data-main-indicatorid' => $indicatorId, 
-                                            'data-structure-indicatorid' => $indicatorId, 
-                                            'data-crud-indicatorid' => $crudIndicatorId,
-                                            'data-mapid' => issetParam($process['map_id'])
-                                        ];
-
-                                    } elseif ($typeCode == 'delete') {
-
-                                        $isDelete = true;
-                                        $className = 'btn btn-danger btn-circle btn-sm';
-                                        $buttonName = '<i class="far fa-trash"></i> '.Lang::line('delete_btn');
-                                        $onClick = "removeKpiIndicatorValue(this, '".$indicatorId."');";
-
-                                        $contextMenu[] = [
-                                            'crudIndicatorId' => $crudIndicatorId, 
-                                            'labelName' => Lang::line('delete_btn'),
-                                            'onClick' => $onClick,
-                                            'actionName' => 'delete',
-                                            'iconName' => 'trash', 
-                                            'data-actiontype' => $typeCode, 
-                                            'data-main-indicatorid' => $indicatorId, 
-                                            'data-structure-indicatorid' => $indicatorId, 
-                                            'data-crud-indicatorid' => $crudIndicatorId,
-                                            'data-mapid' => issetParam($process['map_id'])
-                                        ];
-
-                                    } elseif ($typeCode == 'config') {
-
-                                        $isDelete = true;
-                                        $className = 'btn blue-steel btn-circle btn-sm';
-                                        $buttonName = '<i class="far fa-tools"></i> '.Lang::line('Config');
-                                        $onClick = "mapKpiIndicatorValue(this, '$kpiTypeId', '".$indicatorId."', 'config');";
-
-                                        $contextMenu[] = [
-                                            'crudIndicatorId' => $crudIndicatorId, 
-                                            'labelName' => Lang::line('Config'),
-                                            'onClick' => $onClick,
-                                            'actionName' => 'config',
-                                            'iconName' => 'tools', 
-                                            'data-actiontype' => $typeCode, 
-                                            'data-main-indicatorid' => $indicatorId, 
-                                            'data-structure-indicatorid' => $indicatorId, 
-                                            'data-crud-indicatorid' => $crudIndicatorId,
-                                            'data-mapid' => issetParam($process['map_id'])
-                                        ];
-
-                                    } elseif ($typeCode == '360') {
-
-                                        $isDelete = true;
-                                        $className = 'btn blue-steel btn-circle btn-sm';
-                                        $buttonName = '<i class="far fa-tools"></i> '.Lang::line('360');
-                                        $onClick = "mapKpiIndicatorValue(this, '$kpiTypeId', '".$indicatorId."', '360');";
-
-                                        $contextMenu[] = [
-                                            'crudIndicatorId' => $crudIndicatorId, 
-                                            'labelName' => Lang::line('360'),
-                                            'onClick' => $onClick,
-                                            'actionName' => '360',
-                                            'iconName' => 'tools', 
-                                            'data-actiontype' => $typeCode, 
-                                            'data-main-indicatorid' => $indicatorId, 
-                                            'data-structure-indicatorid' => $indicatorId, 
-                                            'data-crud-indicatorid' => $crudIndicatorId,
-                                            'data-mapid' => issetParam($process['map_id'])
-                                        ];
-
-                                    } elseif ($typeCode == 'excel') {
-
-                                        $className = 'btn green btn-circle btn-sm';
-                                        $buttonName = '<i class="far fa-file-excel"></i> '.Lang::line('pf_excel_import');
-                                        $onClick = "excelImportKpiIndicatorValue(this, '".$indicatorId."');";
-
-                                    } elseif ($typeCode == 'excel_export_one_line') {
-
-                                        $className = 'btn green btn-circle btn-sm';
-                                        $buttonName = '<i class="far fa-file-excel"></i> Эксель нэг мөрөөр татах';
-                                        $onClick = "exportExcelOneLineKpiIndicatorValue(this, '".$indicatorId."');";
-
-                                    } elseif ($typeCode == 'export') {
-
-                                        $isDelete = true;
-                                        $className = 'btn green btn-circle btn-sm';
-                                        $buttonName = '<i class="far fa-download"></i> '.Lang::line('excel_export_btn');
-                                        $onClick = "exportKpiIndicatorValue(this, '".$indicatorId."');";
-
-                                    } elseif ($kpiTypeId == '1191') {
-
-                                        $className = 'btn blue-steel btn-circle btn-sm';
-                                        $buttonName = '<i class="far fa-play"></i> ' . Lang::line($process['label_name'] ? $process['label_name'] : $process['name']);
-                                        $onClick = "manageKpiIndicatorValue(this, '$kpiTypeId', '$crudIndicatorId', false, {transferSelectedRow: true});";
-
-                                    } elseif ($kpiTypeId == '1080') {
-
-                                        $className = 'btn blue-steel btn-circle btn-sm';
-                                        $buttonName = '<i class="far fa-play"></i> ' . Lang::line($process['label_name'] ? $process['label_name'] : $process['name']);
-                                        $onClick = "callWebServiceKpiIndicatorValue(this, '$crudIndicatorId');";
-
-                                    } elseif ($typeCode == 'import') {
-
-                                        $className = 'btn green btn-circle btn-sm';
-                                        $buttonName = '<i class="far fa-file-import"></i> '.Lang::line('Импорт');
-                                        $onClick = "dataImportKpiIndicatorValue(this, '".$indicatorId."');";
-                                    } 
-
-                                } else {
-
-                                    $description = Lang::line(issetParam($process['description']));
-                                    $processName = Lang::line(issetParam($process['label_name']));
-
-                                    if ($typeCode == 'create') {
-
-                                        $className = 'btn btn-success btn-circle btn-sm';
-                                        $buttonName = '<i class="far fa-plus"></i> '.$processName;
-
-                                        if ($isFillRelation) {
-                                            $opt = ', {fillSelectedRow: true, mode: \'create\'}';
-                                        } elseif ($isDfillRelation) {
-                                            $opt = ', {fillDynamicSelectedRow: true, mode: \'create\'}';
-                                        } elseif ($isCfillRelation) {
-                                            $opt = ', {consolidateFillSelectedRow: true, mode: \'create\'}';
-                                        }
-
-                                        if ($isNormalRelation) {
-                                            if (issetParam($process['widget_code']) !== '') {
-                                                $actionmode = "{methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId, mode: 'update', widgetCode: '". $process['widget_code'] ."'}";
-                                                $onClick = "mvWidgetRelationRender(this, '$kpiTypeId', '".$indicatorId."', {methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId, mode: 'update', widgetCode: '". $process['widget_code'] ."'});";
-                                            } else {
-                                                $actionmode = "{methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId}";
-                                                $onClick = "mvNormalRelationRender(this, '$kpiTypeId', '".$indicatorId."', {methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId});";
-                                            }
-                                        } else {
-                                            $actionmode = str_replace(', {', '{', $opt);
-                                            $onClick = "manageKpiIndicatorValue(this, '$kpiTypeId', '$srcIndicatorId', false$opt);";
-                                        }
-
-                                    } elseif ($typeCode == 'update') {
-
-                                        $className = 'btn btn-warning btn-circle btn-sm';
-                                        $buttonName = '<i class="far fa-edit"></i> '.$processName;
-
-                                        if ($isFillRelation) {
-                                            $opt = ', {fillSelectedRow: true, mode: \'update\'}';
-                                        } elseif ($isDfillRelation) {
-                                            $opt = ', {fillDynamicSelectedRow: true, mode: \'update\'}';
-                                        }
-
-                                        if ($isNormalRelation) {
-                                            $actionmode = "{methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId, mode: 'update', isFillRelation: '$isFillRelation'}";
-                                            $onClick = "mvNormalRelationRender(this, '$kpiTypeId', '".$indicatorId."', {methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId, mode: 'update', isFillRelation: '$isFillRelation'});";
-                                        } else {
-                                            if (issetParam($process['widget_code']) !== '') {
-                                                $actionmode = "{methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId, mode: 'update', widgetCode: '". $process['widget_code'] ."'}";
-                                                $onClick = "mvWidgetRelationRender(this, '$kpiTypeId', '".$indicatorId."', {methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId, mode: 'update', widgetCode: '". $process['widget_code'] ."'});";
-                                            } else {
-                                                $actionmode = str_replace(', {', '{', $opt);
-                                                $onClick = "manageKpiIndicatorValue(this, '$kpiTypeId', '$srcIndicatorId', true$opt);";
-                                            }
-                                        }
-
-                                        $contextMenu[] = [
-                                            'crudIndicatorId' => $crudIndicatorId, 
-                                            'labelName' => $processName,
-                                            'onClick' => $onClick,
-                                            'actionName' => 'edit',
-                                            'iconName' => 'edit', 
-                                            'data-actiontype' => $typeCode, 
-                                            'data-main-indicatorid' => $indicatorId, 
-                                            'data-structure-indicatorid' => $srcIndicatorId, 
-                                            'data-crud-indicatorid' => $crudIndicatorId,
-                                            'data-mapid' => issetParam($process['map_id'])
-                                        ];
-
-                                    } elseif ($typeCode == 'read') {
-
-                                        $className = 'btn purple btn-circle btn-sm';
-                                        $buttonName = '<i class="far fa-eye"></i> '.$processName;
-
-                                        if ($isFillRelation) {
-                                            $opt = ', {fillSelectedRow: true, mode: \'view\'}';
-                                        } elseif ($isDfillRelation) {
-                                            $opt = ', {fillDynamicSelectedRow: true, mode: \'view\'}';
-                                        } else {
-                                            $opt = ', {mode: \'view\'}';
-                                        }
-
-                                        if ($isNormalRelation) {
-                                            $actionmode = "{methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId, mode: 'view'}";
-                                            $onClick = "mvNormalRelationRender(this, '$kpiTypeId', '".$indicatorId."', {methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId, mode: 'view'});";
-                                        } else {
-                                            if (issetParam($process['widget_code']) !== '') {
-                                                $actionmode = "{methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId, mode: 'update', widgetCode: '". $process['widget_code'] ."'}";
-                                                $onClick = "mvWidgetRelationRender(this, '$kpiTypeId', '".$indicatorId."', {methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId, mode: 'update', widgetCode: '". $process['widget_code'] ."'});";
-                                            } else {
-                                                $actionmode = str_replace(', {', '{', $opt);
-                                                $onClick = "manageKpiIndicatorValue(this, '$kpiTypeId', '$srcIndicatorId', true$opt);";
-                                            }
-                                        }
-
-                                    } elseif ($typeCode == 'delete') {
-
-                                        $className = 'btn btn-danger btn-circle btn-sm';
-                                        $buttonName = '<i class="far fa-trash"></i> '.$processName;
-                                        $onClick = "removeKpiIndicatorValue(this, '$srcIndicatorId');";
-
-                                    } elseif ($typeCode == 'excel') {
-
-                                        $className = 'btn green btn-circle btn-sm';
-                                        $buttonName = '<i class="far fa-file-excel"></i> '.$processName;
-                                        $onClick = "excelImportKpiIndicatorValue(this, '$srcIndicatorId');";
-
-                                    } elseif ($process['code'] == 'sendmail') {
-
-                                        $className = 'btn green btn-circle btn-sm';
-                                        $buttonName = $processName;
-                                        $onClick = "mvDataViewSendMailBySelectionRowsInit(this, '$crudIndicatorId', '$indicatorId', '');";
-
-                                    } elseif ($typeCode == 'import') {
-
-                                        $className = 'btn green btn-circle btn-sm';
-                                        $buttonName = '<i class="far fa-file-import"></i> '.Lang::line('Импорт');
-                                        $onClick = "dataImportKpiIndicatorValue(this, '$srcIndicatorId', '$indicatorId');";
-                                    } 
-                                }
-
-                                $batchBtn .= '<li>';
-                                $batchBtn .= html_tag('a', [ 
-                                        'href' => 'javascript:;', 
-                                        'data-qtip-title' => $description, 
-                                        'data-qtip-pos' => 'top', 
-                                        'onclick' => $onClick, 
-                                        'data-actiontype' => $typeCode, 
-                                        'data-main-indicatorid' => $indicatorId, 
-                                        'data-structure-indicatorid' => $indicatorId, 
-                                        'data-crud-indicatorid' => $crudIndicatorId,
-                                        'data-mapid' => issetParam($process['map_id'])
-                                    ], 
-                                    $buttonName, true
-                                );
-                                $batchBtn .= '</li>';
-                                $indicatorIds[$crudIndicatorId] = [ 
-                                    'href' => 'javascript:;', 
-                                    'class' => $className, 
-                                    'data-qtip-title' => $description, 
-                                    'data-qtip-pos' => 'top', 
-                                    'onclick' => $onClick, 
-                                    'data-actiontype' => $typeCode, 
-                                    'data-actiontypeid' => $kpiTypeId, 
-                                    'data-actionmode' => $actionmode, 
-                                    'data-main-indicatorid' => $indicatorId, 
-                                    'data-structure-indicatorid' => $indicatorId, 
-                                    'data-crud-indicatorid' => $crudIndicatorId,
-                                    'data-mapid' => issetParam($process['map_id'])
-                                ];
-                            }
-
-                            $batchBtn .= '</ul>';
-                        $batchBtn .= '</div>';
+                        if ($batch['IS_DROP'] === '1') {
+                            $batchBtn = '<div class="btn-group dv-buttons-batch">';
+                                $batchBtn .= '<button class="btn ' . (isset($batch['BUTTON_STYLE']) ? $batch['BUTTON_STYLE'] : 'btn-secondary') . ' btn-circle btn-sm dropdown-toggle" type="button" data-toggle="dropdown">';
+                                    $batchBtn .= (($batch['ICON_NAME'] != '') ? '<i class="far ' . $batch['ICON_NAME'] . '"></i> ' : '<i class="icon-plus3 font-size-12"></i> ') . Lang::line($batch['BATCH_NAME']);
+                                $batchBtn .= '</button>';
+                                $batchBtn .= '<ul class="dropdown-menu" role="menu">';
+
+                                    $processActions = self::processActionModel($processList, $indicatorId, $buttons, $contextMenu, $indicatorIds, $batchBtn);
+                                    if ($processActions['batchBtn']) {
+                                        $batchBtn = $processActions['batchBtn'];
+                                    }
+
+                                $batchBtn .= '</ul>';
+                            $batchBtn .= '</div>';
+                        } else {
+                            $jsonRow = htmlentities(json_encode($processList), ENT_QUOTES, 'UTF-8'); 
+                            $batchBtn = "";
+                            $batchBtn .= '<a href="javascript:;" class="btn ' . (isset($batch['BUTTON_STYLE']) ? $batch['BUTTON_STYLE'] : 'btn-secondary') . ' btn-circle btn-sm " data-rowdata="'. $jsonRow .'" type="button" onclick="transferIndicatorAction(this, \''. $indicatorId .'\')">';
+                                $batchBtn .= (($batch['ICON_NAME'] != '') ? '<i class="far ' . $batch['ICON_NAME'] . '"></i> ' : '<i class="icon-plus3 font-size-12"></i> ') . Lang::line($batch['BATCH_NAME']);
+                            $batchBtn .= '</a>';
+                            /* print_array($processList);
+                            die; */
+                        }
                         $buttons[] = $batchBtn;
+                    } else {
+                        $config['processList'] = array_merge($config['processList'], $processList);
                     }
                 }
-            }   
+            }
         }
 
         if ($config['isDataMart']) {
@@ -24854,354 +25204,14 @@ class Mdform_Model extends Model {
 
         } else {
                                         
-            $processList = $config['processList'];
-
-            foreach ($processList as $process) {
-                
-                $srcIndicatorId = $process['structure_indicator_id'];
-                $crudIndicatorId = issetParam($process['crud_indicator_id']);
-                $isFillRelation = issetParam($process['is_fill_relation']);
-                $isNormalRelation = issetParam($process['is_normal_relation']);
-                $typeCode = $process['type_code'];
-                $kpiTypeId = $process['kpi_type_id'];
-                $buttonName = $className = $onClick = $description = $opt = '';
-                $isDfillRelation = issetParam($process['is_dfill_relation']);
-                $isCfillRelation = issetParam($process['is_cfill_relation']);                                                
-                $actionmode = '';
-
-                if ($srcIndicatorId == $indicatorId) {
-
-                    if ($typeCode == 'create') {
-
-                        $labelName = $process['label_name'] == 'Нэмэх' ? Lang::line('add_btn') : Lang::line($process['label_name']);
-                        $className = 'btn btn-success btn-circle btn-sm';
-                        $buttonName = '<i class="far fa-plus"></i> '.$labelName;
-
-                        if ($isFillRelation) {
-                            $opt = ', {fillSelectedRow: true, mode: \'create\'}';
-                        } 
-
-                        if ($isNormalRelation) {
-                            $onClick = "mvNormalRelationRender(this, '$kpiTypeId', '".$indicatorId."', {methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId});";
-                            $actionmode = "{methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId}";
-                        } else {
-                            $actionmode = str_replace(', {', '{', $opt);
-                            $onClick = "manageKpiIndicatorValue(this, '$kpiTypeId', '".$indicatorId."', false$opt);";
-                        }
-
-                    } elseif ($typeCode == 'update') {
-
-                        $labelName = $process['label_name'] == 'Засах' ? Lang::line('edit_btn') : Lang::line($process['label_name']);
-                        $isUpdate = true;
-
-                        if ($isFillRelation) {
-                            $opt = ', {fillSelectedRow: true, mode: \'update\'}';
-                        } 
-
-                        $className = 'btn btn-warning btn-circle btn-sm';
-                        $buttonName = '<i class="far fa-edit"></i> '.$labelName;
-
-                        if ($isNormalRelation) {
-                            $onClick = "mvNormalRelationRender(this, '$kpiTypeId', '".$indicatorId."', {methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId, mode: 'update'});";
-                            $actionmode = "{methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId, mode: 'update'}";
-                        } else {
-                            if (issetParam($process['widget_code']) !== '') {
-                                $actionmode = "{methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId, mode: 'update', widgetCode: '". $process['widget_code'] ."'}";
-                                $onClick = "mvWidgetRelationRender(this, '$kpiTypeId', '".$indicatorId."', {methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId, mode: 'update', widgetCode: '". $process['widget_code'] ."'});";
-                            } else {
-                                $actionmode = str_replace(', {', '{', $opt);
-                                $onClick = "manageKpiIndicatorValue(this, '$kpiTypeId', '".$indicatorId."', true$opt);";
-                            }
-                        }
-
-                        $contextMenu[] = [
-                            'crudIndicatorId' => $crudIndicatorId, 
-                            'labelName' => $labelName,
-                            'onClick' => $onClick,
-                            'actionName' => 'edit',
-                            'iconName' => 'edit', 
-                            'data-actiontype' => $typeCode, 
-                            'data-main-indicatorid' => $indicatorId, 
-                            'data-structure-indicatorid' => $indicatorId, 
-                            'data-crud-indicatorid' => $crudIndicatorId,
-                            'data-mapid' => issetParam($process['map_id'])
-                        ];
-
-                    } elseif ($typeCode == 'read') {
-
-                        $isUpdate = true;
-                        $className = 'btn purple btn-circle btn-sm';
-                        $buttonName = '<i class="fas fa-eye"></i> '.Lang::line('view_btn');
-
-                        if ($isNormalRelation) {
-                            $actionmode = "{methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId, mode: 'view'}";
-                            $onClick = "mvNormalRelationRender(this, '$kpiTypeId', '".$indicatorId."', {methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId, mode: 'view'});";
-                        } else {
-                            $actionmode = "{mode: 'view'}";
-                            $onClick = "manageKpiIndicatorValue(this, '$kpiTypeId', '".$indicatorId."', true, {mode: 'view'});";
-                        }
-
-                        $contextMenu[] = [
-                            'crudIndicatorId' => $crudIndicatorId, 
-                            'labelName' => Lang::line('view_btn'),
-                            'onClick' => $onClick,
-                            'actionName' => 'view',
-                            'iconName' => 'eye', 
-                            'data-actiontype' => $typeCode, 
-                            'data-main-indicatorid' => $indicatorId, 
-                            'data-structure-indicatorid' => $indicatorId, 
-                            'data-crud-indicatorid' => $crudIndicatorId,
-                            'data-mapid' => issetParam($process['map_id'])
-                        ];
-
-                    } elseif ($typeCode == 'delete') {
-
-                        $isDelete = true;
-                        $className = 'btn btn-danger btn-circle btn-sm';
-                        $buttonName = '<i class="far fa-trash"></i> '.Lang::line('delete_btn');
-                        $onClick = "removeKpiIndicatorValue(this, '".$indicatorId."');";
-
-                        $contextMenu[] = [
-                            'crudIndicatorId' => $crudIndicatorId, 
-                            'labelName' => Lang::line('delete_btn'),
-                            'onClick' => $onClick,
-                            'actionName' => 'delete',
-                            'iconName' => 'trash', 
-                            'data-actiontype' => $typeCode, 
-                            'data-main-indicatorid' => $indicatorId, 
-                            'data-structure-indicatorid' => $indicatorId, 
-                            'data-crud-indicatorid' => $crudIndicatorId,
-                            'data-mapid' => issetParam($process['map_id'])
-                        ];
-
-                    } elseif ($typeCode == 'config') {
-
-                        $isDelete = true;
-                        $className = 'btn blue-steel btn-circle btn-sm';
-                        $buttonName = '<i class="far fa-tools"></i> '.Lang::line('Config');
-                        $onClick = "mapKpiIndicatorValue(this, '$kpiTypeId', '".$indicatorId."', 'config');";
-
-                        $contextMenu[] = [
-                            'crudIndicatorId' => $crudIndicatorId, 
-                            'labelName' => Lang::line('Config'),
-                            'onClick' => $onClick,
-                            'actionName' => 'config',
-                            'iconName' => 'tools', 
-                            'data-actiontype' => $typeCode, 
-                            'data-main-indicatorid' => $indicatorId, 
-                            'data-structure-indicatorid' => $indicatorId, 
-                            'data-crud-indicatorid' => $crudIndicatorId,
-                            'data-mapid' => issetParam($process['map_id'])
-                        ];
-
-                    } elseif ($typeCode == '360') {
-
-                        $isDelete = true;
-                        $className = 'btn blue-steel btn-circle btn-sm';
-                        $buttonName = '<i class="far fa-tools"></i> '.Lang::line('360');
-                        $onClick = "mapKpiIndicatorValue(this, '$kpiTypeId', '".$indicatorId."', '360');";
-
-                        $contextMenu[] = [
-                            'crudIndicatorId' => $crudIndicatorId, 
-                            'labelName' => Lang::line('360'),
-                            'onClick' => $onClick,
-                            'actionName' => '360',
-                            'iconName' => 'tools', 
-                            'data-actiontype' => $typeCode, 
-                            'data-main-indicatorid' => $indicatorId, 
-                            'data-structure-indicatorid' => $indicatorId, 
-                            'data-crud-indicatorid' => $crudIndicatorId,
-                            'data-mapid' => issetParam($process['map_id'])
-                        ];
-
-                    } elseif ($typeCode == 'excel') {
-
-                        $className = 'btn green btn-circle btn-sm';
-                        $buttonName = '<i class="far fa-file-excel"></i> '.Lang::line('pf_excel_import');
-                        $onClick = "excelImportKpiIndicatorValue(this, '".$indicatorId."');";
-
-                    } elseif ($typeCode == 'excel_export_one_line') {
-
-                        $className = 'btn green btn-circle btn-sm';
-                        $buttonName = '<i class="far fa-file-excel"></i> Эксель нэг мөрөөр татах';
-                        $onClick = "exportExcelOneLineKpiIndicatorValue(this, '".$indicatorId."');";
-
-                    } elseif ($typeCode == 'export') {
-
-                        $isDelete = true;
-                        $className = 'btn green btn-circle btn-sm';
-                        $buttonName = '<i class="far fa-download"></i> '.Lang::line('excel_export_btn');
-                        $onClick = "exportKpiIndicatorValue(this, '".$indicatorId."');";
-
-                    } elseif ($kpiTypeId == '1191') {
-
-                        $className = 'btn blue-steel btn-circle btn-sm';
-                        $buttonName = '<i class="far fa-play"></i> ' . Lang::line($process['label_name'] ? $process['label_name'] : $process['name']);
-                        $onClick = "manageKpiIndicatorValue(this, '$kpiTypeId', '$crudIndicatorId', false, {transferSelectedRow: true});";
-
-                    } elseif ($kpiTypeId == '1080') {
-
-                        $className = 'btn blue-steel btn-circle btn-sm';
-                        $buttonName = '<i class="far fa-play"></i> ' . Lang::line($process['label_name'] ? $process['label_name'] : $process['name']);
-                        $onClick = "callWebServiceKpiIndicatorValue(this, '$crudIndicatorId');";
-                        
-                    } elseif ($typeCode == 'import') {
-
-                        $className = 'btn green btn-circle btn-sm';
-                        $buttonName = '<i class="far fa-file-import"></i> '.Lang::line('Импорт');
-                        $onClick = "dataImportKpiIndicatorValue(this, '".$indicatorId."');";
-                    } 
-
-                } else {
-
-                    $description = Lang::line(issetParam($process['description']));
-                    $processName = Lang::line(issetParam($process['label_name']));
-
-                    if ($typeCode == 'create') {
-
-                        $className = 'btn btn-success btn-circle btn-sm';
-                        $buttonName = '<i class="far fa-plus"></i> '.$processName;
-
-                        if ($isFillRelation) {
-                            $opt = ', {fillSelectedRow: true, mode: \'create\'}';
-                        } elseif ($isDfillRelation) {
-                            $opt = ', {fillDynamicSelectedRow: true, mode: \'create\'}';
-                        } elseif ($isCfillRelation) {
-                            $opt = ', {consolidateFillSelectedRow: true, mode: \'create\'}';
-                        }
-
-                        if ($isNormalRelation) {
-                            if (issetParam($process['widget_code']) !== '') {
-                                $actionmode = "{methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId, mode: 'update', widgetCode: '". $process['widget_code'] ."'}";
-                                $onClick = "mvWidgetRelationRender(this, '$kpiTypeId', '".$indicatorId."', {methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId, mode: 'update', widgetCode: '". $process['widget_code'] ."'});";
-                            } else {
-                                $actionmode = "{methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId}";
-                                $onClick = "mvNormalRelationRender(this, '$kpiTypeId', '".$indicatorId."', {methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId});";
-                            }
-                        } else {
-                            $actionmode = str_replace(', {', '{', $opt);
-                            $onClick = "manageKpiIndicatorValue(this, '$kpiTypeId', '$srcIndicatorId', false$opt);";
-                        }
-
-                    } elseif ($typeCode == 'update') {
-
-                        $className = 'btn btn-warning btn-circle btn-sm';
-                        $buttonName = '<i class="far fa-edit"></i> '.$processName;
-
-                        if ($isFillRelation) {
-                            $opt = ', {fillSelectedRow: true, mode: \'update\'}';
-                        } elseif ($isDfillRelation) {
-                            $opt = ', {fillDynamicSelectedRow: true, mode: \'update\'}';
-                        }
-
-                        if ($isNormalRelation) {
-                            $actionmode = "{methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId, mode: 'update', isFillRelation: '$isFillRelation'}";
-                            $onClick = "mvNormalRelationRender(this, '$kpiTypeId', '".$indicatorId."', {methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId, mode: 'update', isFillRelation: '$isFillRelation'});";
-                        } else {
-                            if (issetParam($process['widget_code']) !== '') {
-                                $actionmode = "{methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId, mode: 'update', widgetCode: '". $process['widget_code'] ."'}";
-                                $onClick = "mvWidgetRelationRender(this, '$kpiTypeId', '".$indicatorId."', {methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId, mode: 'update', widgetCode: '". $process['widget_code'] ."'});";
-                            } else {
-                                $actionmode = str_replace(', {', '{', $opt);
-                                $onClick = "manageKpiIndicatorValue(this, '$kpiTypeId', '$srcIndicatorId', true$opt);";
-                            }
-                        }
-                        
-                        $contextMenu[] = [
-                            'crudIndicatorId' => $crudIndicatorId, 
-                            'labelName' => $processName,
-                            'onClick' => $onClick,
-                            'actionName' => 'edit',
-                            'iconName' => 'edit', 
-                            'data-actiontype' => $typeCode, 
-                            'data-main-indicatorid' => $indicatorId, 
-                            'data-structure-indicatorid' => $srcIndicatorId, 
-                            'data-crud-indicatorid' => $crudIndicatorId,
-                            'data-mapid' => issetParam($process['map_id'])
-                        ];
-
-                    } elseif ($typeCode == 'read') {
-
-                        $className = 'btn purple btn-circle btn-sm';
-                        $buttonName = '<i class="far fa-eye"></i> '.$processName;
-
-                        if ($isFillRelation) {
-                            $opt = ', {fillSelectedRow: true, mode: \'view\'}';
-                        } elseif ($isDfillRelation) {
-                            $opt = ', {fillDynamicSelectedRow: true, mode: \'view\'}';
-                        } else {
-                            $opt = ', {mode: \'view\'}';
-                        }
-
-                        if ($isNormalRelation) {
-                            $actionmode = "{methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId, mode: 'view'}";
-                            $onClick = "mvNormalRelationRender(this, '$kpiTypeId', '".$indicatorId."', {methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId, mode: 'view'});";
-                        } else {
-                            if (issetParam($process['widget_code']) !== '') {
-                                $actionmode = "{methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId, mode: 'update', widgetCode: '". $process['widget_code'] ."'}";
-                                $onClick = "mvWidgetRelationRender(this, '$kpiTypeId', '".$indicatorId."', {methodIndicatorId: $crudIndicatorId, structureIndicatorId: $srcIndicatorId, mode: 'update', widgetCode: '". $process['widget_code'] ."'});";
-                            } else {
-                                $actionmode = str_replace(', {', '{', $opt);
-                                $onClick = "manageKpiIndicatorValue(this, '$kpiTypeId', '$srcIndicatorId', true$opt);";
-                            }
-                        }
-
-                    } elseif ($typeCode == 'delete') {
-
-                        $className = 'btn btn-danger btn-circle btn-sm';
-                        $buttonName = '<i class="far fa-trash"></i> '.$processName;
-                        $onClick = "removeKpiIndicatorValue(this, '$srcIndicatorId');";
-
-                    } elseif ($typeCode == 'excel') {
-
-                        $className = 'btn green btn-circle btn-sm';
-                        $buttonName = '<i class="far fa-file-excel"></i> '.$processName;
-                        $onClick = "excelImportKpiIndicatorValue(this, '$srcIndicatorId');";
-
-                    } elseif ($process['code'] == 'sendmail') {
-
-                        $className = 'btn green btn-circle btn-sm';
-                        $buttonName = $processName;
-                        $onClick = "mvDataViewSendMailBySelectionRowsInit(this, '$crudIndicatorId', '$indicatorId', '');";
-                        
-                    } elseif ($typeCode == 'import') {
-
-                        $className = 'btn green btn-circle btn-sm';
-                        $buttonName = '<i class="far fa-file-import"></i> '.Lang::line('Импорт');
-                        $onClick = "dataImportKpiIndicatorValue(this, '$srcIndicatorId', '$indicatorId');";
-                    } 
-                }
-
-                $buttons[] = html_tag('a', [ 
-                        'href' => 'javascript:;', 
-                        'class' => $className, 
-                        'data-qtip-title' => $description, 
-                        'data-qtip-pos' => 'top', 
-                        'onclick' => $onClick, 
-                        'data-actiontype' => $typeCode, 
-                        'data-main-indicatorid' => $indicatorId, 
-                        'data-structure-indicatorid' => $indicatorId, 
-                        'data-crud-indicatorid' => $crudIndicatorId,
-                        'data-mapid' => issetParam($process['map_id'])
-                    ], 
-                    $buttonName, true
-                );
-                
-                $indicatorIds[$crudIndicatorId] = [ 
-                    'href' => 'javascript:;', 
-                    'class' => $className, 
-                    'data-qtip-title' => $description, 
-                    'data-qtip-pos' => 'top', 
-                    'onclick' => $onClick, 
-                    'data-actiontype' => $typeCode, 
-                    'data-actiontypeid' => $kpiTypeId, 
-                    'data-actionmode' => $actionmode, 
-                    'data-main-indicatorid' => $indicatorId, 
-                    'data-structure-indicatorid' => $indicatorId, 
-                    'data-crud-indicatorid' => $crudIndicatorId,
-                    'data-mapid' => issetParam($process['map_id'])
-                ];
-            }
+            $processActions = self::processActionModel($config['processList'], $indicatorId, $buttons, $contextMenu, $indicatorIds);
+            
+            if (issetParamArray($processActions['buttons']))
+                $buttons = array_merge($buttons, $processActions['buttons']);
+            if (issetParamArray($processActions['contextMenu']))
+                $contextMenu = array_merge($contextMenu, $processActions['contextMenu']);
+            if (issetParamArray($processActions['indicatorIds']))
+                $indicatorIds = array_merge($indicatorIds, $processActions['indicatorIds']);
             
             if ($config['isCallWebService']) {
                 
@@ -25339,71 +25349,73 @@ class Mdform_Model extends Model {
     
     public function getSavedRecordMapKpiComponentsModel($srcIndicatorId, $srcRecordId, $components) {
         
-        try {
-            
-            $result = array();
+        $result = [];
         
-            foreach ($components as $component) {
-                
-                $tableName = $component['TABLE_NAME'];
-                $queryString = $component['QUERY_STRING'];
-                
-                if ($tableName || $queryString) {
+        foreach ($components as $component) {
 
-                    $trgIndicatorId = $component['ID'];
+            $tableName = $component['TABLE_NAME'];
+            $queryString = $component['QUERY_STRING'];
 
-                    $fieldConfig = self::getKpiComboDataModel(array('FILTER_INDICATOR_ID' => $trgIndicatorId, 'TRG_TABLE_NAME' => $tableName, 'isData' => false));
+            if ($tableName || $queryString) {
+
+                $trgIndicatorId = $component['ID'];
+
+                $fieldConfig = self::getKpiComboDataModel(['FILTER_INDICATOR_ID' => $trgIndicatorId, 'TRG_TABLE_NAME' => $tableName, 'isData' => false]);
+
+                $idField = $fieldConfig['id'];
+                $nameField = $fieldConfig['name'];
+                
+                if ($idField && $nameField) {
                     
-                    $idField = $fieldConfig['id'];
-                    $nameField = $fieldConfig['name'];
+                    $_POST['isGetSql'] = 1;
+                    $getSql = self::indicatorDataGridModel($trgIndicatorId);
                     
-                    if ($idField && $nameField) {
+                    if (isset($getSql['sql']) && $getSql['sql']) {
                         
-                        if (!$tableName && $queryString) {
-                            $tableName = self::parseQueryString($queryString);
-                        }
-
-                        if (stripos($tableName, 'select') !== false && stripos($tableName, 'from') !== false) {
+                        $mapId = $component['MAP_ID'];
+                        $tableName = $getSql['sql'];
+                        
+                        if (strlen($tableName) > 30 && stripos($tableName, 'select') !== false && stripos($tableName, 'from') !== false) {
                             $tableName = '('.$tableName.')';
                         }
-
-                        $sql = "
-                            SELECT 
-                                MRM.ID AS PF_MAP_ID, 
-                                MRM.TRG_RECORD_ID AS PF_MAP_RECORD_ID, 
-                                T0.$nameField AS PF_MAP_NAME, 
-                                T1.TRG_RECORD_ID AS PF_MAP_TRG_RECORD_ID, 
-                                T0.* 
-                            FROM 
-                                (
-                                    SELECT 
-                                        ID, 
-                                        TRG_RECORD_ID 
-                                    FROM META_DM_RECORD_MAP 
-                                    WHERE SRC_REF_STRUCTURE_ID = $srcIndicatorId 
-                                        AND SRC_RECORD_ID = $srcRecordId 
-                                        AND TRG_REF_STRUCTURE_ID = $trgIndicatorId
-                                ) MRM 
-
-                                INNER JOIN $tableName T0 ON T0.$idField = MRM.TRG_RECORD_ID 
-                                LEFT JOIN META_DM_RECORD_MAP T1 ON T1.SRC_RECORD_ID = MRM.ID 
-                                    AND T1.SRC_REF_STRUCTURE_ID = $trgIndicatorId 
-
-                            ORDER BY MRM.ID ASC";
-
-                        $rows = $this->db->GetAll($sql);
                         
-                    } else {
-                        $rows = array();
+                        try {
+                        
+                            $sql = "
+                                SELECT 
+                                    MRM.ID AS PF_MAP_ID, 
+                                    MRM.TRG_RECORD_ID AS PF_MAP_RECORD_ID, 
+                                    T0.$nameField AS PF_MAP_NAME, 
+                                    T1.TRG_RECORD_ID AS PF_MAP_TRG_RECORD_ID, 
+                                    T0.* 
+                                FROM 
+                                    (
+                                        SELECT 
+                                            ID, 
+                                            TRG_RECORD_ID 
+                                        FROM META_DM_RECORD_MAP 
+                                        WHERE SRC_REF_STRUCTURE_ID = $srcIndicatorId 
+                                            AND SRC_RECORD_ID = $srcRecordId 
+                                            AND TRG_REF_STRUCTURE_ID = $trgIndicatorId
+                                    ) MRM 
+
+                                    INNER JOIN $tableName T0 ON T0.$idField = MRM.TRG_RECORD_ID 
+                                    LEFT JOIN META_DM_RECORD_MAP T1 ON T1.SRC_RECORD_ID = MRM.ID 
+                                        AND T1.SRC_REF_STRUCTURE_ID = $trgIndicatorId 
+
+                                ORDER BY MRM.ID ASC";
+
+                            $rows = $this->db->GetAll($sql);
+                            
+                            $result[$mapId] = $rows;
+                            
+                        } catch (Exception $ex) { } 
                     }
-                    
-                    $result[$trgIndicatorId] = $rows;
-                }
+                } 
             }
-        
-        } catch (Exception $ex) {
-            $result = array();
         }
+        
+        unset($_POST['isGetSql']);
         
         return $result;
     }
@@ -27625,16 +27637,62 @@ class Mdform_Model extends Model {
     
     public function transferIndicatorActionModel() {
         
-        $mainIndicatorId = Input::numeric('mainIndicatorId');
-        $methodIndicatorId = Input::numeric('methodIndicatorId');
-        
-        $row = $this->getKpiIndicatorProcessModel($mainIndicatorId, $methodIndicatorId);
-        
-        if (isset($row[0])) {
-            return array('status' => 'success', 'data' => $row[0]);
-        } else {
+        $rowData = Input::post('rowData');
+        $selectedRow = Input::post('selectedRow');
+
+        if ($selectedRow && $rowData) {
+            foreach ($rowData as $rows) {
+                
+                $rules = $rows['criteria'];
+                
+                foreach ($selectedRow as $sk => $sv) {
+    
+                    if (!is_array($sv)) {
+                        
+                        if (is_string($sv) && strpos($sv, "'") === false) {
+                            $sv = "'".Str::lower($sv)."'";
+                        } elseif (is_null($sv)) {
+                            $sv = "''";
+                        }
+                        
+                        $sk = ($sk == '' ? 'tmpkey' : $sk);
+    
+                        $rules = preg_replace('/\b'.$sk.'\b/u', $sv, $rules);
+                    }
+                }
+    
+                $rules = Mdmetadata::defaultKeywordReplacer($rules);
+                $rules = Mdmetadata::criteriaMethodReplacer($rules);
+
+                if (trim($rules) != '') {
+                    ob_start();
+                    if (!Mdcommon::expressionEvalFixWithReturn($rules)) {
+                        $processNoAccessResult = array('processNoAccess' => true);
+                        $response = $processNoAccessResult;
+                    } else {
+                        return array('status' => 'success', 'data' => $rows);
+                        exit();
+                    }
+                    $rules = ob_get_contents();
+                    ob_end_clean();
+                }
+            }
+
+            
             return array('status' => 'error', 'message' => 'No access!');
+        } else {
+            $mainIndicatorId = Input::numeric('mainIndicatorId');
+            $methodIndicatorId = Input::numeric('methodIndicatorId');
+            
+            $row = $this->getKpiIndicatorProcessModel($mainIndicatorId, $methodIndicatorId);
+            
+            if (isset($row[0])) {
+                return array('status' => 'success', 'data' => $row[0]);
+            } else {
+                return array('status' => 'error', 'message' => 'No access!');
+            }
         }
+        
     }
     
     public function mvGetExcelFileSheetModel() {
@@ -29362,83 +29420,87 @@ class Mdform_Model extends Model {
         
         $result = [];
         
-        try {
-        
-            foreach ($components as $component) {
+        foreach ($components as $component) {
 
-                if ($component['LOOKUP_META_DATA_ID']) {
-                    $result[$component['LOOKUP_META_DATA_ID']] = self::getSavedRecordMapDVModel($component['LOOKUP_META_DATA_ID'], $srcRecordId);
-                } else {
-                
-                    $tableName = $component['TABLE_NAME'];
-                    $queryString = $component['QUERY_STRING'];
-                    
-                    if ($tableName || $queryString) {
+            if ($component['LOOKUP_META_DATA_ID']) {
+                $result[$component['MAP_ID']] = self::getSavedRecordMapDVModel($component['LOOKUP_META_DATA_ID'], $srcRecordId);
+            } else {
 
-                        $trgIndicatorId = $component['ID'];
+                $tableName = $component['TABLE_NAME'];
+                $queryString = $component['QUERY_STRING'];
 
-                        $fieldConfig = self::getKpiComboDataModel(['FILTER_INDICATOR_ID' => $trgIndicatorId, 'TRG_TABLE_NAME' => $tableName, 'isData' => false]);
-                        
-                        $idField = $fieldConfig['id'];
-                        $nameField = $fieldConfig['name'];
-                        $codeField = $fieldConfig['code'];
-                        
-                        if ($idField && $nameField) {
-                            
-                            if (!$tableName && $queryString) {
-                                $tableName = self::parseQueryString($queryString);
-                            }
+                if ($tableName || $queryString) {
 
-                            if (stripos($tableName, 'select') !== false && stripos($tableName, 'from') !== false) {
-                                $tableName = '('.$tableName.')';
-                            }
+                    $trgIndicatorId = $component['ID'];
 
-                            $tableCols = self::table_exists($this->db, $tableName);
+                    $fieldConfig = self::getKpiComboDataModel(['FILTER_INDICATOR_ID' => $trgIndicatorId, 'TRG_TABLE_NAME' => $tableName, 'isData' => false]);
+
+                    $idField = $fieldConfig['id'];
+                    $nameField = $fieldConfig['name'];
+                    $codeField = $fieldConfig['code'];
+
+                    if ($idField && $nameField) {
+
+                        if (!$tableName && $queryString) {
+                            $tableName = self::parseQueryString($queryString);
+                        }
+
+                        if (stripos($tableName, 'select') !== false && stripos($tableName, 'from') !== false) {
+                            $tableName = '('.$tableName.')';
+                        }
+
+                        $tableCols = self::table_exists($this->db, $tableName);
+                        $selectName = "T0.".$nameField;
+
+                        if ($codeField && isset($tableCols[$codeField]) && isset($tableCols[$nameField])) {
+                            $selectName = "T0.".$codeField."||'-'||"."T0.".$nameField;
+                        } elseif ($nameField && isset($tableCols[$nameField])) {
                             $selectName = "T0.".$nameField;
-                            
-                            if ($codeField && isset($tableCols[$codeField]) && isset($tableCols[$nameField])) {
-                                $selectName = "T0.".$codeField."||'-'||"."T0.".$nameField;
-                            } elseif ($nameField && isset($tableCols[$nameField])) {
-                                $selectName = "T0.".$nameField;
-                            }
-
-                            $sql = "
-                                SELECT 
-                                    MRM.ID AS PF_MAP_ID, 
-                                    MRM.TRG_RECORD_ID AS PF_MAP_RECORD_ID, 
-                                    ".$this->db->IfNull("PL.PROCESS_NAME", $selectName)." AS PF_MAP_NAME,
-                                    T1.TRG_RECORD_ID AS PF_MAP_TRG_RECORD_ID, 
-                                    T0.* 
-                                FROM 
-                                    (
-                                        SELECT  
-                                            ID, 
-                                            TRG_RECORD_ID 
-                                        FROM META_DM_RECORD_MAP 
-                                        WHERE SRC_REF_STRUCTURE_ID = 1479204227214 
-                                            AND SRC_RECORD_ID = $srcRecordId 
-                                            AND TRG_REF_STRUCTURE_ID = $trgIndicatorId
-                                    ) MRM 
-
-                                    INNER JOIN $tableName T0 ON T0.$idField = MRM.TRG_RECORD_ID 
-                                    LEFT JOIN META_BUSINESS_PROCESS_LINK PL ON PL.META_DATA_ID = MRM.TRG_RECORD_ID
-                                    LEFT JOIN META_DM_RECORD_MAP T1 ON T1.SRC_RECORD_ID = MRM.ID 
-                                        AND T1.SRC_REF_STRUCTURE_ID = $trgIndicatorId 
-
-                                ORDER BY MRM.ID ASC";
-
-                            $rows = $this->db->GetAll($sql);
-                            
-                        } else {
-                            $rows = [];
                         }
                         
-                        $result[$trgIndicatorId] = $rows;
-                    }
+                        /*$insertMapRow = [
+                            'ID'                   => getUIDAdd($k), 
+                            'SRC_REF_STRUCTURE_ID' => $metaDmRecordMaps['mainIndicatorId'],
+                            'TRG_REF_STRUCTURE_ID' => $metaDmRecordMaps['indicatorId'], 
+                            'SRC_RECORD_ID'        => issetParam($metaDmRecordMaps['mapId']) ? $metaDmRecordMaps['mapId'] : '1479204227214',
+                            'TRG_RECORD_ID'        => $recordId, 
+                            'CREATED_DATE'         => Date::currentDate(), 
+                            'CREATED_USER_ID'      => $sessionUserKeyId
+                        ];*/
+
+                        $sql = "
+                            SELECT 
+                                MRM.ID AS PF_MAP_ID, 
+                                MRM.TRG_RECORD_ID AS PF_MAP_TRG_RECORD_ID, 
+                                ".$this->db->IfNull("PL.PROCESS_NAME", $selectName)." AS PF_MAP_NAME,
+                                MRM.ID AS PF_MAP_RECORD_ID, 
+                                T0.* 
+                            FROM 
+                                (
+                                    SELECT  
+                                        ID, 
+                                        SRC_RECORD_ID, 
+                                        TRG_RECORD_ID 
+                                    FROM META_DM_RECORD_MAP 
+                                    WHERE SRC_REF_STRUCTURE_ID = $srcIndicatorId 
+                                        AND TRG_REF_STRUCTURE_ID = $trgIndicatorId
+                                ) MRM 
+
+                                INNER JOIN $tableName T0 ON T0.$idField = MRM.TRG_RECORD_ID 
+                                LEFT JOIN META_BUSINESS_PROCESS_LINK PL ON PL.META_DATA_ID = MRM.TRG_RECORD_ID 
+
+                            ORDER BY MRM.ID ASC";
+                        
+                        try {
+                            
+                            $rows = $this->db->GetAll($sql);
+                            $result[$component['MAP_ID']] = $rows;
+                            
+                        } catch (Exception $ex) { }
+                    } 
                 }
             }
-        
-        } catch (Exception $ex) { }
+        }
         
         return $result;
     }    
