@@ -135,6 +135,120 @@ class Restapi extends Controller {
                     }
                     break;
                     
+                    case 'kpiIndicatorPageConfig':
+                    {
+                        $kpiMainIndicatorId = Input::param($parameters['indicatorId']);
+
+                        $this->load->model('mdform', 'middleware/models/');
+                        $configRow = $this->model->getKpiIndicatorRowModel($kpiMainIndicatorId);
+
+                        if ($configRow) {
+                            
+                            $result = [
+                                'id'         => $configRow['ID'],
+                                'code'       => $configRow['CODE'],
+                                'name'       => $configRow['NAME'],
+                                'kpiTypeId'  => $configRow['KPI_TYPE_ID'], 
+                                'jsonConfig' => null
+                            ];
+                            
+                            if ($configRow['JSON_CONFIG'] != '') {
+                                $result['jsonConfig'] = json_decode($configRow['JSON_CONFIG'], true);
+                            }
+                            
+                            $idPh = $this->db->Param(0);
+                            $relationData = $this->model->getKpiIndicatorMapWithoutTypeModel($kpiMainIndicatorId, 10000009);              
+                            $_POST['isGetSql'] = 1;
+                            
+                            foreach ($relationData as $r => $relationRow) {
+                                
+                                unset($relationData[$r]['TABLE_NAME']);
+                                unset($relationData[$r]['QUERY_STRING']);
+                                unset($relationData[$r]['SRC_TABLE_NAME']);
+                                unset($relationData[$r]['SRC_QUERY_STRING']);
+                                unset($relationData[$r]['CREATED_USER_ID']);
+                                unset($relationData[$r]['IS_ADDON_FORM']);
+                                
+                                if ($relationRow['JSON_CONFIG'] != '') {
+                                    $relationData[$r]['JSON_CONFIG'] = json_decode($relationRow['JSON_CONFIG'], true);
+                                }
+                                
+                                $mapId          = $relationRow['MAP_ID'];
+                                $trgIndicatorId = $relationRow['ID'];
+                                
+                                $childRelations = $this->db->GetAll("
+                                    SELECT 
+                                        T1.ID, 
+                                        T1.SRC_INDICATOR_ID, 
+                                        T1.TRG_INDICATOR_ID, 
+                                        T1.TRG_ALIAS_NAME, 
+                                        T1.SRC_INDICATOR_PATH, 
+                                        T1.TRG_INDICATOR_PATH, 
+                                        T1.TRG_META_DATA_PATH, 
+                                        NVL(T2.TRG_ALIAS_NAME, T2.LABEL_NAME) AS TRG_INDICATOR_ALIAS_NAME 
+                                    FROM KPI_INDICATOR_INDICATOR_MAP T1 
+                                    LEFT JOIN KPI_INDICATOR_INDICATOR_MAP T2 ON T2.MAIN_INDICATOR_ID = T1.TRG_INDICATOR_ID 
+                                        AND T2.COLUMN_NAME = T1.TRG_INDICATOR_PATH 
+                                    WHERE T1.SRC_INDICATOR_MAP_ID = $idPh 
+                                    ORDER BY T1.ID ASC", 
+                                    [$mapId]
+                                );
+                                
+                                $relationData[$r]['childRelations'] = $childRelations;
+                                
+                                $getSql = $this->model->indicatorDataGridModel($trgIndicatorId);
+                                
+                                if (isset($getSql['sql']) && $getSql['sql']) {
+                                    
+                                    $mapId     = $relationRow['MAP_ID'];
+                                    $sql       = $getSql['sql'];
+                                    $tableName = $sql;
+                                    $getSql    = null;
+
+                                    if (strlen($tableName) > 30 && stripos($tableName, 'select') !== false && stripos($tableName, 'from') !== false) {
+                                        $tableName = '('.$tableName.')';
+                                    }
+
+                                    try {
+
+                                        $selectQuery = "
+                                            SELECT 
+                                                T0.* 
+                                            FROM 
+                                                (
+                                                    SELECT 
+                                                        ID, 
+                                                        TRG_RECORD_ID 
+                                                    FROM META_DM_RECORD_MAP 
+                                                    WHERE SRC_REF_STRUCTURE_ID = $kpiMainIndicatorId 
+                                                        AND SRC_RECORD_ID = $mapId 
+                                                        AND TRG_REF_STRUCTURE_ID = $trgIndicatorId 
+                                                ) MRM 
+                                                INNER JOIN $tableName T0 ON T0.ID = MRM.TRG_RECORD_ID 
+                                            ORDER BY MRM.ID ASC";
+
+                                        $rows = $this->db->GetAll($selectQuery); 
+                                        
+                                        if (!$rows) {
+                                            $rows = $this->db->GetAll($sql); 
+                                        }
+                                        
+                                        $relationData[$r]['DATA'] = $rows;
+
+                                    } catch (Exception $ex) { } 
+                                }
+                            }
+                            
+                            $result['relation'] = $relationData;
+                            
+                            $response = ['status' => 'success', 'result' => $result];
+                            $result = null;
+                        } else {
+                            $response = ['status' => 'error', 'text' => 'Not found indicator!'];
+                        }
+                    }
+                    break;
+                    
                     case 'kpiIndicatorConfig':
                     {
                         $kpiMainIndicatorId = Input::param($parameters['indicatorId']);

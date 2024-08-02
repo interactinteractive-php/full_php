@@ -31,11 +31,6 @@ if (issetParamArray($this->relationComponentsConfigData['rows'])) {
                     ?>
                     <img style="height: 30px;float: left;" class="mr-auto" src="<?php echo $logoImage ?>">
                     <p class="mb-0 mt-1 ml-2 headerTitle mr-auto"><?php echo $this->title ?></p>
-                    <?php if (issetParam($rowsArray)) { ?>
-                    <button type="button" class="btn btn-sm btn-circle mr-1 btn-success bp-btn-save bp-btn-finish<?php echo $this->uniqId ?> pull-right" onclick="saveQuestion_<?php echo $this->uniqId ?>(this)" style="display: none;">
-                        <i class="icon-checkmark-circle2"></i> <?php echo Lang::line('finish_btn') ?>
-                    </button>
-                    <?php } ?>
                 </div>
                 <ul class="nav nav-tabs nav-tabs-bottom mt-3">
                     <li class="nav-item"><a href="#tab-info-section-<?php echo $this->uniqId ?>" class="nav-link active" data-toggle="tab"><?php echo Lang::line('LMS_'. $this->mainIndicatorId .'TITLE_001') ?> </a></li>
@@ -404,6 +399,9 @@ if (issetParamArray($this->relationComponentsConfigData['rows'])) {
                         </form>
                         <?php if (issetParam($rowsArray)) { ?>
                             <div class="w-100 pull-left p-2 actions"> 
+                                <button type="button" class="btn btn-sm btn-circle mr-1 btn-success pull-right bp-btn-save bp-btn-finish<?php echo $this->uniqId ?> pull-right" onclick="saveQuestion_<?php echo $this->uniqId ?>(this)" style="display: none;">
+                                    <i class="icon-checkmark-circle2"></i> <?php echo Lang::line('finish_btn') ?>
+                                </button>
                                 <button type="button" class="btn btn-sm btn-circle mr-1 btn-success bp-btn-next pull-left" onclick="closeQuestion_<?php echo $this->uniqId ?>(this)">
                                     <?php echo Lang::line('close_btn') ?> 
                                 </button>

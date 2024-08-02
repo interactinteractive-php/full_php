@@ -29520,11 +29520,10 @@ class Mdform_Model extends Model {
                     T0.ID AS MAP_ID, 
                     T0.ICON, 
                     T0.COLOR, 
-                    T0.IS_ADDON_FORM, 
                     T0.META_INFO_INDICATOR_ID, 
                     T0.CODE, 
-                    T0.SEMANTIC_TYPE_NAME, 
-                    T0.SEMANTIC_TYPE_ICON, 
+                    ST.NAME AS SEMANTIC_TYPE_NAME, 
+                    ST.ICON AS SEMANTIC_TYPE_ICON, 
                     T0.SEMANTIC_TYPE_ID, 
                     T0.LOOKUP_META_DATA_ID, 
                     T0.CREATED_USER_ID, 
@@ -29532,83 +29531,36 @@ class Mdform_Model extends Model {
                     T0.CRITERIA, 
                     T0.TAB_NAME, 
                     T0.GROUP_NAME, 
+                    T0.LABEL_NAME, 
                     ".$this->db->IfNull('T0.DESCRIPTION', "'Холбоос'")." AS DESCRIPTION, 
                     T2.TABLE_NAME AS SRC_TABLE_NAME, 
-                    T2.QUERY_STRING AS SRC_QUERY_STRING,
+                    T2.QUERY_STRING AS SRC_QUERY_STRING, 
                     T1.PARENT_ID, 
-                    FNC_TRANSLATE('$langCode', T3.TRANSLATION_VALUE, 'NAME', T3.NAME) AS PARENT_NAME 
-                FROM (
+                    T0.JSON_CONFIG, 
+                    T0.IS_HIDE, 
+                    FNC_TRANSLATE('$langCode', T3.TRANSLATION_VALUE, 'NAME', T3.NAME) AS PARENT_NAME, 
+                    (
                         SELECT 
-                            MAX(KIIM.ID) AS ID, 
-                            MAX(KIIM.ICON) AS ICON, 
-                            MAX(KIIM.COLOR) AS COLOR, 
-                            MAX(KIIM.ORDER_NUMBER) AS ORDER_NUMBER, 
-                            MAX(KIIM.IS_ADDON_FORM) AS IS_ADDON_FORM, 
-                            MAX(KIIM.DESCRIPTION) AS DESCRIPTION, 
-                            MAX(KIIM.CRITERIA) AS CRITERIA, 
-                            MAX(KIIM.TAB_NAME) AS TAB_NAME, 
-                            MAX(KIIM.GROUP_NAME) AS GROUP_NAME, 
-                            MAX(KIIM.SEMANTIC_TYPE_NAME) AS SEMANTIC_TYPE_NAME, 
-                            MAX(KIIM.SEMANTIC_TYPE_ICON) AS SEMANTIC_TYPE_ICON, 
-                            MAX(KIIM.SEMANTIC_TYPE_ID) AS SEMANTIC_TYPE_ID, 
-                            MAX(KIIM.CREATED_USER_ID) AS CREATED_USER_ID, 
-                            MAX(KIIM.WIDGET_ID) AS WIDGET_ID, 
-                            KIIM.SRC_INDICATOR_ID, 
-                            KIIM.TRG_INDICATOR_ID, 
-                            KIIM.META_INFO_INDICATOR_ID, 
-                            KIIM.LOOKUP_META_DATA_ID, 
-                            KIIM.CODE
-                        FROM (
-                            SELECT 
-                                KIIM.ID, 
-                                KIIM.ICON, 
-                                KIIM.COLOR, 
-                                KIIM.ORDER_NUMBER, 
-                                KIIM.CODE, 
-                                KIIM.DESCRIPTION, 
-                                KIIM.CRITERIA, 
-                                KIIM.TAB_NAME, 
-                                KIIM.GROUP_NAME, 
-                                KIIM.SRC_INDICATOR_ID, 
-                                KIIM.TRG_INDICATOR_ID, 
-                                KIIM.LOOKUP_META_DATA_ID, 
-                                K.ID AS META_INFO_INDICATOR_ID, 
-                                ST.NAME AS SEMANTIC_TYPE_NAME, 
-                                ST.ICON AS SEMANTIC_TYPE_ICON, 
-                                KIIM.SEMANTIC_TYPE_ID, 
-                                KIIM.CREATED_USER_ID, 
-                                KIIM.WIDGET_ID, 
-                                (
-                                    SELECT 
-                                        COUNT(1) 
-                                    FROM KPI_INDICATOR_INDICATOR_MAP M 
-                                        INNER JOIN KPI_INDICATOR I ON I.ID = M.TRG_INDICATOR_ID 
-                                    WHERE M.SRC_INDICATOR_MAP_ID = KIIM.ID 
-                                        AND M.TRG_INDICATOR_ID IS NOT NULL 
-                                        AND M.SRC_INDICATOR_PATH IS NOT NULL 
-                                        AND M.TRG_INDICATOR_PATH IS NOT NULL 
-                                ) AS IS_ADDON_FORM 
-                            FROM KPI_INDICATOR_INDICATOR_MAP KIIM 
-                                LEFT JOIN KPI_INDICATOR K ON K.ID = KIIM.META_INFO_INDICATOR_ID 
-                                LEFT JOIN META_SEMANTIC_TYPE ST ON ST.ID = KIIM.SEMANTIC_TYPE_ID 
-                            WHERE KIIM.SRC_INDICATOR_MAP_ID IS NULL AND KIIM.SRC_INDICATOR_ID = ".$this->db->Param(0)." 
-                                AND KIIM.SEMANTIC_TYPE_ID NOT IN ($semanticTypeId) 
-                                ".($trgId ? 'AND KIIM.TRG_INDICATOR_ID = '.$trgId : '')."  
-                        ) KIIM 
-                        GROUP BY 
-                            KIIM.SRC_INDICATOR_ID, 
-                            KIIM.TRG_INDICATOR_ID, 
-                            KIIM.META_INFO_INDICATOR_ID, 
-                            KIIM.LOOKUP_META_DATA_ID, 
-                            KIIM.CODE, 
-                            KIIM.ORDER_NUMBER 
-                    ) T0 
+                            COUNT(1) 
+                        FROM KPI_INDICATOR_INDICATOR_MAP M 
+                            INNER JOIN KPI_INDICATOR I ON I.ID = M.TRG_INDICATOR_ID 
+                        WHERE M.SRC_INDICATOR_MAP_ID = T0.ID 
+                            AND M.TRG_INDICATOR_ID IS NOT NULL 
+                            AND M.SRC_INDICATOR_PATH IS NOT NULL 
+                            AND M.TRG_INDICATOR_PATH IS NOT NULL 
+                    ) AS IS_ADDON_FORM 
+                FROM KPI_INDICATOR_INDICATOR_MAP T0 
                     LEFT JOIN KPI_INDICATOR T1 ON T1.ID = T0.TRG_INDICATOR_ID 
                         AND T1.DELETED_USER_ID IS NULL 
                     LEFT JOIN META_DATA T4 ON T4.META_DATA_ID = T0.LOOKUP_META_DATA_ID 
                     INNER JOIN KPI_INDICATOR T2 ON T2.ID = T0.SRC_INDICATOR_ID 
                         AND T2.DELETED_USER_ID IS NULL 
                     LEFT JOIN KPI_INDICATOR T3 ON T3.ID = T1.PARENT_ID 
+                    LEFT JOIN META_SEMANTIC_TYPE ST ON ST.ID = T0.SEMANTIC_TYPE_ID 
+                WHERE T0.SRC_INDICATOR_ID = ".$this->db->Param(0)." 
+                    AND T0.SRC_INDICATOR_MAP_ID IS NULL 
+                    AND T0.SEMANTIC_TYPE_ID NOT IN ($semanticTypeId) 
+                    ".($trgId ? 'AND T0.TRG_INDICATOR_ID = '.$trgId : '')." 
                 ORDER BY T0.ORDER_NUMBER ASC", 
                 [$srcId]
             );
