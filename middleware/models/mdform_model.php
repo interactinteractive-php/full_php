@@ -11583,8 +11583,15 @@ class Mdform_Model extends Model {
                     if ($isPkColumnName) {
 
                         if (is_numeric($getValue)) {
+                            
                             $newId = $getValue;
-                            $isUpdate = (Mdform::$isInsertMode == false) ? true : false;
+                            
+                            if (Mdform::$isInsertMode == false) {
+                                $isUpdate = true;
+                            } else {
+                                $saveData[$columnName] = $newId;
+                            }
+                            
                         } else {
                             $newId = getUIDAdd($depth + $rowIndex);
                             $saveData[$columnName] = $newId;
@@ -11782,8 +11789,14 @@ class Mdform_Model extends Model {
                         if ($isPkColumnName) {
 
                             if (is_numeric($getValue)) {
+                                
                                 $newId = $getValue;
-                                $isUpdate = (Mdform::$isInsertMode == false) ? true : false;
+                                
+                                if (Mdform::$isInsertMode == false) {
+                                    $isUpdate = true;
+                                } else {
+                                    $saveData[$columnName] = $newId;
+                                }
                             } else {
                                 $newId = getUIDAdd($k);
                                 $saveData[$columnName] = $newId;
@@ -32199,5 +32212,124 @@ class Mdform_Model extends Model {
         
         return '';
     }
+    
+    public function getChildComponentModel($mainIndicatorId) {
+        
+        $data = $this->db->GetAll("
+            SELECT 
+                T1.ID, 
+                T1.NAME, 
+                T1.CREATED_DATE, 
+                T1.CREATED_USER_NAME 
+            FROM KPI_INDICATOR_INDICATOR_MAP T0 
+                INNER JOIN KPI_INDICATOR T1 ON T1.ID = T0.TRG_INDICATOR_ID 
+            WHERE T0.SRC_INDICATOR_ID = ".$this->db->Param(0)." 
+                AND T0.SEMANTIC_TYPE_ID = 10000010 
+            ORDER BY T1.CREATED_DATE DESC", 
+            [$mainIndicatorId]
+        );
+        
+        return $data;
+    }    
+    
+    public function getKpiIndicatorMapGetRowsModel($indicatorId) {
+        
+        $getAll = $this->db->GetAll("
+            SELECT *
+            FROM KPI_INDICATOR_INDICATOR_MAP 
+            WHERE MAIN_INDICATOR_ID = ".$this->db->Param(0)." 
+                AND (SHOW_TYPE = 'row' OR SHOW_TYPE = 'rows')", 
+            [$indicatorId]
+        );
+        
+        return $getAll;
+    }    
+    
+    public function getKpiIndicatorMapGetChildRowsModel($indicatorId, $id) {
+        
+        $getAll = $this->db->GetAll("
+            SELECT *
+            FROM KPI_INDICATOR_INDICATOR_MAP 
+            WHERE MAIN_INDICATOR_ID = ".$this->db->Param(0)." 
+                AND PARENT_ID = ".$this->db->Param(1), 
+            [$indicatorId, $id]
+        );
+        
+        return $getAll;
+    }    
+    
+    public function getSrcTrgPathWithCrudModel($srcMapId, $trgIndicatorId) {
+        $data = $this->db->GetAll("
+            SELECT 
+                AA.GET_ID, 
+                AA.SEMANTIC_TYPE_ID, 
+                AA.SRC_INDICATOR_PATH, 
+                AA.TRG_INDICATOR_PATH, 
+                AA.DEFAULT_VALUE, 
+                AA.CRITERIA 
+            FROM KPI_INDICATOR_INDICATOR_MAP AA
+            INNER JOIN KPI_INDICATOR_INDICATOR_MAP BB ON AA.TRG_INDICATOR_ID = BB.TRG_INDICATOR_ID
+            WHERE AA.SRC_INDICATOR_MAP_ID = ".$this->db->Param(0)." 
+                AND BB.SRC_INDICATOR_ID = ".$this->db->Param(1)." 
+                AND BB.SEMANTIC_TYPE_ID = 10000009 
+                AND AA.TRG_INDICATOR_PATH IS NOT NULL 
+                AND AA.GET_ID IS NULL 
+                AND (AA.SRC_INDICATOR_PATH IS NOT NULL OR AA.DEFAULT_VALUE IS NOT NULL) 
+            GROUP BY 
+                AA.GET_ID, 
+                AA.SEMANTIC_TYPE_ID, 
+                AA.SRC_INDICATOR_PATH, 
+                AA.TRG_INDICATOR_PATH, 
+                AA.DEFAULT_VALUE, 
+                AA.CRITERIA", 
+            [$srcMapId, $trgIndicatorId]
+        );
+        
+        return $data;
+    }    
+    
+    public function getDataDynamicTableExportJsonIdModel($mainIndicatorId) {
+        $idField = 'ID';
+        $idPh = $this->db->Param(0);
+        $fieldConfig = $this->db->GetRow("
+            SELECT 
+                UPPER(KIIM.COLUMN_NAME) AS COLUMN_NAME 
+            FROM KPI_INDICATOR_INDICATOR_MAP KIIM 
+                INNER JOIN KPI_INDICATOR KI ON KI.ID = KIIM.MAIN_INDICATOR_ID 
+            WHERE KIIM.MAIN_INDICATOR_ID = $idPh 
+                AND KIIM.INPUT_NAME = 'META_VALUE_ID' 
+                AND KIIM.PARENT_ID IS NULL 
+                AND KIIM.COLUMN_NAME IS NOT NULL", 
+            [$mainIndicatorId]
+        );
+
+        if ($fieldConfig) {
+            $idField = $fieldConfig['COLUMN_NAME']; 
+        }
+            
+        return $idField;
+    }
+    
+    public function getDataDynamicTableExportJsonModel($tableName, $column, $id) {
+        $qry = "SELECT 
+                    t0.*
+                FROM $tableName t0 
+                WHERE t0.$column = ". $id;
+        return $this->db->GetAll($qry);
+    }     
+    
+    public function trgRecordIdMetaDmRecordAllMapModel($srcRefStructureId, $trgRefStructureId, $srcRecordId) {
+        $trgRecordId = $this->db->GetAll("
+            SELECT 
+                * 
+            FROM META_DM_RECORD_MAP 
+            WHERE SRC_REF_STRUCTURE_ID = ".$this->db->Param(0)." 
+                AND TRG_REF_STRUCTURE_ID = ".$this->db->Param(1)." 
+                AND SRC_RECORD_ID = ".$this->db->Param(2), 
+            [$srcRefStructureId, $trgRefStructureId, $srcRecordId]
+        );
+        
+        return $trgRecordId;
+    }    
     
 }
