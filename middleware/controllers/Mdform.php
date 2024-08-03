@@ -70,6 +70,7 @@ class Mdform extends Controller {
     public static $tabSectionRender = false;
     public static $tabSectionRenderSidebar = false;
     public static $isWizardStep = false;
+    public static $isInsertMode = false;
     public static $processParamData = [];
     public static $kpiDmDtlData = [];
     public static $kpiDmMart = [];

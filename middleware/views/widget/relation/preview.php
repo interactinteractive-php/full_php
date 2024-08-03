@@ -63,7 +63,7 @@ if (issetParamArray($this->relationComponentsConfigData['rows'])) {
                         <div class="w-100 text-center vid-component">
                             <?php 
                                 $html = '';
-                                $html .= '<a href="javascript:;" data-starttime="" data-endtime="" class="go-video-startendtime">';
+                                $html .= '<a href="javascript:;" data-starttime="" data-endtime="" class="go-video-startendtime position-relative">';
                                     $html .= '<div class="detail_cart_slider_imagevideo detail_cart_slider_mainvideo'. $this->uniqId .'" data-starttime="'. issetParam($tmparr['0']['position-starttime']) .'">';
                                         $html .= '<video width="100%" controls id="main_video_'. $this->uniqId .'">';
                                             $html .= '<source src="'. issetParam($tmparr['0']['position1']) .'" type="video/mp4" >';
@@ -108,7 +108,7 @@ if (issetParamArray($this->relationComponentsConfigData['rows'])) {
     var dc<?php echo $this->uniqId ?> = 0;
 
     $(function() {
-        $('#main_video_<?php echo $this->uniqId ?>').hide()/* .parent().append('<h4>'+ plang.get('waiting_video_play') +'...</h4>') */;
+        $('#main_video_<?php echo $this->uniqId ?>').hide().parent().append('<i class="icon-play3 me-3 icon-2x" style="position: relative; top: 130px; font-size: 11rem; "></i>');
         videoToImageCheckInterval<?php echo $this->uniqId ?> = setInterval(function () {
             videoToImageFn<?php echo $this->uniqId ?>('#mv-checklist-render<?php echo $this->uniqId ?> .videotoimg:eq('+ dc<?php echo $this->uniqId ?> +')');          
         }, 800);        
@@ -167,7 +167,7 @@ if (issetParamArray($this->relationComponentsConfigData['rows'])) {
         if (typeof videoTimeToSaveInterval<?php echo $this->uniqId ?> !=='undefined')
             clearInterval(videoTimeToSaveInterval<?php echo $this->uniqId ?>);
             
-        $('#main_video_<?php echo $this->uniqId ?>').show().parent().find('h4').remove();
+        $('#main_video_<?php echo $this->uniqId ?>').show().parent().find('i').remove();
         $('#main_video_<?php echo $this->uniqId ?>').attr('data-change', '1');
 
         function checkTime() {

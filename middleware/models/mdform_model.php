@@ -11584,7 +11584,7 @@ class Mdform_Model extends Model {
 
                         if (is_numeric($getValue)) {
                             $newId = $getValue;
-                            $isUpdate = true;
+                            $isUpdate = (Mdform::$isInsertMode == false) ? true : false;
                         } else {
                             $newId = getUIDAdd($depth + $rowIndex);
                             $saveData[$columnName] = $newId;
@@ -11783,7 +11783,7 @@ class Mdform_Model extends Model {
 
                             if (is_numeric($getValue)) {
                                 $newId = $getValue;
-                                $isUpdate = true;
+                                $isUpdate = (Mdform::$isInsertMode == false) ? true : false;
                             } else {
                                 $newId = getUIDAdd($k);
                                 $saveData[$columnName] = $newId;
@@ -12292,7 +12292,7 @@ class Mdform_Model extends Model {
                                     
                                     $newId = $getValue;
                                     
-                                    if (!isset(Mdform::$mvSaveParams['pfIsUpdate']) || (isset(Mdform::$mvSaveParams['pfIsUpdate']) && Mdform::$mvSaveParams['pfIsUpdate'])) {
+                                    if (Mdform::$isInsertMode == false && (!isset(Mdform::$mvSaveParams['pfIsUpdate']) || (isset(Mdform::$mvSaveParams['pfIsUpdate']) && Mdform::$mvSaveParams['pfIsUpdate']))) {
                                         $isUpdate = true;
                                     } else {
                                         $saveData[$columnName] = $newId;
@@ -12708,7 +12708,7 @@ class Mdform_Model extends Model {
             /**
              * Start Microflow expression
              */
-            if (!isset($postData['isMicroFlow'])) { 
+            if (!isset($postData['isMicroFlow']) && Mdform::$isInsertMode == false) { 
                 $this->db->BeginTrans(); 
                 
                 $getExpIndicatorId = self::getParentIndicatorFunctionModel($crudIndicatorId);
@@ -12753,7 +12753,7 @@ class Mdform_Model extends Model {
                 return $response;
             }            
 
-            if (isset($getExpIndicatorId) && isset($_POST['isMicroFlowSelfSave']) && !$isExcelImport) { 
+            if (isset($getExpIndicatorId) && isset($_POST['isMicroFlowSelfSave']) && !$isExcelImport && Mdform::$isInsertMode == false) { 
                 $this->db->CommitTrans();
                 $response = array('status' => 'success', 'message' => Lang::line('msg_save_success'), 'uniqId' => getUID());             
                 return $response;
@@ -12773,44 +12773,48 @@ class Mdform_Model extends Model {
             if ($isUpdate == false) {
                 
                 $rowId = $newId;
-                $isUseCompanyDepartmentId = $configRow['IS_USE_COMPANY_DEPARTMENT_ID'];
-                $wfmStructureId = $configRow['STRUCTURE_INDICATOR_ID'] ? $configRow['STRUCTURE_INDICATOR_ID'] : $kpiMainIndicatorId;
                 
-                if ($isUseCompanyDepartmentId && !array_key_exists('COMPANY_DEPARTMENT_ID', Mdform::$mvDbParams['header']['data'])) { 
-
-                    $sessionCompanyDepartmentId = issetParam($sessionValues['sessioncompanydepartmentid']);
-
-                    if ($sessionCompanyDepartmentId && $sessionCompanyDepartmentId != '1') {
-                        Mdform::$mvDbParams['header']['data']['COMPANY_DEPARTMENT_ID'] = $sessionCompanyDepartmentId;
-                    }
-                }
-                
-                if (isset($isTblCreated['INDICATOR_ID']) && !array_key_exists('INDICATOR_ID', Mdform::$mvDbParams['header']['data'])) {
+                if (Mdform::$isInsertMode == false) {
                     
-                    Mdform::$mvDbParams['header']['data']['INDICATOR_ID'] = $kpiMainIndicatorId;
+                    $isUseCompanyDepartmentId = $configRow['IS_USE_COMPANY_DEPARTMENT_ID'];
 
-                    if ($sourceRecordId && isset($isTblCreated['SRC_RECORD_ID'])) {
-                        Mdform::$mvDbParams['header']['data']['SRC_RECORD_ID'] = $sourceRecordId;
+                    if ($isUseCompanyDepartmentId && !array_key_exists('COMPANY_DEPARTMENT_ID', Mdform::$mvDbParams['header']['data'])) { 
+
+                        $sessionCompanyDepartmentId = issetParam($sessionValues['sessioncompanydepartmentid']);
+
+                        if ($sessionCompanyDepartmentId && $sessionCompanyDepartmentId != '1') {
+                            Mdform::$mvDbParams['header']['data']['COMPANY_DEPARTMENT_ID'] = $sessionCompanyDepartmentId;
+                        }
                     }
-                }
-                
-                Mdform::$mvDbParams['header']['data']['CREATED_DATE'] = Date::currentDate('Y-m-d H:i:s');
-                Mdform::$mvDbParams['header']['data']['CREATED_USER_ID'] = $sessionUserKeyId;
-                Mdform::$mvDbParams['header']['data']['CREATED_USER_NAME'] = $sessionName;
-                
-                if ($configRow['IS_USE_WORKFLOW'] == '1' && !Input::numeric('isRunAutoSave')) {
 
-                    $this->load->model('mdobject', 'middleware/models/');
+                    if (isset($isTblCreated['INDICATOR_ID']) && !array_key_exists('INDICATOR_ID', Mdform::$mvDbParams['header']['data'])) {
 
-                    $dataRow = Mdform::$mvDbParams['header']['data'];
-                    $dataRow['isIndicator'] = 1;
+                        Mdform::$mvDbParams['header']['data']['INDICATOR_ID'] = $kpiMainIndicatorId;
 
-                    $startWfmStatusId = $this->model->getStartWfmStatusModel($wfmStructureId, $dataRow);
+                        if ($sourceRecordId && isset($isTblCreated['SRC_RECORD_ID'])) {
+                            Mdform::$mvDbParams['header']['data']['SRC_RECORD_ID'] = $sourceRecordId;
+                        }
+                    }
 
-                    if ($startWfmStatusId) {
-                        $setStartWfmStatusId = $startWfmStatusId;
-                    } else {
-                        throw new Exception('Эхлэлийн төлөв олдсонгүй!'); 
+                    Mdform::$mvDbParams['header']['data']['CREATED_DATE'] = Date::currentDate('Y-m-d H:i:s');
+                    Mdform::$mvDbParams['header']['data']['CREATED_USER_ID'] = $sessionUserKeyId;
+                    Mdform::$mvDbParams['header']['data']['CREATED_USER_NAME'] = $sessionName;
+
+                    if ($configRow['IS_USE_WORKFLOW'] == '1' && !Input::numeric('isRunAutoSave')) {
+
+                        $this->load->model('mdobject', 'middleware/models/');
+                        
+                        $wfmStructureId = $configRow['STRUCTURE_INDICATOR_ID'] ? $configRow['STRUCTURE_INDICATOR_ID'] : $kpiMainIndicatorId;
+                        $dataRow        = Mdform::$mvDbParams['header']['data'];
+                        $dataRow['isIndicator'] = 1;
+
+                        $startWfmStatusId = $this->model->getStartWfmStatusModel($wfmStructureId, $dataRow);
+
+                        if ($startWfmStatusId) {
+                            $setStartWfmStatusId = $startWfmStatusId;
+                        } else {
+                            throw new Exception('Эхлэлийн төлөв олдсонгүй!'); 
+                        }
                     }
                 }
                 
@@ -13126,7 +13130,7 @@ class Mdform_Model extends Model {
                 }
             }
             
-            if (!isset($postData['isMicroFlow']) && !$isExcelImport) { 
+            if (!isset($postData['isMicroFlow']) && !$isExcelImport && Mdform::$isInsertMode == false) { 
                 
                 $this->db->CommitTrans();
                 
@@ -13141,8 +13145,11 @@ class Mdform_Model extends Model {
                 }
             }
             
-            self::runGenerateKpiDataMartByIndicatorId($kpiMainIndicatorId, $sourceRecordId);
-            self::runGenerateKpiRelationDataMartByIndicatorId($kpiMainIndicatorId);
+            if (Mdform::$isInsertMode == false) {
+                
+                self::runGenerateKpiDataMartByIndicatorId($kpiMainIndicatorId, $sourceRecordId);
+                self::runGenerateKpiRelationDataMartByIndicatorId($kpiMainIndicatorId);
+            }
             
             if (Input::postCheck('wfmStatusParams') && !Input::numeric('isRunAutoSave')) {
                 self::mvChangeWfmStatus($configRow, $rowId, $changeWfmLogDescription);
@@ -16897,6 +16904,7 @@ class Mdform_Model extends Model {
             
             $tableName     = $row['TABLE_NAME'];
             $selectedRows  = Input::post('selectedRows');
+            $selectedRows = !isset($selectedRows[0]) ? [$selectedRows] : $selectedRows;
             $idField       = $standartFields['idField'] ? $standartFields['idField'] : 'ID';
             $ids           = Input::param(Arr::implode_key(',', $selectedRows, $idField, true));
             $isSystemTable = self::isCheckSystemTable($tableName);
@@ -16945,6 +16953,7 @@ class Mdform_Model extends Model {
                     if (isset($typeInfoData['DATA'])) {
                         
                         $dataJson = @json_decode($typeInfoData['DATA'], true);
+                        
                         if (isset($dataJson['RELATION_DTL']) && $dataJson['RELATION_DTL']) {
                             
                             foreach ($selectedRows as $selectedRow) {
@@ -27062,6 +27071,10 @@ class Mdform_Model extends Model {
                                 if (!$fillMapTableName) {
                                     $fillMapTableName = '('.($fillMapRow['QUERY_STRING'] ? $fillMapRow['QUERY_STRING'] : $fillMapRow['SRC_QUERY_STRING']).')';
                                 }
+                            }
+                            
+                            if (!isset($fillMapTableName)) {
+                                return [];
                             }
                             
                             $fillMapTableName = self::parseQueryString($fillMapTableName);
