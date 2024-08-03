@@ -1,7 +1,7 @@
 <?php 
 $time = ini_get('max_execution_time');
 
-//sleep(50);
+sleep(10);
 
 echo 'success';
 ?>
