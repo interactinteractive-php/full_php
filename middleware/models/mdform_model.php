@@ -32321,7 +32321,13 @@ class Mdform_Model extends Model {
     public function trgRecordIdMetaDmRecordAllMapModel($srcRefStructureId, $trgRefStructureId, $srcRecordId) {
         $trgRecordId = $this->db->GetAll("
             SELECT 
-                * 
+                ID, 
+                SRC_TABLE_NAME,
+                SEMANTIC_TYPE_ID,
+                SRC_REF_STRUCTURE_ID, 
+                TRG_REF_STRUCTURE_ID, 
+                SRC_RECORD_ID, 
+                TRG_RECORD_ID
             FROM META_DM_RECORD_MAP 
             WHERE SRC_REF_STRUCTURE_ID = ".$this->db->Param(0)." 
                 AND TRG_REF_STRUCTURE_ID = ".$this->db->Param(1)." 

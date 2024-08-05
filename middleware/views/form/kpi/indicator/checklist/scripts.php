@@ -18,7 +18,8 @@ $(function() {
         $(".mv-checklist-render").css("min-height", $(window).height() - $checkListMenu_<?php echo $this->uniqId; ?>.offset().top - 139);
     }
     
-    $checkListMenu_<?php echo $this->uniqId; ?>.on('click', 'a.nav-link:not(.disabled), .add-mv-relation-btn', function() {
+    $checkListMenu_<?php echo $this->uniqId; ?>.find('a.nav-link').off('click');
+    $checkListMenu_<?php echo $this->uniqId; ?>.on('click', 'a.nav-link:not(.disabled), .add-mv-relation-btn', function(e) {
         var $this = $(this);
         
         $checkListMenu_<?php echo $this->uniqId; ?>.find('a.nav-link.active').removeClass('active');
@@ -33,7 +34,8 @@ $(function() {
             } else {
                 $this.parent().addClass('nav-group-sub-mv-opened');
             }
-            return;
+            e.stopImmediatePropagation();
+            return false;
         }
         
         var viewProcess_<?php echo $this->uniqId; ?> = $checkList_<?php echo $this->uniqId; ?>.find('.mv-checklist-render:visible');

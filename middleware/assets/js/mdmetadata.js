@@ -18462,6 +18462,12 @@ function beforeSignChangeWfmStatusId(elem, wfmStatusId, metaDataId, refStructure
     }
     row = rows[0];
     
+    if (typeof row.usetridiumtoken !== 'undefined' && row.usetridiumtoken === '1') {
+        var funcArguments = [elem, wfmStatusId, metaDataId, refStructureId, newWfmStatusColor, newWfmStatusName];
+        signTridium(elem, 'changeWfmStatusId', row, funcArguments);
+        return false;
+    }
+
     $.ajax({
         type: 'post',
         url: 'mdpki/generateHashFromFileByDataView',

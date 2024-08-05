@@ -302,8 +302,8 @@ class Mdpki extends Controller {
         if (file_exists($filePath)) {
             
             $this->model->checkIsSigned($ecmContentId, $filePath);
-            
             $response = array('status' => 'success');
+
         } else {
             $response = array('status' => 'error');
         }
@@ -541,6 +541,21 @@ class Mdpki extends Controller {
 
         convJson($response);
         exit;
+    }
+
+    public function fileAuth() {
+
+        $filePath = Input::post('filePath');
+        $ecmContentId = Input::post('ecmContentId');
+        if (file_exists($filePath)) {
+            $this->model->checkIsSigned($ecmContentId, $filePath);
+            $response = array('status' => 'success');
+            
+        } else {
+            $response = array('status' => 'error');
+        }
+
+        echo json_encode($response); exit;
     }
     
 }

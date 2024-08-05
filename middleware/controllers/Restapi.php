@@ -145,15 +145,21 @@ class Restapi extends Controller {
                         if ($configRow) {
                             
                             $result = [
-                                'id'         => $configRow['ID'],
-                                'code'       => $configRow['CODE'],
-                                'name'       => $configRow['NAME'],
-                                'kpiTypeId'  => $configRow['KPI_TYPE_ID'], 
-                                'jsonConfig' => null
+                                'id'        => $configRow['ID'],
+                                'code'      => $configRow['CODE'],
+                                'name'      => $configRow['NAME'],
+                                'kpiTypeId' => $configRow['KPI_TYPE_ID'],
+                                'metaInfo'  => []
                             ];
                             
-                            if ($configRow['JSON_CONFIG'] != '') {
-                                $result['jsonConfig'] = json_decode($configRow['JSON_CONFIG'], true);
+                            $metaInfo = $this->model->getIndicatorAdditionalInfoModel(2020, $kpiMainIndicatorId);
+                            
+                            if ($metaInfo) {
+                                $result['metaInfo'] = $metaInfo;
+                                
+                                if ($metaInfo['JSON_CONFIG']) {
+                                    $result['metaInfo']['JSON_CONFIG'] = json_decode(html_entity_decode($metaInfo['JSON_CONFIG'], ENT_QUOTES, 'UTF-8'), true);
+                                }
                             }
                             
                             $idPh = $this->db->Param(0);
@@ -169,12 +175,27 @@ class Restapi extends Controller {
                                 unset($relationData[$r]['CREATED_USER_ID']);
                                 unset($relationData[$r]['IS_ADDON_FORM']);
                                 
+                                $relationData[$r]['metaInfo'] = [];
+                                
                                 if ($relationRow['JSON_CONFIG'] != '') {
                                     $relationData[$r]['JSON_CONFIG'] = json_decode($relationRow['JSON_CONFIG'], true);
                                 }
                                 
                                 $mapId          = $relationRow['MAP_ID'];
                                 $trgIndicatorId = $relationRow['ID'];
+                                
+                                if ($relationRow['KPI_TYPE_ID'] == 2020) {
+                                    
+                                    $metaInfo = $this->model->getIndicatorAdditionalInfoModel(2020, $trgIndicatorId);
+
+                                    if ($metaInfo) {
+                                        $relationData[$r]['metaInfo'] = $metaInfo;
+
+                                        if ($metaInfo['JSON_CONFIG']) {
+                                            $relationData[$r]['metaInfo']['JSON_CONFIG'] = json_decode(html_entity_decode($metaInfo['JSON_CONFIG'], ENT_QUOTES, 'UTF-8'), true);
+                                        }
+                                    }
+                                }
                                 
                                 $childRelations = $this->db->GetAll("
                                     SELECT 

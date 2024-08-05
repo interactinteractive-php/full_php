@@ -174,7 +174,7 @@ class Token extends Controller {
                 'content' => http_build_query($data)
             )
         );
-		
+        
         $context = stream_context_create($options);
         $result = file_get_contents($url, false, $context);
 
@@ -256,4 +256,92 @@ class Token extends Controller {
         }
     }
 
+    public function fileUpload() {
+        try {
+
+            $token = issetParam($_SERVER['HTTP_OTP']);
+            if (!$token) {
+                $httpStatusCode = 521;
+                $httpStatusMsg  = 'Missing parameter';
+                header('Status: '.$httpStatusCode.' '.$httpStatusMsg);
+                convJson(array('status' => 'error'));
+                die;
+            }
+            
+            $token = Hash::decryption($token);
+            if (!$token) {
+                $httpStatusCode = 521;
+                $httpStatusMsg  = 'Missing parameter!';
+                header('Status: '.$httpStatusCode.' '.$httpStatusMsg);
+                convJson(array('status' => 'error'));
+                die;
+            }
+            $tokenArr = explode('^~^', $token);
+            $tokenDate = $tokenArr[0];
+            $tokenUserId = $tokenArr[1];
+            $tokenUID = $tokenArr[2];
+            
+            if ($tokenDate && $tokenUserId && $tokenUID && (strtotime(Date::currentDate('Y-m-d H:i:s')) - strtotime($tokenDate)) > 300) {
+                outputJSON('Token expired!');
+                $httpStatusCode = 521;
+                $httpStatusMsg  = 'Token expired!';
+                header('Status: '.$httpStatusCode.' '.$httpStatusMsg);
+                convJson(array('status' => 'error'));
+                die;
+            }
+            
+            file_put_contents($file, $current);
+            /*
+            if ($_FILES['file']['error'] > 0) {
+                outputJSON('An error ocurred when uploading.');
+            }
+    
+            if ($_FILES['file']['size'] > 20000000) {
+                outputJSON('File uploaded exceeds maximum upload size.');
+            }
+            */
+            $fileName = $_FILES['file']['name'];
+            $fileName = Str::replace('[signed]', '_signed_' . getUID(), $fileName);
+            $newFileName = Str::lower($fileName);
+            $date    = Date::currentDate('Ym');
+            $newPath = UPLOADPATH . 'signed_file/' . $date . '/';
+    
+            if (!is_dir($newPath)) {
+                mkdir($newPath, 0777, true);
+            }
+    
+            $filePath = $newPath . $newFileName;
+            
+            if (file_exists($filePath)) {
+                chmod($filePath, 0755);
+                unlink($filePath);
+            }
+            
+            FileUpload::SetFileName($fileName);
+            FileUpload::SetTempName($_FILES['file']['tmp_name']);
+            FileUpload::SetUploadDirectory($newPath);
+            FileUpload::SetValidExtensions(explode(',', Config::getFromCache('CONFIG_FILE_EXT')));
+            FileUpload::SetMaximumFileSize(FileUpload::GetConfigFileMaxSize());
+            $uploadResult = FileUpload::UploadFile();
+    
+            if (!$uploadResult) {
+                $httpStatusCode = 521;
+                $httpStatusMsg  = 'Error uploading file - check destination is writeable.';
+                header('Status: '.$httpStatusCode.' '.$httpStatusMsg);
+                convJson(array('status' => 'error'));
+                die;
+            } 
+            
+            $httpStatusCode = 522;
+            $httpStatusMsg  = $filePath;
+            header('Status: '.$httpStatusCode.' '.$httpStatusMsg);
+            convJson(array('status' => 'success'));
+        } catch (Exception $e) {
+            
+            $httpStatusCode = 521;
+            $httpStatusMsg  = $e->getMessage();
+            header('Status: '.$httpStatusCode.' '.$httpStatusMsg);
+            convJson(array('status' => 'error'));
+        }
+    }
 }

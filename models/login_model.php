@@ -226,7 +226,7 @@ class Login_Model extends Model {
         
         Session::init();
 
-        $params = array('userKeyId' => $userKeyId);
+        $params = ['userKeyId' => $userKeyId];
         
         $result = $this->ws->runResponse(GF_SERVICE_ADDRESS, 'connectClient', $params);
         

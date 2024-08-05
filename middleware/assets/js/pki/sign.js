@@ -948,6 +948,7 @@ function redirectFunction(element, url) {
         }
     });
 } 
+
 function getSignToken() {
     var result = '';
     $.ajax({
@@ -959,4 +960,182 @@ function getSignToken() {
         }
     });
     return result;
+}
+
+function signTridium(elem, funcName, row, funcArguments) {
+    
+    PNotify.removeAll();
+    Core.unblockUI();
+    if (!row) {
+        
+        new PNotify({
+            title: 'Error',
+            text: "Шаардлагатай мэдээлэл солилцоход алдаа гарлаа! [row]",
+            type: 'error',
+            sticker: false
+        });
+        return false;
+    }
+    if (!row.hasOwnProperty('physicalpath')) {
+        new PNotify({
+            title: 'Error',
+            text: "Шаардлагатай мэдээлэл солилцоход алдаа гарлаа! [physicalpath]",
+            type: 'error',
+            sticker: false
+        });
+        return false;
+    }
+    if (!row.hasOwnProperty('contentid')) {
+        new PNotify({
+            title: 'Error',
+            text: "Шаардлагатай мэдээлэл солилцоход алдаа гарлаа! [contentid]",
+            type: 'error',
+            sticker: false
+        });
+        return false;
+    }
+    if (!row['physicalpath']) {
+        new PNotify({
+            title: 'Error',
+            text: "Шаардлагатай мэдээлэл солилцоход алдаа гарлаа! [physicalpath]",
+            type: 'error',
+            sticker: false
+        });
+        return false;
+    }
+    if (!row['contentid']) {
+        new PNotify({
+            title: 'Error',
+            text: "Шаардлагатай мэдээлэл солилцоход алдаа гарлаа! [contentid]",
+            type: 'error',
+            sticker: false
+        });
+        return false;
+    }
+    Core.blockUI({message: 'Loading...', boxed: true});
+    
+    var json = {
+        "Command": "4",
+        "OTP": getSignToken(), 
+        "PDFFiles": [
+            {
+                "SignFileName": URL_APP + row['physicalpath'],
+                "SignedFileName": URL_APP + "token/fileUpload",
+            }
+        ]
+    };
+
+    if ("WebSocket" in window) {
+        console.log("WebSocket is supported by your Browser!");
+        var ws = new WebSocket("ws://127.0.0.1:59001");
+        ws.onopen = function () {
+            var data = JSON.stringify(json);
+            ws.send(data);
+        };
+
+        ws.onmessage = function (e) {
+            var obj = JSON.parse(e.data);
+            if (!obj.hasOwnProperty('PDFFiles'))  {
+                new PNotify({
+                    title: 'Error',
+                    text: "Шаардлагатай мэдээлэл солилцоход алдаа гарлаа! [PDFFiles]",
+                    type: 'error',
+                    sticker: false
+                });
+                Core.unblockUI();
+                return false;
+            }
+
+            var pdfResponse = JSON.parse(obj['PDFFiles']);
+            if (pdfResponse.hasOwnProperty('0') && pdfResponse['0'].hasOwnProperty('ErrorMessage') && pdfResponse['0']['ErrorMessage'].indexOf("The remote server returned an error: (522) ") > -1) {
+                var filePath = pdfResponse['0']['ErrorMessage'].replace('The remote server returned an error: (522) ', '');
+                filePath = filePath.replace('.pdf.', '.pdf');
+                $.ajax({
+                    type: 'post',
+                    url: 'mdpki/fileAuth',
+                    data: {
+                        filePath: filePath, 
+                        ecmContentId: row['contentid']
+                    },                        
+                    dataType: 'json',
+                    success: function(data){
+                        if(data.status === 'success') {
+                            new PNotify({
+                                title: 'Success',
+                                text: 'Амжилттай гарын үсэг зурлаа.',
+                                type: 'success',
+                                sticker: false
+                            });
+                            if (typeof funcName !== 'undefined' && typeof window[funcName] === 'function') {
+                                window[funcName].apply(elem, funcArguments);
+                            }
+                        }else{
+                            new PNotify({
+                                title: 'Error',
+                                text: 'Баталгаажуулж чадсангүй алдаа гарлаа.',
+                                type: 'error',
+                                sticker: false
+                            });
+                        }
+                        Core.unblockUI();
+                        
+                    },
+                    error: function(){
+                        new PNotify({
+                            title: 'Error',
+                            text: 'Баталгаажуулж чадсангүй алдаа гарлаа.',
+                            type: 'error',
+                            sticker: false
+                        });
+                        Core.unblockUI();
+                    }
+                });
+                
+                return;
+            }
+
+            if (pdfResponse.hasOwnProperty('0') && pdfResponse['0'].hasOwnProperty('ErrorMessage') && pdfResponse['0']['ErrorMessage'].indexOf("The remote server returned an error: (521) ") > -1) {
+                var errorMessage = pdfResponse['0']['ErrorMessage'].replace('The remote server returned an error: (521) ', '');
+                new PNotify({
+                    title: 'Error',
+                    text: errorMessage,
+                    type: 'error',
+                    sticker: false
+                });
+                Core.unblockUI();
+                return;
+            }
+            
+            new PNotify({
+                title: 'Error',
+                text: "Шаардлагатай мэдээлэл солилцоход алдаа гарлаа! [TRIDIUM]",
+                type: 'error',
+                sticker: false
+            });
+        };
+
+        ws.onerror = function (event) {
+            new PNotify({
+                title: 'Error',
+                text: "Клент ажиллуулахад алдаа гарлаа!",
+                type: 'error',
+                sticker: false
+            });
+            
+            Core.unblockUI();
+        };
+
+        ws.onclose = function () {
+            console.log("Connection is closed...");
+        };
+    }
+    else {
+        new PNotify({
+            title: 'Error',
+            text: "WebSocket NOT supported by your Browser!",
+            type: 'error',
+            sticker: false
+        });
+    }
+    
 }
