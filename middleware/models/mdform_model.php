@@ -8728,7 +8728,7 @@ class Mdform_Model extends Model {
                     AND T0.PARENT_ID IS NULL 
                     AND (T0.SHOW_TYPE = 'row' OR T0.SHOW_TYPE = 'rows') 
                     AND T0.COLUMN_NAME = ".$this->db->Param(1), 
-                array($mainIndicatorId, $columnName)
+                [$mainIndicatorId, $columnName]
             );
             
             if ($trgTableName = issetParam($configRow['TABLE_NAME'])) {
@@ -8746,7 +8746,7 @@ class Mdform_Model extends Model {
                         AND T0.SRC_RECORD_ID = ".$this->db->Param(2)." 
                         AND T0.SRC_NAME = ".$this->db->Param(3)." 
                     ORDER BY TO_NUMBER(T0.ORDER_NUM) ASC", 
-                    array($mainIndicatorId, $trgIndicatorId, $sourceId, $columnName)
+                    [$mainIndicatorId, $trgIndicatorId, $sourceId, $columnName]
                 );
                 
                 $result = $data ? $data : null;

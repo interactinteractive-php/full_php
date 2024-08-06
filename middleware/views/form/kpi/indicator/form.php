@@ -989,7 +989,7 @@ $(function() {
     }       
 });
 
-function rowsDtlPathReplacer_(getData, groupPath) {
+function rowsDtlPathReplacer_<?php echo $this->uniqId; ?>(getData, groupPath) {
     <?php
     if (Mdform::$isRowsReplacePath) {
     ?>

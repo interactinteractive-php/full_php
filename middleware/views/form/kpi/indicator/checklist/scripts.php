@@ -769,12 +769,27 @@ $(function() {
                                     var $render = viewProcess_<?php echo $this->uniqId; ?>;
 
                                     $render.find('.bp-add-one-row').parent().remove();
-                                    $render.find('.bp-remove-row, button.red, button.bp-btn-save, button.green-meadow, button.bp-file-choose-btn, a[onclick*="bpFileChoosedRemove"], span.filename, a[onclick*="kpiIndicatorRelationRemoveRows"], div.input-group.quick-item-process').remove();
+                                    $render.find('.bp-remove-row, button.red, button.green-meadow, button.bp-btn-save, button.bp-file-choose-btn, a[onclick*="bpFileChoosedRemove"], span.filename, a[onclick*="kpiIndicatorRelationRemoveRows"], div.input-group.quick-item-process').remove();
                                     $render.find('input[type="text"], textarea').addClass('kpi-notfocus-readonly-input').attr('readonly', 'readonly');
                                     $render.find("div[data-s-path]").addClass('select2-container-disabled kpi-notfocus-readonly-input');
                                     $render.find('button[onclick*="dataViewSelectableGrid"], button[onclick*="chooseKpiIndicatorRowsFromBasket"]').prop('disabled', true);
                                     $render.find('[data-action-name="exportexcel"]').removeClass('d-none');
+                                    
+                                    if ($this.hasAttr('data-stepdone') && $this.attr('data-stepdone') == '1') {
+                                        
+                                        var $indicatorElem = $render.find('input[name="kpiMainIndicatorId"]');
+                                        var $recordElem = $render.find('input[name="kpiTblId"]');
 
+                                        if ($indicatorElem.length && $recordElem.length && $indicatorElem.val() != '' && $recordElem.val() != '') {
+
+                                            sveActionBtn = '<div class="ml-auto pull-right">';
+                                                sveActionBtn += '<button type="button" class="ml-1 btn btn-sm btn-circle btn-success" onclick="mvFormExcelExport(this);">'+plang.get('excel_export_btn')+'</button>';
+                                            sveActionBtn += '</div>';
+
+                                            $render.find('form:eq(0)').append(sveActionBtn);
+                                        }
+                                    }
+                                    
                                     var $radioElements = $render.find("input[type='radio']");
                                     if ($radioElements.length) {
                                         $radioElements.attr({'data-isdisabled': 'true', style: 'cursor: not-allowed', 'tabindex': '-1'});

@@ -118,7 +118,7 @@ $renderType = $this->methodRow['RENDER_THEME'];
                     ?>                    
                         <div class="tab-pane <?php echo ($this->isIgnoreHeaderProcess ? ($tabId == 1 ? 'active' : '') : ''); ?>" id="maintabcustom_<?php echo $this->uniqId; ?>_<?php echo $tabId; ?>" style="padding-bottom: 0 !important;padding-top: 0 !important;padding-right: 0 !important;">
                             <div class="d-flex" style="background-color: rgb(244, 244, 244)">
-<!--                                sidebar-light-->
+                                <!--sidebar-light-->
                                 <div class="sidebar sidebar-dark sidebar-secondary sidebar-expand-md mt-2 ml-2" style="width:280px;border-radius: .75rem;">
                                     <div class="d-flex justify-content-end">
                                         <a href="javascript:;" title="Sidebar хураах" class="checklist-sidebar-close-btn" onclick="mvCheckListSidebarClose(this)" style=""><i class="icon-arrow-left5"></i></a>
@@ -142,7 +142,7 @@ $renderType = $this->methodRow['RENDER_THEME'];
 
                                                             $kpiTypeId = $row['KPI_TYPE_ID'];
                                                             $mapLabelName = $row['MAP_LABEL_NAME'];
-                                                            $class = $itemClass = '';
+                                                            $class = $itemClass = $stepDone = '';
 
                                                             if ($mapLabelName != '') {
                                                                 $name = $this->lang->line($mapLabelName);
@@ -190,6 +190,7 @@ $renderType = $this->methodRow['RENDER_THEME'];
                                                             }
 
                                                             if (isset($this->endToEndLogData['detailData'][$row['ID']]) && $this->endToEndLogData['detailData'][$row['ID']]['STATUS_CODE'] == 'done') {
+                                                                $stepDone = 1;
                                                                 $iconName = 'fas fa-check-square';
                                                             }
 
@@ -198,7 +199,7 @@ $renderType = $this->methodRow['RENDER_THEME'];
                                                             }
 
                                                             $item .= '<li class="nav-item'.$itemClass.'" data-stepid="'.$row['ID'].'">
-                                                                <a href="javascript:;" class="mv_checklist_02_sub nav-link'.$class.'" data-indicatorid="'.$this->indicatorId.'" data-uniqid="'.$this->uniqId.'" data-json="'.$rowJson.'" data-hidden-params="'.$hiddenParams.'" data-iscomment="'.$row['IS_COMMENT'].'" data-stepid="'.$row['ID'].'">
+                                                                <a href="javascript:;" class="mv_checklist_02_sub nav-link'.$class.'" data-indicatorid="'.$this->indicatorId.'" data-uniqid="'.$this->uniqId.'" data-json="'.$rowJson.'" data-hidden-params="'.$hiddenParams.'" data-iscomment="'.$row['IS_COMMENT'].'" data-stepid="'.$row['ID'].'" data-stepdone="'.$stepDone.'">
                                                                     <i class="'.$iconName.'"></i> <span class="pt1">'.$name.'</span>
                                                                 </a>
                                                             </li>';

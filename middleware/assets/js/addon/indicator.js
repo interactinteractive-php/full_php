@@ -643,7 +643,9 @@ function mvNormalRelationRender(elem, kpiTypeId, mainIndicatorId, opt) {
                             $dialog.find('button[onclick*="dataViewSelectableGrid"], button[onclick*="chooseKpiIndicatorRowsFromBasket"]').prop('disabled', true);
                             
                             if (!postData.hasOwnProperty('wfmStatusParams')) {
-                                $dialog.find('button.bp-btn-save').remove();
+                                var $saveBtn = $dialog.find('button.bp-btn-save');
+                                $saveBtn.after('<button type="button" class="ml-1 btn btn-sm btn-circle btn-success" onclick="mvFormExcelExport(this);">'+plang.get('excel_export_btn')+'</button>');
+                                $saveBtn.remove();
                             }
                             
                             var $radioElements = $dialog.find("input[type='radio']");
@@ -702,6 +704,36 @@ function mvNormalRelationRender(elem, kpiTypeId, mainIndicatorId, opt) {
         },
         error: function () { alert('Error'); Core.unblockUI(); }
     });
+}
+function mvFormExcelExport(elem) {
+    var $this = $(elem), $parent = $this.closest('form');
+    var $indicatorElem = $parent.find('input[name="kpiMainIndicatorId"]');
+    var $recordElem = $parent.find('input[name="kpiTblId"]');
+        
+    if ($indicatorElem.length && $recordElem.length && $indicatorElem.val() != '' && $recordElem.val() != '') {
+        
+        Core.blockUI({message: 'Exporting...', boxed: true});
+        $.fileDownload(URL_APP + 'mdform/indicatorRowExport', {
+            httpMethod: 'POST',
+            data: {indicatorId: $indicatorElem.val(), selectedRows: [{ID: $recordElem.val()}], idField: 'ID'} 
+        }).done(function() {
+            Core.unblockUI();
+        }).fail(function(response) {
+            PNotify.removeAll();
+            new PNotify({
+                title: 'Error',
+                text: response,
+                type: 'error',
+                addclass: pnotifyPosition,
+                sticker: false
+            });
+            Core.unblockUI();
+        });
+
+    } else {
+        alert(plang.get('msg_pls_list_select'));
+        return;
+    }
 }
 function developerWorkspace(mainIndicatorId, data) {
     var $dialogName = 'dialog-valuemap-'+mainIndicatorId;
@@ -1407,7 +1439,7 @@ function mvRecordRelationExcelExport(elem) {
         Core.blockUI({message: 'Exporting...', boxed: true});
         $.fileDownload(URL_APP + 'mdform/indicatorRowExport', {
             httpMethod: 'POST',
-            data: {indicatorId: $indicatorElem.val(), selectedRow: {ID: $recordElem.val()}, idField: 'ID'} 
+            data: {indicatorId: $indicatorElem.val(), selectedRows: [{ID: $recordElem.val()}], idField: 'ID'} 
         }).done(function() {
             Core.unblockUI();
         }).fail(function(response) {

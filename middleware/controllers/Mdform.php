@@ -3784,8 +3784,8 @@ class Mdform extends Controller {
         
         try {
             
-            $indicatorId = Input::numeric('indicatorId');
-            $idField     = Input::post('idField');
+            $indicatorId  = Input::numeric('indicatorId');
+            $idField      = Input::post('idField');
             $selectedRows = Input::post('selectedRows');
             
             if (Mdform::$defaultTplSavedId = issetParam($selectedRows[0][$idField])) {
@@ -3828,7 +3828,9 @@ class Mdform extends Controller {
                 $this->spreadsheet->setActiveSheetIndex(0);
                 
                 foreach ($selectedRows as $rowIndex => $selectedRow) {
+                    
                     $configDataTemp = $configData;
+                    
                     Mdform::$defaultTplSavedId = issetParam($selectedRow[$idField]);
                     Mdform::$kpiDmMart = $this->model->getKpiIndicatorDetailDataModel($indicatorId, Mdform::$defaultTplSavedId);
 
@@ -3885,7 +3887,7 @@ class Mdform extends Controller {
         
         foreach ($configData as $k => $arrRow) {
                     
-            if ($arrRow['PARENT_ID'] == $parentId && $arrRow['IS_RENDER']) {
+            if ($arrRow['PARENT_ID'] == $parentId && $arrRow['IS_RENDER'] && $arrRow['SHOW_TYPE'] != 'button') {
                 
                 unset($configData[$k]);
                 
@@ -5411,16 +5413,12 @@ class Mdform extends Controller {
                     AND T1.SRC_INDICATOR_MAP_ID = ".$this->db->Param(0)." 
                     AND ".($isIndicator ? 'T1.TRG_INDICATOR_ID' : 'T1.LOOKUP_META_DATA_ID')." = ".$this->db->Param(1)." 
                 ORDER BY T2.ID ASC", 
-                array($rowId, $lookupId));
+                [$rowId, $lookupId]
+            );
 
             $fields = 'array(';
 
             foreach ($paramMap as $field) {
-                /*if (isset($lookupFieldData[$field['PARAM_FIELD_PATH']])) {
-                    $fields .= '\''.$field['PARAM_FIELD_PATH'].'\' => issetParam($lookupRowDatas[\''.$field['PARAM_FIELD_PATH'].'\'][$field[\''.$field['LOOKUP_FIELD_PATH'].'\']]), ';
-                } else {
-                    $fields .= '\''.$field['PARAM_FIELD_PATH'].'\' => issetParam($field[\''.$field['LOOKUP_FIELD_PATH'].'\']), ';
-                }*/
                 
                 if ($field['DEFAULT_VALUE'] != '') {
                     $fields .= '\''.$field['TRG_INDICATOR_PATH'].'\' => \''.$field['DEFAULT_VALUE'].'\', ';
@@ -6459,6 +6457,7 @@ class Mdform extends Controller {
                         $_POST['transferSelectedRow'][strtoupper($mapRow['TRG_INDICATOR_PATH'])] = issetParam($selectedRow[strtolower($mapRow['SRC_INDICATOR_PATH'])]);
                     }
                 }
+                
             } elseif ($srcRecordId) {
                 $_POST['param']['dynamicRecordId'] = $srcRecordId; 
                 $_POST['param']['idField'] = 'IDFIELD';
