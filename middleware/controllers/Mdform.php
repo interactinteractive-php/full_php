@@ -1182,7 +1182,7 @@ class Mdform extends Controller {
         
         $postData = Input::postData();
         
-        if (isset($postData['param']['indicatorId'])) {
+        if (isset($postData['param']['indicatorId']) && is_numeric($postData['param']['indicatorId'])) {
             
             $this->load->model('mdform', 'middleware/models/');
             
@@ -7354,7 +7354,7 @@ class Mdform extends Controller {
         $response = $this->model->mvControlRenderModel();
         echo $response;
     }
-    
+
     public function getMetaVerseBindParamRelation($structureIndicatorId, $srcStrId, $recordId, $row = []) {
         $params = ['recordId' => $recordId];
         $trgRecordId = $this->model->trgRecordIdMetaDmRecordMapModel($structureIndicatorId, $srcStrId, $recordId);

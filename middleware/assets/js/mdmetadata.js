@@ -18283,6 +18283,12 @@ function beforeSignProcess(mainMetaDataId, processMetaDataId, metaTypeId, whereF
     }
     var row = rows[0];
     
+    if (typeof row.usetridiumtoken !== 'undefined' && row.usetridiumtoken === '1') {
+        var funcArguments = [mainMetaDataId, processMetaDataId, metaTypeId, whereFrom, elem, params, dataGrid, wfmStatusParams, drillDownType];
+        signTridium(elem, 'privateTransferProcessAction', row, funcArguments);
+        return false;
+    }
+    
     $.ajax({
         type: 'post',
         url: 'mdpki/generateHashFromFileByDataView',

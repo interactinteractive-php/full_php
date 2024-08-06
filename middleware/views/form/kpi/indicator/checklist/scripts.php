@@ -696,6 +696,10 @@ $(function() {
                         }
                         
                         renderHeader += '</div>';
+                        
+                        if (viewMode_<?php echo $this->uniqId; ?> == 'view') {
+                            dataHtml.html = (dataHtml.html).replace('name="kpiActionType"', 'name="kpiActionType" value="read"');
+                        }
                 
                         html.push('<form method="post" enctype="multipart/form-data" id="wsForm">');
                             html.push(renderHeader);
@@ -759,7 +763,7 @@ $(function() {
                         } else {                           
 
                             viewProcess_<?php echo $this->uniqId; ?>.empty().append(html.join('')).promise().done(function() {
-
+                                
                                 if (viewMode_<?php echo $this->uniqId; ?> == 'view') {
 
                                     var $render = viewProcess_<?php echo $this->uniqId; ?>;

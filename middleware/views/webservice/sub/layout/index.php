@@ -339,6 +339,57 @@ $(function() {
         layoutAdjustBoxHeights();
     
     }, 0);
+    
+    <?php
+    if (Mdwebservice::$isTopFixedNavbar) {
+    ?>
+    var $topMenu = bp_window_<?php echo $this->methodId; ?>.find('.nav.nav-scroll'),
+        topMenuHeight = $topMenu.outerHeight(),
+        $menuItems = $topMenu.find('a');
+
+    $menuItems.click(function(e) {
+        var href = $(this).attr('data-go-fixed-id'),
+            offsetTop = $('[data-fixed-id="'+href+'"]').offset().top - topMenuHeight - 100;
+
+        $('html, body').stop().animate({ 
+            scrollTop: offsetTop
+        }, 300);
+
+        e.preventDefault();
+    });
+
+    $(document).scroll(function() { 
+
+        var $sections = $('[data-fixed-id]');
+        var scrollTop = $(document).scrollTop();
+        var pos = scrollTop + 100;
+        
+        if (scrollTop > 0) {
+            $topMenu.css('margin-top', '-11px');
+        } else {
+            $topMenu.css('margin-top', '');
+        }
+
+        $sections.each(function() {
+
+            var $this = $(this);
+            var top = $this.offset().top - topMenuHeight;
+            var bottom = top + $this.outerHeight();
+
+            if (pos >= top && pos <= bottom) {
+
+                var id = $this.attr('data-fixed-id');
+
+                if (id) {  
+                    $topMenu.find('.active').removeClass('active');
+                    $topMenu.find('a[data-go-fixed-id="' + id + '"]').parent().addClass('active');
+                }
+            }
+        });
+    });
+    <?php
+    }
+    ?>
 });
 </script>
 
@@ -437,5 +488,56 @@ $(function() {
 .bp-layout .bl-section-no-padding > .card-body {
     padding: 5px!important;
 }
-<?php echo $this->gridHeaderClass; ?>
+<?php 
+echo $this->gridHeaderClass; 
+
+if (Mdwebservice::$isTopFixedNavbar) {
+?> 
+.bp-layout .nav-scroll {
+    position: fixed;
+    background: #fff;
+    width: 94%;
+    z-index: 97;
+    padding: 0;
+    margin: 0;
+    border-radius: 0;
+}
+.bp-layout .nav-scroll li {
+    width: auto !important;
+    position: relative;
+}
+.bp-layout .nav-scroll li a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-transform: uppercase;
+    font-size: 11px;
+    color: #1b4588;
+    padding: 10px !important;
+    text-align: left;
+    min-height: 48px;
+    font-weight: bold;
+    line-height: normal;
+}
+.bp-layout .nav-scroll li.active, .bp-layout .nav-scroll li:active, .bp-layout .nav-scroll li:hover, .bp-layout .nav-scroll li:focus {
+    background: var(--root-color03);
+    color: #fff !important;
+}
+.bp-layout .nav-scroll li a .order-number {
+    background: #1b4588;
+    color: #fff;
+    font-style: normal;
+    font-weight: bold;
+    border-radius: 20px;
+    width: 25px;
+    min-width: 25px;
+    height: 25px;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    margin-right: 12px;
+}
+<?php
+}
+?>
 </style>

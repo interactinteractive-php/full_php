@@ -14,7 +14,7 @@ var anketForm = function(){
             $processHtml.find('input[name="param[kpiTemplateId]"]').val(kpiTemplateId);
         }
         
-        var $topMenu = $('.nav.nav-scroll'),
+        /*var $topMenu = $('.nav.nav-scroll'),
             topMenuHeight = $topMenu.outerHeight(),
             $menuItems = $topMenu.find('a');
 
@@ -50,7 +50,7 @@ var anketForm = function(){
                     }
                 }
             });
-        });
+        });*/
 
         $processHtml.find('.bpMainSaveButton').click(function(e, a){
             var $this = $(this);

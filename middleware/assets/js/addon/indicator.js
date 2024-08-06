@@ -620,6 +620,10 @@ function mvNormalRelationRender(elem, kpiTypeId, mainIndicatorId, opt) {
                 }
                 var $dialog = $('#' + $dialogName);
                 
+                if (mode == 'view') {
+                    data.html = (data.html).replace('name="kpiActionType"', 'name="kpiActionType" value="read"');
+                }
+                        
                 $dialog.empty().append(data.html);
                 $dialog.dialog({
                     cache: false,

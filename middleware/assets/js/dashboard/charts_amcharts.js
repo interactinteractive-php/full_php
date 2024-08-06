@@ -2815,8 +2815,19 @@ var ChartsAmcharts = function () {
                 isBar = true;
                 if (response.chartType === 'am_bar_axis') {
                     var yAxisArray = chartTitleSeparatorSplit(response.series.yAxisName);
-                    var yAxisArray2 = yAxisArray[0].split('_');
-                    var yAxisArray3 = yAxisArray[1].split('_');
+                    
+                    if (typeof yAxisArray[0] != 'undefined') {
+                        var yAxisArray2 = yAxisArray[0].split('_');
+                    } else {
+                        var yAxisArray2 = ['', ''];
+                    }
+                    
+                    if (typeof yAxisArray[1] != 'undefined') {
+                        var yAxisArray3 = yAxisArray[1].split('_');
+                    } else {
+                        var yAxisArray3 = ['', ''];
+                    }
+                    
                     graphs = [{
                             "alphaField": "alpha",
                             "balloonText": "<span style='font-size:10px;'>[[title]]:<br><span style='font-size:10px;'>[[value]]</span> [[additional]]</span>",
@@ -2841,7 +2852,7 @@ var ChartsAmcharts = function () {
                             "lineAlpha": 1,
                             "title": yAxisArray3[0],
                             "valueField": yAxisArray3[1]
-                        }]
+                        }];
                 }
                 break;
             }

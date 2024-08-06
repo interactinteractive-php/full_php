@@ -12,9 +12,6 @@
 
 class Mdwebservice extends Controller {
 
-    public static $processMetaDataId = null;
-    public static $paramRealPath = null;
-    private static $uploadedFiles = array();
     public static $uploadedPath = 'process/';
     private static $viewPath = 'middleware/views/webservice/';
     public static $defaultWindowWidth = 850;
@@ -27,8 +24,11 @@ class Mdwebservice extends Controller {
     public static $tableWidth = 0;
     public static $tablePercentWidth = 0;
     public static $isGroupRender = 0;
-    public static $processCode = null;
-    public static $selectedRowId = null;
+    public static $isHistoryControl = false;
+    public static $isLogViewMode = false;
+    public static $isLayoutRender = false;
+    public static $isTopFixedNavbar = false;
+    private static $uploadedFiles = array();
     public static $cacheExpressionMessage = array();
     public static $pfTranslationValArr = array(1);
     public static $fillParamData = array();
@@ -37,11 +37,12 @@ class Mdwebservice extends Controller {
     public static $sections = array();
     public static $layoutExistsParam = array();
     public static $detailFillData = array();
+    public static $processMetaDataId = null;
+    public static $paramRealPath = null;
+    public static $processCode = null;
+    public static $selectedRowId = null;
     public static $responseData = null;
-    public static $isHistoryControl = false;
-    public static $isLogViewMode = false;
     public static $bpActionType = null;
-    public static $isLayoutRender = false;
     public static $renderLayoutSectionParamFnc = null;
     public static $renderParamControlFnc = null;
     public static $renderLayoutSectionRowFnc = null;
@@ -16803,6 +16804,8 @@ class Mdwebservice extends Controller {
         $bar = array();
         
         if ($type == 'topFixed') {
+            
+            self::$isTopFixedNavbar = true;
             
             ksort($navbarFixedArr);
             

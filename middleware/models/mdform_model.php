@@ -15510,7 +15510,7 @@ class Mdform_Model extends Model {
             $isQueryString = ($queryString) ? true : false;
             
             if ($isTableName == false && $isQueryString == false) {
-                return ['status' => 'error', 'message' => '', 'rows' => [], 'total' => 0]; /*Invalid table_name!*/
+                return ['status' => 'success', 'message' => 'invalid table, query string', 'rows' => [], 'total' => 0]; /*Invalid table_name!*/
             }
             
             if (!$isTableName && $isQueryString && strlen($queryString) <= 30 
@@ -29447,9 +29447,11 @@ class Mdform_Model extends Model {
         $result = [];
         
         foreach ($components as $component) {
-
+            
+            $mapId = $component['MAP_ID'];
+            
             if ($component['LOOKUP_META_DATA_ID']) {
-                $result[$component['MAP_ID']] = self::getSavedRecordMapDVModel($component['LOOKUP_META_DATA_ID'], $srcRecordId);
+                $result[$mapId] = self::getSavedRecordMapDVModel($component['LOOKUP_META_DATA_ID'], $srcRecordId);
             } else {
 
                 $tableName = $component['TABLE_NAME'];
@@ -29483,16 +29485,6 @@ class Mdform_Model extends Model {
                         } elseif ($nameField && isset($tableCols[$nameField])) {
                             $selectName = "T0.".$nameField;
                         }
-                        
-                        /*$insertMapRow = [
-                            'ID'                   => getUIDAdd($k), 
-                            'SRC_REF_STRUCTURE_ID' => $metaDmRecordMaps['mainIndicatorId'],
-                            'TRG_REF_STRUCTURE_ID' => $metaDmRecordMaps['indicatorId'], 
-                            'SRC_RECORD_ID'        => issetParam($metaDmRecordMaps['mapId']) ? $metaDmRecordMaps['mapId'] : '1479204227214',
-                            'TRG_RECORD_ID'        => $recordId, 
-                            'CREATED_DATE'         => Date::currentDate(), 
-                            'CREATED_USER_ID'      => $sessionUserKeyId
-                        ];*/
 
                         $sql = "
                             SELECT 
@@ -29509,7 +29501,8 @@ class Mdform_Model extends Model {
                                         TRG_RECORD_ID 
                                     FROM META_DM_RECORD_MAP 
                                     WHERE SRC_REF_STRUCTURE_ID = $srcIndicatorId 
-                                        AND TRG_REF_STRUCTURE_ID = $trgIndicatorId
+                                        AND TRG_REF_STRUCTURE_ID = $trgIndicatorId 
+                                        AND SRC_RECORD_ID = $mapId 
                                 ) MRM 
 
                                 INNER JOIN $tableName T0 ON T0.$idField = MRM.TRG_RECORD_ID 
@@ -29520,7 +29513,7 @@ class Mdform_Model extends Model {
                         try {
                             
                             $rows = $this->db->GetAll($sql);
-                            $result[$component['MAP_ID']] = $rows;
+                            $result[$mapId] = $rows;
                             
                         } catch (Exception $ex) { }
                     } 
