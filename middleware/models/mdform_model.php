@@ -5675,6 +5675,21 @@ class Mdform_Model extends Model {
                             }
                         }
                     }
+                    
+                    if (Mdform::$isStandardFieldsGet) {
+                        
+                        if (isset($rowData['WFM_STATUS_ID']) && !isset($data['WFM_STATUS_ID'])) {
+                            $data['WFM_STATUS_ID'] = $rowData['WFM_STATUS_ID'];
+                        }
+                        
+                        if (isset($rowData['CREATED_DATE']) && !isset($data['CREATED_DATE'])) {
+                            $data['CREATED_DATE'] = $rowData['CREATED_DATE'];
+                        }
+                        
+                        if (isset($rowData['MODIFIED_DATE']) && !isset($data['MODIFIED_DATE'])) {
+                            $data['MODIFIED_DATE'] = $rowData['MODIFIED_DATE'];
+                        }
+                    }
                 }
                 
                 $response = ['status' => 'success', 'data' => $data];
@@ -8734,13 +8749,19 @@ class Mdform_Model extends Model {
             if ($trgTableName = issetParam($configRow['TABLE_NAME'])) {
                 
                 $sourceId = ($sourceId == 1) ? Mdform::$firstTplId : $sourceId;
+                $joinCriteria = null;
+                
+                if (!self::isCheckSystemTable($trgTableName)) {
+                    
+                    $joinCriteria = ' AND T1.DELETED_USER_ID IS NULL '; 
+                }
                 
                 $data = $this->db->GetAll("
                     SELECT 
                         T1.* 
                     FROM META_DM_RECORD_MAP T0 
                         INNER JOIN $trgTableName T1 ON T1.ID = T0.TRG_RECORD_ID 
-                            AND T1.DELETED_USER_ID IS NULL 
+                            $joinCriteria 
                     WHERE T0.SRC_REF_STRUCTURE_ID = ".$this->db->Param(0)." 
                         AND T0.TRG_REF_STRUCTURE_ID = ".$this->db->Param(1)." 
                         AND T0.SRC_RECORD_ID = ".$this->db->Param(2)." 
@@ -25417,8 +25438,8 @@ class Mdform_Model extends Model {
                                             TRG_RECORD_ID 
                                         FROM META_DM_RECORD_MAP 
                                         WHERE SRC_REF_STRUCTURE_ID = $srcIndicatorId 
+                                            AND TRG_REF_STRUCTURE_ID = $trgIndicatorId 
                                             AND SRC_RECORD_ID = $srcRecordId 
-                                            AND TRG_REF_STRUCTURE_ID = $trgIndicatorId
                                     ) MRM 
 
                                     INNER JOIN $tableName T0 ON T0.$idField = MRM.TRG_RECORD_ID 
@@ -32228,10 +32249,14 @@ class Mdform_Model extends Model {
     public function getKpiIndicatorMapGetRowsModel($indicatorId) {
         
         $getAll = $this->db->GetAll("
-            SELECT *
+            SELECT 
+                ID, 
+                SEMANTIC_TYPE_ID,
+                TABLE_NAME, 
+                TRG_INDICATOR_ID 
             FROM KPI_INDICATOR_INDICATOR_MAP 
             WHERE MAIN_INDICATOR_ID = ".$this->db->Param(0)." 
-                AND (SHOW_TYPE = 'row' OR SHOW_TYPE = 'rows')", 
+                AND SHOW_TYPE IN ('row', 'rows')", 
             [$indicatorId]
         );
         
@@ -32241,7 +32266,8 @@ class Mdform_Model extends Model {
     public function getKpiIndicatorMapGetChildRowsModel($indicatorId, $id) {
         
         $getAll = $this->db->GetAll("
-            SELECT *
+            SELECT 
+                SET_PARAMETER, COLUMN_NAME 
             FROM KPI_INDICATOR_INDICATOR_MAP 
             WHERE MAIN_INDICATOR_ID = ".$this->db->Param(0)." 
                 AND PARENT_ID = ".$this->db->Param(1), 
@@ -32320,7 +32346,7 @@ class Mdform_Model extends Model {
                 SRC_REF_STRUCTURE_ID, 
                 TRG_REF_STRUCTURE_ID, 
                 SRC_RECORD_ID, 
-                TRG_RECORD_ID
+                TRG_RECORD_ID 
             FROM META_DM_RECORD_MAP 
             WHERE SRC_REF_STRUCTURE_ID = ".$this->db->Param(0)." 
                 AND TRG_REF_STRUCTURE_ID = ".$this->db->Param(1)." 
@@ -32330,5 +32356,34 @@ class Mdform_Model extends Model {
         
         return $trgRecordId;
     }    
+    
+    public function getEndToEndLogModel($srcDatasetId, $srcRecordId) {
+        
+        $log = $this->db->GetRow("
+            SELECT 
+                ID, SRC_RECORD_ID, SRC_DATASET_ID, END_TO_END_INDICATOR_ID, CREATED_DATE, CREATED_USER_ID 
+            FROM END_TO_END_SESSION_LOG 
+            WHERE SRC_DATASET_ID = ".$this->db->Param(0)." 
+                AND SRC_RECORD_ID = ".$this->db->Param(1), 
+            [$srcDatasetId, $srcRecordId]
+        );
+        $result = [];
+        
+        if ($log) {
+            $result['header'] = $log;
+            
+            $logDtl = $this->db->GetAll("
+                SELECT 
+                    ID, LOG_ID, STEP_INDICATOR_ID, CREATED_DATE, CREATED_USER_ID, STATUS_CODE  
+                FROM END_TO_END_SESSION_LOG_DTL  
+                WHERE LOG_ID = ".$this->db->Param(0), 
+                [$log['ID']]
+            );
+            
+            $result['detail'] = $logDtl;
+        }
+        
+        return $result;
+    }
     
 }

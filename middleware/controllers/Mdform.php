@@ -71,6 +71,7 @@ class Mdform extends Controller {
     public static $tabSectionRenderSidebar = false;
     public static $isWizardStep = false;
     public static $isInsertMode = false;
+    public static $isStandardFieldsGet = false;
     public static $processParamData = [];
     public static $kpiDmDtlData = [];
     public static $kpiDmMart = [];
@@ -7368,10 +7369,13 @@ class Mdform extends Controller {
         $selectedRowPost['amount'] = 800000000;
         
         if ($trgRecordId) {
+            
             $params = ['recordId' => $trgRecordId];
             $idValue  = $trgRecordId;
             $dmRecordMap = $this->model->trgRecordIdMetaDmRecordAllMapModel($structureIndicatorId, $srcStrId, $recordId);
+            
         } elseif ($row) {
+            
             $mapData = $this->model->getSrcTrgPathModel($row['MAP_ID'], $row['ID']);
             
             if ($mapData) {
@@ -7395,19 +7399,16 @@ class Mdform extends Controller {
                         $setValue = issetParam($selectedRow[strtolower($mapRow['SRC_INDICATOR_PATH'])]);
                     }
 
-                    $idValue  = $setValue;
+                    $idValue = $setValue;
                     $getParams[strtoupper($mapRow['TRG_INDICATOR_PATH'])] = $setValue;
-                }            
+                } 
+                
                 $params = $getParams;
                 $dmRecordMap = $this->model->trgRecordIdMetaDmRecordAllMapModel($structureIndicatorId, $srcStrId, $setValue);
             }
         }
         
-        return [
-            'param' => $params,
-            'idValue' => $idValue,
-            'dmRecordMap' => $dmRecordMap
-        ];
+        return ['param' => $params, 'idValue' => $idValue, 'dmRecordMap' => $dmRecordMap];
     }
     
     public function getIndicatorDtlInfo($srcStrId, $data) {
@@ -7450,19 +7451,19 @@ class Mdform extends Controller {
     public function getIndicatorExportInfo($srcStrId, $structureIndicatorId, $getParams, $recordId = '') {
 
         $getData = $this->model->getMetaVerseDataModel($srcStrId, $getParams);
-        $getIndicatorInfo = $this->model->getIndicatorModel($srcStrId);            
+        $getIndicatorInfo = $this->model->getIndicatorModel($srcStrId); 
         $getIdField = $this->model->getDataDynamicTableExportJsonIdModel($srcStrId);            
 
         return [
             'structureIndicatorId' => $srcStrId,
             'clear' => [
-                'tableName' => issetParam($getIndicatorInfo['TABLE_NAME']),
-                'column' => $getIdField,
-                'dtl' => self::getIndicatorDtlInfo($srcStrId, issetParam($getData['data']))
+                'tableName' => issetParam($getIndicatorInfo['TABLE_NAME']), 
+                'column' => $getIdField, 
+                'dtl' => self::getIndicatorDtlInfo($srcStrId, issetParam($getData['data'])) 
             ],
-            'recordId' => $recordId,
-            'data'     => issetParam($getData['data']),
-            'component'=> []
+            'recordId'  => $recordId,
+            'data'      => issetParam($getData['data']),
+            'component' => []
         ];
     }    
     
@@ -7470,30 +7471,39 @@ class Mdform extends Controller {
         /**
          * dummy data
          */
-        $selectedRowPost['id'] = 1714209995456770;
+        Mdform::$isStandardFieldsGet = true;
+        
+        $selectedRowPost['id'] = 1722847457003905;
         $selectedRowPost['wfm_status_id'] = 1672040852195359;
         $selectedRowPost['wfmstatusid'] = 1672040852195359;
-        $selectedRowPost['amount'] = 800000000;        
-        $exportJson = [];
+        $selectedRowPost['amount'] = 800000000; 
         $recordId = $selectedRowPost['id'];
+        $exportJson = $relationData = [];
         
         $getExportResult = self::getIndicatorExportInfo($structureIndicatorId, $structureIndicatorId, ['recordId' => $recordId], $recordId);
         $exportJson['general'] = $getExportResult;
         
+        $endToEndLog = $this->model->getEndToEndLogModel($structureIndicatorId, $recordId);
+        $exportJson['general']['endToEndLog'] = $endToEndLog;
+        
         $relationList = $this->model->getChildRenderStructureModel($structureIndicatorId, [Mdform::$semanticTypes['normal'], Mdform::$semanticTypes['config']]);
         
-        $relationData = [];
+        Mdform::$isStandardFieldsGet = false;
+        
         foreach ($relationList as $row) {
+            
             $srcStrId = $row['STRUCTURE_INDICATOR_ID'];
             $componentRelation = $this->model->getChildComponentModel($srcStrId);
             $component = [];           
                         
-            $getParams = self::getMetaVerseBindParamRelation($structureIndicatorId, $srcStrId, $recordId, $row);                        
+            $getParams = self::getMetaVerseBindParamRelation($structureIndicatorId, $srcStrId, $recordId, $row);
             
             if ($row['KPI_TYPE_ID'] == 1000) {
+                
                 $getIndicatorInfo = $this->model->getIndicatorModel($srcStrId);
                 
                 if ($getIndicatorInfo['TABLE_NAME']) {
+                    
                     $mapData = $this->model->getSrcTrgPathWithCrudModel($row['MAP_ID'], $row['ID']);    
                     $setValue = issetParam($selectedRowPost[strtolower($mapData[0]['SRC_INDICATOR_PATH'])]);
                     $getDataTbl = $this->model->getDataDynamicTableExportJsonModel($getIndicatorInfo['TABLE_NAME'], $mapData[0]['TRG_INDICATOR_PATH'], $setValue);                 
@@ -7511,6 +7521,7 @@ class Mdform extends Controller {
             }            
             
             if ($componentRelation) {
+                
                 $components = $this->model->getKpiIndicatorMapModel($srcStrId, Mdform::$semanticTypes['component']);
                 $savedComponentRows = $this->model->getSavedRecordMapKpiComponentsModel($srcStrId, $getParams['idValue'], $components);
                 
@@ -7524,10 +7535,11 @@ class Mdform extends Controller {
                     }
                 }
             }       
-            $getExportResult['component'] = $component;
             
+            $getExportResult['component'] = $component;
             $relationData[] = $getExportResult;
         }
+        
         $exportJson['relation'] = $relationData;
         
         convJson($exportJson);
@@ -7562,26 +7574,30 @@ class Mdform extends Controller {
             }
             
             $this->db->CommitTrans();
-            echo "<h2>Successfully</h2>";
+
+            $response = ['status' => 'success', 'message' => 'Successfully'];
         
         } catch (Exception $ex) {
 
             $message = $ex->getMessage();
             $this->db->RollbackTrans();
 
-            convJson(['status' => 'error', 'message' => $message]);
-            exit;
+            $response = ['status' => 'error', 'message' => $message];
         }       
+        
+        convJson($response);
     }    
     
     public function jsonDataInsertDelete($reloationRow) {
+        
+        $resultSave = ['status' => 'error', 'message' => ''];
+        $deleteIdPh = $this->db->Param(0);
+        
         if ($reloationRow['recordId'] && $reloationRow['data']) {
+            
             $instanceExp = &getInstance();
             $instanceExp->load->model('mdform', 'middleware/models/');
-            /**
-             * Delete data
-             */            
-            $deleteIdPh = $this->db->Param(0);
+          
             $tblName = $reloationRow['clear']['tableName'];
             
             /**
@@ -7632,9 +7648,25 @@ class Mdform extends Controller {
                     throw new Exception($resultSave['message']);
                 }
             }
+        }    
+        
+        if (isset($reloationRow['endToEndLog'])) {
             
-            return $resultSave;
-        }        
+            $endToEndLogId        = $reloationRow['endToEndLog']['header']['ID'];
+            $endToEndLogDatasetId = $reloationRow['endToEndLog']['header']['SRC_DATASET_ID'];
+            $endToEndLogRecordId  = $reloationRow['endToEndLog']['header']['SRC_RECORD_ID'];
+            
+            $this->db->Execute("DELETE FROM END_TO_END_SESSION_LOG_DTL WHERE SRC_DATASET_ID = $deleteIdPh AND SRC_RECORD_ID = ".$this->db->Param(1), [$endToEndLogDatasetId, $endToEndLogRecordId]);
+            $this->db->Execute("DELETE FROM END_TO_END_SESSION_LOG WHERE SRC_RECORD_ID = $deleteIdPh", [$endToEndLogId]);
+            
+            $this->db->AutoExecute('END_TO_END_SESSION_LOG', $reloationRow['endToEndLog']['header']);
+            
+            foreach ($reloationRow['endToEndLog']['detail'] as $endToEndLogDtl) {
+                $this->db->AutoExecute('END_TO_END_SESSION_LOG_DTL', $endToEndLogDtl);
+            }
+        }
+        
+        return $resultSave;
     }
     
     public function jsonDataDmRecordMapInsertDelete($mapData, $mapRowKey) {
