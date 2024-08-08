@@ -6704,8 +6704,8 @@ class Mdform extends Controller {
         $strIndicatorId = Input::numeric('strIndicatorId');
         $rowId = Input::numeric('rowId');
         
-        $getDetailData = $this->model->getKpiIndicatorDetailDataModel($strIndicatorId, $rowId, 'IDFIELD');
-        $rowData = issetParam($getDetailData['detailData']);
+        $getDetailData = $this->model->getMetaVerseDataModel($strIndicatorId, ['recordId' => $rowId]);
+        $rowData = issetParam($getDetailData['data']);
 
         if ($rowData) {
             $relationList = $this->model->getChildRenderStructureModel($strIndicatorId, array(Mdform::$semanticTypes['normal'], Mdform::$semanticTypes['config']));
