@@ -360,6 +360,9 @@ foreach ($dataResult as $groupName => $groupRow) {
         }
     } 
         if ($createClickAction) {
+            if ($this->idField) {
+                unset($groupRow['row'][$this->idField]);
+            }
     ?>
     <a href="javascript:;" onclick="<?php echo $createClickAction; ?>" data-list-relation="1" data-rowdata="<?php echo htmlentities(json_encode($groupRow['row'], JSON_UNESCAPED_UNICODE), ENT_QUOTES, 'UTF-8') ?>" data-mapid="<?php echo $mapId ?>" data-main-indicatorid="<?php echo $this->indicatorId; ?>" data-crud-indicatorid="<?php echo $createCrudId ?>" class="mv-cardview no-dataview" style="margin-bottom: 30px;background-color: #eaeaea;height: 70px;width: 60px;margin-top: 10px;margin-left: 20px;">
         <div class="card" style="border: none;box-shadow: none;">
