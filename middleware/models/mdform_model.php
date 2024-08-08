@@ -6048,27 +6048,33 @@ class Mdform_Model extends Model {
                 $inputId = $fieldConfig['idField'];
             }
             
-            if (!$dataTableName && $configRow['QUERY_STRING']) {
+            if (!Mdform::$kpiDmMart) {
                 
-                $queryString = self::parseQueryString($configRow['QUERY_STRING']);
+                if (!$dataTableName && $configRow['QUERY_STRING']) {
                 
-                unset(self::$indicatorColumns[$indicatorId]);
-                
-                $configRow['isFilter'] = true;
-                $filterParams = self::getKpiIndicatorColumnsModel($indicatorId, $configRow);
-                
-                foreach ($filterParams as $filterParam) {
-                    if ($filterParam['TRG_ALIAS_NAME'] != '') {
-                        $queryString = str_ireplace(':'.$filterParam['TRG_ALIAS_NAME'], "''", $queryString);
+                    $queryString = self::parseQueryString($configRow['QUERY_STRING']);
+
+                    unset(self::$indicatorColumns[$indicatorId]);
+
+                    $configRow['isFilter'] = true;
+                    $filterParams = self::getKpiIndicatorColumnsModel($indicatorId, $configRow);
+
+                    foreach ($filterParams as $filterParam) {
+                        if ($filterParam['TRG_ALIAS_NAME'] != '') {
+                            $queryString = str_ireplace(':'.$filterParam['TRG_ALIAS_NAME'], "''", $queryString);
+                        }
                     }
+
+                    $dataTableName = '('.$queryString.')';
                 }
+
+                Mdform::$kpiDmMart = self::getKpiDynamicDataRowModel($dataTableName, $inputId, $recordId, $parameters);
                 
-                $dataTableName = '('.$queryString.')';
+            } else {
+                Mdform::$kpiDmMart = Mdform::$kpiDmMart['data'];
             }
             
-            Mdform::$kpiDmMart = self::getKpiDynamicDataRowModel($dataTableName, $inputId, $recordId, $parameters);
-            
-            self::$lookupDatas = array();
+            self::$lookupDatas = [];
             
             if (Mdform::$kpiDmMart) {
                 
@@ -6212,16 +6218,16 @@ class Mdform_Model extends Model {
 
                 } elseif ($arrRow['SHOW_TYPE'] == 'row' || $arrRow['SHOW_TYPE'] == 'rows') {
                     
-                    if ($arrRow['FILTER_INDICATOR_ID'] && $arrRow['SEMANTIC_TYPE_NAME'] == 'Sub хүснэгт') {
+                    /*if ($arrRow['FILTER_INDICATOR_ID'] && $arrRow['SEMANTIC_TYPE_NAME'] == 'Sub хүснэгт') {
 
                         $savedSubTableRows = self::getKpiSubTableRowsModel($indicatorId, $arrRow['FILTER_INDICATOR_ID'], Mdform::$defaultTplSavedId, $arrRow['COLUMN_NAME']);
                         
-                        Mdform::$kpiDmMart[$arrRow['COLUMN_NAME']] = array();
+                        Mdform::$kpiDmMart[$arrRow['COLUMN_NAME']] = [];
                         
                         if ($savedSubTableRows) {
                             Mdform::$kpiDmMart[$arrRow['COLUMN_NAME'] . '_subTableRows'] = $savedSubTableRows;
                         }
-                    }
+                    }*/
                     
                     $this->getKpiIndicatorDetailRowsDataModel($indicatorId, $configData, $arrRow['ID'], $arrRow);
                 }
@@ -6261,7 +6267,7 @@ class Mdform_Model extends Model {
             
             if ($isSavedDataJson) {
                 
-                $lookupDatas = array();
+                $lookupDatas = [];
                 
                 foreach ($arr as $k => $arrRow) {
 

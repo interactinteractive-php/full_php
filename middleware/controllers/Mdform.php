@@ -3840,6 +3840,7 @@ class Mdform extends Controller {
                     $configDataTemp = $configData;
                     
                     Mdform::$defaultTplSavedId = issetParam($selectedRow[$idField]);
+                    Mdform::$kpiDmMart = $this->model->getMetaVerseDataModel($indicatorId, ['recordId' => Mdform::$defaultTplSavedId]);
                     Mdform::$kpiDmMart = $this->model->getKpiIndicatorDetailDataModel($indicatorId, Mdform::$defaultTplSavedId);
 
                     if (Mdform::$kpiDmMart['status'] != 'success') {
@@ -7825,7 +7826,7 @@ class Mdform extends Controller {
                     try {
                         $db->Connect($dbHost, $dbUser, $dbPass, $dbSID, false, true);
                     } catch (Exception $e) {
-                        jsonResponse(['status' => 'error2', 'message' => $e->msg]);
+                        jsonResponse(['status' => 'error', 'message' => $e->msg]);
                     }
 
                     $db->SetCharSet(DB_CHATSET);
