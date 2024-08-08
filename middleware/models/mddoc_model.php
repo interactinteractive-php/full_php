@@ -709,7 +709,7 @@ class Mddoc_Model extends Model {
 
         } catch (Exception $e) {
             return array('status' => 'warning', 'message' => $e->getMessage());
-        }                                    
+        }
 
         return array('status' => 'error', 'message' => 'Error');
     }

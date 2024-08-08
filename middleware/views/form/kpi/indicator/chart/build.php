@@ -7,7 +7,7 @@ try {
     $chartDefaultAggerates = Info::chartDefaultAggerates();
     $chartDefaultTypes = $this->chartMainTypeData['typeCode']; /* Info::chartDefaultTypes(); */
     $chartTypesConfigration = $this->chartMainTypeData['typeTreeList']; /* Info::chartTypesConfigration(); */
-    
+
     $returnBuilder = issetParam($this->returnBuilder);
 } catch (\Throwable $th) {
     (Array) $chartDefaultTheme = $chartDefaultAggerates = $chartDefaultTypes = $chartTypesConfigration = $chartConfigration = array();
@@ -285,7 +285,6 @@ try {
                                                 'class' => 'form-control form-control-sm', 
                                                 'style' => 'background-color: '.$bgColor,
                                                 'name' => 'kpiDMChartBgColor', 
-                                                /* 'data' => $chartDefaultTheme, */
                                                 'data' => array(
                                                     array(
                                                         'bgColor' => '#29b6f6'
@@ -366,42 +365,41 @@ try {
                                             echo Form::checkbox(array(
                                                 'class' => 'booleanInit', 
                                                 'name' => 'kpiDMChartIsFilterSave', 
-                                                'value' => '1', 
+                                                'value' => '1',
                                                 'saved_val' => issetParam($this->graphJsonConfig['chartFilterCriteria']) ? '1' : ''
                                             ));
                                             ?>
                                         </div>
                                     </div>
                                 </div>
+                                <?php require 'drillConfig.php';  ?>
                             </div>
                         </div>
                     </div>
-                    <div class="card rounded-top-0 p-0 mb-0 border-top-0 border-bottom-1 type-config<?php echo $this->uniqId ?>">
-                    </div>
+                    <div class="card rounded-top-0 p-0 mb-0 border-top-0 border-bottom-1 type-config<?php echo $this->uniqId ?>"></div>
                     <?php 
                     /* var_dump($this->graphJsonConfig['chartConfig']); */
                     if (1 == 0 && $chartTypesConfigration) {
-                        foreach ($chartTypesConfigration as $config) { 
-                            ?> 
-                                <div class="echart card rounded-top-0 p-0 mb-0 border-top-0 border-bottom-1 chartTypesConfigration conf_<?php echo $config['TYPE_CODE']; ?>">
-                                    <div class="card-header h-auto m-0 px-1 py-2 bg-grey-light">
-                                        <h6 class="card-title pull-left w-100">
-                                            <a class="text-dark-info w-100 pull-left collapsed" data-toggle="collapse" href="#collapsible-<?php echo $config['TYPE_CODE']; ?>-group" aria-expanded="true"><?php echo $config['LABEL_NAME']; ?></a>
-                                        </h6>
-                                    </div>
-                                    <div id="collapsible-<?php echo $config['TYPE_CODE']; ?>-group" class="collapse">
-                                        <div class="card-body">
-                                            <div class="col-md-12">
-                                                <?php if (issetParamArray($config['children'])) { 
-                                                    foreach ($config['children'] as $panel) { 
-                                                        echo (new Mdform_Model())->renderConfigControl($panel, $this->graphJsonConfig, $config['TYPE_CODE']);
-                                                    }
-                                                } ?>
-                                            </div>
+                        foreach ($chartTypesConfigration as $config) { ?> 
+                            <div class="echart card rounded-top-0 p-0 mb-0 border-top-0 border-bottom-1 chartTypesConfigration conf_<?php echo $config['TYPE_CODE']; ?>">
+                                <div class="card-header h-auto m-0 px-1 py-2 bg-grey-light">
+                                    <h6 class="card-title pull-left w-100">
+                                        <a class="text-dark-info w-100 pull-left collapsed" data-toggle="collapse" href="#collapsible-<?php echo $config['TYPE_CODE']; ?>-group" aria-expanded="true"><?php echo $config['LABEL_NAME']; ?></a>
+                                    </h6>
+                                </div>
+                                <div id="collapsible-<?php echo $config['TYPE_CODE']; ?>-group" class="collapse">
+                                    <div class="card-body">
+                                        <div class="col-md-12">
+                                            <?php if (issetParamArray($config['children'])) { 
+                                                foreach ($config['children'] as $panel) { 
+                                                    echo (new Mdform_Model())->renderConfigControl($panel, $this->graphJsonConfig, $config['TYPE_CODE']);
+                                                }
+                                            } ?>
                                         </div>
                                     </div>
                                 </div>
-                            <?php 
+                            </div>
+                        <?php 
                         }
                     } ?>
                 </div>

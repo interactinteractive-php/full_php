@@ -1140,7 +1140,7 @@ var EchartBuilder = function() {
                 break;
         }
 
-        console.log(option);
+        /* console.log(option); */
         option && myChart.setOption(option);
         var jsonMinif = JSON.stringify(option);
         

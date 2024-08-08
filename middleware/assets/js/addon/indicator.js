@@ -5306,6 +5306,11 @@ function mvChangeWfmStatus(elem, mainIndicatorId) {
     
     PNotify.removeAll();
     
+    if (methodIndicatorId == '17225954905521') {
+        mvCloudDatabaseSyncJson(mainIndicatorId, obj);
+        return;
+    }
+    
     $.ajax({
         type: 'post',
         url: 'mdform/transferIndicatorAction',
@@ -5354,6 +5359,35 @@ function mvChangeWfmStatus(elem, mainIndicatorId) {
             }
         }
     });
+}
+function mvCloudDatabaseSyncJson(indicatorId, statusConfig) {
+    var selectedRows = getDataViewSelectedRows(indicatorId);
+    
+    $.ajax({
+        type: 'post',
+        url: 'mdform/cloudDatabaseSyncJson',
+        data: {listIndicatorId: indicatorId, statusConfig: statusConfig, selectedRows: selectedRows}, 
+        dataType: 'json',
+        beforeSend: function() {
+            Core.blockUI({message: 'Хүсэлтийг банк руу илгээж байна...', boxed: true});
+        },
+        success: function(data) {
+            PNotify.removeAll();
+            new PNotify({
+                title: data.status,
+                text: data.message,
+                type: data.status,
+                sticker: false, 
+                addclass: pnotifyPosition
+            }); 
+            if (data.status == 'success') {
+                dataViewReload(indicatorId);
+            }
+            Core.unblockUI();
+        }
+    });
+                    
+    return;
 }
 function mvAddStructureFormRemove(elem) {
     var dialogName = '#dialog-addonstr-obj-confirm';

@@ -577,6 +577,7 @@ $(function() {
                                     chartLabelText = kpiDMChart_<?php echo $this->uniqId; ?>.find('input[name="kpiDMChartLabelText"]').val(),
                                     chartBgColor = kpiDMChart_<?php echo $this->uniqId; ?>.find('select[name="kpiDMChartBgColor"]').val(), 
                                     chartIconName = kpiDMChart_<?php echo $this->uniqId; ?>.find('input[name="kpiDMChartIconName"]').val();
+                                    chartDrillConfig = kpiDMChart_<?php echo $this->uniqId; ?>.find('textarea[name="drillConfig"]').val();
                                 
                                 formData.push(
                                     {name: 'indicatorId', value: '<?php echo $this->indicatorId; ?>'}, 
@@ -592,6 +593,7 @@ $(function() {
                                     {name: 'chartBgColor', value: chartBgColor}, 
                                     {name: 'chartIconName', value: chartIconName}, 
                                     {name: 'chartMapCountry', value: chartMapCountry},
+                                    {name: 'chartDrillConfig', value: chartDrillConfig},
                                 );
                                 formData.push({name: 'buildCharConfig', value: $this.attr('data-config')});
                                 kpiDMChart_<?php echo $this->uniqId; ?>.find('.chartTypesConfigration input, .chartTypesConfigration select').each(function (i, r) {

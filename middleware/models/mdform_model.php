@@ -4939,6 +4939,7 @@ class Mdform_Model extends Model {
                         KI.IS_ADDON_PHOTO, 
                         KI.IS_ADDON_FILE, 
                         KI.IS_ADDON_COMMENT, 
+                        KI.IS_ADDON_TAG_MAP, 
                         NULL AS TAB_NAME, 
                         NULL AS TAB_NAME_TOP, 
                         NULL AS JSON_CONFIG, 
@@ -5048,7 +5049,8 @@ class Mdform_Model extends Model {
                         NULL AS KPI_TYPE_ID, 
                         NULL AS IS_ADDON_PHOTO, 
                         NULL AS IS_ADDON_FILE, 
-                        NULL AS IS_ADDON_COMMENT,                        
+                        NULL AS IS_ADDON_COMMENT, 
+                        NULL AS IS_ADDON_TAG_MAP, 
                         M.TAB_NAME, 
                         M.TAB_NAME_TOP, 
                         TO_CHAR(M.JSON_CONFIG) AS JSON_CONFIG, 
@@ -5677,6 +5679,10 @@ class Mdform_Model extends Model {
                     }
                     
                     if (Mdform::$isStandardFieldsGet) {
+                        
+                        if (isset($rowData['SRC_RECORD_ID']) && !isset($data['SRC_RECORD_ID'])) {
+                            $data['SRC_RECORD_ID'] = $rowData['SRC_RECORD_ID'];
+                        }
                         
                         if (isset($rowData['WFM_STATUS_ID']) && !isset($data['WFM_STATUS_ID'])) {
                             $data['WFM_STATUS_ID'] = $rowData['WFM_STATUS_ID'];
@@ -9831,7 +9837,8 @@ class Mdform_Model extends Model {
                 AND (T1.LOOKUP_META_DATA_ID IS NOT NULL OR T1.TRG_INDICATOR_ID IS NOT NULL) 
                 AND (T2.ID IS NOT NULL OR T3.META_DATA_ID IS NOT NULL) 
             ORDER BY T1.ID ASC", 
-            array($rowId));
+            [$rowId]
+        );
         
         $lookupFirstRow = $lookupDatas[0];
         $lookupIndicatorId = $lookupFirstRow['TRG_INDICATOR_ID'];
@@ -12850,9 +12857,48 @@ class Mdform_Model extends Model {
                             throw new Exception('Эхлэлийн төлөв олдсонгүй!'); 
                         }
                     }
-                }
+                } 
                 
-                $rs = self::dbAutoExecuteMetaVerseData(Mdform::$mvDbParams['header']['tableName'], Mdform::$mvDbParams['header']['data']);
+                if (Mdform::$isInsertMode == true) {
+                    
+                    if (isset(Mdform::$insertedTables[Mdform::$mvDbParams['header']['tableName']])) {
+                        $rs = true;
+                    } else {
+                        
+                        if (isset(Mdform::$mvSaveParams['SRC_RECORD_ID'])) {
+                            Mdform::$mvDbParams['header']['data']['SRC_RECORD_ID'] = Mdform::$mvSaveParams['SRC_RECORD_ID'];
+                        }
+                        
+                        if (isset(Mdform::$mvSaveParams['WFM_STATUS_ID'])) {
+                            Mdform::$mvDbParams['header']['data']['WFM_STATUS_ID'] = Mdform::$mvSaveParams['WFM_STATUS_ID'];
+                        }
+                        
+                        if (isset(Mdform::$mvSaveParams['CREATED_DATE'])) {
+                            Mdform::$mvDbParams['header']['data']['CREATED_DATE'] = Mdform::$mvSaveParams['CREATED_DATE'];
+                        }
+                        
+                        if (isset(Mdform::$mvSaveParams['CREATED_USER_ID'])) {
+                            Mdform::$mvDbParams['header']['data']['CREATED_USER_ID'] = Mdform::$mvSaveParams['CREATED_USER_ID'];
+                        }
+                        
+                        if (isset(Mdform::$mvSaveParams['CREATED_USER_NAME'])) {
+                            Mdform::$mvDbParams['header']['data']['CREATED_USER_NAME'] = Mdform::$mvSaveParams['CREATED_USER_NAME'];
+                        }
+                        
+                        if (isset(Mdform::$mvSaveParams['MODIFIED_DATE'])) {
+                            Mdform::$mvDbParams['header']['data']['MODIFIED_DATE'] = Mdform::$mvSaveParams['MODIFIED_DATE'];
+                        }
+                        
+                        $rs = self::dbAutoExecuteMetaVerseData(Mdform::$mvDbParams['header']['tableName'], Mdform::$mvDbParams['header']['data']);
+
+                        if ($rs) {
+                            Mdform::$insertedTables[Mdform::$mvDbParams['header']['tableName']] = 1;
+                        }
+                    }
+                    
+                } else {
+                    $rs = self::dbAutoExecuteMetaVerseData(Mdform::$mvDbParams['header']['tableName'], Mdform::$mvDbParams['header']['data']);
+                }
                 
                 if ($rs && isset($setStartWfmStatusId)) {
                     $setWfmStatusArr = ['statusId' => $setStartWfmStatusId, 'metaDataId' => $wfmStructureId, 'id' => $rowId];
@@ -13104,6 +13150,7 @@ class Mdform_Model extends Model {
                 unset($_POST['mapHidden']);
                 unset($_POST['mapSrc']);
                 unset($_POST['endToEndLog']);
+                unset($_POST['pfMvTagMap']);
                 
                 foreach ($detailSubTables as $subPath) {
                     
@@ -14187,7 +14234,61 @@ class Mdform_Model extends Model {
             $response = array('status' => 'info');
         }
         
+        if (Input::postCheck('pfMvTagMap')) {
+            
+            $tagMap = Input::post('pfMvTagMap');
+            $tagIds = $tagMap['tagId'];
+            $sessionUserKeyId = Ue::sessionUserKeyId();
+            $idPh = $this->db->Param(0);
+            
+            foreach ($tagIds as $tagKey => $tagId) {
+                
+                $rowState = $tagMap['rowState'][$tagKey];
+                
+                if ($rowState == 'added') {
+                    
+                    $insertMapRow = [
+                        'ID'                   => getUIDAdd($tagKey), 
+                        'SRC_REF_STRUCTURE_ID' => $srcIndicatorId,
+                        'TRG_REF_STRUCTURE_ID' => 17211930402843, 
+                        'SRC_RECORD_ID'        => $srcRecordId,
+                        'TRG_RECORD_ID'        => $tagId, 
+                        'CREATED_DATE'         => Date::currentDate(), 
+                        'CREATED_USER_ID'      => $sessionUserKeyId
+                    ];
+
+                    $this->db->AutoExecute('META_DM_RECORD_MAP', $insertMapRow);
+                    
+                } elseif ($rowState == 'removed') {
+                    
+                    $id = $tagMap['id'][$tagKey];
+                    $this->db->Execute("DELETE FROM META_DM_RECORD_MAP WHERE ID = $idPh", [$id]);
+                }
+            }
+        }
+        
         return $response;
+    }
+    
+    public function getSavedRecordMapTagMapModel($srcIndicatorId, $srcRecordId) {
+        try {
+            $data = $this->db->GetAll("
+                SELECT 
+                    T1.ID, 
+                    T2.ID AS TAG_ID, 
+                    T2.NAME, 
+                    T2.VIEW_COLOR 
+                FROM META_DM_RECORD_MAP T1 
+                    INNER JOIN REF_TAG T2 ON T2.ID = T1.TRG_RECORD_ID 
+                WHERE T1.SRC_REF_STRUCTURE_ID = ".$this->db->Param(0)." 
+                    AND T1.TRG_REF_STRUCTURE_ID = 17211930402843 
+                    AND T1.SRC_RECORD_ID = ".$this->db->Param(1), 
+                [$srcIndicatorId, $srcRecordId]
+            );
+            return $data;
+        } catch (Exception $ex) {
+            return [];
+        }
     }
 
     public function saveRelationMetaRecordMapModel() {    
@@ -23654,13 +23755,14 @@ class Mdform_Model extends Model {
                     'rowNum' => Input::post('chartRowNum'), 
                     'labelText' => Input::post('chartLabelText'), 
                     'bgColor' => Input::post('chartBgColor'), 
+                    'drillConfig' => Input::post('chartDrillConfig'), 
                     'iconName' => Input::post('chartIconName')
                 )
             );
 
             if (issetParam($postData['chartMainType']) === 'echart') {
                 foreach($postData as $key => $row) {
-                    if ($row) {
+                    if ($row && $key !== 'chartDrillConfig') {
                         $jsonConfig['chartConfig'][$key] = $row;
                     }
                 }
@@ -32381,6 +32483,53 @@ class Mdform_Model extends Model {
             );
             
             $result['detail'] = $logDtl;
+        }
+        
+        return $result;
+    }
+    
+    public function getMvWfmLogModel($srcDatasetId, $srcRecordId) {
+        
+        $logDtl = $this->db->GetAll("
+            SELECT 
+                ID, REF_STRUCTURE_ID, RECORD_ID, WFM_STATUS_ID, WFM_DESCRIPTION, CREATED_DATE, CREATED_USER_ID, PREV_WFM_STATUS_ID, TIME_SPENT, IS_CURRENT, PERSON_ID   
+            FROM META_WFM_LOG  
+            WHERE REF_STRUCTURE_ID = ".$this->db->Param(0)." 
+                AND RECORD_ID = ".$this->db->Param(1), 
+            [$srcDatasetId, $srcRecordId]
+        );
+        
+        return ['header' => ['refStructureId' => $srcDatasetId, 'recordId' => $srcRecordId], 'detail' => $logDtl];
+    }
+    
+    public function getMvEcmContentModel($refStructureId, $recordId) {
+        
+        $log = $this->db->GetAll("
+            SELECT 
+                ID, CONTENT_ID, REF_STRUCTURE_ID, RECORD_ID, ORDER_NUM, IS_MAIN, TAG_CODE  
+            FROM ECM_CONTENT_MAP 
+            WHERE REF_STRUCTURE_ID = ".$this->db->Param(0)." 
+                AND RECORD_ID = ".$this->db->Param(1), 
+            [$refStructureId, $recordId]
+        );
+        $result = [];
+        
+        if ($log) {
+            
+            $result['header'] = ['refStructureId' => $refStructureId, 'recordId' => $recordId];
+            $result['contentMap'] = $log;
+            
+            $logDtl = $this->db->GetAll("
+                SELECT 
+                    T1.CONTENT_ID, T1.FILE_NAME, T1.PHYSICAL_PATH, T1.FILE_SIZE, T1.FILE_EXTENSION, T1.CREATED_DATE, T1.CREATED_USER_ID 
+                FROM ECM_CONTENT T1 
+                    INNER JOIN ECM_CONTENT_MAP T2 ON T2.CONTENT_ID = T1.CONTENT_ID 
+                WHERE T2.REF_STRUCTURE_ID = ".$this->db->Param(0)." 
+                    AND T2.RECORD_ID = ".$this->db->Param(1),  
+                [$refStructureId, $recordId]
+            );
+            
+            $result['content'] = $logDtl;
         }
         
         return $result;
