@@ -13154,6 +13154,8 @@ class Mdform_Model extends Model {
                 } 
             }
             
+            $headerSavedData = Mdform::$mvDbParams['header']['data'];
+            
             if (isset(Mdform::$mvDbParams['detailSubTables'])) {
                 
                 $mvSaveParams = Mdform::$mvSaveParams;
@@ -13233,11 +13235,11 @@ class Mdform_Model extends Model {
                 
                 if (isset($endToEndLog['hdrId'])) {
                     
-                    $endToEndLogResult = self::saveEndToEndLog(issetVar($endToEndLog['listIndicatorId']), issetVar($endToEndLog['stepIndicatorId']), $kpiMainIndicatorId, issetVar($endToEndLog['recordId']), $rowId, Mdform::$mvDbParams['header']['data'], issetVar($endToEndLog['hdrId']));
+                    $endToEndLogResult = self::saveEndToEndLog(issetVar($endToEndLog['listIndicatorId']), issetVar($endToEndLog['stepIndicatorId']), $kpiMainIndicatorId, issetVar($endToEndLog['recordId']), $rowId, $headerSavedData, issetVar($endToEndLog['hdrId']));
 
                     if ($endToEndLogResult['status'] == 'success') {
-                        Mdform::$mvDbParams['header']['data']['endToEndLogHdrId'] = $endToEndLogResult['endToEndLogHdrId'];
-                        Mdform::$mvDbParams['header']['data']['checkListStatus']  = $endToEndLogResult['checkListStatus'];
+                        $headerSavedData['endToEndLogHdrId'] = $endToEndLogResult['endToEndLogHdrId'];
+                        $headerSavedData['checkListStatus']  = $endToEndLogResult['checkListStatus'];
                     }
                 }
             }
@@ -13260,16 +13262,16 @@ class Mdform_Model extends Model {
                 'rowId'       => $rowId, 
                 'uniqId'      => getUID(), 
                 'idField'     => $kpiTblIdField, 
-                'result'      => Mdform::$mvDbParams['header']['data']
+                'result'      => $headerSavedData
             ];
             
             if (isset($setWfmStatusArr)) {
                 
-                unset(Mdform::$mvDbParams['header']['data']['ID']);
+                unset($headerSavedData['ID']);
                 
                 $_POST['newWfmStatusid'] = $setWfmStatusArr['statusId'];
                 $_POST['metaDataId'] = $setWfmStatusArr['metaDataId'];
-                $_POST['dataRow'] = array_merge(Mdform::$mvDbParams['header']['data'], ['id' => $setWfmStatusArr['id']]);
+                $_POST['dataRow'] = array_merge($headerSavedData, ['id' => $setWfmStatusArr['id']]);
                 $_POST['description'] = $changeWfmLogDescription;
                 $_POST['isIndicator'] = 1;
                 
