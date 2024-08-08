@@ -12868,8 +12868,17 @@ class Mdform_Model extends Model {
                 
                 if (Mdform::$isInsertMode == true) {
                     
-                    if (isset(Mdform::$insertedTables[Mdform::$mvDbParams['header']['tableName']])) {
-                        $rs = true;
+                    if (isset(Mdform::$insertedTables[Mdform::$mvDbParams['header']['tableName'].'_'.$rowId])) {
+                        
+                        if (count(Mdform::$mvDbParams['header']['data']) > 1) {
+                            
+                            unset(Mdform::$mvDbParams['header']['data'][$kpiTblIdField]);
+                            $rs = self::dbAutoExecuteMetaVerseData(Mdform::$mvDbParams['header']['tableName'], Mdform::$mvDbParams['header']['data'], $kpiTblIdField.' = '.$rowId);
+                            
+                        } else {
+                            $rs = true;
+                        }
+                        
                     } else {
                         
                         if (isset(Mdform::$mvSaveParams['SRC_RECORD_ID'])) {
@@ -12899,7 +12908,7 @@ class Mdform_Model extends Model {
                         $rs = self::dbAutoExecuteMetaVerseData(Mdform::$mvDbParams['header']['tableName'], Mdform::$mvDbParams['header']['data']);
 
                         if ($rs) {
-                            Mdform::$insertedTables[Mdform::$mvDbParams['header']['tableName']] = 1;
+                            Mdform::$insertedTables[Mdform::$mvDbParams['header']['tableName'].'_'.$rowId] = 1;
                         }
                     }
                     
