@@ -1105,12 +1105,12 @@ $(function() {
                                         }
                                     });                                    
 
-                                } else {                                         
+                                } else { 
 
                                     viewProcess_<?php echo $this->uniqId; ?>.empty().append(html.join('')).promise().done(function() {
                                         
                                         if (viewMode_<?php echo $this->uniqId; ?> == 'view') {
-                                            viewProcess_<?php echo $this->uniqId; ?>.find('[data-actiontype="update"], [data-actiontype="update"], [data-actiontype="delete"], a[data-crud-indicatorid][onclick*="manageKpiIndicatorValue"]').remove();
+                                            viewProcess_<?php echo $this->uniqId; ?>.find('[data-actiontype="update"], [data-actiontype="update"], [data-actiontype="delete"], a[data-crud-indicatorid][onclick*="manageKpiIndicatorValue"], [data-crud-indicatorid][onclick*="removeKpiIndicatorValue"]').remove();
                                         }
                                         
                                         if (postData.hasOwnProperty('isComment') && postData.isComment == '1') {
