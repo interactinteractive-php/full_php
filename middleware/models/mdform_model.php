@@ -13369,17 +13369,14 @@ class Mdform_Model extends Model {
                 
             } elseif (!$endToEndLogListIndicatorId) {
                 
-                $idPh1 = $this->db->Param(0);
-                $idPh2 = $this->db->Param(1);
-                
                 $getLogDtlRow = $this->db->GetRow("
                     SELECT 
                         T0.ID, 
                         T1.SRC_DATASET_ID 
                     FROM END_TO_END_SESSION_LOG_DTL T0 
                         INNER JOIN END_TO_END_SESSION_LOG T1 ON T1.ID = T0.LOG_ID 
-                    WHERE T0.LOG_ID = $idPh1 
-                        AND T0.STEP_INDICATOR_ID = $idPh2", 
+                    WHERE T0.LOG_ID = ".$this->db->Param(0)." 
+                        AND T0.STEP_INDICATOR_ID = ".$this->db->Param(1), 
                     [$endToEndLogHdrId, $endToEndLogStepIndicatorId]
                 );
                 
@@ -13401,10 +13398,10 @@ class Mdform_Model extends Model {
                     ];
                     $this->db->AutoExecute('END_TO_END_SESSION_LOG_DTL', $data);  
                     
-                    $srcDatasetId = $this->db->GetOne("SELECT SRC_DATASET_ID FROM END_TO_END_SESSION_LOG = $idPh1", [$endToEndLogHdrId]);
+                    $srcDatasetId = $this->db->GetOne("SELECT SRC_DATASET_ID FROM END_TO_END_SESSION_LOG WHERE ID = ".$this->db->Param(0), [$endToEndLogHdrId]);
                 }
                 
-                $this->db->UpdateClob('END_TO_END_SESSION_LOG_DTL', 'JSON_DATA', json_encode($saveData, JSON_UNESCAPED_UNICODE), 'ID = '.$getLogDtlId);
+                //$this->db->UpdateClob('END_TO_END_SESSION_LOG_DTL', 'JSON_DATA', json_encode($saveData, JSON_UNESCAPED_UNICODE), 'ID = '.$getLogDtlId);
                 
                 $getCheckQuery = $this->db->GetRow("
                     SELECT 
@@ -13416,8 +13413,8 @@ class Mdform_Model extends Model {
                         INNER JOIN KPI_INDICATOR_INDICATOR_MAP T1 ON T1.SRC_INDICATOR_MAP_ID = T0.ID 
                         INNER JOIN KPI_INDICATOR T2 ON T2.ID = T1.TRG_INDICATOR_ID 
                         INNER JOIN V_CHECK_QUERY T3 ON T3.SRC_RECORD_ID = T2.ID 
-                    WHERE T0.SRC_INDICATOR_ID = $idPh1 
-                        AND T0.TRG_INDICATOR_ID = $idPh2 
+                    WHERE T0.SRC_INDICATOR_ID = ".$this->db->Param(0)." 
+                        AND T0.TRG_INDICATOR_ID = ".$this->db->Param(1)." 
                         AND T0.SEMANTIC_TYPE_ID = 44 
                         AND T1.SEMANTIC_TYPE_ID = 121 
                         AND T3.CHECK_QUERY IS NOT NULL", [$srcDatasetId, $endToEndLogStepIndicatorId]);
@@ -13462,9 +13459,9 @@ class Mdform_Model extends Model {
                 $this->db->AutoExecute('END_TO_END_SESSION_LOG_DTL', ['STATUS_CODE' => $checkListStatus, 'WFM_STATUS_ID' => Input::post('endSessionLogStatusId')], 'UPDATE', 'ID = '.$getLogDtlId);
             }
             
-            if ($endToEndLogListIndicatorId) {
+            /*if ($endToEndLogListIndicatorId) {
                 $this->db->UpdateClob('END_TO_END_SESSION_LOG', 'JSON_DATA', json_encode($saveData, JSON_UNESCAPED_UNICODE), 'ID = '.$endToEndLogHdrId);
-            }
+            }*/
             
             return ['status' => 'success', 'endToEndLogHdrId' => $endToEndLogHdrId, 'checkListStatus' => $checkListStatus];
             
