@@ -389,6 +389,7 @@ class Mdpreview extends Controller {
         $this->view->contentId = Input::numeric('contentId');
         $this->view->isIgnoreDownload = Input::numeric('isIgnoreDownload');
         $this->view->isIgnoreToolbarPrint = Input::numeric('isIgnoreToolbarPrint');
+        $this->view->filePath = str_replace(URL, '', $this->view->fullPath);
         
         $this->model->createEcmContentLogModel($this->view->contentId, 1);
         
@@ -433,7 +434,7 @@ class Mdpreview extends Controller {
             $response['fullPath'] = 'mdobject/downloadFile?fDownload=1&file='.$contentRow['PHYSICAL_PATH'].'&fileName='.$contentRow['FILE_NAME'];
         }
         
-        echo json_encode($response, JSON_UNESCAPED_UNICODE);
+        convJson($response);
     }
     
     public function filePreview() {

@@ -1,4 +1,13 @@
-<?php
+<?php 
+if (
+    ($this->fileExtension == 'doc' || $this->fileExtension == 'docx' || $this->fileExtension == 'xls' || $this->fileExtension == 'xlsx') 
+    && (!defined('CONFIG_FILE_VIEWER_ADDRESS') || (defined('CONFIG_FILE_VIEWER_ADDRESS') && !CONFIG_FILE_VIEWER_ADDRESS))
+    ) {
+    
+    echo '<div class="text-center mt-5"><div class="mb-2">'.$this->fileName.'</div><a href="mdobject/downloadFile?file='.$this->filePath.'&fileName='.$this->fileName.'&fDownload=1"><i class="icon-file-download" style="font-size: 50px;"></i></a></div>';
+    
+} else {
+
 if ($this->fileExtension == 'pdf') {
     echo issetParam($this->statusButtons);
 ?>
@@ -57,6 +66,7 @@ if ($this->fileExtension == 'pdf') {
 } elseif ($this->fileExtension == 'html') {
     $htmlContent = @file_get_contents(str_replace(URL, '', $this->fullPath));
     echo $htmlContent;
+}
 }
 ?>
 <script type="text/javascript">
