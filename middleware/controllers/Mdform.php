@@ -6376,25 +6376,6 @@ class Mdform extends Controller {
         $_POST['param']['crudIndicatorId'] = $trgIndicatorId;
         $_POST['param']['actionType'] = 'create';
         
-        /*$getWfmRecordIdMetaDmRecordMap = $this->model->getWfmRecordIdMetaDmRecordMapModel($srcMapId);
-        if ($getWfmRecordIdMetaDmRecordMap) {
-            $_POST['endSessionLogStatusCombo'] = Form::select(
-                array(
-                    'class' => 'form-control input-sm select2',
-                    'name' => 'endSessionLogStatusId',
-                    'data' => $getWfmRecordIdMetaDmRecordMap,
-                    'op_value' => 'ID',
-                    'value' => Input::post('endSessionLogSavedStatusId'),
-                    'op_custom_attr' => array(array(
-                        'attr' => 'data-color',
-                        'key' => 'WFM_STATUS_COLOR'
-                    )),                     
-                    'op_text' => 'WFM_STATUS_NAME',             
-                    'text' => '- Төлөв сонгох -'
-                )
-            );
-        }*/
-        
         $mapData = $this->model->getIndicatorSrcTrgPathModel($srcMapId, $trgIndicatorId);
         
         if ($mapData) {
@@ -7492,10 +7473,15 @@ class Mdform extends Controller {
         $getExportResult = self::getIndicatorExportInfo($structureIndicatorId, $structureIndicatorId, ['recordId' => $recordId], $recordId);
         $exportJson['general'] = $getExportResult;
         
+        if (isset($inputParam['wfmStatusId']) && isset($exportJson['general']['data']['WFM_STATUS_ID'])) {
+            
+            $exportJson['general']['data']['WFM_STATUS_ID'] = $inputParam['wfmStatusId'];
+        }
+        
         $endToEndLog = $this->model->getEndToEndLogModel($structureIndicatorId, $recordId);
         $exportJson['general']['endToEndLog'] = $endToEndLog;
         
-        $wfmLog = $this->model->getMvWfmLogModel(16716769902139, $recordId);
+        $wfmLog = $this->model->getMvWfmLogModel($this->db, 16716769902139, $recordId);
         $exportJson['general']['wfmLog'] = $wfmLog;
         
         $relationList = $this->model->getChildRenderStructureModel($structureIndicatorId, [Mdform::$semanticTypes['normal'], Mdform::$semanticTypes['config']]);
@@ -7774,7 +7760,7 @@ class Mdform extends Controller {
             
             $selectedRow = Arr::changeKeyLower($selectedRows[0]);
             
-            $importJson = self::checklistExportJson(null, ['structureIndicatorId' => '169987129260032', 'dataRow' => $selectedRow]);
+            $importJson = self::checklistExportJson(null, ['structureIndicatorId' => '169987129260032', 'dataRow' => $selectedRow, 'wfmStatusId' => $statusConfig['wfmstatusid']]);
             
             if ($importJson['status'] == 'success') {
                 
@@ -7796,6 +7782,7 @@ class Mdform extends Controller {
                     } catch (Exception $e) { } 
 
                     $db->SetCharSet(DB_CHATSET);
+                    $mDb = $db;
                 
                     $connectionInfo = DBUtil::getConnectionByCustomerId(171980795304929);
                     
@@ -7832,6 +7819,7 @@ class Mdform extends Controller {
                     $db->SetCharSet(DB_CHATSET);
 
                     $this->db = $db;
+                    $cDb = $db;
                 }
                 
                 $response = self::checklistImportJson($importData);
@@ -7842,7 +7830,20 @@ class Mdform extends Controller {
                     $statusConfig['currentwfmstatusid'] = $selectedRow['wfmstatusid'];
                     $_POST['wfmStatusParams'] = json_encode($statusConfig, JSON_UNESCAPED_UNICODE);
                     
-                    $this->model->mvChangeWfmStatus(['ID' => $statusConfig['indicatorid']], $selectedRow['id'], 'Банк руу илгээсэн.');
+                    $statusRs = $this->model->mvChangeWfmStatus(['ID' => $statusConfig['indicatorid']], $selectedRow['id'], 'Банк руу илгээсэн.');
+                    
+                    if ($statusRs['status'] == 'success') {
+                        $wfmLogId = issetParam($statusRs['data']['id']);
+                        
+                        if ($wfmLogId && isset($mDb)) {
+                            
+                            $wfmLog = $this->model->getMvWfmLogModel($mDb, null, null, $wfmLogId);
+                            
+                            if (isset($wfmLog['detail']) && $wfmLog['detail']) {
+                                $cDb->AutoExecute('META_WFM_LOG', $wfmLog['detail']);
+                            }
+                        }
+                    }
                 }
                 
             } else {

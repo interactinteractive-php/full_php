@@ -8752,7 +8752,8 @@ class Mdobject_Model extends Model {
 
                 $response = array(
                     'status' => 'success', 
-                    'message' => $this->lang->line('msg_save_success') 
+                    'message' => $this->lang->line('msg_save_success'), 
+                    'data' => isset($result['result']) ? $result['result'] : []
                 );
                 
             } else {

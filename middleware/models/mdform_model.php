@@ -32505,15 +32505,23 @@ class Mdform_Model extends Model {
         return $result;
     }
     
-    public function getMvWfmLogModel($srcDatasetId, $srcRecordId) {
+    public function getMvWfmLogModel($db, $srcDatasetId = null, $srcRecordId = null, $logId = null) {
         
-        $logDtl = $this->db->GetAll("
+        if ($logId) {
+            $where = "ID = ".$db->Param(0);
+            $bindParams = [$logId];
+        } else {
+            $where = "REF_STRUCTURE_ID = ".$db->Param(0)." 
+                AND RECORD_ID = ".$db->Param(1);
+            $bindParams = [$srcDatasetId, $srcRecordId];
+        }
+        
+        $logDtl = $db->GetAll("
             SELECT 
                 ID, REF_STRUCTURE_ID, RECORD_ID, WFM_STATUS_ID, WFM_DESCRIPTION, CREATED_DATE, CREATED_USER_ID, PREV_WFM_STATUS_ID, TIME_SPENT, IS_CURRENT, PERSON_ID   
             FROM META_WFM_LOG  
-            WHERE REF_STRUCTURE_ID = ".$this->db->Param(0)." 
-                AND RECORD_ID = ".$this->db->Param(1), 
-            [$srcDatasetId, $srcRecordId]
+            WHERE $where", 
+            $bindParams
         );
         
         return ['header' => ['refStructureId' => $srcDatasetId, 'recordId' => $srcRecordId], 'detail' => $logDtl];
