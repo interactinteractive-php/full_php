@@ -12128,6 +12128,7 @@ class Mdform_Model extends Model {
             
             Mdform::$currentKpiTypeId = ($sourceRecordId ? null : $kpiTypeId);
             Mdform::$mvParamsConfig = self::getKpiIndicatorParamsModel($kpiMainIndicatorId);
+            Mdform::$mvDbParams = [];
             
             $fileData = Input::fileData();
             
@@ -25530,6 +25531,7 @@ class Mdform_Model extends Model {
                                 SELECT 
                                     MRM.ID AS PF_MAP_ID, 
                                     MRM.TRG_RECORD_ID AS PF_MAP_RECORD_ID, 
+                                    MRM.SRC_RECORD_ID AS PF_MAP_SRC_RECORD_ID, 
                                     T0.$nameField AS PF_MAP_NAME, 
                                     T1.TRG_RECORD_ID AS PF_MAP_TRG_RECORD_ID, 
                                     T0.* 
@@ -25537,6 +25539,7 @@ class Mdform_Model extends Model {
                                     (
                                         SELECT 
                                             ID, 
+                                            SRC_RECORD_ID, 
                                             TRG_RECORD_ID 
                                         FROM META_DM_RECORD_MAP 
                                         WHERE SRC_REF_STRUCTURE_ID = $srcIndicatorId 
