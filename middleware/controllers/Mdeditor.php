@@ -426,53 +426,12 @@ class Mdeditor extends Controller {
     
     public function pgkid($pid = '') {
         
-        if ($pid && is_numeric($pid)) {
-            if (DB_DRIVER == 'postgres9') {
-                $this->db->Execute("SELECT pg_cancel_backend($pid)");
-                $this->db->Execute("SELECT pg_terminate_backend($pid)");
-            }
+        if ($pid && is_numeric($pid) && DB_DRIVER == 'postgres9') {
+            $this->db->Execute("SELECT pg_cancel_backend($pid)");
+            $this->db->Execute("SELECT pg_terminate_backend($pid)");
         }
         
         return true;
-    }
-    
-    public function sendMailPass() {
-        
-        /*includeLib('Mail/Mail');
-        $users = $this->db->GetAll("SELECT USER_ID, EMAIL FROM UM_SYSTEM_USER WHERE lower(USERNAME) <> 'admin' AND EMAIL IS NOT NULL AND (INACTIVE = 0 OR INACTIVE IS NULL) AND (IS_TOUCH_MODE IS NULL OR IS_TOUCH_MODE = 0)");
-        $n = 0;
-        
-        foreach ($users as $user) {
-            
-            $userId = $user['USER_ID'];
-            $toEmail = $user['EMAIL'];
-            $newPassword = Str::random_string('alnum', 8); 
-            
-            $emailSubject = 'Нууц үг өөрчлөх тухай';
-            
-            $emailBodyContent = 'Сайн байна уу?<br /><br />';
-            $emailBodyContent .= 'Засгийн газрын Хэрэг эрхлэх газрын байгууллагын дотоод удирдлагын цахим системд нэвтрэх таны нууц үгийг системээс шинэчиллээ.<br />';
-            $emailBodyContent .= 'Таны шинэ нууц үг: '.$newPassword.'<br />';
-            
-            $mailResult = Mail::sendPhpMailer(array(
-                'subject' => $emailSubject, 
-                'altBody' => 'Password changed - ' . $emailSubject, 
-                'body'    => $emailBodyContent, 
-                'toMail'  => $toEmail 
-            ));
-            
-            if ($mailResult['status'] == 'success') {
-                $passHash = Hash::create('sha256', $newPassword);
-                $this->db->AutoExecute('UM_SYSTEM_USER', array('PASSWORD_HASH' => $passHash, 'IS_TOUCH_MODE' => 1), 'UPDATE', "USER_ID = $userId");
-            }
-            
-            $n ++;
-            
-            if ($n == 50) {
-                sleep(5);
-                $n = 0;
-            }
-        }*/
     }
     
 }
