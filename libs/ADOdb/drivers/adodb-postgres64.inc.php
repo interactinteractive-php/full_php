@@ -647,7 +647,10 @@ class ADODB_postgres64 extends ADOConnection{
 
 	function param($name, $type='C')
 	{
-		if (!$name) {
+            return '$' . ($name + 1);
+            
+		/*
+                if (!$name) {
 			// Reset parameter number if $name is falsy
 			$this->_pnum = 0;
 			if ($name === false) {
@@ -657,6 +660,7 @@ class ADODB_postgres64 extends ADOConnection{
 		}
 
 		return '$' . ++$this->_pnum;
+                 */
 	}
 
 	function MetaIndexes ($table, $primary = FALSE, $owner = false)
