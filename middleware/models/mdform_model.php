@@ -32460,7 +32460,8 @@ class Mdform_Model extends Model {
         $trgRecordId = $this->db->GetAll("
             SELECT 
                 ID, 
-                SRC_TABLE_NAME,
+                SRC_TABLE_NAME, 
+                SRC_NAME, 
                 SEMANTIC_TYPE_ID,
                 SRC_REF_STRUCTURE_ID, 
                 TRG_REF_STRUCTURE_ID, 

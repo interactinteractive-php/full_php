@@ -13150,7 +13150,7 @@ function posItemDiscountBtn() {
     var salePrice = Number($itemRow.find('input[name="salePrice[]"]').val());
 
     if ($('#isAllItemsForDiscount').is(':checked')) {
-      $tbody.find('> tr').each(function () {
+      $tbody.find('> tr[data-item-id]').each(function () {
         $itemRow = $(this);
         salePrice = Number($itemRow.find('input[name="salePrice[]"]').val());
 

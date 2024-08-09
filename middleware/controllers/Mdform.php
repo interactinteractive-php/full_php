@@ -7529,11 +7529,14 @@ class Mdform extends Controller {
                 
                 foreach ($components as $comRow) {
                     if (isset($savedComponentRows[$comRow['MAP_ID']])) {
+                        
                         $childRows = $savedComponentRows[$comRow['MAP_ID']];
+                        $getParams = self::getMetaVerseBindParamRelation($srcStrId, $comRow['ID'], $childRows[0]['PF_MAP_SRC_RECORD_ID'], [], $selectedRowPost);
+                        $component[] = ['recordId' => null, 'data' => [], 'dmRecordMap' => $getParams['dmRecordMap']];
+                        
                         foreach ($childRows as $savedComRow) {
-                            $getParams = self::getMetaVerseBindParamRelation($srcStrId, $comRow['ID'], $savedComRow['PF_MAP_SRC_RECORD_ID'], [], $selectedRowPost);
-                            $getExportResultComp = self::getIndicatorExportInfo($comRow['ID'], $structureIndicatorId, $getParams['param'], $getParams['idValue']);
-                            $getExportResultComp['dmRecordMap'] = $getParams['dmRecordMap'];
+                            
+                            $getExportResultComp = self::getIndicatorExportInfo($comRow['ID'], $structureIndicatorId, ['recordId' => $savedComRow['PF_MAP_RECORD_ID']], $savedComRow['PF_MAP_RECORD_ID']);
                             $component[] = $getExportResultComp;
                         }
                     }
@@ -7731,21 +7734,21 @@ class Mdform extends Controller {
 
         try {
 
-            $insertMapRow = array(
+            $insertMapRow = [
                 'ID'                   => getUIDAdd($mapRowKey), 
                 'SRC_TABLE_NAME'       => $mapData['SRC_TABLE_NAME'], 
+                'SRC_NAME'             => $mapData['SRC_NAME'],
                 'SEMANTIC_TYPE_ID'     => $mapData['SEMANTIC_TYPE_ID'], 
                 'SRC_REF_STRUCTURE_ID' => $mapData['SRC_REF_STRUCTURE_ID'], 
                 'TRG_REF_STRUCTURE_ID' => $mapData['TRG_REF_STRUCTURE_ID'], 
                 'SRC_RECORD_ID'        => $mapData['SRC_RECORD_ID'], 
                 'TRG_RECORD_ID'        => $mapData['TRG_RECORD_ID'], 
                 'CREATED_DATE'         => Date::currentDate()
-            );
+            ];
 
             $this->db->AutoExecute('META_DM_RECORD_MAP', $insertMapRow);
 
         } catch (Exception $ex) {
-
             throw new Exception($ex->getMessage()); 
         }          
     }

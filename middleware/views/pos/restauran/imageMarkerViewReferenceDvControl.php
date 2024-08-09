@@ -331,6 +331,19 @@
                     }
                 });                
             } else {
+                <?php if (Config::getFromCacheDefault('CONFIG_POS_NO_PASS_TABLE', null, '')) { ?>
+                    $this.attr('data-first-table', JSON.stringify(selectedRow));
+                    new PNotify({
+                        title: 'Info',
+                        text: 'Солих ширээгээ сонгоод DOUBLE CLICK дарна уу.', 
+                        type: 'info', 
+                        sticker: false,
+                        addclass: 'pnotify-center'
+                    });                            
+                    restPosEventType['event'] = 'changeTable';       
+                    return;
+                <?php } ?>
+                
                 var $dialogName = 'dialog-talon-protect';
                 if (!$("#" + $dialogName).length) {
                     $('<div id="' + $dialogName + '"></div>').appendTo('body');
@@ -1353,12 +1366,12 @@
                 var selectedRow = [];
 
                 objectdatagrid_<?php echo $this->dataViewId ?>.find('.selected-row').each(function(){
-                    //if ($(this).find('.multipleCheckLocation').is(':checked')) {
+                    if ($(this).find('.multipleCheckLocation').is(':checked')) {
                         var dataObj = JSON.parse($(this).attr('data-row-data'));
                         if (dataObj['salesorderid']) {
                             selectedRow.push(dataObj);
                         }
-                    //}
+                    }
                 })
 
                 if (!selectedRow.length) {
@@ -1372,6 +1385,19 @@
                     });                  
                     return;
                 }
+                
+                <?php if (Config::getFromCacheDefault('CONFIG_POS_NO_PASS_TABLE', null, '')) { ?>
+                    $this.attr('data-first-table', JSON.stringify(selectedRow));
+                    new PNotify({
+                        title: 'Info',
+                        text: 'Нийлүүлэх ширээгээ сонгоод DOUBLE CLICK дарна уу.', 
+                        type: 'info', 
+                        sticker: false,
+                        addclass: 'pnotify-center'
+                    });                            
+                    restPosEventType['event'] = 'mergeTable';                
+                    return;
+                <?php } ?>
             
                 var $dialogName = 'dialog-talon-protect';
                 if (!$("#" + $dialogName).length) {
