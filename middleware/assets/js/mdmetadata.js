@@ -2798,6 +2798,8 @@ function urlRedirectByDataView(elem, processMetaDataId, url, target, dataViewId,
                 $("head").append('<link rel="stylesheet" type="text/css" href="assets/custom/addon/plugins/jsplumb/css/style.v2.css"/>');
                 $.getScript('assets/custom/addon/plugins/jsplumb/jsplumb.min.js').done(function() {
                     $.getScript(URL_APP + 'middleware/assets/js/addon/kpinew.js').done(function() {
+                        firstInstanceJsPlumb = jsPlumb.getInstance();
+                        secondInstanceJsPlumb = jsPlumb.getInstance();
                         kpiDataMartRelationConfigTable(elem, processMetaDataId, dataViewId, selectedRow, paramData);
                     });
                 });

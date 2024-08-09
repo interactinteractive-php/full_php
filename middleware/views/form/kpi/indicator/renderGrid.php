@@ -321,7 +321,8 @@ $(function() {
         postHiddenParams: '<?php echo $this->postHiddenParams; ?>', 
         hiddenParams: '<?php echo $this->hiddenParams; ?>', 
         filter: '<?php echo $this->filter; ?>',
-        isSqlResult: '<?php echo Input::numeric('isSqlResult'); ?>'
+        isSqlResult: '<?php echo Input::numeric('isSqlResult'); ?>',
+        unionColumns: <?php echo Input::postCheck('unionColumns') ? json_encode(Input::post('unionColumns')) : 0; ?>
     };
     if (queryParams.isSqlResult) {
         gridUrl = 'generateKpiDataMartByPostNew';

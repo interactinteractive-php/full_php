@@ -1,6 +1,8 @@
 var isKpiAddonScript = true;
 var kpiDataMartArrowStyle = 'Flowchart'; /*[Straight, Flowchart, Bezier, StateMachine]*/
 var kpiIndicatorAttrs = [];
+var firstInstanceJsPlumb;
+var secondInstanceJsPlumb;
 var kpiDataMartConnectConfig = {
     connector: [kpiDataMartArrowStyle, {stub: [10, 20], gap: 10, cornerRadius: 5, alwaysRespectStubs: true}], 
     paintStyle: {strokeStyle: "#525252", fillStyle: "#525252", lineWidth: 2, outlineColor: "#fff", outlineWidth: 2, radius: 5},
@@ -1256,12 +1258,186 @@ function kpiDataMartRelationConfigTable(elem, processMetaDataId, dataViewId, sel
         }
     });
 }
+function kpiDataMartUnionConfigTable(elem, processMetaDataId, dataViewId, selectedRow, paramData) {
+    var id = '';
+    var $dialogName = 'dialog-dmart-unionconfig-table';
+    if (!$("#" + $dialogName).length) { $('<div id="' + $dialogName + '"></div>').appendTo('body'); }
+    var $dialog = $('#' + $dialogName);
+    
+    kpiIndicatorAttrs = [];
+    
+    $.ajax({
+        type: 'post',
+        url: 'mdform/kpiDataMartUnionConfigTable',
+        data: {
+            id: id
+        }, 
+        dataType: 'json', 
+        beforeSend: function(){
+            Core.blockUI({message: 'Loading...', boxed: true});
+        },
+        success: function (data) {
+            
+            if (data.status == 'success') {
+                
+                $dialog.dialog({
+                    cache: false,
+                    resizable: false,
+                    bgiframe: true,
+                    autoOpen: false,
+                    title: 'Union тохиргоо',
+                    width: $(window).width(),
+                    height: $(window).height(),
+                    modal: false,
+                    open: function() {
+
+                        disableScrolling();
+
+                        $dialog.empty().append(data.html).promise().done(function() {
+
+                            var setHeight = $(window).height() - 550;
+                            var $editor = $('#datamart-union-editor');
+                            
+                            //$editor.css({'height': setHeight - 2, 'max-height': setHeight - 2});                            
+                            
+                            var splitobj = Split(["#relation-settings-gutter-union", "#relation-settings-gutter-2-union"], {
+                                elementStyle: function (dimension, size, gutterSize) {
+                                    $(window).trigger('resize');
+                                    return {'height': 'calc(' + size + '% - 20px)'};
+                                },
+                                gutterStyle: function (dimension, gutterSize) { 
+                                    return {'height':  gutterSize + '% - 20px'}; 
+                                },
+                                direction: 'vertical',
+                                sizes: [40,60],
+                                minSize: 70,
+                                gutterSize: 6,
+                                cursor: 'col-resize',
+                                onDragEnd: function (sizes) {
+                                    $('.editor-table-settings-area-union').css('height',$('#relation-settings-gutter-2-union').height() - 45);
+                                    refreshLoadDataListMart();
+                                }
+                            });
+                            
+                            setTimeout(function() {
+                                $('.editor-table-settings-area-union').css('height',$('#relation-settings-gutter-2-union').height() - 45);
+                            }, 100);    
+                            
+                            setKpiDataMartVisualObjectsUnion($editor, data.objects, data.objects.graphjson, false);
+                            
+                            Core.unblockUI();
+                        });
+                    }, 
+                    close: function() {
+                        enableScrolling();
+                    }, 
+                    buttons: [
+                        {text: plang.get('save_btn'), class: 'btn btn-sm green bp-btn-save', click: function() {
+                            var $dialogNameU = "dialog-create-union-indicator";
+                            if (!$("#" + $dialogNameU).length) {
+                              $('<div id="' + $dialogNameU + '"></div>').appendTo("body");
+                            }
+                            var $dialogU = $("#" + $dialogNameU);
+
+                            $dialogU
+                              .empty()
+                              .append(
+                                '<form method="post" autocomplete="off" id="unionIndicatorForm"><input type="text" name="indicatorName" class="form-control" style="font-size:17px; height:40px;" autocomplete="off" required="required"></form>'
+                              );
+                            $dialogU.dialog({
+                              cache: false,
+                              resizable: true,
+                              bgiframe: true,
+                              autoOpen: false,
+                              title: "Union indicator үүсгэх",
+                              width: 400,
+                              height: "auto",
+                              modal: true,
+                              open: function () {
+                              },
+                              close: function () {
+                                $dialogU.empty().dialog("destroy").remove();
+                              },
+                              buttons: [
+                                {
+                                  text: plang.get("save_btn"),
+                                  class: "btn btn-sm green-meadow",
+                                  click: function () {
+                                    PNotify.removeAll();
+                                    var $form = $("#unionIndicatorForm");
+
+                                    $form.validate({ errorPlacement: function () { } });
+
+                                    if ($form.valid()) {
+                                      $.ajax({
+                                        type: "post",
+                                        url: "mdform/saveUnionCreateIndicator",
+                                        data: $form.serialize(),
+                                        dataType: "json",
+                                        beforeSend: function () {
+                                          Core.blockUI({
+                                            message: "Loading...",
+                                            boxed: true
+                                          });
+                                        },
+                                        success: function (dataSub) {
+                                          Core.unblockUI();
+                                          if (dataSub.status == "success") {
+                                            $dialogU.dialog("close");
+                                            $dialog.find('input[data-kpidatamart-id="1"]').val(dataSub.id);
+                                            saveKpiDataMartRelationConfigUnion(elem, $dialog, true, dataSub);
+                                          } else {
+                                            new PNotify({
+                                              title: dataSub.status,
+                                              text: dataSub.message,
+                                              type: dataSub.status,
+                                              sticker: false,
+                                            });
+                                          }
+                                        },
+                                      });
+                                    }
+                                  },
+                                },
+                                {
+                                  text: plang.get("close_btn"),
+                                  class: "btn btn-sm blue-madison",
+                                  click: function () {
+                                    $dialogU.dialog("close");
+                                  },
+                                },
+                              ],
+                            });
+                            $dialogU.dialog("open");                                                            
+                        }},
+                        {text: plang.get('close_btn'), class: 'btn btn-sm blue-hoki', click: function() {
+                            $dialog.dialog('close');
+                        }}
+                    ]
+                });
+                $dialog.dialog('open');
+            
+            } else {
+                
+                PNotify.removeAll();
+                new PNotify({
+                    title: data.status,
+                    text: data.message,
+                    type: data.status,
+                    addclass: pnotifyPosition,
+                    sticker: false
+                });
+                Core.unblockUI();
+            }
+        }
+    });
+}
 function saveKpiDataMartRelationConfig(elem, $dialog) {
     
     Core.blockUI({message: 'Saving...', boxed: true});
                             
     var positions = [], objects = [], connections = [], columns = [], criterias = [], checkObjects = [],   
-        getConnections = jsPlumb.getConnections(), $editor = $('#datamart-editor'), 
+        getConnections = firstInstanceJsPlumb.getConnections(), $editor = $('#datamart-editor'), 
         $columns = $('.kpi-datamart-columns-config > tbody > tr'), 
         $criterias = $('.kpi-datamart-criterias-config > tbody > tr'), 
         $objects = $editor.find('.wfposition'), 
@@ -1423,6 +1599,210 @@ function saveKpiDataMartRelationConfig(elem, $dialog) {
         }
     });
 }
+function saveKpiDataMartRelationConfigUnion(elem, $dialog, $isSave, recordData) {
+    
+    Core.blockUI({message: 'Saving...', boxed: true});
+                            
+    var positions = [], objects = [], connections = [], columns = [], criterias = [], checkObjects = [],   
+        getConnections = secondInstanceJsPlumb.getConnections(), $editor = $('#datamart-union-editor'), 
+        $columns = $('.kpi-datamart-columns-config > tbody > tr'), 
+        $criterias = $('.kpi-datamart-criterias-config > tbody > tr'), 
+        $objects = $editor.find('.wfposition'), 
+        mainIndicatorId = $dialog.find('input[data-kpidatamart-id="1"]').val();
+
+    $objects.each(function () {
+
+        var $elem = $(this), objId = $elem.attr('id'), indicatorId = $elem.attr('data-indicatorid');
+
+        positions.push({
+            id: objId,
+            top: $elem.css('top'),
+            left: $elem.css('left')
+        });
+        
+        if (!checkObjects.hasOwnProperty(indicatorId)) {
+            
+            objects.push({
+                trgIndicatorId: indicatorId
+            });
+            
+            checkObjects[indicatorId] = 1;
+        }
+    });
+    
+    if (getConnections.length) {
+
+        $.each(getConnections, function (idx, connection) {
+
+            var sourceId = connection.sourceId, targetId = connection.targetId;
+            var $linkInput = $editor.find('textarea[name="union_'+sourceId+'_'+targetId+'"]');
+            var srcIndicatorId = $linkInput.attr('data-src-indicatorid');
+            var srcAliasName = $linkInput.attr('data-src-aliasname');
+            var trgIndicatorId = $linkInput.attr('data-trg-indicatorid');
+            var trgAliasName = $linkInput.attr('data-trg-aliasname');
+            var joinType = $linkInput.attr('data-jointype');
+            var relationOrder = $linkInput.attr('data-relation-order');
+            var subDtls = JSON.parse($linkInput.val());
+            var defaultValue = '';
+
+            connections.push({
+                mainIndicatorId: mainIndicatorId, 
+                srcIndicatorId: srcIndicatorId, 
+                srcAliasName: srcAliasName, 
+                trgIndicatorId: trgIndicatorId, 
+                trgAliasName: trgAliasName, 
+                joinType: joinType,
+                joinOrderNumber: relationOrder,
+                defaultValue: defaultValue, 
+                KPI_DATAMODEL_MAP_KEY_DTL: subDtls
+            });
+        });
+        
+    } else if (objects.length == 1) {
+        
+        var srcIndicatorId = $objects.attr('data-indicatorid');
+        var srcAliasName = $objects.find('.bp-code').text();
+        
+        connections.push({
+            mainIndicatorId: mainIndicatorId, 
+            srcIndicatorId: srcIndicatorId, 
+            srcAliasName: srcAliasName, 
+            trgIndicatorId: '', 
+            trgAliasName: '', 
+            joinType: '',
+            joinOrderNumber: '',
+            defaultValue: ''
+        });
+    }
+    
+    if ($columns.length) {
+        $columns.each(function() {
+            
+            var $row = $(this);
+            var id = $row.find('input[data-field-name="id"]').val();
+            var trg_indicator_id = $row.find('input[data-field-name="trg_indicator_id"]').val();
+            var trg_indicator_map_id = $row.find('input[data-field-name="trg_indicator_map_id"]').val();
+            var trg_alias_name = $row.find('input[data-field-name="trg_alias_name"]').val();
+            
+            var $aggregate = $row.find('select[data-field-name="aggregate"]');
+            var $expression = $row.find('input[data-field-name="expression"]');
+            var expression = '', aggregate = '';
+            
+            if ($aggregate.length) {
+                aggregate = $aggregate.val();
+            }
+            
+            if ($expression.length) {
+                expression = $expression.val();
+            }
+            
+            columns.push({
+                id: id, 
+                mainIndicatorId: mainIndicatorId, 
+                trgIndicatorId: trg_indicator_id, 
+                expressionString: expression, 
+                trgIndicatorMapId: trg_indicator_map_id, 
+                trgAliasName: trg_alias_name, 
+                aggregateFunction: aggregate
+            });
+        });
+    }
+    
+    if ($criterias.length) {
+        $criterias.each(function() {
+            
+            var $row = $(this);
+            var id = $row.find('input[data-field-name="id"]').val();
+            var criteria_alias_name = $row.find('input[data-field-name="criteria_alias_name"]').val();
+            var criteria_indicator_id = $row.find('input[data-field-name="criteria_indicator_id"]').val();
+            var criteriaCriteria = ($row.find('input[data-field-name="criteriaCriteria"]').val()).trim();
+            
+            if (criteria_alias_name != '' && criteria_indicator_id != '' && criteriaCriteria != '') {
+                
+                criterias.push({
+                    id: id, 
+                    mainIndicatorId: mainIndicatorId, 
+                    indicatorId: criteria_indicator_id, 
+                    aliasName: criteria_alias_name, 
+                    criteria: criteriaCriteria
+                });
+            }
+        });
+    }
+
+    var postData = {
+        id: mainIndicatorId,
+        graphJson: JSON.stringify(positions), 
+        objects: objects, 
+        connections: connections, 
+        columns: columns, 
+        criterias: criterias
+    };
+    
+    if (typeof $isSave === 'undefined') {
+        getKpiIndicatorAttrsNewUnion(postData.connections[0]['srcIndicatorId'], connections);
+        loadDataListMartUnion(postData.connections[0]['srcIndicatorId'], connections);
+        Core.unblockUI();
+        return;
+    }
+
+    $.ajax({
+        type: 'post',
+        url: 'mdform/saveKpiDataMartRelationConfigTableUnion',
+        data: postData, 
+        dataType: 'json', 
+        success: function (data) {            
+            if (data.status == 'success') {                
+                $.ajax({
+                    type: 'post',
+                    url: 'mdform/generateKpiDataMartByPostNew',
+                    data: {
+                        unionColumns: connections,
+                        indicatorId: mainIndicatorId,
+                        isSave: 1
+                    }, 
+                    dataType: 'json', 
+                    success: function (data) {
+
+                        PNotify.removeAll();
+                        new PNotify({
+                            title: data.status,
+                            text: data.message,
+                            type: data.status,
+                            addclass: pnotifyPosition,
+                            sticker: false
+                        });
+
+                        if (data.status == 'success') {
+                            $dialog.dialog('close');
+                            var appendCard = [
+                                {
+                                    id: recordData.id,
+                                    name: recordData.name
+                                }
+                            ];
+                            kpiDataMartFillEditorTable('', '', '', '', appendCard)                            
+                        }
+
+                        Core.unblockUI();
+                    }
+                });                
+//                getKpiIndicatorAttrsNewUnion(mainIndicatorId);
+//                loadDataListMartUnion(mainIndicatorId, connections);
+            } else {
+                PNotify.removeAll();
+                new PNotify({
+                    title: data.status,
+                    text: data.message,
+                    type: data.status,
+                    addclass: pnotifyPosition,
+                    sticker: false
+                });                
+                Core.unblockUI();  
+            }            
+        }
+    });
+}
 function kpiDataMartAddObject(elem) {
     dataViewSelectableGrid('nullmeta', '0', '16511984441409', 'multi', 'nullmeta', elem, 'kpiDataMartFillEditor');
 }
@@ -1481,6 +1861,9 @@ function kpiDataMartFillEditor(metaDataCode, processMetaDataId, chooseType, elem
 function kpiDataMartAddObjectTable(elem) {
     dataViewSelectableGrid('nullmeta', '0', '16511984441409', 'multi', 'nullmeta', elem, 'kpiDataMartFillEditorTable');
 }
+function kpiDataMartAddObjectTableUnion(elem) {
+    dataViewSelectableGrid('nullmeta', '0', '16511984441409', 'multi', 'nullmeta', elem, 'kpiDataMartFillEditorTableUnion');
+}
 function kpiDataMartFillEditorTable(metaDataCode, processMetaDataId, chooseType, elem, rows, wfIconAddPositionTop, lookupMetaDataId, isMetaGroup) {
     var $editor = $('#datamart-editor');
     var wfIconClass = 'wfIconRectangle',
@@ -1534,9 +1917,62 @@ function kpiDataMartFillEditorTable(metaDataCode, processMetaDataId, chooseType,
         saveKpiDataMartRelationConfig();
     }
 }
+function kpiDataMartFillEditorTableUnion(metaDataCode, processMetaDataId, chooseType, elem, rows, wfIconAddPositionTop, lookupMetaDataId, isMetaGroup) {
+    var $editor = $('#datamart-union-editor');
+    var wfIconClass = 'wfIconRectangle',
+        wfIconType = 'rectangle',
+        wfIconWidth = 160,
+        wfIconHeight = 70,
+        bpOrder = 0,
+        wfIconAddPositionTop = 20,
+        wfIconAddPostionLeft = 20;
+    
+    for (var k in rows) {
+        
+        var row = rows[k];
+        bpOrder = parseInt(bpOrder) + 1;
+        
+        var aliasname = 'T' + (Number($editor.find('.wfposition').length) + 1);
+        var tempWidth = (parseInt($editor.width()) - 470) - parseInt(wfIconAddPostionLeft);
+
+        if (parseInt(tempWidth) < 0) {
+            wfIconAddPostionLeft = 20;
+            wfIconAddPositionTop = wfIconAddPositionTop + 120;
+        }
+
+        var wfIconArray = {
+            id: row.id + '__' + aliasname, 
+            code: aliasname, 
+            title: row.name,
+            indicatorId: row.id, 
+            type: wfIconType,
+            class: wfIconClass,
+            positionTop: wfIconAddPositionTop,
+            positionLeft: wfIconAddPostionLeft,
+            width: wfIconWidth, 
+            height: wfIconHeight, 
+            colorCode: ''
+        };
+
+        $editor.append(setBoxKpiDataMartRelationTable(wfIconArray));
+        wfIconAddPostionLeft = wfIconAddPostionLeft + 250;
+
+        /*jsPlumb.detachEveryConnection();*/
+
+        var $lastBox = $editor.find('.wfposition:last');
+
+        setVisualKpiDataMartUnion($lastBox);
+        kpiDataMartBoxDraggableUnion($lastBox);
+    }
+    
+//    if ($editor.find('.wfposition').length == 1) {
+//        setKpiDataMartAliasCombo($editor);
+//        saveKpiDataMartRelationConfigUnion(null, $('#dialog-dmart-unionconfig-table'));
+//    }
+}
 function setKpiDataMartVisualObjects($editor, objects, graphJson, isReadonly) {
     
-    jsPlumb.detachEveryConnection();
+    firstInstanceJsPlumb.detachEveryConnection();
     
     if (objects.hasOwnProperty('dtls') && objects.dtls && Object.keys(objects.dtls).length) {
         
@@ -1629,7 +2065,7 @@ function setKpiDataMartVisualObjects($editor, objects, graphJson, isReadonly) {
 //                        connectObj.overlays = [['Label', {label: cRow.name}]];
 //                    }
                     
-                    jsPlumb.connect(connectObj, kpiDataMartConnectConfig);
+                    firstInstanceJsPlumb.connect(connectObj, kpiDataMartConnectConfig);
                     
                     var inputAttr = 'name="'+srcId+'_'+trgId+'" '+
                         'data-name="'+cRow.name+'" '+
@@ -1657,6 +2093,136 @@ function setKpiDataMartVisualObjects($editor, objects, graphJson, isReadonly) {
         
         //setKpiDataMartAliasCombo($editor);
         getKpiIndicatorAttrsNew($('input[data-kpidatamart-id="1"]').val());
+        //$('.reload-datamart-btn').removeClass('d-none');
+        loadDataListMart($('input[data-kpidatamart-id="1"]').val());        
+    }
+    
+    return;
+}
+function setKpiDataMartVisualObjectsUnion($editor, objects, graphJson, isReadonly) {
+    return;
+    
+    secondInstanceJsPlumb.detachEveryConnection();
+    
+    if (objects.hasOwnProperty('dtls') && objects.dtls && Object.keys(objects.dtls).length) {
+        
+        var graphObj = [], connections = [], isSavedPosition = false, 
+            wfIconClass = 'wfIconRectangle', wfIconType = 'rectangle', 
+            wfIconWidth = 160, wfIconHeight = 70, 
+            wfIconAddPositionTop = 20, wfIconAddPostionLeft = 40, 
+            templateList = objects.dtls,
+            indicatorList = objects.indicator;
+    
+        if (graphJson) {
+            
+            var graphObjs = JSON.parse(html_entity_decode(graphJson, "ENT_QUOTES"));
+
+            for (var g in graphObjs) {
+                graphObj[graphObjs[g]['id']] = {top: graphObjs[g]['top'], left: graphObjs[g]['left']};
+            }
+            
+            isSavedPosition = true;
+        }
+        
+        for (var k in templateList) {            
+            var row = templateList[k];                
+            connections.push(row);
+        }
+        
+        for (var k in indicatorList) {
+            
+            var row = indicatorList[k];
+                
+            var id = row.id + '_' + row.aliasname;
+
+            if (!isSavedPosition || (isSavedPosition && typeof graphObj[id] === 'undefined')) {
+
+                var tempWidth = (parseInt($editor.width()) - 470) - parseInt(wfIconAddPostionLeft);
+
+                if (parseInt(tempWidth) < 0) {
+                    wfIconAddPositionTop = wfIconAddPositionTop + 120;
+                    wfIconAddPostionLeft = 40;
+                }
+
+            } else {
+                wfIconAddPositionTop = (graphObj[id]['top']).replace('px', '');
+                wfIconAddPostionLeft = (graphObj[id]['left']).replace('px', '');
+            }
+
+            var wfIconArray = {
+                id: id,
+                code: row.aliasname, 
+                title: row.name,
+                indicatorId: row.id, 
+                type: wfIconType,
+                class: wfIconClass,
+                positionTop: wfIconAddPositionTop,
+                positionLeft: wfIconAddPostionLeft,
+                width: wfIconWidth,
+                height: wfIconHeight, 
+                colorCode: '', 
+                isReadonly: isReadonly
+            };
+
+            $editor.append(setBoxKpiDataMartRelationTable(wfIconArray));
+
+            if (!isSavedPosition) {
+                wfIconAddPostionLeft = wfIconAddPostionLeft + 200;
+            }
+
+            var $lastBox = $editor.find('.wfposition:last');
+
+            setVisualKpiDataMartRelation($lastBox);
+
+            if (!isReadonly) {
+                kpiDataMartBoxDraggable($lastBox);
+            }
+        }
+        
+        if (connections) {
+            
+            for (var c in connections) {
+                
+                var cRow = connections[c];
+                var srcId = cRow.srcindicatorid + '_' + cRow.srcaliasname;
+                var trgId = cRow.trgindicatorid + '_' + cRow.trgaliasname;
+                
+                if ($editor.find('#' + srcId).length && $editor.find('#' + trgId).length) {
+                    
+                    var connectObj = {source: srcId, target: trgId};
+                    
+//                    if (cRow.name != '' && cRow.name != null) {
+//                        connectObj.overlays = [['Label', {label: cRow.name}]];
+//                    }
+                    
+                    secondInstanceJsPlumb.connect(connectObj, kpiDataMartConnectConfig);
+                    
+                    var inputAttr = 'name="union-'+srcId+'_'+trgId+'" '+
+                        'data-name="'+cRow.name+'" '+
+                        'data-jointype="'+cRow.jointype+'" '+
+                        'data-relation-order="'+((cRow.hasOwnProperty('joinordernumber') && cRow.joinordernumber != null && cRow.joinordernumber != '') ? cRow.joinordernumber : '')+'" '+
+                        'data-sourceid="'+srcId+'" '+
+                        'data-targetid="'+trgId+'" '+
+                        'data-src-aliasname="'+cRow.srcaliasname+'" '+
+                        'data-trg-aliasname="'+cRow.trgaliasname+'" '+
+                        'data-src-indicatorid="'+cRow.srcindicatorid+'" '+
+                        'data-trg-indicatorid="'+cRow.trgindicatorid+'"';
+                    
+                    var relationDtlIds = cRow.relationdtlid;
+                    
+                    if (relationDtlIds.length) {
+                        for (var r in relationDtlIds) {
+                            relationDtlIds[r]['id'] = '';
+                        }
+                    }
+
+                    $editor.append('<textarea class="d-none" '+inputAttr+'>'+JSON.stringify(relationDtlIds)+'</textarea>');
+                }
+            }
+        }
+        
+        //setKpiDataMartAliasCombo($editor);
+        getKpiIndicatorAttrsNewUnion($('input[data-kpidatamart-id="1"]').val());
         //$('.reload-datamart-btn').removeClass('d-none');
         loadDataListMart($('input[data-kpidatamart-id="1"]').val());        
     }
@@ -1726,7 +2292,7 @@ function setBoxKpiDataMartRelationTable(elem) {
 
 function setVisualKpiDataMartRelation(elem) {
     
-    jsPlumb.importDefaults({
+    firstInstanceJsPlumb.importDefaults({
         ConnectionsDetachable: false,
         ReattachConnections: false,
         connector: [kpiDataMartArrowStyle, {stub: [10, 20], gap: 10, cornerRadius: 5, alwaysRespectStubs: true}],
@@ -1734,7 +2300,7 @@ function setVisualKpiDataMartRelation(elem) {
         Endpoint: ["Dot", {radius: 6}]
     });
 
-    jsPlumb.makeSource(elem, {
+    firstInstanceJsPlumb.makeSource(elem, {
         filter: ".connect",
         anchor: "Continuous",
         isSource: true,
@@ -1761,7 +2327,61 @@ function setVisualKpiDataMartRelation(elem) {
         hoverPaintStyle: {fillStyle: "transparent", lineWidth: 5},
         Endpoint: ["Dot", {radius: 1}]
     });
-    jsPlumb.makeTarget(elem, {
+    firstInstanceJsPlumb.makeTarget(elem, {
+        isSource: false,
+        isTarget: true,
+        reattach: true,
+        setDragAllowedWhenFull: true,
+        dropOptions: {hoverClass: "dragHover"},
+        anchor: "Continuous",
+        connectorHoverPaintStyle: {
+            strokeStyle: "#77ca00",
+            outlineColor: "#77ca00",
+            outlineWidth: 5
+        },
+        paintStyle: {fillStyle: "transparent"},
+        hoverPaintStyle: {fillStyle: "#77ca00", strokeStyle: "#77ca00", lineWidth: 7}
+    });
+}
+
+function setVisualKpiDataMartUnion(elem) {
+    
+    secondInstanceJsPlumb.importDefaults({
+        ConnectionsDetachable: false,
+        ReattachConnections: false,
+        connector: [kpiDataMartArrowStyle, {stub: [10, 20], gap: 10, cornerRadius: 5, alwaysRespectStubs: true}],
+        ConnectionOverlays: [["Arrow", {location: 0.99, width: 12, length: 10, foldback: 1}]],
+        Endpoint: ["Dot", {radius: 6}]
+    });
+
+    secondInstanceJsPlumb.makeSource(elem, {
+        filter: ".connect",
+        anchor: "Continuous",
+        isSource: true,
+        isTarget: false,
+        reattach: true,
+        maxConnections: 99,
+        connector: [kpiDataMartArrowStyle, {stub: [10, 20], gap: 10, cornerRadius: 1, alwaysRespectStubs: true}],
+        connectorPaintStyle: {
+            strokeStyle: "green",
+            lineWidth: 2
+        },
+        connectorHoverPaintStyle: {
+            strokeStyle: "#77ca00",
+            outlineColor: "#77ca00",
+            outlineWidth: 5
+        },
+        connectorStyle: {
+            strokeStyle: "#5c96bc",
+            lineWidth: 2,
+            outlineColor: "#fff",
+            outlineWidth: 2
+        },
+        paintStyle: {fillStyle: "transparent"},
+        hoverPaintStyle: {fillStyle: "transparent", lineWidth: 5},
+        Endpoint: ["Dot", {radius: 1}]
+    });
+    secondInstanceJsPlumb.makeTarget(elem, {
         isSource: false,
         isTarget: true,
         reattach: true,
@@ -1779,8 +2399,16 @@ function setVisualKpiDataMartRelation(elem) {
 }
 
 function kpiDataMartBoxDraggable(elem) {
-    jsPlumb.draggable(elem, {
+    firstInstanceJsPlumb.draggable(elem, {
         containment: '#datamart-editor', 
+        stop: function () {
+            setBoxAttrKpiDataMartRelation($(this));
+        }
+    });
+}
+function kpiDataMartBoxDraggableUnion(elem) {
+    secondInstanceJsPlumb.draggable(elem, {
+        containment: '#datamart-union-editor', 
         stop: function () {
             setBoxAttrKpiDataMartRelation($(this));
         }
@@ -2014,7 +2642,7 @@ function kpiDataMartNewRelationConnect(info, data, $editor) {
 
                         $editor.append('<textarea class="d-none" '+inputAttr+'>'+relationAttrsJsonStr+'</textarea>');
 
-                        jsPlumb.connect({
+                        firstInstanceJsPlumb.connect({
                             source: info.sourceId,
                             target: info.targetId
                         }, kpiDataMartConnectConfig);
@@ -2314,7 +2942,7 @@ function kpiDataMartNewRelationConnectTable(info, data, $editor) {
 
                         $editor.append('<textarea class="d-none" '+inputAttr+'>'+relationAttrsJsonStr+'</textarea>');
 
-                        jsPlumb.connect({
+                        firstInstanceJsPlumb.connect({
                             source: info.sourceId,
                             target: info.targetId
                         }, kpiDataMartConnectConfig);
@@ -2328,6 +2956,296 @@ function kpiDataMartNewRelationConnectTable(info, data, $editor) {
                     
                     setTimeout(function() {
                         saveKpiDataMartRelationConfig();                            
+                    }, 300);                    
+                    
+                } else {
+                    new PNotify({
+                        title: 'Info',
+                        text: 'Та талбарыг сонгоно уу!',
+                        type: 'info',
+                        addclass: pnotifyPosition,
+                        sticker: false
+                    });
+                }
+            }},
+            {text: plang.get('close_btn'), class: 'btn btn-sm blue-hoki bp-btn-close', click: function() { 
+                $dialog.dialog('close'); 
+            }}
+        ]
+    });
+    $dialog.dialog('open');
+    
+    $dialog.on('click', 'button[data-relation-type="add"]', function() {
+        var $connectSourceFieldId = $('input[name="connectSourceFieldId"]');
+        var $connectTargetFieldId = $('input[name="connectTargetFieldId"]');
+        var connectSourceFieldId = $connectSourceFieldId.val();
+        var connectTargetFieldId = $connectTargetFieldId.val();
+        
+        PNotify.removeAll();
+        
+        if (connectSourceFieldId == '' || connectTargetFieldId == '') {
+            new PNotify({
+                title: 'Info',
+                text: 'Та талбарыг сонгоно уу!',
+                type: 'info',
+                sticker: false,
+                hide: true,
+                addclass: pnotifyPosition
+            });
+        } else {
+            
+            var $tbl = $('table[data-relation-tbl-list="1"]');
+            var relationRow = {
+                srcindicatormapid: connectSourceFieldId, 
+                trgindicatormapid: connectTargetFieldId, 
+                operatorname: '=', 
+                sourceComboOption: sourceComboOption, 
+                targetComboOption: targetComboOption, 
+                operatorComboOption: operatorComboOption
+            };
+            var relationAttrs = setKpiDataMartRelationAttrs(relationRow);
+            
+            $tbl.find('> tbody').append(relationAttrs);
+            
+            Core.initSelect2($tbl.find('> tbody > tr:last'));
+            
+            setKpiDataMartAttrsMaxHeight($dialog);
+        }
+    });
+    
+    $dialog.on('click', 'button[data-relation-type="remove"]', function() {
+        $(this).closest('tr').remove();
+        setKpiDataMartAttrsMaxHeight($dialog);
+    });
+    
+    $dialog.on('click', 'tr[data-attr-row]', function() {
+        var $row = $(this), info = $row.attr('data-attr-row'), $icon = $row.find('i');
+        
+        if ($icon.hasClass('icon-circle')) {
+            
+            var $tbody = $row.closest('tbody');
+            var labelName = $row.find('td:eq(2)').text();
+            
+            $tbody.find('.icon-checkmark-circle2').removeClass('icon-checkmark-circle2').addClass('icon-circle');
+            $icon.removeClass('icon-circle').addClass('icon-checkmark-circle2');
+            
+            $tbody.find('.table-info').removeClass('table-info');
+            $row.addClass('table-info');
+            
+            if (info == 'source') {
+                $('input[name="connectSourceFieldId"]').val($row.attr('data-id')).attr('data-name', labelName);
+            } else {
+                $('input[name="connectTargetFieldId"]').val($row.attr('data-id')).attr('data-name', labelName);
+            }
+            
+        } else {
+            
+            $icon.removeClass('icon-checkmark-circle2').addClass('icon-circle');
+            $row.removeClass('table-info');
+            
+            if (info == 'source') {
+                $('input[name="connectSourceFieldId"]').val('').attr('data-name', '');
+            } else {
+                $('input[name="connectTargetFieldId"]').val('').attr('data-name', '');
+            }
+        }
+    });
+}
+
+function kpiDataMartNewRelationConnectTableUnion(info, data, $editor) {
+    
+    var sourceAttrs = data.sourceAttrs;
+    var targetAttrs = data.targetAttrs;
+    
+    if (sourceAttrs.length == 0 || targetAttrs.length == 0) {
+        PNotify.removeAll();
+        new PNotify({
+            title: 'Info',
+            text: 'Темплейтийн талбарууд ирсэнгүй!',
+            type: 'info',
+            addclass: pnotifyPosition,
+            sticker: false
+        });
+        return;
+    }
+    
+    var $dialogName = 'dialog-dmart-relationconnect';
+    if (!$("#" + $dialogName).length) { $('<div id="' + $dialogName + '"></div>').appendTo('body'); }
+    var $dialog = $('#' + $dialogName);
+    var $src = $editor.find('#' + info.sourceId);
+    var $trg = $editor.find('#' + info.targetId);
+    var sourceRows = '<select class="form-control form-control-sm" data-relation-type="src">', 
+        targetRows = '<select class="form-control form-control-sm" data-relation-type="trg">', relationAttrs = '', sourceComboOption = '', 
+        targetComboOption = '', relationOrder = '', joinType = '';
+    var isEdit = false;
+    var operatorComboOption = '<select class="form-control form-control-sm" style="width:90px" data-relation-type="operator"><option value="=">=</option>'+
+        '<option value="<"><</option>'+
+        '<option value="<">></option>'+
+        '<option value="<="><=</option>'+
+        '<option value=">=">>=</option></select>';
+    var joinTypeComboOption = '<option value="INNER">INNER</option>'+
+        '<option value="LEFT">LEFT</option>';        
+    
+    for (var s in sourceAttrs) {        
+        if (sourceAttrs[s]['parentid']) {
+            sourceRows += '<option value="'+sourceAttrs[s]['id']+'">'+sourceAttrs[s]['labelname']+'</option>';
+        }
+    }
+    sourceRows += '</select>';
+    
+    for (var t in targetAttrs) {
+        if (targetAttrs[t]['parentid']) {
+            targetRows += '<option value="'+targetAttrs[t]['id']+'">'+targetAttrs[t]['labelname']+'</option>';
+        }
+    }
+    targetRows += '</select>';
+    
+    var trHtml = '<tr><td style="width:255px">'+sourceRows+'</td><td style="width:255px">'+targetRows+'</td><td style="width:40px"></td></tr>';
+    
+    if (data.hasOwnProperty('isEdit') && data.isEdit) {
+        
+        var $linkInput = $editor.find('textarea[name="'+info.sourceId+'_'+info.targetId+'"]');
+        var linkInputJsonStr = $linkInput.val();
+        var relationObj = JSON.parse(linkInputJsonStr);
+        var editTrHtml = '';
+        
+        joinType = $linkInput.attr('data-jointype');
+        relationOrder = $linkInput.attr('data-relation-order');
+                
+        if (relationObj) {
+                    
+            for (var r in relationObj) {
+
+                var relationRow = relationObj[r];
+                
+                relationRow.sourceComboOption = sourceComboOption;
+                relationRow.targetComboOption = targetComboOption;
+                relationRow.operatorComboOption = operatorComboOption;
+                
+                relationAttrs += setKpiDataMartRelationAttrs(relationRow);
+                
+                editTrHtml += trHtml.replace('value="'+relationRow.srcindicatormapid+'"', 'value="'+relationRow.srcindicatormapid+'" selected')
+                            .replace('value="'+relationRow.trgindicatormapid+'"', 'value="'+relationRow.trgindicatormapid+'" selected')
+                            .replace('value="'+(html_entity_decode(relationRow.operatorname, "ENT_QUOTES"))+'"', 'value="'+html_entity_decode(relationRow.operatorname, "ENT_QUOTES")+'" selected');
+            }
+            
+            isEdit = true;
+        }
+        
+        trHtml = editTrHtml;
+    }
+    
+    var html = 
+            '<div data-relation-header="1">'+
+            '</div>'+
+            
+            '<div class="row join-config-area">'+
+                '<div class="col" data-attr-tbl="1">'+
+                    '<table class="table table-hover table-bordered mt20" data-relation-tbl-list="1">'+
+                        '<thead>'+
+                            '<tr>'+
+                                '<th>Data source</th>'+
+                                '<th>' + $trg.find('.wfIconTable').attr('data-title') + '</th>'+
+                                '<th></th>'+
+                            '</tr>'+
+                        '</thead>'+
+                        '<tbody>'+trHtml+'</tbody>'+
+                    '</table>'+
+                    '<div class="my-2 cursor-pointer" style="color: #6b6b6b;" onclick="addJoinClause(this)">Баганын тохиргоо нэмэх</div>'+
+                '</div>'+
+            '</div>';
+    
+    $dialog.html(html);
+    $dialog.dialog({
+        cache: false,
+        resizable: false,
+        bgiframe: true,
+        autoOpen: false,
+        title: 'Union тохиргоо',
+        width: 600,
+        height: 'auto',
+        position: { my: "top", at: "top+100" },
+        modal: false,
+        open: function () {
+            Core.initLongInput($dialog);
+            Core.initSelect2($dialog);
+            setKpiDataMartAttrsMaxHeight($dialog);
+            Core.unblockUI();
+        },
+        close: function () {
+            PNotify.removeAll();
+            $dialog.dialog('destroy').remove();
+        },
+        buttons: [
+            {text: plang.get('save_btn'), class: 'btn btn-sm green-meadow bp-btn-save', click: function() {
+                
+                PNotify.removeAll();
+                
+                var $relationRows = $dialog.find('table[data-relation-tbl-list] > tbody > tr');
+                
+                if ($relationRows.length) {
+                    
+                    var relationAttrs = [];
+                    
+                    $relationRows.each(function() {
+                        var $thisRow = $(this);
+                        var relationAttr = {
+                            srcindicatormapid: $thisRow.find('select[data-relation-type="src"]').val(), 
+                            trgindicatormapid: $thisRow.find('select[data-relation-type="trg"]').val(), 
+                            operatorname: $thisRow.find('select[data-relation-type="operator"]').val()
+                        };
+                        relationAttrs.push(relationAttr);
+                    });
+                    
+                    var relationAttrsJsonStr = JSON.stringify(relationAttrs);
+                    var relationJoinType = $dialog.find('input[data-relation-type="jointype"]').val();
+                    var relationOrder = $dialog.find('input[data-relation-type="order"]').val();
+                    
+                    if (isEdit) {
+                        
+                        var $linkInput = $editor.find('textarea[name="union_'+info.sourceId+'_'+info.targetId+'"]');
+                        
+                        $linkInput.val(relationAttrsJsonStr);
+                        $linkInput.attr({'data-jointype': relationJoinType, 'data-relation-order': relationOrder});
+                        
+                        $dialog.dialog('close'); 
+                        
+                    } else {
+                    
+                        var $sourceIndicatorElem = $editor.find('#' + info.sourceId);
+                        var $targetIndicatorElem = $editor.find('#' + info.targetId);
+                        var sourceIndicatorId = $sourceIndicatorElem.attr('data-indicatorid');
+                        var targetIndicatorId = $targetIndicatorElem.attr('data-indicatorid');
+                        var srcAliasName = $sourceIndicatorElem.find('.bp-code').text();
+                        var trgAliasName = $targetIndicatorElem.find('.bp-code').text();
+
+                        var inputAttr = 'name="union_'+info.sourceId+'_'+info.targetId+'" '+
+                            'data-name="" '+
+                            'data-jointype="'+relationJoinType+'" ' + 
+                            'data-relation-order="'+relationOrder+'" ' + 
+                            'data-sourceid="'+info.sourceId+'" '+
+                            'data-targetid="'+info.targetId+'" '+
+                            'data-src-aliasname="'+srcAliasName+'" '+
+                            'data-trg-aliasname="'+trgAliasName+'" '+
+                            'data-src-indicatorid="'+sourceIndicatorId+'" '+
+                            'data-trg-indicatorid="'+targetIndicatorId+'"';
+
+                        $editor.append('<textarea class="d-none" '+inputAttr+'>'+relationAttrsJsonStr+'</textarea>');
+
+                        secondInstanceJsPlumb.connect({
+                            source: info.sourceId,
+                            target: info.targetId
+                        }, kpiDataMartConnectConfig);
+
+                        $dialog.dialog('close');                         
+
+                        setTimeout(function() {
+                            setKpiDataMartAliasCombo($editor);
+                        }, 1);
+                    }
+                    
+                    setTimeout(function() {
+                        saveKpiDataMartRelationConfigUnion(null, $('#dialog-dmart-unionconfig-table'));
                     }, 300);                    
                     
                 } else {
@@ -2531,6 +3449,44 @@ function getKpiIndicatorAttrsNew(indicatorId) {
     $('.editor-table-settings-area').empty().append(trgComboAttrs2.join(''));    
     $('.show-indicator-column-count').text(colCount);
 }
+function getKpiIndicatorAttrsNewUnion(indicatorId, connections) {
+    var trgComboAttrs2 = [],
+        colCount = 0;
+    
+    trgComboAttrs2.push('<table class="table table-hover table-bordered mt10">');
+    trgComboAttrs2.push('<thead>'+
+                        '<tr>'+
+                            '<th>Төрөл</th>'+
+                            '<th>Нэр</th>'+
+                            '<th></th>'+
+                        '</tr>'+
+                    '</thead>'+
+                    '<tbody>');        
+
+    $.ajax({
+        type: 'post',
+        url: 'mdform/getKpiIndicatorAttrs',
+        data: {
+            indicatorId: indicatorId,
+            connections: connections
+        }, 
+        dataType: 'json', 
+        async: false, 
+        success: function(data) {
+
+            $.each(data, function(i, value) {
+                if (data[i]['parentid'] != '' && data[i]['parentid'] != null) {
+                    trgComboAttrs2.push(settingsRow(data[i]));
+                    colCount++;
+                }
+            });
+        }
+    });
+
+    trgComboAttrs2.push('</tbody></table>');
+    $('.editor-table-settings-area-union').empty().append(trgComboAttrs2.join(''));    
+    $('.show-indicator-column-count-union').text(colCount);
+}
 function setKpiDataMartAliasCombo($editor) {
     return;
     
@@ -2710,6 +3666,27 @@ function loadDataListMart(id) {
     });      
 }
 
+function loadDataListMartUnion(id, connections) {
+    $.ajax({
+        type: 'post',
+        url: 'mdform/indicatorList/'+id+'/1',
+        data: {
+            isJson: 1,
+            isHideCheckBox: 1, 
+            isIgnoreTitle: 1,
+            isSqlResult: 1,
+            unionColumns: connections
+        },
+        dataType: 'json', 
+        success: function(content) {
+            $(".editor-table-datalist-area-union").empty().append(content.html);
+            setTimeout(function() {
+                $(".editor-table-datalist-area-union").find('.dv-process-buttons').closest('.table-toolbar').attr('style', 'display: none !important');
+            }, 10);
+        }
+    });      
+}
+
 function settingsRow(row, single) {
     return '<tr data-mapid="' + row['id'] + '" data-type="' + row['showtype'] + '"><td style="width:80px;'+(row['aggregatefunction'] ? 'border-left: 3px solid #0abf9a;' : '')+'">' + row['showtype'] + '</td><td>' + row['labelname'] + '</td>'+
         '<td style="width:50px;padding: 0;" class="pl3">'+
@@ -2776,7 +3753,7 @@ $(function() {
     
     if (typeof jsPlumb != 'undefined') { 
     
-    jsPlumb.bind('beforeDrop', function(info) {
+    firstInstanceJsPlumb.bind('beforeDrop', function(info) {
         
         var result = false;
         var $editor = $('#datamart-editor');
@@ -2790,7 +3767,6 @@ $(function() {
             dataType: 'json', 
             async: false, 
             success: function (data) {
-                
                 kpiDataMartNewRelationConnectTable(info, data, $editor);
             }
         });
@@ -2798,7 +3774,32 @@ $(function() {
         return result;
     });
     
-    jsPlumb.bind('dblclick', function(connection, originalEvent) {
+    secondInstanceJsPlumb.bind('beforeDrop', function(info) {
+        
+        var result = false;
+        var $editor = $('#datamart-union-editor');
+        var sourceIndicatorId = $editor.find('#' + info.sourceId).attr('data-indicatorid');
+        var targetIndicatorId = $editor.find('#' + info.targetId).attr('data-indicatorid');
+        
+        $.ajax({
+            type: 'post',
+            url: 'mdform/getKpiDataMartObjectRelation',
+            data: {sourceIndicatorId: sourceIndicatorId, targetIndicatorId: targetIndicatorId}, 
+            dataType: 'json', 
+            async: false, 
+            success: function (data) {                
+                kpiDataMartNewRelationConnectTableUnion(info, data, $editor);
+            }
+        });
+        
+        return result;
+    });
+    
+    firstInstanceJsPlumb.bind('dblclick', function(connection, originalEvent) {
+        editKpiDataMartConnection(connection);
+    });
+    
+    secondInstanceJsPlumb.bind('dblclick', function(connection, originalEvent) {
         editKpiDataMartConnection(connection);
     });
     
@@ -2897,8 +3898,8 @@ $(function() {
                                 $thisObj.remove();
                             });
                             
-                            jsPlumb.detach(objId);
-                            jsPlumb.remove(objId);
+                            firstInstanceJsPlumb.detach(objId);
+                            firstInstanceJsPlumb.remove(objId);
                             
                             $dialog.dialog('close');
                             
@@ -3053,7 +4054,12 @@ $(function() {
 
         $this.parent().find('.active').removeClass('active');
         $this.addClass('active');
-        $('.editor-table-settings-area').empty().append('<div class="mt10">Түр хүлээнэ үү...</div>');
+        if ($('.editor-table-settings-area-union').length && $('.editor-table-settings-area-union').is(':visible')) {
+            return;
+            $('.editor-table-settings-area-union').empty().append('<div class="mt10">Түр хүлээнэ үү...</div>');
+        } else {
+            $('.editor-table-settings-area').empty().append('<div class="mt10">Түр хүлээнэ үү...</div>');
+        }
         
         trgComboAttrs.push('<table class="table table-hover table-bordered mt10">');
         trgComboAttrs.push('<thead>'+
@@ -3082,9 +4088,13 @@ $(function() {
             }
         });
         trgComboAttrs.push('</tbody></table>');
-
-        $('.show-indicator-column-count').text(colCount);
-        $('.editor-table-settings-area').empty().append(trgComboAttrs.join(''));
+        if ($('.editor-table-settings-area-union').length && $('.editor-table-settings-area-union').is(':visible')) {
+            $('.show-indicator-column-count-union').text(colCount);
+            $('.editor-table-settings-area-union').empty().append(trgComboAttrs.join(''));
+        } else {
+            $('.show-indicator-column-count').text(colCount);
+            $('.editor-table-settings-area').empty().append(trgComboAttrs.join(''));
+        }
     });
     
     $(document.body).on('click', '.heigh-editor-table', function(e) {

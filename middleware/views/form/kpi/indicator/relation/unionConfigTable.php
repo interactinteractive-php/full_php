@@ -1,13 +1,10 @@
-<form method="post" id="kpiDataMartVisualConfigForm" style="height: 100%">
+<form method="post" id="kpiDataMartVisualConfigUnionForm" style="height: 100%">
     
     <div class="row">
         <div class="col">
             <div class="mb10">
-                <button type="button" class="btn btn-sm green-meadow" onclick="kpiDataMartAddObjectTable(this);">
+                <button type="button" class="btn btn-sm green-meadow" onclick="kpiDataMartAddObjectTableUnion(this);">
                     <i class="icon-plus3 font-size-12"></i> <?php echo $this->lang->line('add_btn'); ?>
-                </button>
-                <button type="button" class="btn btn-sm green-meadow" onclick="kpiDataMartUnionConfigTable(this);">
-                    <i class="icon-plus3 font-size-12"></i> Union нэмэх
                 </button>
             </div>
         </div>
@@ -15,13 +12,13 @@
     <div class="row" style="height: 100%">
         <div class="col">
             <div class="" style="height: 100%">
-                <div class="heigh-editor-table" id="relation-settings-gutter">
-                    <div class="css-editor" id="datamart-editor" style=""></div>
+                <div class="heigh-editor-table" id="relation-settings-gutter-union">
+                    <div class="css-editor" id="datamart-union-editor" style=""></div>
                 </div>              
-                <div id="relation-settings-gutter-2">
+                <div id="relation-settings-gutter-2-union">
                     <div class="d-flex justify-content-between" style="height: 35px;background-color: #F5F5F5;border-top: 1px solid #ccc;border-bottom: 1px solid #ccc;">
                         <div class="mt7 ml10" style="color:rgba(0,0,0,0.6)">
-                            <span class="show-indicator-column-count"></span> багана
+                            <span class="show-indicator-column-count-union"></span> багана
                         </div>
                         <div>
                             <button type="button" style="padding: 2px 5px 0px 7px;" class="btn dropdown-toggle mt5 mr10" data-toggle="dropdown" aria-expanded="true">
@@ -34,7 +31,7 @@
                     </div>
                     <div class="editor-bottom-layout d-flex">
                         <div class="col" style="flex: 0 0 500px;border-right: 1px solid #ccc;">    
-                            <div class="editor-table-settings-area">
+                            <div class="editor-table-settings-area-union">
                             </div>    
                         </div>           
                         <div class="col pl10">    
@@ -43,7 +40,7 @@
                                     <i class="far fa-database"></i> Датамарт шинэчлэх
                                 </button>
                             </div>
-                            <div class="editor-table-datalist-area">
+                            <div class="editor-table-datalist-area-union">
                             </div>    
                         </div>    
                     </div>                      
@@ -81,19 +78,19 @@
         color: #19d119;
         font-weight: bold; 
     }
-    .editor-table-settings-area table tbody button {
+    .editor-table-settings-area-union table tbody button {
         display: none;
     }
-    .editor-table-settings-area table tbody tr:hover button {
+    .editor-table-settings-area-union table tbody tr:hover button {
         display: block;
     }
     .wfdmart.active {
         border: 1px solid #333;
     }
-    .editor-table-settings-area {
+    .editor-table-settings-area-union {
         overflow-y: auto;
     }
-    #dialog-dmart-relationconfig-table {
+    #dialog-dmart-unionconfig-table {
         overflow: hidden;
     }
     .gutter.gutter-vertical {

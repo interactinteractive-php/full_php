@@ -257,7 +257,8 @@ class Mdpos_Model extends Model {
         Session::set(SESSION_PREFIX.'posDistrictCode', $cashierInfo['posapidistrictcode']);
         Session::set(SESSION_PREFIX.'posUseIpTerminal', issetParam($cashierInfo['ipterminaldtl']) ? "1" : "0");
         Session::set(SESSION_PREFIX.'posSocialPayTerminal', issetParam($cashierInfo['socialpayterminalid']));
-        Session::set(SESSION_PREFIX.'posTypeCode', issetParam($cashierInfo['typecode']));
+        Session::set(SESSION_PREFIX.'posTypeCode', 3);
+//        Session::set(SESSION_PREFIX.'posTypeCode', issetParam($cashierInfo['typecode']));
         Session::set(SESSION_PREFIX.'isEditBasketPrice', issetParam($cashierInfo['iseditbasketprice']));
         Session::set(SESSION_PREFIX.'posActiveLogin', '0');
 

@@ -1716,7 +1716,7 @@ class Mdform extends Controller {
             exit;
         }
         
-        $this->view->columnsData = $this->model->getKpiIndicatorColumnsModel($this->view->indicatorId, $this->view->row);
+        $this->view->columnsData = self::indicatorListColumn($this->view->indicatorId, $this->view->row);
         $fieldConfig = $this->model->getKpiIndicatorIdFieldModel($this->view->indicatorId, $this->view->columnsData);
         
         $this->view->idField = $fieldConfig['idField'];
@@ -1890,6 +1890,25 @@ class Mdform extends Controller {
         if ($this->view->isAjax == false) {
             $this->view->render('footer');
         }
+    }
+    
+    public function indicatorListColumn($indicatorId, $config) {
+        
+        $unionColumns = Input::post('unionColumns');
+        $columnData = $this->model->getKpiIndicatorColumnsModel($indicatorId, $config);
+        
+        if ($unionColumns) {
+            $unionColumnData = [];
+            $columnData = self::groupByArrayIsset($columnData, 'ID');
+            foreach ($unionColumns[0]['KPI_DATAMODEL_MAP_KEY_DTL'] as $row) {
+                if (array_key_exists($row['srcindicatormapid'], $columnData)) {
+                    $unionColumnData[] = $columnData[$row['srcindicatormapid']]['row'];
+                }
+            }
+            $columnData = $unionColumnData;
+        }
+        
+        return $columnData;
     }
     
     public function renderCustomView($kpiTypeId) {
@@ -2190,6 +2209,8 @@ class Mdform extends Controller {
         
         if (Input::numeric('isSqlView') == 1) {
             $response = $this->model->generateKpiRelationDataMartModel($indicatorId);
+        } elseif (Input::post('unionColumns')) {
+            $response = $this->model->generateKpiUnionDataNewModel($indicatorId, Input::post('unionColumns'));
         } elseif (Input::numeric('isSqlResult') == 1) {
             $response = $this->model->generateKpiRelationDataMartNewModel($indicatorId);
         } else {
@@ -2642,6 +2663,19 @@ class Mdform extends Controller {
             ))
         );
         
+        $unionColumns = Input::post('connections');
+        
+        if ($unionColumns) {
+            $unionColumnData = [];
+            $columnData = self::groupByArrayIsset($attrs, 'id');
+            foreach ($unionColumns[0]['KPI_DATAMODEL_MAP_KEY_DTL'] as $row) {
+                if (array_key_exists($row['srcindicatormapid'], $columnData)) {
+                    $unionColumnData[] = $columnData[$row['srcindicatormapid']]['row'];
+                }
+            }
+            $attrs = $unionColumnData;
+        }        
+        
         echo json_encode($attrs, JSON_UNESCAPED_UNICODE);
     }
     
@@ -2704,6 +2738,12 @@ class Mdform extends Controller {
     
     public function saveKpiDataMartRelationConfigTable() {
         $response = $this->model->saveKpiDataMartRelationConfigModelTable();
+        
+        jsonResponse($response);
+    }
+    
+    public function saveKpiDataMartRelationConfigTableUnion() {
+        $response = $this->model->saveKpiDataMartRelationConfigModelTableUnion();
         
         jsonResponse($response);
     }
@@ -7128,6 +7168,48 @@ class Mdform extends Controller {
         jsonResponse($response);
     }    
     
+    public function kpiDataMartUnionConfigTable() {
+        $this->view->id = Input::numeric('id');
+        $this->view->isWs = false;
+        
+        parse_str(Input::post('workSpaceParams'), $workSpaceParamArray);
+        
+        if (isset($workSpaceParamArray['workSpaceParam']['id'])) {
+            $this->view->id = Input::param($workSpaceParamArray['workSpaceParam']['id']);
+            $this->view->isWs = true;
+        }                
+        
+        if ($this->view->id) {
+            
+            $this->view->columns = $this->model->getKpiDataMartRelationColumnsModel($this->view->id);
+            $this->view->criterias = $this->model->getKpiDataMartRelationCriteriasModel($this->view->id);
+            
+            //$this->load->model('mddatamodel', 'middleware/models/');
+            //$objects = $this->model->getDataMartGetDataModel('data_dataModelGetDV_004', array('id' => $this->view->id));
+            $_POST['mainIndicatorId'] = $this->view->id;
+            $objects = $this->model->getListKpiDataMartRelationConfigModel();
+            
+            if ($this->view->isWs) {
+                echo $this->view->renderPrint('form/kpi/indicator/relation/unionConfigTable', 'middleware/views/');
+                exit;
+            }            
+            
+            $response = array(
+                'html'      => $this->view->renderPrint('form/kpi/indicator/relation/unionConfigTable', 'middleware/views/'), 
+                'status'    => 'success', 
+                'objects'   => $objects
+            );
+        } else {
+            $response = array(
+                'html'      => $this->view->renderPrint('form/kpi/indicator/relation/unionConfigTable', 'middleware/views/'), 
+                'status'    => 'success', 
+                'objects'   => []
+            );
+        }
+        
+        jsonResponse($response);
+    }    
+    
     public function callMetaVerseIndicator() {
         
         $indicatorId = Input::numeric('indicatorId');
@@ -7752,6 +7834,28 @@ class Mdform extends Controller {
             throw new Exception($ex->getMessage()); 
         }          
     }
+    
+    public function saveUnionCreateIndicator() {
+        $id = getUID();
+        $indicatorName = Input::post('indicatorName');
+        $saveParams = [
+            'ID' => $id,
+            'CODE' => $id,
+            'IS_ACTIVE' => 1,
+            'KPI_TYPE_ID' => 16641793815766,
+            'TYPE_CODE' => 'union',
+            'NAME' => $indicatorName,
+            'CREATED_DATE' => Date::currentDate(),
+            'CREATED_USER_ID' => Ue::sessionUserKeyId()
+        ];
+        $saveResult = $this->model->dbAutoExecuteMetaVerseData('KPI_INDICATOR', $saveParams);
+
+        if ($saveResult) {
+            convJson(['status' => 'success', 'id' => $id, 'name' => $indicatorName]);
+        } else {
+            convJson(['status' => 'error', 'message' => 'Алдаа гарлаа!']);
+        }
+    }      
     
     public function cloudDatabaseSyncJson() {
         
